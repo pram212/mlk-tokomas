@@ -11,39 +11,39 @@
     <link rel="manifest" href="{{url('manifest.json')}}">
     <link rel="icon" type="image/png" href="{{url('logo', $general_setting->site_logo)}}" />
     <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="{{asset('vendor/bootstrap/css/bootstrap.min.css')}}" type="text/css">
-    <link rel="stylesheet" href="{{asset('vendor/bootstrap/css/bootstrap-datepicker.min.css')}}" type="text/css">
-    <link rel="stylesheet" href="{{asset('vendor/bootstrap/css/bootstrap-select.min.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{public_path('vendor/bootstrap/css/bootstrap.min.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{public_path('vendor/bootstrap/css/bootstrap-datepicker.min.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{public_path('vendor/bootstrap/css/bootstrap-select.min.css')}}" type="text/css">
     <!-- Font Awesome CSS-->
-    <link rel="stylesheet" href="{{asset('vendor/font-awesome/css/font-awesome.min.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{public_path('vendor/font-awesome/css/font-awesome.min.css')}}" type="text/css">
     <!-- Google fonts - Roboto -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
     <!-- jQuery Circle-->
-    <link rel="stylesheet" href="{{asset('css/grasp_mobile_progress_circle-1.0.0.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{public_path('css/grasp_mobile_progress_circle-1.0.0.min.css') }}" type="text/css">
     <!-- Custom Scrollbar-->
-    <link rel="stylesheet" href="{{asset('vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{public_path('vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css')}}" type="text/css">
     <!-- theme stylesheet-->
-    <link rel="stylesheet" href="{{asset('css/style.default.css')}}" id="theme-stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{public_path('css/style.default.css')}}" id="theme-stylesheet" type="text/css">
     <!-- Custom stylesheet - for your changes-->
-    <link rel="stylesheet" href="{{asset('css/custom-'.$general_setting->theme) }}" type="text/css">
+    <link rel="stylesheet" href="{{public_path('css/custom-'.$general_setting->theme) }}" type="text/css">
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
 
 
-    <script type="text/javascript" src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('vendor/jquery/jquery-ui.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('vendor/jquery/bootstrap-datepicker.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('vendor/popper.js/umd/popper.min.js') }}">
+    <script type="text/javascript" src="{{ public_path('vendor/jquery/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ public_path('vendor/jquery/jquery-ui.min.js') }}"></script>
+<script type="text/javascript" src="{{ public_path('vendor/jquery/bootstrap-datepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ public_path('vendor/popper.js/umd/popper.min.js') }}">
 </script>
-<script type="text/javascript" src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('vendor/bootstrap/js/bootstrap-select.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/grasp_mobile_progress_circle-1.0.0.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('vendor/jquery.cookie/jquery.cookie.js') }}">
+<script type="text/javascript" src="{{ public_path('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ public_path('vendor/bootstrap/js/bootstrap-select.min.js') }}"></script>
+<script type="text/javascript" src="{{ public_path('js/grasp_mobile_progress_circle-1.0.0.min.js') }}"></script>
+<script type="text/javascript" src="{{ public_path('vendor/jquery.cookie/jquery.cookie.js') }}">
 </script>
-<script type="text/javascript" src="{{ asset('vendor/jquery-validation/jquery.validate.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/front.js') }}"></script>
+<script type="text/javascript" src="{{ public_path('vendor/jquery-validation/jquery.validate.min.js') }}"></script>
+<script type="text/javascript" src="{{ public_path('vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js')}}"></script>
+<script type="text/javascript" src="{{ public_path('js/front.js') }}"></script>
   </head>
   <body>
     <!-- <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Please close the envato preview window from the top-right corner before accessing the demo. Thank you.</div> -->
@@ -97,17 +97,17 @@
   </body>
 </html>
 <script>
-    // if ('serviceWorker' in navigator ) {
-    //     window.addEventListener('load', function() {
-    //         navigator.serviceWorker.register('/saleproposmajed/service-worker.js').then(function(registration) {
-    //             // Registration was successful
-    //             console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    //         }, function(err) {
-    //             // registration failed :(
-    //             console.log('ServiceWorker registration failed: ', err);
-    //         });
-    //     });
-    // }
+    if ('serviceWorker' in navigator ) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/saleproposmajed/service-worker.js').then(function(registration) {
+                // Registration was successful
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+                // registration failed :(
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
 </script>
 <script type="text/javascript">
     $('.admin-btn').on('click', function(){
