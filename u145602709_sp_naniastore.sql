@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 25, 2023 at 10:18 AM
+-- Generation Time: Oct 02, 2023 at 08:51 AM
 -- Server version: 10.6.14-MariaDB-cll-lve
 -- PHP Version: 7.2.34
 
@@ -22736,7 +22736,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `remember_token`, `phone`, `company_name`, `role_id`, `biller_id`, `warehouse_id`, `is_active`, `is_deleted`, `created_at`, `updated_at`) VALUES
-(1, 'lubirasoftware', 'lubirasoftware@gmail.com', '$2y$10$WYV7tiu0/2ndETalhxuP7uAwGbDKC8.hc4Fa7oJ.Ds0YncIuHN9Vm', 'AX1wle2fK95mECFj37LnKDpyMor447HqnUXgGKAP2GzUKttHKSwdhcFJ5Uti', '082144092552', 'Lubira Software', 1, NULL, NULL, 1, 0, '2018-06-02 03:24:15', '2023-08-25 10:17:22'),
+(1, 'hanwayscg', 'hanwayscg@gmail.com', '$2y$10$KGOoxBVYkaJihn5EK3ObA.DOz4fFeCcmQvlH/Kd/uPSavUX73tN4m', 'qi8RuhTLqo4f84uTqEOKsUdtrSSjv3Ax02SXZVd9EjHU6QCceHquvo2w43uq', '082144092552', 'Hanways Consulting Group', 1, NULL, NULL, 1, 0, '2018-06-02 03:24:15', '2023-10-02 08:42:00'),
 (3, 'dhiman da', 'dhiman@gmail.com', '$2y$10$Fef6vu5E67nm11hX7V5a2u1ThNCQ6n9DRCvRF9TD7stk.Pmt2R6O.', '5ehQM6JIfiQfROgTbB5let0Z93vjLHS7rd9QD5RPNgOxli3xdo7fykU7vtTt', '212', 'lioncoders', 1, NULL, NULL, 0, 1, '2018-06-13 22:00:31', '2020-11-05 07:06:51'),
 (6, 'test', 'test@gmail.com', '$2y$10$TDAeHcVqHyCmurki0wjLZeIl1SngKX3WLOhyTiCoZG3souQfqv.LS', 'KpW1gYYlOFacumklO2IcRfSsbC3KcWUZzOI37gqoqM388Xie6KdhaOHIFEYm', '1234', '212312', 4, NULL, NULL, 0, 1, '2018-06-23 03:05:33', '2018-06-23 03:13:45'),
 (8, 'test', 'test@yahoo.com', '$2y$10$hlMigidZV0j2/IPkgE/xsOSb8WM2IRlsMv.1hg1NM7kfyd6bGX3hC', NULL, '31231', NULL, 4, NULL, NULL, 0, 1, '2018-06-24 22:35:49', '2018-07-02 01:07:39'),

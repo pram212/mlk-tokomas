@@ -18,11 +18,4 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
-
-    # Melarang Akses ke .env
-    <Files .env>
-    Order Allow,Deny
-    Deny from all
-    </Files>
-    
 </IfModule>
