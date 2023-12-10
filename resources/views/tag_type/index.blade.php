@@ -93,7 +93,7 @@
                     dataType: "json",
                     success: function (response) {
                         $.ajax({
-                            url: "tagtype/" + data.id,
+                            url: "{{ url('tagtype/') }}" + data.id,
                             type: 'delete',
                             dataType: "json",
                             success: function(response) {
