@@ -11,6 +11,9 @@
 |
 */
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function() {
@@ -287,5 +290,11 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 
 	Route::get('/home', 'HomeController@index')->name('home');
 	Route::get('my-transactions/{year}/{month}', 'HomeController@myTransaction');
+	Route::resource('tagtype', 'TagTypeController');
+	Route::get('tagtype-datatable', 'TagTypeController@tagTypeData');
+	Route::resource('producttype', 'ProductTypeController');
+	Route::get('producttype-datatable', 'ProductTypeController@productTypeData');
+	Route::resource('gramasi', 'GramasiController');
+	Route::get('gramasi-datatable', 'GramasiController@gramasiData');
 });
 

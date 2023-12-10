@@ -23,7 +23,8 @@
         "spatie/laravel-permission": "^3.17",
         "srmklive/paypal": "^3.0",
         "stripe/stripe-php": "^7.57",
-        "twilio/sdk": "^6.10"
+        "twilio/sdk": "^6.10",
+        "yajra/laravel-datatables-oracle": "*"
     },
     "require-dev": {
         "facade/ignition": "^1.4",
