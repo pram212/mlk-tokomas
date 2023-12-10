@@ -85,18 +85,11 @@
             if (confirmation) {
                 $.ajax({
                     type: "DELETE",
-                    url: "/gramasi/" + data.id,
+                    url: "{!! url('gramasi') !!}" + "/" + data.id,
                     dataType: "json",
                     success: function (response) {
-                        $.ajax({
-                            url: "tagtype/" + data.id,
-                            type: 'delete',
-                            dataType: "json",
-                            success: function(response) {
-                                alert(response)
-                                tagTypeTable.ajax.reload();
-                            }
-                        }) 
+                        alert(response)
+                        tagTypeTable.ajax.reload();
                     }
                 });
 
