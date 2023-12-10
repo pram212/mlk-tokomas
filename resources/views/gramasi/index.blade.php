@@ -57,7 +57,7 @@
         tagTypeTable = $('#gramasi-datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '/gramasi-datatable',
+            ajax: "{{ url('gramasi-datatable') }}",
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',

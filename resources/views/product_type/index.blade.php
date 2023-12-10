@@ -57,7 +57,7 @@
         tagTypeTable = $('#producttype-datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '/producttype-datatable',
+            ajax: "{{ url('producttype-datatable') }}",
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
