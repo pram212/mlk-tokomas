@@ -1104,7 +1104,7 @@
                     <a id="toggle-btn" href="#" class="menu-btn"><i class="fa fa-bars"> </i></a>
                     <span class="brand-big">
                         @if ($general_setting->site_logo)
-                            <img src="{{ url('logo', $general_setting->site_logo) }}" width="50">&nbsp;&nbsp;
+                            <img src="{{ url('public/logo', $general_setting->site_logo) }}" width="50">&nbsp;&nbsp;
                         @endif
                         <a href="{{ url('/') }}">
                             <h1 class="d-inline">{{ $general_setting->site_title }}</h1>
