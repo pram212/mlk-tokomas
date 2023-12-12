@@ -29,17 +29,17 @@
         <div class="container-fluid">
             {{-- @if (in_array('products-add', $all_permission)) --}}
             <a href="{{ route('tagtype.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
-                Tambah Jenis Tagging</a>
+                {{ __('file.Add Tag Type') }}</a>
             {{-- @endif --}}
         </div>
         <div class="table-responsive">
             <table id="tagtype-datatable" class="table" style="width: 100%">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Kode Tag</th>
-                        <th>Deskripsi</th>
-                        <th>Kode Warna</th>
+                        <th class="not-exported"></th>
+                        <th>{{ __('file.Code') }}</th>
+                        <th>{{ __('file.Description' )}}</th>
+                        <th>{{ __('file.Color') }}</th>
                         <th class="not-exported">{{ trans('file.action') }}</th>
                     </tr>
                 </thead>
@@ -48,12 +48,8 @@
         </div>
     </section>
 
+    <script src="{{ asset('public/js/axios.min.js') }}"></script>
     <script>
-         $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
 
         tagTypeTable = $('#tagtype-datatable').DataTable({
             processing: true,
@@ -61,7 +57,6 @@
             ajax: "{{ url('tagtype-datatable') }}",
             columns: [{
                     data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
                     orderable: false,
                     searchable: false
                 },
@@ -78,27 +73,140 @@
                     data: 'action'
                 },
             ],
+            order: [
+                ['2', 'asc']
+            ],
+            columnDefs: [{
+                    "orderable": false,
+                    'targets': [0, 4]
+                },
+                {
+                    'render': function(data, type, row, meta) {
+                        if (type === 'display') {
+                            data =
+                                '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                        }
+
+                        return data;
+                    },
+                    'checkboxes': {
+                        'selectRow': true,
+                        'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                    },
+                    'targets': [0]
+                }
+            ],
+            select: {
+                style: 'multi',
+                selector: 'td:first-child'
+            },
+            dom: '<"row"lfB>rtip',
+            language: {
+                'lengthMenu': '_MENU_ {{ trans('file.records per page') }}',
+                "info": '<small>{{ trans('file.Showing') }} _START_ - _END_ (_TOTAL_)</small>',
+                "search": '{{ trans('file.Search') }}',
+                'paginate': {
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
+                }
+            },
+            buttons: [{
+                    text: '{{ trans('file.delete') }}',
+                    className: 'buttons-delete',
+                    action: function(e, dt, node, config) {
+
+                        var user_verified = '{!! env('USER_VERIFIED') !!}'
+
+                        if (!user_verified) {
+                            return alert('This feature is disable for demo!')
+                        }
+                        ids = []
+                        $.each($('.dt-checkboxes:checked'), function(indexInArray, valueOfElement) {
+                            const tr = $(this).closest('tr'); // get the row target
+                            const data = tagTypeTable.row(tr).data(); // get detail data
+                            if (data !== undefined) ids.push(data.id)
+                        });
+
+                        if (ids.length < 1) {
+                            return alert('No data selected!')
+                        }
+                        const confirmDeleteMultiple = confirm(
+                            "If you delete under this tags will also be deleted. Are you sure want to delete?"
+                            )
+                        if (confirmDeleteMultiple) {
+                            const url = "{!! url('tagtype-multi-delete') !!}"
+                            axios.post(url, {
+                                    ids: ids
+                                })
+                                .then(function(response) {
+                                    alert(response.data)
+                                    tagTypeTable.ajax.reload();
+                                })
+                                .catch(function(error) {
+                                    const errorMessage = error.response.data
+                                    alert(errorMessage)
+                                })
+
+                            return
+                        }
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    text: '{{ trans('file.PDF') }}',
+                    exportOptions: {
+                        columns: ':visible:Not(.not-exported)',
+                        rows: ':visible'
+                    },
+                    footer: true
+                },
+                {
+                    extend: 'csv',
+                    text: '{{ trans('file.CSV') }}',
+                    exportOptions: {
+                        columns: ':visible:Not(.not-exported)',
+                        rows: ':visible'
+                    },
+                    footer: true
+                },
+                {
+                    extend: 'print',
+                    text: '{{ trans('file.Print') }}',
+                    exportOptions: {
+                        columns: ':visible:Not(.not-exported)',
+                        rows: ':visible'
+                    },
+                    footer: true
+                },
+                {
+                    extend: 'colvis',
+                    text: '{{ trans('file.Column visibility') }}',
+                    columns: ':gt(0)'
+                },
+            ]
         });
 
-        // function delete detail
+        // Handle delete data with serverside
         $('#tagtype-datatable tbody').on('click', 'button.btn-delete', function() {
-            var tr = $(this).closest('tr');
-            var data = tagTypeTable.row(tr).data();
+            var tr = $(this).closest('tr'); // get the row target
+            var data = tagTypeTable.row(tr).data(); // get detail data
+            // show confirmation alert
             const confirmation = confirm("Apakah Anda yakin ingin menghapusnya?");
-
+            // if user choose true
             if (confirmation) {
-                $.ajax({
-                    type: "DELETE",
-                    url: "{!! url('tagtype') !!}" + "/" + data.id,
-                    dataType: "json",
-                    success: function (response) {
-                        alert(response)
+                // run delete function via ajax
+                const url = "{!! url('tagtype') !!}" + "/" + data.id
+                axios.delete(url)
+                    .then(function (response) {
+                        alert(response.data)
                         tagTypeTable.ajax.reload();
-                    }
-                });
+                    })
+                    .catch(function (error) {
+                        const errorMessage = error.response.data
+                        alert(errorMessage)
+                    });
 
             }
-
-        });
+        })
     </script>
 @endsection

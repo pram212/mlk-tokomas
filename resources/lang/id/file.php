@@ -587,5 +587,31 @@ return [
 	"Backup Database" => "Backup Database",
 	"Recieved AmountPurchase" => "Total",
 	"Paying AmountPurchase" => "Jumlah dibayarkan",
+
+	// translations for kategori product modul
+	"Product Category" => "Kategori Produk",
+	"Tagging Type" => "Jenis Tagging",
+	"Product Type" => "Jenis Produk",
+	"Gramasi List" => "Daftar Gramasi",
+	"Add Tag Type" => "Tambah Jenis Tag",
+	"Color" => "Warna",
+	"Tag Type Code" => "Kode Jenis Tag",
+	"Color Code" => "Kode Warna",
+	"Add Product Type" => "Tambah Jenis Produk",
+	"Add Product Property" => "Tambah Sifat Barang",
+	"Product Property" => "Sifat Barang",
+	"Product Type Code" => "Kode Jenis Produk",
+	"Product Property Code" => "Kode Sifat Barang",
+	"Add Gramasi" => "Tambah Gramasi",
+	"Freetext" => "Freetext",
+	"Product Gramasi Type Code" => "Kode Jenis Gramasi Produk",
+	"The data was successfully deleted and those related to GRAMASI were not deleted" => "Data berhasil dihapus dan yang berhubungan dengan gramasi tidak terhapus",
+	"Data saved successfully" => "Data berhasil disimpan",
+	"Data updated successfully" => "Data berhasil diubah",
+	"The Data was successfully deleted" => "Data berhasil dihapus",
+	"Data deleted successfully" => "Data berhasil dihapus",
+	"Failed to be deleted because it was used by grammar" =>  "Gagal dihapus karena digunakan di oleh gramasi",
+	"Select" => "Pilih",
 ];
+
 ?>

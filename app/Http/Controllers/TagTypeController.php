@@ -15,12 +15,6 @@ class TagTypeController extends Controller
 {
     public function index()
     {
-        // if (Gate::allows('lihat-produk')) {
-        //     dd('punya akses lihat produk');
-        // } else {
-        //     dd('gak punya akses lihat produk');
-        // }
-
         return view('tag_type.index');
     }
 
@@ -70,15 +64,15 @@ class TagTypeController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'code' => ['required'],
+            'color' => ['required'],
+            'description' => ['required'],
+
+        ]);
+
         try {
             DB::beginTransaction();
-            
-            $request->validate([
-                'code' => ['required'],
-                'color' => ['required'],
-                'description' => ['required'],
-    
-            ]);
     
             TagType::create([
                 'code' => $request->code,
@@ -88,7 +82,7 @@ class TagTypeController extends Controller
 
             DB::commit();
     
-            return back()->with('create_message', 'Jenis tag berhasil disimpan');
+            return back()->with('create_message', __('file.Data saved successfully'));
 
         } catch (\Exception $exception) {
 
@@ -101,14 +95,14 @@ class TagTypeController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'code' => ['required'],
+            'color' => ['required'],
+            'description' => ['required'],
+        ]);
+
         try {
             DB::beginTransaction();
-
-            $request->validate([
-                'code' => ['required'],
-                'color' => ['required'],
-                'description' => ['required'],
-            ]);
 
             $tagType = TagType::find($id);
     
@@ -120,7 +114,7 @@ class TagTypeController extends Controller
 
             DB::commit();
     
-            return back()->with('create_message', 'Jenis tag berhasil diupdate');
+            return back()->with('create_message', __('file.Data updated successfully'));
 
         } catch (\Exception $exception) {
 
@@ -141,7 +135,7 @@ class TagTypeController extends Controller
 
             DB::commit();
 
-            return response()->json('data berhasil dihapus', 200);
+            return response()->json(__('file.The data was successfully deleted'), 200);
 
         } catch (\Exception $exception) {
             Db::rollBack();
@@ -152,5 +146,24 @@ class TagTypeController extends Controller
         
     }
 
+    public function destroyMultiple(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            
+            TagType::destroy($request->ids);
+
+            DB::commit();
+
+            return response(__('file.Data deleted successfully'), 200);
+
+        } catch (\Exception $exception) {
+
+            Db::rollBack();
+            
+            return response($exception->getMessage(), 500);
+        }
+
+    }
 
 }

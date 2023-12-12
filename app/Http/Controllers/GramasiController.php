@@ -40,7 +40,7 @@ class GramasiController extends Controller
                 return $action;
             })
             ->addColumn('product_type', function($model) {
-                return $model->productType->code . " - " . $model->productType->description;
+                return @$model->productType->code . " - " . @$model->productType->description;
             })
             ->addIndexColumn()
             ->rawColumns(['action', 'color'])
@@ -65,15 +65,13 @@ class GramasiController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'product_type_id' => ['required'],
+            'freetext' => ['required', 'numeric', 'digits_between:1,20'],
+        ]);
 
         try {
             DB::beginTransaction();
-            
-            $request->validate([
-                'product_type_id' => ['required'],
-                'freetext' => ['required'],
-    
-            ]);
     
             Gramasi::create([
                 'product_type_id' => $request->product_type_id,
@@ -82,7 +80,7 @@ class GramasiController extends Controller
 
             DB::commit();
     
-            return back()->with('create_message', 'Jenis tag berhasil disimpan');
+            return back()->with('create_message', __('file.Data saved successfully'));
 
         } catch (\Exception $exception) {
 
@@ -95,24 +93,24 @@ class GramasiController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'product_type_id' => ['required'],
+            'freetext' => ['required', 'numeric', 'digits_between:1,20'],
+        ]);
+
         try {
             DB::beginTransaction();
-
-            $request->validate([
-                'product_type_id' => ['required'],
-                'freetext' => ['required'],
-            ]);
 
             $gramasi = Gramasi::find($id);
     
             $gramasi->update([
-                'dproduct_type_id' => $request->product_type_id,
+                'product_type_id' => $request->product_type_id,
                 'freetext' => $request->freetext,
             ]);
 
             DB::commit();
     
-            return back()->with('create_message', 'Jenis tag berhasil diupdate');
+            return back()->with('create_message', __('file.Data updated successfully'));
 
         } catch (\Exception $exception) {
 
@@ -133,7 +131,7 @@ class GramasiController extends Controller
 
             DB::commit();
 
-            return response()->json('data berhasil dihapus', 200);
+            return response()->json(__('file.Data deleted successfully'), 200);
 
         } catch (\Exception $exception) {
             Db::rollBack();
@@ -143,6 +141,27 @@ class GramasiController extends Controller
         }
         
     }
+
+    public function destroyMultiple(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            
+            Gramasi::destroy($request->ids);
+
+            DB::commit();
+
+            return response(__('file.Data deleted successfully'), 200);
+
+        } catch (\Exception $exception) {
+
+            Db::rollBack();
+            
+            return response($exception->getMessage(), 500);
+        }
+
+    }
+
 
 
 }

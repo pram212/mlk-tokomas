@@ -28,12 +28,12 @@
     <section>
         <div class="container-fluid">
             {{-- @if (in_array('products-add', $all_permission)) --}}
-            <a href="{{ route('producttype.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
-                {{ __('file.Add Product Type') }}</a>
+            <a href="{{ route('productproperty.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
+                {{ __('file.Add Product Property') }}</a>
             {{-- @endif --}}
         </div>
         <div class="table-responsive">
-            <table id="producttype-datatable" class="table" style="width: 100%">
+            <table id="productproperty-datatable" class="table" style="width: 100%">
                 <thead>
                     <tr>
                         <th class="not-exported"></th>
@@ -57,10 +57,10 @@
 
         console.log(axios);
 
-        productTypeTable = $('#producttype-datatable').DataTable({
+        productPropertyTable = $('#productproperty-datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('producttype-datatable') }}",
+            ajax: "{{ url('productproperty-datatable') }}",
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
@@ -125,7 +125,7 @@
                         ids = []
                         $.each($('.dt-checkboxes:checked'), function(indexInArray, valueOfElement) {
                             const tr = $(this).closest('tr'); // get the row target
-                            const data = productTypeTable.row(tr).data(); // get detail data
+                            const data = productPropertyTable.row(tr).data(); // get detail data
                             if (data !== undefined) ids.push(data.id)
                         });
 
@@ -136,13 +136,13 @@
                             "If you delete under this tags will also be deleted. Are you sure want to delete?"
                             )
                         if (confirmDeleteMultiple) {
-                            const url = "{!! url('producttype-multi-delete') !!}"
+                            const url = "{!! url('productproperty-multi-delete') !!}"
                             axios.post(url, { 
                                     ids : ids 
                                 })
                                 .then(function (response) {
                                     alert(response.data)
-                                    productTypeTable.ajax.reload();
+                                    productPropertyTable.ajax.reload();
                                 })
                                 .catch(function (error) {
                                     const errorMessage = error.response.data
@@ -189,17 +189,17 @@
         });
 
         // function delete detail
-        $('#producttype-datatable tbody').on('click', 'button.btn-delete', function() {
+        $('#productproperty-datatable tbody').on('click', 'button.btn-delete', function() {
             var tr = $(this).closest('tr');
-            var data = productTypeTable.row(tr).data();
+            var data = productPropertyTable.row(tr).data();
             const confirmation = confirm("Apakah Anda yakin ingin menghapusnya?");
 
             if (confirmation) {
-                const url = "{!! url('producttype') !!}" + "/" + data.id
+                const url = "{!! url('productproperty') !!}" + "/" + data.id
                 axios.delete(url)
                     .then(function (response) {
                         alert(response.data)
-                        productTypeTable.ajax.reload();
+                        productPropertyTable.ajax.reload();
                     })
                     .catch(function (error) {
                         const errorMessage = error.response.data

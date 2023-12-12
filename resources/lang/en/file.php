@@ -589,5 +589,29 @@ return [
 	"Transaction Reference" => "Transaction Reference",
 	"Recieved AmountPurchase" => "Received Amount",
 	"Paying AmountPurchase" => "Paying Amount",
+	
+	"Product Category" => "Product Category",
+	"Gramasi List" => "Gramasi List",
+	"Tagging Type" => "Tagging Type",
+	"Add Tag Type" => "Add Tag Type",
+	"Add Product Type" => "Add Product Type",
+	"Add Product Property" => "Add Product Property",
+	"Product Property" => "Product Property",
+	"Color" => "Color",
+	"Tag Type Code" => "Tag Type Code",
+	"Color Code" => "Color Code",
+	"Product Type Code" => "Product Type Code",
+	"Product Property Code" => "Product Property Code",
+	"Add Gramasi" => "Add Gramasi",
+	"Freetext" => "Freetext",
+	"Product Gramasi Type Code" => "Product Gramasi Type Code",
+
+	"Data saved successfully" => "Data saved successfully",
+	"Data updated successfully" => "Data updated successfully",
+	"The data was successfully deleted" => "The data was successfully deleted" ,
+	"Data deleted successfully" => "Data deleted successfully",
+	"The data was successfully deleted and those related to GRAMASI were not deleted" => "The data was successfully deleted and those related to GRAMASI were not deleted",
+	"Failed to be deleted because it was used by grammar" => "Gagal dihapus karena digunakan di oleh gramasi",
+	"Select" => "Select"
 ];
 ?>

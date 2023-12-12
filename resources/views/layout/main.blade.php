@@ -112,22 +112,25 @@
                     <li>
                       @php
                           $isExpandProductCategory = (
-                              request()->is('tagtype*') || request()->is('producttype*') || request()->is('gramasi*')
+                              request()->is('tagtype*') || request()->is('producttype*') || request()->is('productproperty*') || request()->is('gramasi*')
                             ) ? "true" : "false";
                       @endphp
                       <a href="#productcategory" aria-expanded="{{ $isExpandProductCategory }}" data-toggle="collapse"> 
-                        <i class="dripicons-card"></i><span>Kategori Produk</span>
+                        <i class="dripicons-card"></i><span>{{ __('file.Product Category') }}</span>
                       </a>
 
                       <ul id="productcategory" class="collapse list-unstyled @if ( $isExpandProductCategory === "true" ) show @endif">
                           <li id="productcategory-list-menu" class="@if (request()->is('tagtype*')) active @endif">
-                            <a href="{{ route('tagtype.index') }}">Jenis Tagging</a>
+                            <a href="{{ route('tagtype.index') }}">{{ __('file.Tagging Type') }}</a>
+                          </li>
+                          <li id="productcategory-list-menu" class="@if (request()->is('productproperty*')) active @endif">
+                            <a href="{{ route('productproperty.index') }}">{{ __('file.Product Property') }}</a>
                           </li>
                           <li id="productcategory-list-menu" class="@if (request()->is('producttype*')) active @endif">
-                            <a href="{{ route('producttype.index') }}">Jenis Produk</a>
+                            <a href="{{ route('producttype.index') }}">{{ __('file.Product Type') }}</a>
                           </li>
                           <li id="productcategory-list-menu" class="@if (request()->is('gramasi*')) active @endif">
-                            <a href="{{ route('gramasi.index') }}">Daftar Gramasi</a>
+                            <a href="{{ route('gramasi.index') }}">{{ __('file.Gramasi List') }}</a>
                           </li>
                       </ul>
                     </li>

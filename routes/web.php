@@ -290,11 +290,21 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 
 	Route::get('/home', 'HomeController@index')->name('home');
 	Route::get('my-transactions/{year}/{month}', 'HomeController@myTransaction');
+
 	Route::resource('tagtype', 'TagTypeController');
 	Route::get('tagtype-datatable', 'TagTypeController@tagTypeData');
+	Route::post('tagtype-multi-delete', 'TagTypeController@destroyMultiple');
+
 	Route::resource('producttype', 'ProductTypeController');
 	Route::get('producttype-datatable', 'ProductTypeController@productTypeData');
+	Route::post('producttype-multi-delete', 'ProductTypeController@destroyMultiple');
+
+	Route::resource('productproperty', 'ProductPropertyController');
+	Route::get('productproperty-datatable', 'ProductPropertyController@productPropertyData');
+	Route::post('productproperty-multi-delete', 'ProductPropertyController@destroyMultiple');
+
 	Route::resource('gramasi', 'GramasiController');
 	Route::get('gramasi-datatable', 'GramasiController@gramasiData');
+	Route::post('gramasi-multi-delete', 'GramasiController@destroyMultiple');
 });
 

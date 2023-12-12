@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\ProductType;
+use App\ProductProperty;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\DB;
 
-class ProductTypeController extends Controller
+class ProductPropertyController extends Controller
 {
     public function index()
     {
-        return view('product_type.index');
+        return view('product_property.index');
     }
 
-    public function productTypeData(Request $request)
+    public function productPropertyData(Request $request)
     {
-        $model = ProductType::query();
+        $model = ProductProperty::query();
 
         return DataTables::of($model)
             ->addColumn('action', function ($model) {
@@ -28,7 +28,7 @@ class ProductTypeController extends Controller
                     </button>
                     <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                         <li>
-                            <a href="'. route('producttype.edit', $model->id) .'" class="btn btn-link"><i class="fa fa-pencil"></i>  Edit </a>
+                            <a href="'. route('productproperty.edit', $model->id) .'" class="btn btn-link"><i class="fa fa-pencil"></i>  Edit </a>
                         </li>
                         <li>
                             <button type="button" class="btn btn-link view btn-delete"><i class="fa fa-trash"></i>  Hapus</button>
@@ -45,14 +45,14 @@ class ProductTypeController extends Controller
 
     public function create()
     {
-        return view('product_type.form');
+        return view('product_property.form');
     }
 
     public function edit($id)
     {
-        $productType = ProductType::findOrFail($id);
+        $productProperty = ProductProperty::findOrFail($id);
 
-        return view('product_type.form', compact('productType'));
+        return view('product_property.form', compact('productProperty'));
     }
 
     public function store(Request $request)
@@ -67,7 +67,7 @@ class ProductTypeController extends Controller
             DB::beginTransaction();
             
     
-            ProductType::create([
+            ProductProperty::create([
                 'code' => $request->code,
                 'description' => $request->description,
                 'color' => $request->color,
@@ -96,10 +96,9 @@ class ProductTypeController extends Controller
         try {
             DB::beginTransaction();
 
-
-            $productType = ProductType::find($id);
+            $productProperty = ProductProperty::find($id);
     
-            $productType->update([
+            $productProperty->update([
                 'code' => $request->code,
                 'description' => $request->description,
                 'color' => $request->color,
@@ -124,17 +123,11 @@ class ProductTypeController extends Controller
         try {
             DB::beginTransaction();
 
-            $productType = ProductType::find($id);
-
-            if ($productType->gramasi->count() > 0) {
-                return response(__('file.Failed to be deleted because it was used by grammar'), 403);
-            }
-            
-            $productType->delete();
+            ProductProperty::destroy($id);
 
             DB::commit();
 
-            return response(__('file.Data deleted successfully'), 200);
+            return response(__('file.The data was successfully deleted'), 200);
 
         } catch (\Exception $exception) {
 
@@ -151,11 +144,11 @@ class ProductTypeController extends Controller
         try {
             DB::beginTransaction();
             
-            ProductType::whereIn('id', $request->ids)->doesntHave('gramasi')->delete();
+            ProductProperty::destroy($request->ids);
 
             DB::commit();
 
-            return response(__('file.The data was successfully deleted and those related to GRAMASI were not deleted'), 200);
+            return response(__('file.Data deleted successfully'), 200);
 
         } catch (\Exception $exception) {
 
