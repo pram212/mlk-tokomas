@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Gramasi extends Model
 {
-    protected $fillable = [ 'product_type_id', 'freetext' ];
+    protected $fillable = [ 'code', 'product_type_id', 'gramasi' ];
 
     public function productType()
     {
         return $this->belongsTo(ProductType::class);
     }
-
+    
 }

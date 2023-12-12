@@ -67,7 +67,8 @@ class GramasiController extends Controller
     {
         $request->validate([
             'product_type_id' => ['required'],
-            'freetext' => ['required', 'numeric', 'digits_between:1,20'],
+            'gramasi' => ['required', 'numeric'],
+            'code' => ['required'],
         ]);
 
         try {
@@ -75,12 +76,13 @@ class GramasiController extends Controller
     
             Gramasi::create([
                 'product_type_id' => $request->product_type_id,
-                'freetext' => $request->freetext,
+                'gramasi' => $request->gramasi,
+                'code' => $request->code,
             ]);
 
             DB::commit();
     
-            return back()->with('create_message', __('file.Data saved successfully'));
+            return redirect('gramasi')->with('create_message', __('file.Data saved successfully'));
 
         } catch (\Exception $exception) {
 
@@ -95,7 +97,8 @@ class GramasiController extends Controller
     {
         $request->validate([
             'product_type_id' => ['required'],
-            'freetext' => ['required', 'numeric', 'digits_between:1,20'],
+            'gramasi' => ['required', 'numeric'],
+            'code' => ['required'],
         ]);
 
         try {
@@ -105,12 +108,13 @@ class GramasiController extends Controller
     
             $gramasi->update([
                 'product_type_id' => $request->product_type_id,
-                'freetext' => $request->freetext,
+                'gramasi' => $request->gramasi,
+                'code' => $request->code,
             ]);
 
             DB::commit();
     
-            return back()->with('create_message', __('file.Data updated successfully'));
+            return redirect('gramasi')->with('create_message', __('file.Data updated successfully'));
 
         } catch (\Exception $exception) {
 

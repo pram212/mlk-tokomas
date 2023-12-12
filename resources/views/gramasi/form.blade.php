@@ -44,7 +44,7 @@
                         @endif
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>{{ __('file.Product Gramasi Type Code') }} *</strong> </label>
+                                <label><strong>{{ __('file.Product Type') }} *</strong> </label>
                                 <select name="product_type_id" class="form-control" id="product_type_id">
                                     <option value="">{{ __('file.Select') }}</option>
                                     @foreach ($productType as $item)
@@ -60,23 +60,23 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>{{ __('file.Product Type') }} *</strong> </label>
-                                <input type="text" name="product_code" class="form-control" id="product_code"
-                                    value="{{ @$gramasi->productType->code }}" disabled>
+                                <label><strong>{{ __('file.Product Gramasi Type Code') }} *</strong> </label>
+                                <input type="text" name="code" class="form-control" id="code"
+                                    value="{{ @$gramasi->code }}">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>{{ __('file.Freetext') }} *</strong> </label>
-                                <input type="number" name="freetext" class="form-control" id="freetext"
-                                    value="{{ old('freetext', @$gramasi->freetext) }}">
-                                @error('freetext')
+                                <label>{{ __('file.Gramasi') }} *</strong> </label>
+                                <input type="number" name="gramasi" class="form-control" id="gramasi"
+                                    value="{{ old('gramasi', @$gramasi->gramasi) }}">
+                                @error('gramasi')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <button class="btn btn-primary">Submit</button>
+                            <button class="btn btn-primary">{{__('file.submit')}}</button>
                         </div>
                     </form>
                 </div>

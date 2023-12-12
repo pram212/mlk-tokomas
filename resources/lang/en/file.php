@@ -612,6 +612,7 @@ return [
 	"Data deleted successfully" => "Data deleted successfully",
 	"The data was successfully deleted and those related to GRAMASI were not deleted" => "The data was successfully deleted and those related to GRAMASI were not deleted",
 	"Failed to be deleted because it was used by grammar" => "Gagal dihapus karena digunakan di oleh gramasi",
-	"Select" => "Select"
+	"Select" => "Select",
+	"Gramasi" => "Gramasi"
 ];
 ?>

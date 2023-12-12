@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeTypeFreetextColumnFromGramasiTable extends Migration
+class RemoveFreetexColumnOfGramasis extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class ChangeTypeFreetextColumnFromGramasiTable extends Migration
     public function up()
     {
         Schema::table('gramasis', function (Blueprint $table) {
-            $table->string('freetext', 50)->nullable()->change();
+            $table->dropColumn('freetext');
         });
     }
 
@@ -26,7 +26,6 @@ class ChangeTypeFreetextColumnFromGramasiTable extends Migration
     public function down()
     {
         Schema::table('gramasis', function (Blueprint $table) {
-            $table->string('freetext')->nullable()->change();
         });
     }
 }

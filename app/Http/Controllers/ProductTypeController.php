@@ -75,7 +75,7 @@ class ProductTypeController extends Controller
 
             DB::commit();
     
-            return back()->with('create_message', __('file.Data saved successfully'));
+            return redirect('producttype')->with('create_message', __('file.Data saved successfully'));
 
         } catch (\Exception $exception) {
 
@@ -107,7 +107,7 @@ class ProductTypeController extends Controller
 
             DB::commit();
     
-            return back()->with('create_message', __('file.Data updated successfully'));
+            return redirect('producttype')->with('create_message', __('file.Data updated successfully'));
 
         } catch (\Exception $exception) {
 

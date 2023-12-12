@@ -60,13 +60,11 @@ class ProductPropertyController extends Controller
         $request->validate([
             'code' => ['required'],
             'description' => ['required'],
-
         ]);
 
         try {
             DB::beginTransaction();
             
-    
             ProductProperty::create([
                 'code' => $request->code,
                 'description' => $request->description,
@@ -75,7 +73,7 @@ class ProductPropertyController extends Controller
 
             DB::commit();
     
-            return back()->with('create_message', __('file.Data saved successfully'));
+            return redirect('productproperty')->with('create_message', __('file.Data saved successfully'));
 
         } catch (\Exception $exception) {
 
@@ -106,7 +104,7 @@ class ProductPropertyController extends Controller
 
             DB::commit();
     
-            return back()->with('create_message', __('file.Data updated successfully'));
+            return redirect('productproperty')->with('create_message', __('file.Data updated successfully'));
 
         } catch (\Exception $exception) {
 

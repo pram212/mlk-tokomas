@@ -82,7 +82,7 @@ class TagTypeController extends Controller
 
             DB::commit();
     
-            return back()->with('create_message', __('file.Data saved successfully'));
+            return redirect('tagtype')->with('create_message', __('file.Data saved successfully'));
 
         } catch (\Exception $exception) {
 
@@ -120,7 +120,7 @@ class TagTypeController extends Controller
 
             DB::rollBack();
 
-            return back()->with('message', $exception->getMessage());
+            return redirect('tagtype')->with('message', $exception->getMessage());
         }
         
     }

@@ -37,8 +37,9 @@
                 <thead>
                     <tr>
                         <th class="not-exported"></th>
+                        <th>{{ __('file.Product Gramasi Type Code') }}</th>
                         <th>{{ __('file.Product Type') }}</th>
-                        <th>{{ __('file.Freetext') }}</th>
+                        <th>{{ __('file.Gramasi') }}</th>
                         <th class="not-exported">{{ trans('file.action') }}</th>
                     </tr>
                 </thead>
@@ -61,10 +62,13 @@
                     searchable: false
                 },
                 {
+                    data: 'code'
+                },
+                {
                     data: 'product_type'
                 },
                 {
-                    data: 'freetext'
+                    data: 'gramasi'
                 },
                 {
                     data: 'action'
