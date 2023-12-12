@@ -75,7 +75,7 @@
             ],
             columnDefs: [{
                     "orderable": false,
-                    'targets': [0]
+                    'targets': [0, 3]
                 },
                 {
                     'render': function(data, type, row, meta) {

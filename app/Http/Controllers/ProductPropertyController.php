@@ -28,10 +28,10 @@ class ProductPropertyController extends Controller
                     </button>
                     <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                         <li>
-                            <a href="'. route('productproperty.edit', $model->id) .'" class="btn btn-link"><i class="fa fa-pencil"></i>  Edit </a>
+                            <a href="'. route('productproperty.edit', $model->id) .'" class="btn btn-link"><i class="fa fa-pencil"></i>  '.__('file.edit').' </a>
                         </li>
                         <li>
-                            <button type="button" class="btn btn-link view btn-delete"><i class="fa fa-trash"></i>  Hapus</button>
+                            <button type="button" class="btn btn-link view btn-delete"><i class="fa fa-trash"></i>  '.__('file.delete').'</button>
                         </li>
                     <ul>
                 </div>';
