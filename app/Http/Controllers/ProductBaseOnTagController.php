@@ -98,7 +98,7 @@ class ProductBaseOnTagController extends Controller
 
             DB::rollBack();
 
-            return redirect('productbaseontag')->with('message', $exception->getMessage());
+            return back()->with('message', $exception->getMessage());
         }
         
     }
@@ -128,7 +128,7 @@ class ProductBaseOnTagController extends Controller
 
             DB::commit();
     
-            return redirect('productbaseontag')->with('create_message', __('file.Data updated successfully'));
+            return back()->with('create_message', __('file.Data updated successfully'));
 
         } catch (\Exception $exception) {
 
