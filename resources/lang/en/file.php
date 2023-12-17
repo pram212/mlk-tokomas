@@ -613,6 +613,8 @@ return [
 	"The data was successfully deleted and those related to GRAMASI were not deleted" => "The data was successfully deleted and those related to GRAMASI were not deleted",
 	"Failed to be deleted because it was used by grammar" => "Gagal dihapus karena digunakan di oleh gramasi",
 	"Select" => "Select",
-	"Gramasi" => "Gramasi"
+	"Gramasi" => "Gramasi",
+	"Gramasi Code" => "Gramasi Code",
+	"Add Product" => "Add Product",
 ];
 ?>

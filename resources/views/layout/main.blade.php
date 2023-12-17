@@ -112,7 +112,7 @@
                     <li>
                       @php
                           $isExpandProductCategory = (
-                              request()->is('tagtype*') || request()->is('producttype*') || request()->is('productproperty*') || request()->is('gramasi*')
+                              request()->is('tagtype*') || request()->is('producttype*') || request()->is('productproperty*') || request()->is('gramasi*') || request()->is('productbaseontag*')
                             ) ? "true" : "false";
                       @endphp
                       <a href="#productcategory" aria-expanded="{{ $isExpandProductCategory }}" data-toggle="collapse"> 
@@ -131,6 +131,9 @@
                           </li>
                           <li id="productcategory-list-menu" class="@if (request()->is('gramasi*')) active @endif">
                             <a href="{{ route('gramasi.index') }}">{{ __('file.Gramasi List') }}</a>
+                          </li>
+                          <li id="productcategory-list-menu" class="@if (request()->is('productbaseontag*')) active @endif">
+                            <a href="{{ route('productbaseontag.index') }}">Tambah Produk</a>
                           </li>
                       </ul>
                     </li>

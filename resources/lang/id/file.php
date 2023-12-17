@@ -613,6 +613,8 @@ return [
 	"Failed to be deleted because it was used by grammar" =>  "Gagal dihapus karena digunakan di oleh gramasi",
 	"Select" => "Pilih",
 	"Gramasi" => "Gramasi",
+	"Gramasi Code" => "Kode Gramasi",
+	"Add Product" => "Tambah Produk",
 ];
 
 ?>
