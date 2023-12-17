@@ -907,7 +907,7 @@
                     <div class="payment-amount">
                         <h2>{{trans('file.grand total')}} <span id="grand-total">0</span></h2>
                     </div>
-                    <div class="payment-options">
+                    {{-- <div class="payment-options">
                         <div class="column-5">
                             <button style="background: #0984e3" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="credit-card-btn"><i class="fa fa-credit-card"></i> Card</button>   
                         </div>
@@ -935,7 +935,7 @@
                         <div class="column-5">
                             <button style="background-color: #ffc107;" type="button" class="btn btn-custom" data-toggle="modal" data-target="#recentTransaction"><i class="dripicons-clock"></i> Recent transaction</button>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <!-- payment modal -->
