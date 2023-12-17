@@ -202,7 +202,7 @@
                                                 href="{{ route('products.create') }}">{{ __('file.add_product') }}</a>
                                         </li> --}}
                                         <li id="productcategory-list-menu" class="@if (request()->is('productbaseontag*')) active @endif">
-                                            <a href="{{ route('productbaseontag.create') }}">Tambah Produk</a>
+                                            <a href="{{ route('productbaseontag.create') }}">{{ __('file.add_product') }}</a>
                                         </li>
                                     @endif
                                 @endif
