@@ -112,7 +112,7 @@
                     <li>
                       @php
                           $isExpandProductCategory = (
-                              request()->is('tagtype*') || request()->is('producttype*') || request()->is('productproperty*') || request()->is('gramasi*') || request()->is('productbaseontag*')
+                              request()->is('tagtype*') || request()->is('producttype*') || request()->is('productproperty*') || request()->is('gramasi*')
                             ) ? "true" : "false";
                       @endphp
                       <a href="#productcategory" aria-expanded="{{ $isExpandProductCategory }}" data-toggle="collapse"> 
