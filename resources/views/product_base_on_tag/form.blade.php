@@ -82,15 +82,16 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>{{ __('file.Product Type Code') }} *</strong> </label>
-                                                <select name="product_type_id" class="form-control" id="product_type_id">
+                                                <label>{{ __('file.Discount') }} *</strong> </label>
+                                                <input type="number" class="form-control" name="discount">
+                                                {{-- <select name="product_type_id" class="form-control" id="product_type_id">
                                                     <option value="">{{ __('file.Select') }}</option>
                                                     @foreach ($productType as $item)
                                                         <option value="{{ $item->id }}"
                                                             @if ($item->id == @$productBaseOnTag->product_type_id) selected @endif>{{ $item->code }} - {{ $item->description }}</option>
                                                     @endforeach
-                                                </select>
-                                                @error('tag_type_id')
+                                                </select> --}}
+                                                @error('discount')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
