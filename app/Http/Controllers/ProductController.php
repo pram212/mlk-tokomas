@@ -21,6 +21,10 @@ use Illuminate\Validation\Rule;
 use DB;
 use App\Variant;
 use App\ProductVariant;
+use App\Gramasi;
+use App\ProductProperty;
+use App\ProductType;
+use App\TagType;
 
 class ProductController extends Controller
 {
@@ -201,7 +205,12 @@ class ProductController extends Controller
             $lims_unit_list = Unit::where('is_active', true)->get();
             $lims_tax_list = Tax::where('is_active', true)->get();
             $lims_warehouse_list = Warehouse::where('is_active', true)->get();
-            return view('product.create',compact('lims_product_list', 'lims_brand_list', 'lims_category_list', 'lims_unit_list', 'lims_tax_list', 'lims_warehouse_list'));
+            $tagType = TagType::all();
+            $productType = ProductType::all();
+            $productProperty = ProductProperty::all();
+            $gramasi = Gramasi::all();
+            
+            return view('product.create',compact('tagType','productType', 'productProperty', 'gramasi','lims_product_list', 'lims_brand_list', 'lims_category_list', 'lims_unit_list', 'lims_tax_list', 'lims_warehouse_list'));
         }
         else
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
@@ -264,6 +273,13 @@ class ProductController extends Controller
             $file->move('public/product/files', $fileName);
             $data['file'] = $fileName;
         }
+
+        $data['tag_type_id'] = $request->tag_type_id;
+        $data['gramasi_id'] = $request->gramasi_id;
+        $data['discount'] = $request->discount;
+        $data['mg'] = $request->mg;
+        $data['product_property_id'] = $request->product_property_id;
+
         $lims_product_data = Product::create($data);
         //dealing with product variant
         if(isset($data['is_variant'])) {

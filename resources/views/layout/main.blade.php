@@ -132,9 +132,6 @@
                           <li id="productcategory-list-menu" class="@if (request()->is('gramasi*')) active @endif">
                             <a href="{{ route('gramasi.index') }}">{{ __('file.Gramasi List') }}</a>
                           </li>
-                          {{-- <li id="productcategory-list-menu" class="@if (request()->is('productbaseontag*')) active @endif">
-                            <a href="{{ route('productbaseontag.index') }}">Tambah Produk</a>
-                          </li> --}}
                       </ul>
                     </li>
                     {{-- PRODUCT CATEGORY MENU END --}}
@@ -198,12 +195,12 @@
                                         ->first();
                                     ?>
                                     @if ($add_permission_active)
-                                        {{-- <li id="product-create-menu"><a
+                                        <li id="product-create-menu"><a
                                                 href="{{ route('products.create') }}">{{ __('file.add_product') }}</a>
-                                        </li> --}}
-                                        <li id="productcategory-list-menu" class="@if (request()->is('productbaseontag*')) active @endif">
-                                            <a href="{{ route('productbaseontag.create') }}">{{ __('file.add_product') }}</a>
                                         </li>
+                                        {{-- <li id="productcategory-list-menu" class="@if (request()->is('productbaseontag*')) active @endif">
+                                            <a href="{{ route('productbaseontag.create') }}">{{ __('file.add_product') }}</a>
+                                        </li> --}}
                                     @endif
                                 @endif
                                 @if ($print_barcode_active)
