@@ -16,7 +16,6 @@
                             <form id="product-form">
                                 <div class="card">
                                     <div class="card-body">
-
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -118,37 +117,48 @@
 
                                             <div class="col-md-6"></div>
 
-                                            <div class="col-md-6">
-                                                <div class="card" id="product-preview"
-                                                    style="background-color: {{ @$productBaseOnTag->tagType->color }}">
-                                                    <div class="card-body">
-                                                        <div class="row">
-                                                            <div class="col-md-6 mb-3">
-                                                                <h5 id="prev-kd-gramasi"></h5>
-                                                            </div>
-
-                                                            <div class="col-md-6 text-right mb-3">
-                                                                <h5 id="prev-diskon"></h5>
-                                                            </div>
-
-                                                            <div class="col-md-12 text-center mb-3">
-                                                                <h1 class="d-inline text-xl" id="prev-mg"></h1> 
-                                                                <small class="align-top" id="prev-gramasi"></small>
-                                                            </div>
-
-                                                            <div class="col-md-12 text-right">
-                                                                <h5 id="prev-kd-sifat"></h5>
+                                            <div class="col-md-8">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="card h-100" id="product-preview"
+                                                            style="background-color: {{ @$productBaseOnTag->tagType->color }}">
+                                                            <div class="card-body">
+                                                                <div class="row font-weight-bold">
+                                                                    <div class="col-md-6 mb-3">
+                                                                        <h1 id="prev-kd-gramasi"></h1>
+                                                                    </div>
+        
+                                                                    <div class="col-md-6 text-right mb-3">
+                                                                        <h1 id="prev-diskon"></h1>
+                                                                    </div>
+        
+                                                                    <div class="col-md-12 text-center">
+                                                                        <h1 class="d-inline display-4" id="prev-mg"></h1> 
+                                                                        <span class="align-top" id="prev-gramasi"></span>
+                                                                    </div>
+        
+                                                                    <div class="col-md-12 text-right">
+                                                                        <h1 id="prev-kd-sifat"></h1>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+
+                                                    <div class="col-md-6 bg-light">
+                                                        <div class="h-100 d-flex align-items-center justify-content-center">
+                                                            <div class="text-center" id="prev-qrcode">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                {{-- <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>{{ trans('file.Product Type') }} *</strong> </label>
@@ -454,7 +464,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="form-group">
                                     <input type="button" value="{{ trans('file.submit') }}" id="submit-btn"
                                         class="btn btn-primary">
@@ -466,6 +476,8 @@
             </div>
         </div>
     </section>
+
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
     <script type="text/javascript">
         $("ul#product").siblings('a').attr('aria-expanded', 'true');
@@ -491,8 +503,19 @@
         $('#genbutton').on("click", function() {
             $.get('gencode', function(data) {
                 $("input[name='code']").val(data);
+                generateQRCode(data, "prev-qrcode")
             });
         });
+
+        // Fungsi untuk menghasilkan QR code
+        function generateQRCode(data, elementId) {
+            document.getElementById(elementId).innerHTML = "";
+            var qrcode = new QRCode(document.getElementById(elementId), {
+                text: data,
+                width: 100,
+                height: 100
+            });
+        }
 
 
         tinymce.init({
@@ -755,7 +778,7 @@
             }
         });
         //dropzone portion
-        Dropzone.autoDiscover = false;
+        // Dropzone.autoDiscover = false;
 
         jQuery.validator.setDefaults({
             errorPlacement: function(error, element) {
@@ -818,148 +841,148 @@
             opacity: 0.5,
         });
 
-        $(".dropzone").sortable({
-            items: '.dz-preview',
-            cursor: 'grab',
-            opacity: 0.5,
-            containment: '.dropzone',
-            distance: 20,
-            tolerance: 'pointer',
-            stop: function() {
-                var queue = myDropzone.getAcceptedFiles();
-                newQueue = [];
-                $('#imageUpload .dz-preview .dz-filename [data-dz-name]').each(function(count, el) {
-                    var name = el.innerHTML;
-                    queue.forEach(function(file) {
-                        if (file.name === name) {
-                            newQueue.push(file);
-                        }
-                    });
-                });
-                myDropzone.files = newQueue;
-            }
-        });
+        // $(".dropzone").sortable({
+        //     items: '.dz-preview',
+        //     cursor: 'grab',
+        //     opacity: 0.5,
+        //     containment: '.dropzone',
+        //     distance: 20,
+        //     tolerance: 'pointer',
+        //     stop: function() {
+        //         var queue = myDropzone.getAcceptedFiles();
+        //         newQueue = [];
+        //         $('#imageUpload .dz-preview .dz-filename [data-dz-name]').each(function(count, el) {
+        //             var name = el.innerHTML;
+        //             queue.forEach(function(file) {
+        //                 if (file.name === name) {
+        //                     newQueue.push(file);
+        //                 }
+        //             });
+        //         });
+        //         myDropzone.files = newQueue;
+        //     }
+        // });
 
-        myDropzone = new Dropzone('div#imageUpload', {
-            addRemoveLinks: true,
-            autoProcessQueue: false,
-            uploadMultiple: true,
-            parallelUploads: 100,
-            maxFilesize: 12,
-            paramName: 'image',
-            clickable: true,
-            method: 'POST',
-            url: '{{ route('products.store') }}',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            renameFile: function(file) {
-                var dt = new Date();
-                var time = dt.getTime();
-                return time + file.name;
-            },
-            acceptedFiles: ".jpeg,.jpg,.png,.gif",
-            init: function() {
-                var myDropzone = this;
-                $('#submit-btn').on("click", function(e) {
-                    e.preventDefault();
-                    if ($("#product-form").valid() && validate()) {
-                        tinyMCE.triggerSave();
-                        if (myDropzone.getAcceptedFiles().length) {
-                            myDropzone.processQueue();
-                        } else {
-                            console.log($("#product-form").serialize());
-                            $.ajax({
-                                type: 'POST',
-                                url: '{{ route('products.store') }}',
-                                data: $("#product-form").serialize(),
-                                success: function(response) {
-                                    location.href = '../products';
-                                },
-                                error: function(response) {
-                                    if (response.responseJSON.errors.name) {
-                                        $("#name-error").text(response.responseJSON.errors
-                                            .name);
-                                    } else if (response.responseJSON.errors.code) {
-                                        $("#code-error").text(response.responseJSON.errors
-                                            .code);
-                                    }
-                                },
-                            });
-                        }
-                    }
-                });
+        // myDropzone = new Dropzone('div#imageUpload', {
+        //     addRemoveLinks: true,
+        //     autoProcessQueue: false,
+        //     uploadMultiple: true,
+        //     parallelUploads: 100,
+        //     maxFilesize: 12,
+        //     paramName: 'image',
+        //     clickable: true,
+        //     method: 'POST',
+        //     url: '{{ route('products.store') }}',
+        //     headers: {
+        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //     },
+        //     renameFile: function(file) {
+        //         var dt = new Date();
+        //         var time = dt.getTime();
+        //         return time + file.name;
+        //     },
+        //     acceptedFiles: ".jpeg,.jpg,.png,.gif",
+        //     init: function() {
+        //         var myDropzone = this;
+        //         $('#submit-btn').on("click", function(e) {
+        //             e.preventDefault();
+        //             if ($("#product-form").valid() && validate()) {
+        //                 tinyMCE.triggerSave();
+        //                 if (myDropzone.getAcceptedFiles().length) {
+        //                     myDropzone.processQueue();
+        //                 } else {
+        //                     console.log($("#product-form").serialize());
+        //                     $.ajax({
+        //                         type: 'POST',
+        //                         url: '{{ route('products.store') }}',
+        //                         data: $("#product-form").serialize(),
+        //                         success: function(response) {
+        //                             location.href = '../products';
+        //                         },
+        //                         error: function(response) {
+        //                             if (response.responseJSON.errors.name) {
+        //                                 $("#name-error").text(response.responseJSON.errors
+        //                                     .name);
+        //                             } else if (response.responseJSON.errors.code) {
+        //                                 $("#code-error").text(response.responseJSON.errors
+        //                                     .code);
+        //                             }
+        //                         },
+        //                     });
+        //                 }
+        //             }
+        //         });
 
-                this.on('sending', function(file, xhr, formData) {
-                    // Append all form inputs to the formData Dropzone will POST
-                    var data = $("#product-form").serializeArray();
-                    $.each(data, function(key, el) {
-                        formData.append(el.name, el.value);
-                    });
-                });
-            },
-            error: function(file, response) {
-                console.log(response);
-                if (response.errors.name) {
-                    $("#name-error").text(response.errors.name);
-                    this.removeAllFiles(true);
-                } else if (response.errors.code) {
-                    $("#code-error").text(response.errors.code);
-                    this.removeAllFiles(true);
-                } else {
-                    try {
-                        var res = JSON.parse(response);
-                        if (typeof res.message !== 'undefined' && !$modal.hasClass('in')) {
-                            $("#success-icon").attr("class", "fas fa-thumbs-down");
-                            $("#success-text").html(res.message);
-                            $modal.modal("show");
-                        } else {
-                            if ($.type(response) === "string")
-                                var message = response; //dropzone sends it's own error messages in string
-                            else
-                                var message = response.message;
-                            file.previewElement.classList.add("dz-error");
-                            _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
-                            _results = [];
-                            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                                node = _ref[_i];
-                                _results.push(node.textContent = message);
-                            }
-                            return _results;
-                        }
-                    } catch (error) {
-                        console.log(error);
-                    }
-                }
-            },
-            successmultiple: function(file, response) {
-                location.href = '../products';
-                //console.log(file, response);
-            },
-            completemultiple: function(file, response) {
-                console.log(file, response, "completemultiple");
-            },
-            reset: function() {
-                console.log("resetFiles");
-                this.removeAllFiles(true);
-            }
-        });
+        //         this.on('sending', function(file, xhr, formData) {
+        //             // Append all form inputs to the formData Dropzone will POST
+        //             var data = $("#product-form").serializeArray();
+        //             $.each(data, function(key, el) {
+        //                 formData.append(el.name, el.value);
+        //             });
+        //         });
+        //     },
+        //     error: function(file, response) {
+        //         console.log(response);
+        //         if (response.errors.name) {
+        //             $("#name-error").text(response.errors.name);
+        //             this.removeAllFiles(true);
+        //         } else if (response.errors.code) {
+        //             $("#code-error").text(response.errors.code);
+        //             this.removeAllFiles(true);
+        //         } else {
+        //             try {
+        //                 var res = JSON.parse(response);
+        //                 if (typeof res.message !== 'undefined' && !$modal.hasClass('in')) {
+        //                     $("#success-icon").attr("class", "fas fa-thumbs-down");
+        //                     $("#success-text").html(res.message);
+        //                     $modal.modal("show");
+        //                 } else {
+        //                     if ($.type(response) === "string")
+        //                         var message = response; //dropzone sends it's own error messages in string
+        //                     else
+        //                         var message = response.message;
+        //                     file.previewElement.classList.add("dz-error");
+        //                     _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+        //                     _results = [];
+        //                     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        //                         node = _ref[_i];
+        //                         _results.push(node.textContent = message);
+        //                     }
+        //                     return _results;
+        //                 }
+        //             } catch (error) {
+        //                 console.log(error);
+        //             }
+        //         }
+        //     },
+        //     successmultiple: function(file, response) {
+        //         location.href = '../products';
+        //         //console.log(file, response);
+        //     },
+        //     completemultiple: function(file, response) {
+        //         console.log(file, response, "completemultiple");
+        //     },
+        //     reset: function() {
+        //         console.log("resetFiles");
+        //         this.removeAllFiles(true);
+        //     }
+        // });
 
-        var rupiah = document.getElementById('price');
-        rupiah.addEventListener('keyup', function(e) {
-            rupiah.value = formatRupiah(this.value, 'input');
-        });
-        rupiah.addEventListener('mouseover', function(e) {
-            rupiah.value = formatRupiah(this.value, 'input');
-        });
+        // var rupiah = document.getElementById('price');
+        // rupiah.addEventListener('keyup', function(e) {
+        //     rupiah.value = formatRupiah(this.value, 'input');
+        // });
+        // rupiah.addEventListener('mouseover', function(e) {
+        //     rupiah.value = formatRupiah(this.value, 'input');
+        // });
 
-        var costproduk = document.getElementById('costproduk');
-        costproduk.addEventListener('keyup', function(e) {
-            costproduk.value = formatRupiah(this.value, 'input');
-        });
-        costproduk.addEventListener('mouseover', function(e) {
-            costproduk.value = formatRupiah(this.value, 'input');
-        });
+        // var costproduk = document.getElementById('costproduk');
+        // costproduk.addEventListener('keyup', function(e) {
+        //     costproduk.value = formatRupiah(this.value, 'input');
+        // });
+        // costproduk.addEventListener('mouseover', function(e) {
+        //     costproduk.value = formatRupiah(this.value, 'input');
+        // });
 
         function formatRupiah(angka, type) {
             var number_string = '';
