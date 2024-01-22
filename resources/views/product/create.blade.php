@@ -13,7 +13,8 @@
                             <p class="italic">
                                 <small>{{ trans('file.The field labels marked with * are required input fields') }}.</small>
                             </p>
-                            <form id="product-form">
+                            <form id="product-form" method="POST" action="{{url('products')}}">
+                                @csrf
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row">
@@ -118,10 +119,9 @@
                                             <div class="col-md-6"></div>
 
                                             <div class="col-md-10">
-                                                <div class="row">
-                                                    <div class="col-md-5">
-                                                        <div class="card h-100" id="product-preview"
-                                                            style="background-color: {{ @$productBaseOnTag->tagType->color }}">
+                                                <div class="row" id="product-preview" style="background-color: {{ @$productBaseOnTag->tagType->color }}">
+                                                    <div class="col-md-6">
+                                                        <div class="card h-100 bg-transparent">
                                                             <div class="card-body">
                                                                 <div class="row font-weight-bold">
                                                                     <div class="col-md-6 mb-3">
@@ -145,7 +145,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-md-7 bg-light border">
+                                                    <div class="col-md-6 border">
                                                         <div class="h-100 d-flex align-items-center justify-content-center">
                                                             <div class="text-center" id="prev-qrcode">
                                                             </div>
@@ -466,7 +466,7 @@
                                     </div>
                                 </div> --}}
                                 <div class="form-group">
-                                    <input type="button" value="{{ trans('file.submit') }}" id="submit-btn"
+                                    <input type="submit" value="{{ trans('file.submit') }}" id="submit-btn"
                                         class="btn btn-primary">
                                 </div>
                             </form>
@@ -512,8 +512,8 @@
             document.getElementById(elementId).innerHTML = "";
             var qrcode = new QRCode(document.getElementById(elementId), {
                 text: data,
-                width: 100,
-                height: 100
+                width: 200,
+                height: 200
             });
         }
 
