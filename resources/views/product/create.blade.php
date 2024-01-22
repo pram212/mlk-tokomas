@@ -117,9 +117,9 @@
 
                                             <div class="col-md-6"></div>
 
-                                            <div class="col-md-8">
+                                            <div class="col-md-10">
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-5">
                                                         <div class="card h-100" id="product-preview"
                                                             style="background-color: {{ @$productBaseOnTag->tagType->color }}">
                                                             <div class="card-body">
@@ -145,7 +145,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-md-6 bg-light">
+                                                    <div class="col-md-7 bg-light border">
                                                         <div class="h-100 d-flex align-items-center justify-content-center">
                                                             <div class="text-center" id="prev-qrcode">
                                                             </div>
@@ -968,10 +968,10 @@
         //     }
         // });
 
-        // var rupiah = document.getElementById('price');
-        // rupiah.addEventListener('keyup', function(e) {
-        //     rupiah.value = formatRupiah(this.value, 'input');
-        // });
+        var rupiah = document.getElementById('price');
+        rupiah.addEventListener('keyup', function(e) {
+            rupiah.value = formatRupiah(this.value, 'input');
+        });
         // rupiah.addEventListener('mouseover', function(e) {
         //     rupiah.value = formatRupiah(this.value, 'input');
         // });
