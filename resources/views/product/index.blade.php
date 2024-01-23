@@ -604,10 +604,10 @@
                 // isi inputan yang ada di modal box detail product
                 $("#dtl-code").val(data.code);
                 $("#dtl-price").val(data.price);
-                $("#dtl-tag-code").val(data.tag_type.code);
-                $("#dtl-gramasi-code").val(data.gramasi.code);
+                $("#dtl-tag-code").val(data.tag_type?.code);
+                $("#dtl-gramasi-code").val(data.gramasi?.code);
                 $("#dtl-discount").val(data.discount);
-                $("#dtl-product-property").val(data.product_property.description);
+                $("#dtl-product-property").val(data.product_property?.description);
                 generateQRCode(data.code, "prev-qrcode")
                 // tampilkan modal box detil produk
                 $('#detailModal').modal("show")
