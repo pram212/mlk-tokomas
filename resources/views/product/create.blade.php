@@ -41,7 +41,7 @@
                                                     <label>{{ trans('file.Product Code') }} *</strong> </label>
                                                     <div class="input-group">
                                                         <input type="text" name="code" class="form-control"
-                                                            id="code" aria-describedby="code" required>
+                                                            id="code" aria-describedby="code">
                                                         <div class="input-group-append">
                                                             <button id="genbutton" type="button"
                                                                 class="btn btn-sm btn-default"
@@ -49,6 +49,9 @@
                                                                     class="fa fa-refresh"></i></button>
                                                         </div>
                                                     </div>
+                                                    @error('code')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                     <span class="validation-msg" id="code-error"></span>
                                                 </div>
                                             </div>
@@ -84,15 +87,20 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="">Miligram</label>
-                                                    <input type="number" class="form-control" class="mg" id="input-mg">
+                                                    <input type="number" class="form-control" name="mg" class="mg" id="input-mg">
+                                                    @error('mg')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
 
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>{{ trans('file.Product Price') }} *</strong> </label>
-                                                    <input type="text" id="price" name="price" required
-                                                        class="form-control" step="any">
+                                                    <input type="text" id="price" name="price" class="form-control" step="any">
+                                                    @error('price')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                     <span class="validation-msg"></span>
                                                 </div>
                                             </div>

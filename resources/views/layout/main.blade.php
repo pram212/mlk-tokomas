@@ -74,9 +74,7 @@
     <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/jquery.dataTables.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/dataTables.bootstrap4.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/dataTables.buttons.min.js'); ?>"></script>
-    <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/buttons.bootstrap4.min.js'); ?>">
-
-    </script>
+    <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/buttons.bootstrap4.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/buttons.colVis.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/buttons.html5.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/buttons.print.min.js'); ?>"></script>
@@ -103,72 +101,72 @@
             <div class="main-menu">
                 <ul id="side-main-menu" class="side-menu list-unstyled">
                     <li>
-                      <a href="{{ url('/') }}"> 
-                        <i class="dripicons-meter"></i><span>{{ __('file.dashboard') }}</span>
-                      </a>
+                        <a href="{{ url('/') }}">
+                            <i class="dripicons-meter"></i><span>{{ __('file.dashboard') }}</span>
+                        </a>
                     </li>
 
                     {{-- PRODUCT CATEGORY MENU --}}
                     <li>
-                      @php
-                          $isExpandProductCategory = (
-                              request()->is('tagtype*') || request()->is('producttype*') || request()->is('productproperty*') || request()->is('gramasi*')
-                            ) ? "true" : "false";
-                      @endphp
-                      <a href="#productcategory" aria-expanded="{{ $isExpandProductCategory }}" data-toggle="collapse"> 
-                        <i class="dripicons-card"></i><span>{{ __('file.Product Category') }}</span>
-                      </a>
+                        @php
+                            $isExpandProductCategory = request()->is('tagtype*') || request()->is('producttype*') || request()->is('productproperty*') || request()->is('gramasi*') ? 'true' : 'false';
+                        @endphp
+                        <a href="#productcategory" aria-expanded="{{ $isExpandProductCategory }}"
+                            data-toggle="collapse">
+                            <i class="dripicons-card"></i><span>{{ __('file.Product Category') }}</span>
+                        </a>
 
-                      <ul id="productcategory" class="collapse list-unstyled @if ( $isExpandProductCategory === "true" ) show @endif">
-                          <li id="productcategory-list-menu" class="@if (request()->is('tagtype*')) active @endif">
-                            <a href="{{ route('tagtype.index') }}">{{ __('file.Tagging Type') }}</a>
-                          </li>
-                          <li id="productcategory-list-menu" class="@if (request()->is('productproperty*')) active @endif">
-                            <a href="{{ route('productproperty.index') }}">{{ __('file.Product Property') }}</a>
-                          </li>
-                          <li id="productcategory-list-menu" class="@if (request()->is('producttype*')) active @endif">
-                            <a href="{{ route('producttype.index') }}">{{ __('file.Product Type') }}</a>
-                          </li>
-                          <li id="productcategory-list-menu" class="@if (request()->is('gramasi*')) active @endif">
-                            <a href="{{ route('gramasi.index') }}">{{ __('file.Gramasi List') }}</a>
-                          </li>
-                      </ul>
+                        <ul id="productcategory"
+                            class="collapse list-unstyled @if ($isExpandProductCategory === 'true') show @endif">
+                            <li id="productcategory-list-menu" class="@if (request()->is('tagtype*')) active @endif">
+                                <a href="{{ route('tagtype.index') }}">{{ __('file.Tagging Type') }}</a>
+                            </li>
+                            <li id="productcategory-list-menu" class="@if (request()->is('productproperty*')) active @endif">
+                                <a href="{{ route('productproperty.index') }}">{{ __('file.Product Property') }}</a>
+                            </li>
+                            <li id="productcategory-list-menu" class="@if (request()->is('producttype*')) active @endif">
+                                <a href="{{ route('producttype.index') }}">{{ __('file.Product Type') }}</a>
+                            </li>
+                            <li id="productcategory-list-menu" class="@if (request()->is('gramasi*')) active @endif">
+                                <a href="{{ route('gramasi.index') }}">{{ __('file.Gramasi List') }}</a>
+                            </li>
+                        </ul>
                     </li>
                     {{-- PRODUCT CATEGORY MENU END --}}
 
                     <?php
-                      $role = DB::table('roles')->find(Auth::user()->role_id);
-                      $category_permission_active = DB::table('permissions')
-                          ->join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
-                          ->where([['permissions.name', 'category'], ['role_id', $role->id]])
-                          ->first();
-                      $index_permission = DB::table('permissions')
-                          ->where('name', 'products-index')
-                          ->first();
-                      $index_permission_active = DB::table('role_has_permissions')
-                          ->where([['permission_id', $index_permission->id], ['role_id', $role->id]])
-                          ->first();
-                      
-                      $print_barcode = DB::table('permissions')
-                          ->where('name', 'print_barcode')
-                          ->first();
-                      $print_barcode_active = DB::table('role_has_permissions')
-                          ->where([['permission_id', $print_barcode->id], ['role_id', $role->id]])
-                          ->first();
-                      
-                      $stock_count = DB::table('permissions')
-                          ->where('name', 'stock_count')
-                          ->first();
-                      $stock_count_active = DB::table('role_has_permissions')
-                          ->where([['permission_id', $stock_count->id], ['role_id', $role->id]])
-                          ->first();
-                      
-                      $adjustment = DB::table('permissions')
-                          ->where('name', 'adjustment')
-                          ->first();
-                      $adjustment_active = DB::table('role_has_permissions')
-                          ->where([['permission_id', $adjustment->id], ['role_id', $role->id]])
-                          ->first();
+                    $role = DB::table('roles')->find(Auth::user()->role_id);
+                    $category_permission_active = DB::table('permissions')
+                        ->join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
+                        ->where([['permissions.name', 'category'], ['role_id', $role->id]])
+                        ->first();
+                    $index_permission = DB::table('permissions')
+                        ->where('name', 'products-index')
+                        ->first();
+                    $index_permission_active = DB::table('role_has_permissions')
+                        ->where([['permission_id', $index_permission->id], ['role_id', $role->id]])
+                        ->first();
+                    
+                    $print_barcode = DB::table('permissions')
+                        ->where('name', 'print_barcode')
+                        ->first();
+                    $print_barcode_active = DB::table('role_has_permissions')
+                        ->where([['permission_id', $print_barcode->id], ['role_id', $role->id]])
+                        ->first();
+                    
+                    $stock_count = DB::table('permissions')
+                        ->where('name', 'stock_count')
+                        ->first();
+                    $stock_count_active = DB::table('role_has_permissions')
+                        ->where([['permission_id', $stock_count->id], ['role_id', $role->id]])
+                        ->first();
+                    
+                    $adjustment = DB::table('permissions')
+                        ->where('name', 'adjustment')
+                        ->first();
+                    $adjustment_active = DB::table('role_has_permissions')
+                        ->where([['permission_id', $adjustment->id], ['role_id', $role->id]])
+                        ->first();
                     ?>
                     @if (
                         $category_permission_active ||
@@ -185,7 +183,8 @@
                                 @endif
                                 @if ($index_permission_active)
                                     <li id="product-list-menu"><a
-                                            href="{{ route('products.index') }}">{{ __('file.product_list') }}</a></li>
+                                            href="{{ route('products.index') }}">{{ __('file.product_list') }}</a>
+                                    </li>
                                     <?php
                                     $add_permission = DB::table('permissions')
                                         ->where('name', 'products-add')
@@ -1110,7 +1109,8 @@
                     <a id="toggle-btn" href="#" class="menu-btn"><i class="fa fa-bars"> </i></a>
                     <span class="brand-big">
                         @if ($general_setting->site_logo)
-                            <img src="{{ url('public/logo', $general_setting->site_logo) }}" width="50">&nbsp;&nbsp;
+                            <img src="{{ url('public/logo', $general_setting->site_logo) }}"
+                                width="50">&nbsp;&nbsp;
                         @endif
                         <a href="{{ url('/') }}">
                             <h1 class="d-inline">{{ $general_setting->site_title }}</h1>
@@ -1708,6 +1708,32 @@
         <!-- end supplier modal -->
 
         <div style="display:none" id="content" class="animate-bottom">
+            @if (session()->has('create_message'))
+                <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close"
+                        data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>{{ session()->get('create_message') }}</div>
+            @endif
+            @if (session()->has('edit_message'))
+                <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close"
+                        data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>{{ session()->get('edit_message') }}</div>
+            @endif
+            @if (session()->has('import_message'))
+                <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close"
+                        data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>{{ session()->get('import_message') }}</div>
+            @endif
+            @if (session()->has('not_permitted'))
+                <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close"
+                        data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
+            @endif
+            @if (session()->has('message'))
+                <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close"
+                        data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div>
+            @endif
+
             @yield('content')
         </div>
 
@@ -1753,7 +1779,7 @@
             document.getElementById("content").style.display = "block";
         }
 
-        $("div.alert").delay(3000).slideUp(750);
+        // $("div.alert").delay(3000).slideUp(750);
 
         function confirmDelete() {
             if (confirm("Are you sure want to delete?")) {

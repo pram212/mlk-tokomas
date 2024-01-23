@@ -11,15 +11,16 @@
         <table id="product-data-table" class="table" style="width: 100%">
             <thead>
                 <tr>
+                    <th class="not-exported"></th>
+                    <th>{{trans('file.Image')}}</th>
+                    <th>{{trans('file.name')}}</th>
                     <th>{{trans('file.Code')}}</th>
-                    <th>{{ __('file.Date') }}</th>
+                    <th>{{trans('file.Brand')}}</th>
+                    <th>{{trans('file.category')}}</th>
+                    <th>{{trans('file.Quantity')}}</th>
+                    <th>{{trans('file.Unit')}}</th>
                     <th>{{trans('file.Price')}}</th>
-                    <th>{{ __('file.Tag Type Code') }}</th>
-                    <th>{{ __('file.Color' )}}</th>
-                    <th>Miligram</th>
-                    <th>Gramasi</th>
-                    <th>{{ __('file.Product Property') }}</th>
-                    {{-- <th class="not-exported">{{trans('file.action')}}</th> --}}
+                    <th class="not-exported">{{trans('file.action')}}</th>
                 </tr>
             </thead>
             
@@ -303,55 +304,65 @@
             "processing": true,
             "serverSide": true,
             "ajax":{
-                url:'{!! url("products/product-datatable") !!}',
+                url:"products/product-data",
+                data:{
+                    all_permission: all_permission
+                },
                 dataType: "json",
-                type:"get"
+                type:"post"
+            },
+            "createdRow": function( row, data, dataIndex ) {
+                $(row).addClass('product-link');
+                $(row).attr('data-product', data['product']);
+                $(row).attr('data-imagedata', data['imagedata']);
             },
             "columns": [
+                {"data": "key"},
+                {"data": "image"},
+                {"data": "name"},
                 {"data": "code"},
-                {"data": "created_at"},
+                {"data": "brand"},
+                {"data": "category"},
+                {"data": "qty"},
+                {"data": "unit"},
                 {"data": "price"},
-                {"data": "tag_type_code"},
-                {"data": "tag_type_color"},
-                {"data": "mg"},
-                {"data": "gramasi_gramasi"},
-                {"data": "product_property_description"}
+                {"data": "options"},
             ],
-            // 'language': {
-            //     /*'searchPlaceholder': "{{trans('file.Type Product Name or Code...')}}",*/
-            //     'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-            //      "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
-            //     "search":  '{{trans("file.Search")}}',
-            //     'paginate': {
-            //             'previous': '<i class="dripicons-chevron-left"></i>',
-            //             'next': '<i class="dripicons-chevron-right"></i>'
-            //     }
-            // },
+            'language': {
+                /*'searchPlaceholder': "{{trans('file.Type Product Name or Code...')}}",*/
+                'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
+                 "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
+                "search":  '{{trans("file.Search")}}',
+                'paginate': {
+                        'previous': '<i class="dripicons-chevron-left"></i>',
+                        'next': '<i class="dripicons-chevron-right"></i>'
+                }
+            },
             order:[['2', 'asc']],
-            // 'columnDefs': [
-            //     {
-            //         "orderable": false,
-            //         'targets': [0, 1, 9]
-            //     },
-            //     {
-            //         'render': function(data, type, row, meta){
-            //             if(type === 'display'){
-            //                 data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
-            //             }
+            'columnDefs': [
+                {
+                    "orderable": false,
+                    'targets': [0, 1, 9]
+                },
+                {
+                    'render': function(data, type, row, meta){
+                        if(type === 'display'){
+                            data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                        }
 
-            //            return data;
-            //         },
-            //         'checkboxes': {
-            //            'selectRow': true,
-            //            'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
-            //         },
-            //         'targets': [0]
-            //     },
-            //     {
-            //         'targets': [8],
-            //         render: $.fn.dataTable.render.number( '.', ',', 0, '')
-            //     },
-            // ],
+                       return data;
+                    },
+                    'checkboxes': {
+                       'selectRow': true,
+                       'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                    },
+                    'targets': [0]
+                },
+                {
+                    'targets': [8],
+                    render: $.fn.dataTable.render.number( '.', ',', 0, '')
+                },
+            ],
             'select': { style: 'multi', selector: 'td:first-child'},
             'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "All"]],
             dom: '<"row"lfB>rtip',
