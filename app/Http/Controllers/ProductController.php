@@ -355,9 +355,55 @@ class ProductController extends Controller
             $lims_product_variant_data = $lims_product_data->variant()->orderBy('position')->get();
             $lims_warehouse_list = Warehouse::where('is_active', true)->get();
 
-            return view('product.edit', compact('lims_product_list', 'lims_brand_list', 'lims_category_list', 'lims_unit_list', 'lims_tax_list', 'lims_product_data', 'lims_product_variant_data', 'lims_warehouse_list'));
+            $product = Product::find($id)->load(['tagType:id,code,color', 'productProperty:id,code,description', 'gramasi:id,code,gramasi']);
+            $tagType = TagType::all();
+            $productType = ProductType::all();
+            $productProperty = ProductProperty::all();
+            $gramasi = Gramasi::all();
+
+            return view('product.edit', compact('lims_product_list', 'lims_brand_list', 'lims_category_list', 'lims_unit_list', 'lims_tax_list', 'lims_product_data', 'lims_product_variant_data', 'lims_warehouse_list', 'tagType', 'productType', 'productProperty', 'gramasi', 'product'));
         } else
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
+    }
+
+    public function update(Request $request, $id) 
+    {
+        $request->validate([
+            'tag_type_id' => ['required'],
+            'gramasi_id' => ['required'],
+            'discount' => ['required'],
+            'price' => ['required'],
+            'mg' => ['required'],
+            'code' => ['required'],
+            'product_property_id' => ['required'],
+        ]);
+
+        $product = Product::find($id);
+
+        try {
+            DB::beginTransaction();
+
+            $product->update([
+                'tag_type_id' => $request->tag_type_id,
+                'gramasi_id' => $request->gramasi_id,
+                'discount' => $request->discount,
+                'mg' => $request->mg,
+                'product_property_id' => $request->product_property_id,
+                'discount' => $request->discount,
+                'price' => $request->price,
+                'code' => $request->code,
+            ]);
+
+            DB::commit();
+
+            return back()->with('create_message', 'Product updated successfully');
+
+        } catch (\Exception $ex) {
+
+            DB::rollBack();
+
+            return back()->with('create_message', $ex->getMessage());
+        }
     }
 
     public function updateProduct(Request $request)
@@ -741,6 +787,21 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
+        try {
+            DB::beginTransaction();
+            
+            Product::destroy($id);
+
+            DB::commit();
+
+            return response("Data Berhasil dihapus", 200);
+
+        } catch (\Exception $ex) {
+
+            DB::rollBack();
+            
+            return response("gagal: " . $ex->getMessage(), 500);
+        }
         $lims_product_data = Product::findOrFail($id);
         $lims_product_data->is_active = false;
         /*if($lims_product_data->image != 'zummXD2dvAtI.png') {
@@ -757,22 +818,39 @@ class ProductController extends Controller
     {
         $productQuery = Product::query();
 
-        $productQuery->select('id', 'code', 'price', 'discount', 'created_at', 'tag_type_id', 'gramasi_id', 'product_property_id', 'mg')->orderBy("created_at", "desc");
+        $productQuery->select('id', 'code', 'price', 'discount', 'created_at', 'tag_type_id', 'gramasi_id', 'product_property_id', 'mg')
+                    ->orderBy("created_at", "desc")
+                    ->with(['tagType:id,code,color', 'productProperty:id,code,description', 'gramasi:id,code,gramasi']);
 
         return DataTables::of($productQuery)
             ->addColumn('tag_type_code', fn ($query) => $query->tagType->code ?? "-" )
-            ->addColumn('tag_type_color', function ($query) {
-                $color = $query->tagType->color ?? "none" ;
-                $element = '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color .'</div>';
-                return $element;
-            })
             ->addColumn('product_property_code', fn ($query) => $query->productProperty->code ?? "-")
             ->addColumn('product_property_description', fn ($query) => $query->productProperty->description ?? "-")
             ->addColumn('gramasi_code', fn ($query) => $query->gramasi->code ?? "-")
             ->addColumn('gramasi_gramasi', fn ($query) => $query->gramasi->gramasi ?? "-")
             ->editColumn('created_at', fn($query) => date('d M Y', strtotime($query->created_at)))
             ->editColumn('price', fn($query) => number_format($query->price, 2))
-            ->rawColumns(['tag_type_color'])
+            ->addColumn('tag_type_color', function ($query) {
+                $color = $query->tagType->color ?? "none" ;
+                $element = '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color .'</div>';
+                return $element;
+            })
+            ->addColumn('action', function($query) {
+                $element = 
+                '<div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Action
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item btn-view" href="#"><i class="fa fa-eye"></i> View</a>
+                        <a class="dropdown-item" href="'. url("products/$query->id/edit") .'"><i class="fa fa-pencil"></i> Edit</a>
+                        <a class="dropdown-item btn-delete" href="#"><i class="fa fa-trash"></i> Delete</a>
+                    </div>
+                </div>';
+
+                return $element;
+            })
+            ->rawColumns(['tag_type_color', 'action'])
             ->make();
     }
 }
