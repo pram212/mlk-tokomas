@@ -126,35 +126,32 @@
 
                                             <div class="col-md-6"></div>
 
-                                            <div class="col-md-10">
+                                            <div class="col-md-9 border">
                                                 <div class="row" id="product-preview" style="background-color: {{ @$productBaseOnTag->tagType->color }}">
-                                                    <div class="col-md-6">
-                                                        <div class="card h-100 bg-transparent">
-                                                            <div class="card-body">
-                                                                <div class="row font-weight-bold">
-                                                                    <div class="col-md-6 mb-3">
-                                                                        <h1 id="prev-kd-gramasi"></h1>
-                                                                    </div>
-        
-                                                                    <div class="col-md-6 text-right mb-3">
-                                                                        <h1 id="prev-diskon"></h1>
-                                                                    </div>
-        
-                                                                    <div class="col-md-12 text-center">
-                                                                        <h1 class="d-inline display-4" id="prev-mg"></h1> 
-                                                                        <span class="align-top" id="prev-gramasi"></span>
-                                                                    </div>
-        
-                                                                    <div class="col-md-12 text-right">
-                                                                        <h1 id="prev-kd-sifat"></h1>
-                                                                    </div>
-                                                                </div>
+                                                    <div class="col-md-6 pt-3">
+                                                        <div class="row font-weight-bold">
+                                                            <div class="col-md-6 mb-3">
+                                                                <h1 id="prev-kd-gramasi"></h1>
+                                                            </div>
+
+                                                            <div class="col-md-6 text-right mb-3">
+                                                                <h1 id="prev-diskon"></h1>
+                                                            </div>
+
+                                                            <div class="col-md-12 text-center">
+                                                                <h1 class="d-inline display-4" id="prev-mg"></h1> 
+                                                                <span class="align-top" id="prev-gramasi"></span>
+                                                            </div>
+
+                                                            <div class="col-md-12 text-right">
+                                                                <h1 id="prev-kd-sifat"></h1>
                                                             </div>
                                                         </div>
+                                                       
                                                     </div>
 
-                                                    <div class="col-md-6 border">
-                                                        <div class="h-100 d-flex align-items-center justify-content-center">
+                                                    <div class="col-md-6 border border-top-0 border-top-0 border-bottom-0 border-right-0">
+                                                        <div class="d-flex align-items-center justify-content-center" style="min-height: 200px">
                                                             <div class="text-center" id="prev-qrcode">
                                                             </div>
                                                         </div>
