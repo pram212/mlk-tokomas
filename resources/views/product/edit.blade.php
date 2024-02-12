@@ -26,7 +26,8 @@
                                                         <option value="">{{ __('file.Select') }}</option>
                                                         @foreach ($tagType as $item)
                                                             <option value="{{ $item->id }}"
-                                                                style="color: {{ $item->color }}; font-weight: bold"
+                                                                style="color: {{ $item->color }}
+                                                                 font-weight: bold"
                                                                 @if ($item->id == @$product->tag_type_id) selected @endif>
                                                                 {{ $item->code }} - {{ $item->color }}</option>
                                                         @endforeach
@@ -180,169 +181,166 @@
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
     <script type="text/javascript">
-        $('[data-toggle="tooltip"]').tooltip();
-
+        $('[data-toggle="tooltip"]').tooltip()
+        
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-        });
+        })
 
         const produk = JSON.parse('{!! $product !!}')
 
-        $("#prev-kd-gramasi").text(produk.gramasi.code);
-        $("#prev-kd-sifat").text(produk.product_property.code);
+        $("#prev-kd-sifat").text(produk.product_property.code)
+        $("#prev-kd-gramasi").text(produk.gramasi.code)
+        $("#prev-gramasi").text(produk.gramasi.gramasi)
+        $("#prev-diskon").text(produk.discount)
         $("#prev-mg").text(produk.mg)
-        $("#prev-diskon").text(produk.discount);
-        $("#prev-gramasi").text(produk.gramasi.gramasi);
-
+        
         generateQRCode(produk.code, "prev-qrcode")
 
+        // handle aksi generate genereate code 
         $('#genbutton').on("click", function() {
             $.get("{!! url('products/gencode') !!}", function(data) {
-                console.log(data);
-                $("input[name='code']").val(data);
+                $("input[name='code']").val(data)
                 generateQRCode(data, "prev-qrcode")
-            });
-        });
+            })
+            
+        })        
 
         // Fungsi untuk menghasilkan QR code
         function generateQRCode(data, elementId) {
-            document.getElementById(elementId).innerHTML = "";
-            var qrcode = new QRCode(document.getElementById(elementId), {
-                text: data,
-                width: 200,
-                height: 200
-            });
+            document.getElementById(elementId).innerHTML = ""
+            var qrcode = new QRCode(document.getElementById(elementId), { text: data, width: 200, height: 200 })
         }
 
         $(window).keydown(function(e) {
             if (e.which == 13) {
-                var $targ = $(e.target);
-
+                var $targ = $(e.target)
                 if (!$targ.is("textarea") && !$targ.is(":button,:submit")) {
-                    var focusNext = false;
+                    var focusNext = false
                     $(this).find(":input:visible:not([disabled],[readonly]), a").each(function() {
                         if (this === e.target) {
-                            focusNext = true;
+                            focusNext = true
                         } else if (focusNext) {
-                            $(this).focus();
-                            return false;
+                            $(this).focus()
+                            return false
                         }
-                    });
-
-                    return false;
+                    })
+                    return false
                 }
             }
         })
 
-        var rupiah = document.getElementById('price');
+        var rupiah = document.getElementById('price')
+        
         rupiah.addEventListener('keyup', function(e) {
-            rupiah.value = formatRupiah(this.value, 'input');
-        });
+            rupiah.value = formatRupiah(this.value, 'input')
+        })
 
         function formatRupiah(angka, type) {
-            var number_string = '';
-            var split = '';
-            var sisa = '';
-            var rupiah = '';
-            var ribuan = '';
+            var number_string = ''
+            var split = ''
+            var sisa = ''
+            var rupiah = ''
+            var ribuan = ''
+            
             if (angka.toString().includes("-")) {
-                var reverse = angka.toString().split('').reverse().join(''),
-                    ribuan = reverse.match(/\d{1,3}/g);
-                ribuan = ribuan.join('.').split('').reverse().join('');
-                return "-" + ribuan;
-            }
-            if (type == 'input') {
-                number_string = angka.replace(/[^,\d]/g, '').toString(),
-                    split = number_string.split(',');
-                sisa = split[0].length % 3;
-                rupiah = split[0].substr(0, sisa);
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-            } else {
-                number_string = angka.toString();
-                split = number_string.split(',');
-                sisa = split[0].length % 3;
-                rupiah = split[0].substr(0, sisa);
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+                var reverse = angka.toString().split('').reverse().join(''), ribuan = reverse.match(/\d{1,3}/g)
+                ribuan = ribuan.join('.').split('').reverse().join('')
+                return "-" + ribuan
             }
 
+            if (type == 'input') {
+                number_string = angka.replace(/[^,\d]/g, '').toString(), split = number_string.split(',')
+                sisa = split[0].length % 3
+                rupiah = split[0].substr(0, sisa)
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi)
+            } 
+            
+            else {
+                number_string = angka.toString()
+                split = number_string.split(',')
+                sisa = split[0].length % 3
+                rupiah = split[0].substr(0, sisa)
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi)    
+            }
 
             // tambahkan titik jika yang di input sudah menjadi angka ribuan
             if (ribuan) {
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
+                separator = sisa ? '.' : ''
+                rupiah += separator + ribuan.join('.')
             }
 
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            // return prefix == undefined || ? rupiah : (rupiah ? '' + rupiah : '');
-            return (rupiah);
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah
+            // return prefix == undefined || ? rupiah : (rupiah ? '' + rupiah : '')
+            return (rupiah)
+            
         }
 
         const getGramasi = (id_gramasi) => {
             const gramasis = JSON.parse('{!! $gramasi !!}')
-            const selectedGramasi = gramasis.find(({
-                id
-            }) => id === id_gramasi);
+            const selectedGramasi = gramasis.find(({ id }) => id === id_gramasi)
             return selectedGramasi
         }
 
         const getKdSifat = (id_kd_sifat) => {
             const properties = JSON.parse('{!! $productProperty !!}')
-            const selectedProerties = properties.find(({ id }) => id === id_kd_sifat);
+            const selectedProerties = properties.find(({ id }) => id === id_kd_sifat)
             return selectedProerties.code
         }
 
         $("#tag_type_id").change(function(e) {
-            e.preventDefault();
-            var selectedText = $(this).find('option:selected').text();
-            var color = selectedText.split('-')[1];
-            $("#product-preview").css("background-color", color);
-        });
+            e.preventDefault()
+            
+            var selectedText = $(this).find('option:selected').text()
+            
+            var color = selectedText.split('-')[1]
+            
+            $("#product-preview").css("background-color", color)
+            
+        })
+        
 
         $("#input-kd-gramasi").change(function(e) {
-            e.preventDefault();
+            e.preventDefault()
+            
             id = parseInt(e.target.value)
             const gramasi = getGramasi(id)
-            $("#prev-gramasi").text(gramasi.gramasi);
-            $("#prev-kd-gramasi").text(gramasi.code);
-        });
+            $("#prev-gramasi").text(gramasi.gramasi)
+            
+            $("#prev-kd-gramasi").text(gramasi.code)
+            
+        })
+        
 
         $("#input-kd-sifat").change(function (e) { 
-            e.preventDefault();
+            e.preventDefault()
+            
             id = parseInt(e.target.value)
             const property = getKdSifat(id)
-            $("#prev-kd-sifat").text(property);
-        });
+            $("#prev-kd-sifat").text(property)
+            
+        })
+        
 
         $("#input-mg").bind("input", function (e) {
-            e.preventDefault();
+            e.preventDefault()
+            
             const mg = e.target.value
-            $("#prev-mg").text(mg);
-        });
+            $("#prev-mg").text(mg)
+            
+        })
+        
 
         $("#input-diskon").bind("input", function (e) {
-            e.preventDefault();
+            e.preventDefault()
+            
             const diskon = e.target.value
-            $("#prev-diskon").text(diskon);
-        });
+            $("#prev-diskon").text(diskon)
+            
+        })
+        
 
-        /* Fungsi formatRupiah */
-        // function formatRupiah(angka, prefix){
-        //     var number_string = angka.replace(/[^,\d]/g, '').toString(),
-        //     split           = number_string.split(','),
-        //     sisa             = split[0].length % 3,
-        //     rupiah             = split[0].substr(0, sisa),
-        //     ribuan             = split[0].substr(sisa).match(/\d{3}/gi);
-
-        //     // tambahkan titik jika yang di input sudah menjadi angka satuan ribuan
-        //     if(ribuan){
-        //         separator = sisa ? '.' : '';
-        //         rupiah += separator + ribuan.join('.');
-        //     }
-
-        //     rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-        //     return prefix == undefined ? rupiah : (rupiah ? '' + rupiah : '');
-        // }
     </script>
 @endsection

@@ -111,8 +111,8 @@
                         @php
                             $isExpandProductCategory = request()->is('tagtype*') || request()->is('producttype*') || request()->is('productproperty*') || request()->is('gramasi*') ? 'true' : 'false';
                         @endphp
-                        <a href="#productcategory" aria-expanded="{{ $isExpandProductCategory }}"
-                            data-toggle="collapse">
+
+                        <a href="#productcategory" aria-expanded="{{ $isExpandProductCategory }}"  data-toggle="collapse">
                             <i class="dripicons-card"></i><span>{{ __('file.Product Category') }}</span>
                         </a>
 
@@ -134,52 +134,50 @@
                     </li>
                     {{-- PRODUCT CATEGORY MENU END --}}
 
-                    <?php
-                    $role = DB::table('roles')->find(Auth::user()->role_id);
-                    $category_permission_active = DB::table('permissions')
-                        ->join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
-                        ->where([['permissions.name', 'category'], ['role_id', $role->id]])
-                        ->first();
-                    $index_permission = DB::table('permissions')
-                        ->where('name', 'products-index')
-                        ->first();
-                    $index_permission_active = DB::table('role_has_permissions')
-                        ->where([['permission_id', $index_permission->id], ['role_id', $role->id]])
-                        ->first();
-                    
-                    $print_barcode = DB::table('permissions')
-                        ->where('name', 'print_barcode')
-                        ->first();
-                    $print_barcode_active = DB::table('role_has_permissions')
-                        ->where([['permission_id', $print_barcode->id], ['role_id', $role->id]])
-                        ->first();
-                    
-                    $stock_count = DB::table('permissions')
-                        ->where('name', 'stock_count')
-                        ->first();
-                    $stock_count_active = DB::table('role_has_permissions')
-                        ->where([['permission_id', $stock_count->id], ['role_id', $role->id]])
-                        ->first();
-                    
-                    $adjustment = DB::table('permissions')
-                        ->where('name', 'adjustment')
-                        ->first();
-                    $adjustment_active = DB::table('role_has_permissions')
-                        ->where([['permission_id', $adjustment->id], ['role_id', $role->id]])
-                        ->first();
-                    ?>
+                    @php
+                        $role = DB::table('roles')->find(Auth::user()->role_id);
+                        $category_permission_active = DB::table('permissions')
+                            ->join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
+                            ->where([['permissions.name', 'category'], ['role_id', $role->id]])
+                            ->first();
+                        $index_permission = DB::table('permissions')
+                            ->where('name', 'products-index')
+                            ->first();
+                        $index_permission_active = DB::table('role_has_permissions')
+                            ->where([['permission_id', $index_permission->id], ['role_id', $role->id]])
+                            ->first();
+                        
+                        $print_barcode = DB::table('permissions')
+                            ->where('name', 'print_barcode')
+                            ->first();
+                        $print_barcode_active = DB::table('role_has_permissions')
+                            ->where([['permission_id', $print_barcode->id], ['role_id', $role->id]])
+                            ->first();
+                        
+                        $stock_count = DB::table('permissions')
+                            ->where('name', 'stock_count')
+                            ->first();
+                        $stock_count_active = DB::table('role_has_permissions')
+                            ->where([['permission_id', $stock_count->id], ['role_id', $role->id]])
+                            ->first();
+                        
+                        $adjustment = DB::table('permissions')
+                            ->where('name', 'adjustment')
+                            ->first();
+                        $adjustment_active = DB::table('role_has_permissions')
+                            ->where([['permission_id', $adjustment->id], ['role_id', $role->id]])
+                            ->first();
+                    @endphp
+                
                     @if (
-                        $category_permission_active ||
-                            $index_permission_active ||
-                            $print_barcode_active ||
-                            $stock_count_active ||
-                            $adjustment_active)
-                        <li><a href="#product" aria-expanded="false" data-toggle="collapse"> <i
-                                    class="dripicons-list"></i><span>{{ __('file.product') }}</span><span></a>
+                        $category_permission_active || $index_permission_active || $print_barcode_active || $stock_count_active || $adjustment_active)
+                        <li>
+                            <a href="#product" aria-expanded="{{ $isExpandProductCategory }}" data-toggle="collapse"> 
+                                <i class="dripicons-list"></i><span>{{ __('file.product') }}</span><span>
+                            </a>
                             <ul id="product" class="collapse list-unstyled ">
                                 @if ($category_permission_active)
-                                    <li id="category-menu"><a
-                                            href="{{ route('category.index') }}">{{ __('file.category') }}</a></li>
+                                    <li id="category-menu"><a href="{{ route('category.index') }}">{{ __('file.category') }}</a></li>
                                 @endif
                                 @if ($index_permission_active)
                                     <li id="product-list-menu"><a
@@ -197,9 +195,6 @@
                                         <li id="product-create-menu"><a
                                                 href="{{ route('products.create') }}">{{ __('file.add_product') }}</a>
                                         </li>
-                                        {{-- <li id="productcategory-list-menu" class="@if (request()->is('productbaseontag*')) active @endif">
-                                            <a href="{{ route('productbaseontag.create') }}">{{ __('file.add_product') }}</a>
-                                        </li> --}}
                                     @endif
                                 @endif
                                 @if ($print_barcode_active)
@@ -224,14 +219,15 @@
                         </li>
                     @endif
 
-                    <?php
-                    $index_permission = DB::table('permissions')
-                        ->where('name', 'purchases-index')
-                        ->first();
-                    $index_permission_active = DB::table('role_has_permissions')
-                        ->where([['permission_id', $index_permission->id], ['role_id', $role->id]])
-                        ->first();
-                    ?>
+                    @php
+                        $index_permission = DB::table('permissions')
+                            ->where('name', 'purchases-index')
+                            ->first();
+                        $index_permission_active = DB::table('role_has_permissions')
+                            ->where([['permission_id', $index_permission->id], ['role_id', $role->id]])
+                            ->first();
+                    @endphp
+                   
                     @if ($index_permission_active)
                         <li><a href="#purchase" aria-expanded="false" data-toggle="collapse"> <i
                                     class="dripicons-card"></i><span>{{ trans('file.Purchase') }}</span></a>
@@ -258,40 +254,42 @@
                             </ul>
                         </li>
                     @endif
-                    <?php
-                    $sale_index_permission = DB::table('permissions')
-                        ->where('name', 'sales-index')
-                        ->first();
-                    $sale_index_permission_active = DB::table('role_has_permissions')
-                        ->where([['permission_id', $sale_index_permission->id], ['role_id', $role->id]])
-                        ->first();
+
+                    @php
+                        $sale_index_permission = DB::table('permissions')
+                            ->where('name', 'sales-index')
+                            ->first();
+                        $sale_index_permission_active = DB::table('role_has_permissions')
+                            ->where([['permission_id', $sale_index_permission->id], ['role_id', $role->id]])
+                            ->first();
+                        
+                        $gift_card_permission = DB::table('permissions')
+                            ->where('name', 'gift_card')
+                            ->first();
+                        $gift_card_permission_active = DB::table('role_has_permissions')
+                            ->where([['permission_id', $gift_card_permission->id], ['role_id', $role->id]])
+                            ->first();
+                        
+                        $coupon_permission = DB::table('permissions')
+                            ->where('name', 'coupon')
+                            ->first();
+                        $coupon_permission_active = DB::table('role_has_permissions')
+                            ->where([['permission_id', $coupon_permission->id], ['role_id', $role->id]])
+                            ->first();
+                        
+                        $delivery_permission_active = DB::table('permissions')
+                            ->join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
+                            ->where([['permissions.name', 'delivery'], ['role_id', $role->id]])
+                            ->first();
+                        
+                        $sale_add_permission = DB::table('permissions')
+                            ->where('name', 'sales-add')
+                            ->first();
+                        $sale_add_permission_active = DB::table('role_has_permissions')
+                            ->where([['permission_id', $sale_add_permission->id], ['role_id', $role->id]])
+                            ->first();
+                    @endphp
                     
-                    $gift_card_permission = DB::table('permissions')
-                        ->where('name', 'gift_card')
-                        ->first();
-                    $gift_card_permission_active = DB::table('role_has_permissions')
-                        ->where([['permission_id', $gift_card_permission->id], ['role_id', $role->id]])
-                        ->first();
-                    
-                    $coupon_permission = DB::table('permissions')
-                        ->where('name', 'coupon')
-                        ->first();
-                    $coupon_permission_active = DB::table('role_has_permissions')
-                        ->where([['permission_id', $coupon_permission->id], ['role_id', $role->id]])
-                        ->first();
-                    
-                    $delivery_permission_active = DB::table('permissions')
-                        ->join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
-                        ->where([['permissions.name', 'delivery'], ['role_id', $role->id]])
-                        ->first();
-                    
-                    $sale_add_permission = DB::table('permissions')
-                        ->where('name', 'sales-add')
-                        ->first();
-                    $sale_add_permission_active = DB::table('role_has_permissions')
-                        ->where([['permission_id', $sale_add_permission->id], ['role_id', $role->id]])
-                        ->first();
-                    ?>
                     @if (
                         $sale_index_permission_active ||
                             $gift_card_permission_active ||
@@ -333,14 +331,15 @@
                         </li>
                     @endif
 
-                    <?php
-                    $index_permission = DB::table('permissions')
-                        ->where('name', 'expenses-index')
-                        ->first();
-                    $index_permission_active = DB::table('role_has_permissions')
-                        ->where([['permission_id', $index_permission->id], ['role_id', $role->id]])
-                        ->first();
-                    ?>
+                    @php
+                        $index_permission = DB::table('permissions')
+                            ->where('name', 'expenses-index')
+                            ->first();
+                        $index_permission_active = DB::table('role_has_permissions')
+                            ->where([['permission_id', $index_permission->id], ['role_id', $role->id]])
+                            ->first();
+                    @endphp
+                    
                     @if ($index_permission_active)
                         <li><a href="#expense" aria-expanded="false" data-toggle="collapse"> <i
                                     class="dripicons-wallet"></i><span>{{ trans('file.Expense') }}</span></a>
@@ -365,14 +364,16 @@
                             </ul>
                         </li>
                     @endif
-                    <?php
-                    $index_permission = DB::table('permissions')
-                        ->where('name', 'quotes-index')
-                        ->first();
-                    $index_permission_active = DB::table('role_has_permissions')
-                        ->where([['permission_id', $index_permission->id], ['role_id', $role->id]])
-                        ->first();
-                    ?>
+
+                    @php
+                        $index_permission = DB::table('permissions')
+                            ->where('name', 'quotes-index')
+                            ->first();
+                        $index_permission_active = DB::table('role_has_permissions')
+                            ->where([['permission_id', $index_permission->id], ['role_id', $role->id]])
+                            ->first();
+                    @endphp
+                   
                     @if ($index_permission_active)
                         <li><a href="#quotation" aria-expanded="false" data-toggle="collapse"> <i
                                     class="dripicons-document"></i><span>{{ trans('file.Quotation') }}</span><span></a>

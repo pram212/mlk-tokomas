@@ -15,6 +15,7 @@
         "intervention/image": "^2.5",
         "kwn/number-to-words": "^1.12",
         "laravel/framework": "^6.2",
+        "laravel/telescope": "3.0",
         "laravel/tinker": "^2.0",
         "laravelcollective/html": "^6.2",
         "maatwebsite/excel": "^3.1",

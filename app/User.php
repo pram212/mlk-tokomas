@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -26,5 +27,9 @@ class User extends Authenticatable
 
     public function holiday() {
         return $this->hasMany('App\Holiday');
+    }
+
+    public function roles() {
+        return $this->belongsTo(Role::class);
     }
 }
