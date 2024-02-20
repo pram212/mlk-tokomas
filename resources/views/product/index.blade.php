@@ -1,12 +1,12 @@
 @extends('layout.main') @section('content')
     <section>
         <div class="container-fluid">
-            @if (in_array('products-add', $all_permission))
+            @can('create', App\Product::class)
                 <a href="{{ route('products.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
                     {{ __('file.add_product') }}</a>
                 <a href="#" data-toggle="modal" data-target="#importProduct" class="btn btn-primary"><i
                         class="dripicons-copy"></i> {{ __('file.import_product') }}</a>
-            @endif
+            @endcan
         </div>
         <div class="table-responsive">
 
@@ -146,21 +146,21 @@
                                 <input type="text" id="dtl-code" class="form-control" readonly>
                             </div>
                         </div>
-    
+
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="code">{{ __('file.Price') }} :</label>
                                 <input type="text" id="dtl-price" class="form-control" readonly>
                             </div>
                         </div>
-    
+
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="code">{{ __('file.Tag Type Code') }} :</label>
                                 <input type="text" id="dtl-tag-code" class="form-control" readonly>
                             </div>
                         </div>
-    
+
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="code">{{ __('file.Gramasi Code') }} :</label>
@@ -209,7 +209,6 @@
         var htmltext;
         var slidertext;
         var product_id = [];
-        var all_permission = <?php echo json_encode($all_permission); ?>;
         var user_verified = <?php echo json_encode(env('USER_VERIFIED')); ?>;
         $.ajaxSetup({
             headers: {
@@ -424,8 +423,7 @@
                     dataType: "json",
                     type: "get"
                 },
-                "columns": [
-                    {
+                "columns": [{
                         "data": "code"
                     },
                     // {
@@ -609,7 +607,8 @@
             // handle button lihat untuk menapilkan detail produk
             $('#product-data-table tbody').on('click', 'a.btn-view', function(e) {
                 var tr = $(this).closest('tr'); // ambil row table (tr) dari baris terpilih
-                var data = table.row(tr).data(); // ambil isi data (data sesuai dengan yang dikirim dari backend)
+                var data = table.row(tr)
+            .data(); // ambil isi data (data sesuai dengan yang dikirim dari backend)
                 // isi inputan yang ada di modal box detail product
                 $("#dtl-code").val(data.code);
                 $("#dtl-price").val(data.price);
@@ -625,8 +624,10 @@
             // handle button hapus untuk menghapus data
             $('#product-data-table tbody').on('click', 'a.btn-delete', function(e) {
                 var tr = $(this).closest('tr') // ambil row table (tr) dari baris terpilih
-                var data = table.row(tr).data() // ambil isi data (data sesuai dengan yang dikirim dari backend)
-                var confirmation = confirm("Apakah Anda yakin ingin menghapus data?"); // konfirmasi aksi hapus data
+                var data = table.row(tr)
+                .data() // ambil isi data (data sesuai dengan yang dikirim dari backend)
+                var confirmation = confirm(
+                "Apakah Anda yakin ingin menghapus data?"); // konfirmasi aksi hapus data
                 if (confirmation) {
                     // lakukan proses hapus data dengan ajax
                     $.ajax({
@@ -651,9 +652,6 @@
             });
 
         });
-
-        if (all_permission.indexOf("products-delete") == -1)
-            $('.buttons-delete').addClass('d-none');
 
         $('select').selectpicker();
     </script>

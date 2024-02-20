@@ -28,7 +28,7 @@ class ProductController extends Controller
     {
         $this->authorize('viewAny', Product::class);
 
-        return view('product.index', compact('all_permission'));
+        return view('product.index');
     }
 
     public function create()
@@ -82,7 +82,14 @@ class ProductController extends Controller
 
     public function edit($id)
     {
-        $this->authorize('update', Product::class);
+        $product = Product::find($id)->load([
+            'productProperty:id,code,description',
+            'gramasi:id,code,gramasi',
+            'tagType:id,code,color',
+            'category'
+        ]);
+
+        $this->authorize('update', $product);
 
         $lims_category_list = Category::where('is_active', true)->get();
         $productProperty = ProductProperty::all();
@@ -109,9 +116,9 @@ class ProductController extends Controller
 
     public function update(UpdateProductRequest $request, $id)
     {
-        $this->authorize('update', Product::class);
-
         $product = Product::find($id);
+
+        $this->authorize('update', $product);
 
         try {
 
@@ -373,6 +380,8 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
+        $this->authorize('delete', Product::find($id));
+
         try {
             DB::beginTransaction();
 
@@ -400,28 +409,36 @@ class ProductController extends Controller
             ->with([ 'tagType:id,code,color', 'productProperty:id,code,description', 'gramasi:id,code,gramasi' ]);
 
         return DataTables::of($productQuery)
-            ->editColumn('created_at', fn ($query) => date('d M Y', strtotime($query->created_at)))
-            ->editColumn('price', fn ($query) => number_format($query->price, 2))
-            ->addColumn('product_property_description', fn ($query) => $query->productProperty->description ?? "-")
-            ->addColumn('product_property_code', fn ($query) => $query->productProperty->code ?? "-")
-            ->addColumn('gramasi_gramasi', fn ($query) => $query->gramasi->gramasi ?? "-")
-            ->addColumn('tag_type_code', fn ($query) => $query->tagType->code ?? "-")
-            ->addColumn('gramasi_code', fn ($query) => $query->gramasi->code ?? "-")
-            ->addColumn('tag_type_color', function ($query) {
-                $color = $query->tagType->color ?? "none";
+            ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
+            ->editColumn('price', fn ($product) => number_format($product->price, 2))
+            ->addColumn('product_property_description', fn ($product) => $product->productProperty->description ?? "-")
+            ->addColumn('product_property_code', fn ($product) => $product->productProperty->code ?? "-")
+            ->addColumn('gramasi_gramasi', fn ($product) => $product->gramasi->gramasi ?? "-")
+            ->addColumn('tag_type_code', fn ($product) => $product->tagType->code ?? "-")
+            ->addColumn('gramasi_code', fn ($product) => $product->gramasi->code ?? "-")
+            ->addColumn('tag_type_color', function ($product) {
+                $color = $product->tagType->color ?? "none";
                 return '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color . '</div>';
             })
-            ->addColumn('action', function ($query) {
+            ->addColumn('action', function ($product) {
+                $user = auth()->user();
+                $btnEdit = $user->can('update', $product) 
+                    ? '<a class="dropdown-item" href="' . url("products/$product->id/edit") . '"><i class="fa fa-pencil"></i> Edit</a>'
+                    : '';
+                $btnDelete = $user->can('delete', $product)
+                    ? '<a class="dropdown-item btn-delete" href="#"><i class="fa fa-trash"></i> Delete</a>'
+                    : '';
+
                 $element =
                 '<div class="dropdown">
                     <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Action
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item btn-view" href="#"><i class="fa fa-eye"></i> View</a>
-                        <a class="dropdown-item" href="' . url("products/$query->id/edit") . '"><i class="fa fa-pencil"></i> Edit</a>
-                        <a class="dropdown-item btn-delete" href="#"><i class="fa fa-trash"></i> Delete</a>
-                    </div>
+                        <a class="dropdown-item btn-view" href="#"><i class="fa fa-eye"></i> View</a>'
+                        . $btnEdit
+                        . $btnDelete .
+                    '</div>
                 </div>';
 
                 return $element;

@@ -69,7 +69,8 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product)
     {
-        //
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('products-delete');
     }
 
     /**
@@ -81,7 +82,8 @@ class ProductPolicy
      */
     public function restore(User $user, Product $product)
     {
-        //
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('products-restore');
     }
 
     /**
