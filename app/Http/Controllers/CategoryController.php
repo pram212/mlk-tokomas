@@ -2,31 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Category;
 use App\Product;
-use DB;
-use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
     public function index()
     {
-        $role = Role::find(Auth::user()->role_id);
-        if($role->hasPermissionTo('category')) {
-            $lims_categories = Category::where('is_active', true)->pluck('name', 'id');
-            $lims_category_all = Category::where('is_active', true)->get();
-            return view('category.create',compact('lims_categories', 'lims_category_all'));
-        }
-        else
-            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
+        $this->authorize('viewAny', Category::class);
+        $lims_categories = Category::where('is_active', true)->pluck('name', 'id');
+        $lims_category_all = Category::where('is_active', true)->get();
+        return view('category.create',compact('lims_categories', 'lims_category_all'));
+
     }
 
     public function categoryData(Request $request)
     {
+        $this->authorize('viewAny', Category::class);
+
         $columns = array( 
             0 =>'id',
             2 =>'name',
@@ -41,9 +38,9 @@ class CategoryController extends Controller
             $limit = $request->input('length');
         else
             $limit = $totalData;
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
+            $start = $request->input('start');
+            $order = $columns[$request->input('order.0.column')];
+            $dir = $request->input('order.0.dir');
         if(empty($request->input('search.value')))
             $categories = Category::offset($start)
                         ->where('is_active', true)
@@ -124,6 +121,53 @@ class CategoryController extends Controller
         echo json_encode($json_data);
     }
 
+    public function categoryDatatable(Request $request)
+    {
+        $categories = Category::query()
+            ->where('is-active', true);
+
+        return DataTables::of($categories)
+                ->editColumn('image', function($category) {
+                    $element = $category->image ?
+                    '<img src="'.url('public/images/category', $category->image).'" height="70" width="70">'
+                    : '<img src="'.url('public/images/product/zummXD2dvAtI.png').'" height="80" width="80">';
+                    return $element;
+                })
+                ->addColumn('number_of_product', function($category) {
+                    return $category->product()->where('is_active', true)->count();
+                })
+                ->addColumn('stock_qty', function($category) {
+                    return $category->product()->where('is_active', true)->sum('qty');
+                })
+                ->addColumn('stock_worth', function($category) {
+                    $totalPrice =  $category->product()->where('is_active', true)->sum(DB::raw('price * qty'));
+                    $totalCost = $category->product()->where('is_active', true)->sum(DB::raw('cost * qty'));
+                    return config('currency_position') == 'prefix' 
+                        ? config('currency').' '.number_format($totalPrice,0, ',' , '.').' / '.config('currency').' '.number_format($totalCost,0, ',' , '.')
+                        : number_format($totalPrice,0, ',' , '.').' '.config('currency').' / '.number_format($totalCost,0, ',' , '.').' '.config('currency');
+                })
+                ->addColumn('options', function($category) {
+                    return '<div class="btn-group">
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.trans("file.action").'
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
+                                <li>
+                                    <button type="button" data-id="'.$category->id.'" class="open-EditCategoryDialog btn btn-link" data-toggle="modal" data-target="#editModal" ><i class="dripicons-document-edit"></i> '.trans("file.edit").'</button>
+                                </li>
+                                <li class="divider"></li>'.
+                                \Form::open(["route" => ["category.destroy", $category->id], "method" => "DELETE"] ).'
+                                <li>
+                                <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> '.trans("file.delete").'</button> 
+                                </li>'.\Form::close().'
+                            </ul>
+                        </div>';
+                })
+                ->make(true);
+
+    }
+
     public function store(Request $request)
     {
         $request->name = preg_replace('/\s+/', ' ', $request->name);
@@ -148,6 +192,8 @@ class CategoryController extends Controller
         $lims_category_data['name'] = $request->name;
         $lims_category_data['parent_id'] = $request->parent_id;
         $lims_category_data['is_active'] = true;
+        $lims_category_data['category'] = $request->category;
+        $lims_category_data['sub_category'] = $request->sub_category;
         Category::create($lims_category_data);
         return redirect('category')->with('message', 'Category inserted successfully');
     }
@@ -161,7 +207,7 @@ class CategoryController extends Controller
         return $lims_category_data;
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         $this->validate($request,[
             'name' => [
@@ -182,7 +228,7 @@ class CategoryController extends Controller
             $image->move('public/images/category', $imageName);
             $input['image'] = $imageName;
         }
-        $lims_category_data = Category::findOrFail($request->category_id);
+        $lims_category_data = Category::findOrFail($id);
         $lims_category_data->update($input);
         return redirect('category')->with('message', 'Category updated successfully');
     }
