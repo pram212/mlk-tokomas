@@ -63,7 +63,6 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::resource('tax', 'TaxController');
 
 	//Route::get('products/getbarcode', 'ProductController@getBarcode');
-	Route::post('products/product-data', 'ProductController@productData');
 	Route::get('products/product-datatable', 'ProductController@productDataTable');
 	Route::get('products/gencode', 'ProductController@generateCode');
 	Route::get('products/search', 'ProductController@search');
@@ -76,7 +75,6 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	
 	Route::get('products/lims_product_search', 'ProductController@limsProductSearch')->name('product.search');
 	Route::post('products/deletebyselection', 'ProductController@deleteBySelection');
-	Route::post('products/update', 'ProductController@updateProduct');
 	Route::resource('products', 'ProductController');
 
 	Route::post('importcustomer_group', 'CustomerGroupController@importCustomerGroup')->name('customer_group.import');

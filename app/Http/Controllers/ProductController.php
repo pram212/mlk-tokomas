@@ -2,397 +2,130 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Keygen;
-use App\Brand;
-use App\Category;
-use App\Unit;
-use App\Tax;
-use App\Warehouse;
-use App\Supplier;
-use App\Product;
-use App\Product_Warehouse;
-use App\Product_Supplier;
-use Illuminate\Support\Facades\Auth;
-use DNS1D;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
-use App\Variant;
-use App\ProductVariant;
-use App\Gramasi;
-use App\ProductProperty;
-use App\ProductType;
-use App\TagType;
+use App\Http\Requests\UpdateProductRequest;
+use App\Http\Requests\StoreProductRequest;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Product_Warehouse;
+use App\ProductProperty;
+use App\ProductVariant;
+use App\ProductType;
+use App\Warehouse;
+use App\Category;
+use App\Product;
+use App\Variant;
+use App\Gramasi;
+use App\TagType;
+use App\Brand;
+use App\Unit;
+use DNS1D;
+use Keygen;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $role = Role::find(Auth::user()->role_id);
-        if ($role->hasPermissionTo('products-index')) {
-            $permissions = Role::findByName($role->name)->permissions;
-            foreach ($permissions as $permission)
-                $all_permission[] = $permission->name;
-            if (empty($all_permission))
-                $all_permission[] = 'dummy text';
-            return view('product.index', compact('all_permission'));
-        } else
-            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
-    }
+        $this->authorize('viewAny', Product::class);
 
-    public function productData(Request $request)
-    {
-        $columns = array(
-            2 => 'name',
-            3 => 'code',
-            4 => 'brand_id',
-            5 => 'category_id',
-            6 => 'qty',
-            7 => 'unit_id',
-            8 => 'price'
-        );
-
-        $totalData = Product::where('is_active', true)->count();
-        $totalFiltered = $totalData;
-
-        if ($request->input('length') != -1)
-            $limit = $request->input('length');
-        else
-            $limit = $totalData;
-        $start = $request->input('start');
-        $order = 'products.' . $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
-        if (empty($request->input('search.value'))) {
-            $products = Product::with('category', 'brand', 'unit')->offset($start)
-                ->where('is_active', true)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-        } else {
-            $search = $request->input('search.value');
-            $products =  Product::select('products.*')
-                ->with('category', 'brand', 'unit')
-                ->join('categories', 'products.category_id', '=', 'categories.id')
-                ->leftjoin('brands', 'products.brand_id', '=', 'brands.id')
-                ->where([
-                    ['products.name', 'LIKE', "%{$search}%"],
-                    ['products.is_active', true]
-                ])
-                ->orWhere([
-                    ['products.code', 'LIKE', "%{$search}%"],
-                    ['products.is_active', true]
-                ])
-                ->orWhere([
-                    ['categories.name', 'LIKE', "%{$search}%"],
-                    ['categories.is_active', true],
-                    ['products.is_active', true]
-                ])
-                ->orWhere([
-                    ['brands.title', 'LIKE', "%{$search}%"],
-                    ['brands.is_active', true],
-                    ['products.is_active', true]
-                ])
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)->get();
-
-            $totalFiltered = Product::join('categories', 'products.category_id', '=', 'categories.id')
-                ->leftjoin('brands', 'products.brand_id', '=', 'brands.id')
-                ->where([
-                    ['products.name', 'LIKE', "%{$search}%"],
-                    ['products.is_active', true]
-                ])
-                ->orWhere([
-                    ['products.code', 'LIKE', "%{$search}%"],
-                    ['products.is_active', true]
-                ])
-                ->orWhere([
-                    ['categories.name', 'LIKE', "%{$search}%"],
-                    ['categories.is_active', true],
-                    ['products.is_active', true]
-                ])
-                ->orWhere([
-                    ['brands.title', 'LIKE', "%{$search}%"],
-                    ['brands.is_active', true],
-                    ['products.is_active', true]
-                ])
-                ->count();
-        }
-        $data = array();
-        if (!empty($products)) {
-            foreach ($products as $key => $product) {
-                $nestedData['id'] = $product->id;
-                $nestedData['key'] = $key;
-                $product_image = explode(",", $product->image);
-                $product_image = htmlspecialchars($product_image[0]);
-                $nestedData['image'] = '<img src="' . url('public/images/product', $product_image) . '" height="80" width="80">';
-                $nestedData['name'] = $product->name;
-                $nestedData['code'] = $product->code;
-                if ($product->brand_id)
-                    $nestedData['brand'] = $product->brand->title;
-                else
-                    $nestedData['brand'] = "N/A";
-                $nestedData['category'] = $product->category->name;
-                $nestedData['qty'] = $product->qty;
-                if ($product->unit_id)
-                    $nestedData['unit'] = $product->unit->unit_name;
-                else
-                    $nestedData['unit'] = 'N/A';
-
-                $nestedData['price'] = $product->price;
-                $nestedData['options'] = '<div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . trans("file.action") . '
-                              <span class="caret"></span>
-                              <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
-                            <li>
-                                <button="type" class="btn btn-link view"><i class="fa fa-eye"></i> ' . trans('file.View') . '</button>
-                            </li>';
-                if (in_array("products-edit", $request['all_permission']))
-                    $nestedData['options'] .= '<li>
-                            <a href="' . route('products.edit', $product->id) . '" class="btn btn-link"><i class="fa fa-edit"></i> ' . trans('file.edit') . '</a>
-                        </li>';
-                if (in_array("products-delete", $request['all_permission']))
-                    $nestedData['options'] .= \Form::open(["route" => ["products.destroy", $product->id], "method" => "DELETE"]) . '
-                            <li>
-                              <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> ' . trans("file.delete") . '</button> 
-                            </li>' . \Form::close() . '
-                        </ul>
-                    </div>';
-                // data for product details by one click
-                if ($product->tax_id)
-                    $tax = Tax::find($product->tax_id)->name;
-                else
-                    $tax = "N/A";
-
-                if ($product->tax_method == 1)
-                    $tax_method = trans('file.Exclusive');
-                else
-                    $tax_method = trans('file.Inclusive');
-
-                $nestedData['product'] = array(
-                    '[ "' . $product->type . '"', ' "' . $product->name . '"', ' "' . $product->code . '"', ' "' . $nestedData['brand'] . '"', ' "' . $nestedData['category'] . '"', ' "' . $nestedData['unit'] . '"', ' "' . $product->cost . '"', ' "' . $product->price . '"', ' "' . $tax . '"', ' "' . $tax_method . '"', ' "' . $product->alert_quantity . '"', ' "' . preg_replace('/\s+/S', " ", $product->product_details) . '"', ' "' . $product->id . '"', ' "' . $product->product_list . '"', ' "' . $product->qty_list . '"', ' "' . $product->price_list . '"', ' "' . $product->qty . '"', ' "' . $product->image . '"]'
-                );
-                //$nestedData['imagedata'] = DNS1D::getBarcodePNG($product->code, $product->barcode_symbology);
-                $data[] = $nestedData;
-            }
-        }
-        $json_data = array(
-            "draw"            => intval($request->input('draw')),
-            "recordsTotal"    => intval($totalData),
-            "recordsFiltered" => intval($totalFiltered),
-            "data"            => $data
-        );
-
-        echo json_encode($json_data);
+        return view('product.index', compact('all_permission'));
     }
 
     public function create()
     {
-        $role = Role::firstOrCreate(['id' => Auth::user()->role_id]);
-        if ($role->hasPermissionTo('products-add')) {
-            $lims_product_list = Product::where([['is_active', true], ['type', 'standard']])->get();
-            $lims_brand_list = Brand::where('is_active', true)->get();
-            $lims_category_list = Category::where('is_active', true)->get();
-            $lims_unit_list = Unit::where('is_active', true)->get();
-            $lims_tax_list = Tax::where('is_active', true)->get();
-            $lims_warehouse_list = Warehouse::where('is_active', true)->get();
-            $tagType = TagType::all();
-            $productType = ProductType::all();
-            $productProperty = ProductProperty::all();
-            $gramasi = Gramasi::all();
+        $this->authorize('create', Product::class);
 
-            return view('product.create', compact('tagType', 'productType', 'productProperty', 'gramasi', 'lims_product_list', 'lims_brand_list', 'lims_category_list', 'lims_unit_list', 'lims_tax_list', 'lims_warehouse_list'));
-        } else
-            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
+        $lims_category_list = Category::where('is_active', true)->get();
+        $productProperty = ProductProperty::all();
+        $productType = ProductType::all();
+        $tagType = TagType::all();
+        $gramasi = Gramasi::all();
+
+        return view('product.create', compact(
+            'lims_category_list',
+            'productProperty',
+            'productType',
+            'tagType',
+            'gramasi',
+        ));
     }
 
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $request->validate([
-            'tag_type_id' => ['required'],
-            'gramasi_id' => ['required'],
-            'discount' => ['required'],
-            'price' => ['required'],
-            'mg' => ['required'],
-            'code' => ['required'],
-            'product_property_id' => ['required'],
-        ]);
+        $this->authorize('create', Product::class);
 
         try {
             DB::beginTransaction();
 
-            Product::create([
-                'tag_type_id' => $request->tag_type_id,
-                'gramasi_id' => $request->gramasi_id,
-                'discount' => $request->discount,
-                'mg' => $request->mg,
-                'product_property_id' => $request->product_property_id,
-                'discount' => $request->discount,
-                'price' => $request->price,
-                'code' => $request->code,
-            ]);
+            $imagePath = 'zummXD2dvAtI.png';
+
+            if ($request->file('image')) {
+                $file = $request->file('image');
+                $imagePath = "storage/app/" . $file->storeAs('product_images', time() . $request->file('image')->getClientOriginalName()); // Simpan file ke dalam folder 'uploads' 
+            }
+
+            $request->merge(['image' => $imagePath]);
+
+            Product::create($request->all());
 
             DB::commit();
 
             return back()->with('create_message', 'Product created successfully');
-
         } catch (\Exception $ex) {
 
             DB::rollBack();
 
             return back()->with('create_message', $ex->getMessage());
         }
-
-
-        // tidak akan diekseksi
-        $this->validate($request, [
-            'code' => [
-                'max:255',
-                Rule::unique('products')->where(function ($query) {
-                    return $query->where('is_active', 1);
-                }),
-            ],
-            'name' => [
-                'max:255',
-                Rule::unique('products')->where(function ($query) {
-                    return $query->where('is_active', 1);
-                }),
-            ]
-        ]);
-        $request['price'] = str_replace('.', '', $request->input('price'));
-        $request['cost'] = str_replace('.', '', $request->input('cost'));
-        $data = $request->except('image', 'file');
-        $data['name'] = htmlspecialchars(trim($data['name']));
-        if ($data['type'] == 'combo') {
-            $data['product_list'] = implode(",", $data['product_id']);
-            $data['qty_list'] = implode(",", $data['product_qty']);
-            $data['price_list'] = implode(",", $data['unit_price']);
-            $data['cost'] = $data['unit_id'] = $data['purchase_unit_id'] = $data['sale_unit_id'] = 0;
-        } elseif ($data['type'] == 'digital')
-            $data['cost'] = $data['unit_id'] = $data['purchase_unit_id'] = $data['sale_unit_id'] = 0;
-
-        $data['product_details'] = str_replace('"', '@', $data['product_details']);
-
-        if ($data['starting_date'])
-            $data['starting_date'] = date('Y-m-d', strtotime($data['starting_date']));
-        if ($data['last_date'])
-            $data['last_date'] = date('Y-m-d', strtotime($data['last_date']));
-        $data['is_active'] = true;
-        $images = $request->image;
-        $image_names = [];
-        if ($images) {
-            foreach ($images as $key => $image) {
-                $imageName = $image->getClientOriginalName();
-                $image->move('public/images/product', $imageName);
-                $image_names[] = $imageName;
-            }
-            $data['image'] = implode(",", $image_names);
-        } else {
-            $data['image'] = 'zummXD2dvAtI.png';
-        }
-        $file = $request->file;
-        if ($file) {
-            $ext = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
-            $fileName = strtotime(date('Y-m-d H:i:s'));
-            $fileName = $fileName . '.' . $ext;
-            $file->move('public/product/files', $fileName);
-            $data['file'] = $fileName;
-        }
-
-        $data['tag_type_id'] = $request->tag_type_id;
-        $data['gramasi_id'] = $request->gramasi_id;
-        $data['discount'] = $request->discount;
-        $data['mg'] = $request->mg;
-        $data['product_property_id'] = $request->product_property_id;
-
-        $lims_product_data = Product::create($data);
-        //dealing with product variant
-        if (isset($data['is_variant'])) {
-            foreach ($data['variant_name'] as $key => $variant_name) {
-                $lims_variant_data = Variant::firstOrCreate(['name' => $data['variant_name'][$key]]);
-                $lims_variant_data->name = $data['variant_name'][$key];
-                $lims_variant_data->save();
-                $lims_product_variant_data = new ProductVariant;
-                $lims_product_variant_data->product_id = $lims_product_data->id;
-                $lims_product_variant_data->variant_id = $lims_variant_data->id;
-                $lims_product_variant_data->position = $key + 1;
-                $lims_product_variant_data->item_code = $data['item_code'][$key];
-                $lims_product_variant_data->additional_price = $data['additional_price'][$key];
-                $lims_product_variant_data->qty = 0;
-                $lims_product_variant_data->save();
-            }
-        }
-        if (isset($data['is_diffPrice'])) {
-            foreach ($data['diff_price'] as $key => $diff_price) {
-                if ($diff_price) {
-                    Product_Warehouse::create([
-                        "product_id" => $lims_product_data->id,
-                        "warehouse_id" => $data["warehouse_id"][$key],
-                        "qty" => 0,
-                        "price" => $diff_price
-                    ]);
-                }
-            }
-        }
-        \Session::flash('create_message', 'Product created successfully');
     }
 
     public function edit($id)
     {
-        $role = Role::firstOrCreate(['id' => Auth::user()->role_id]);
-        if ($role->hasPermissionTo('products-edit')) {
-            $lims_product_list = Product::where([['is_active', true], ['type', 'standard']])->get();
-            $lims_brand_list = Brand::where('is_active', true)->get();
-            $lims_category_list = Category::where('is_active', true)->get();
-            $lims_unit_list = Unit::where('is_active', true)->get();
-            $lims_tax_list = Tax::where('is_active', true)->get();
-            $lims_product_data = Product::where('id', $id)->first();
-            $lims_product_variant_data = $lims_product_data->variant()->orderBy('position')->get();
-            $lims_warehouse_list = Warehouse::where('is_active', true)->get();
+        $this->authorize('update', Product::class);
 
-            $product = Product::find($id)->load(['tagType:id,code,color', 'productProperty:id,code,description', 'gramasi:id,code,gramasi']);
-            $tagType = TagType::all();
-            $productType = ProductType::all();
-            $productProperty = ProductProperty::all();
-            $gramasi = Gramasi::all();
+        $lims_category_list = Category::where('is_active', true)->get();
+        $productProperty = ProductProperty::all();
+        $productType = ProductType::all();
+        $tagType = TagType::all();
+        $gramasi = Gramasi::all();
 
-            return view('product.edit', compact('lims_product_list', 'lims_brand_list', 'lims_category_list', 'lims_unit_list', 'lims_tax_list', 'lims_product_data', 'lims_product_variant_data', 'lims_warehouse_list', 'tagType', 'productType', 'productProperty', 'gramasi', 'product'));
-        } else
-            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
+        $product = Product::find($id)->load([
+            'productProperty:id,code,description',
+            'gramasi:id,code,gramasi',
+            'tagType:id,code,color',
+            'category'
+        ]);
+
+        return view('product.edit', compact(
+            'lims_category_list',
+            'productProperty',
+            'productType',
+            'tagType',
+            'gramasi',
+            'product'
+        ));
     }
 
-    public function update(Request $request, $id) 
+    public function update(UpdateProductRequest $request, $id)
     {
-        $request->validate([
-            'tag_type_id' => ['required'],
-            'gramasi_id' => ['required'],
-            'discount' => ['required'],
-            'price' => ['required'],
-            'mg' => ['required'],
-            'code' => ['required'],
-            'product_property_id' => ['required'],
-        ]);
+        $this->authorize('update', Product::class);
 
         $product = Product::find($id);
 
         try {
+
             DB::beginTransaction();
 
-            $product->update([
-                'tag_type_id' => $request->tag_type_id,
-                'gramasi_id' => $request->gramasi_id,
-                'discount' => $request->discount,
-                'mg' => $request->mg,
-                'product_property_id' => $request->product_property_id,
-                'discount' => $request->discount,
-                'price' => $request->price,
-                'code' => $request->code,
-            ]);
+            $imagePath = 'zummXD2dvAtI.png';
+
+            if ($request->file('image')) {
+                $file = $request->file('image');
+                $imagePath = "storage/app/" . $file->storeAs('product_images', time() . $request->file('image')->getClientOriginalName());
+            }
+
+            $request->merge(['image' => $imagePath]);
+
+            $product->update($request->all());
 
             DB::commit();
 
@@ -403,154 +136,6 @@ class ProductController extends Controller
             DB::rollBack();
 
             return back()->with('create_message', $ex->getMessage());
-        }
-    }
-
-    public function updateProduct(Request $request)
-    {
-        if (!env('USER_VERIFIED')) {
-            \Session::flash('not_permitted', 'This feature is disable for demo!');
-        } else {
-            $this->validate($request, [
-                'name' => [
-                    'max:255',
-                    Rule::unique('products')->ignore($request->input('id'))->where(function ($query) {
-                        return $query->where('is_active', 1);
-                    }),
-                ],
-
-                'code' => [
-                    'max:255',
-                    Rule::unique('products')->ignore($request->input('id'))->where(function ($query) {
-                        return $query->where('is_active', 1);
-                    }),
-                ]
-            ]);
-            $request['price'] = str_replace('.', '', $request->input('price'));
-            $request['cost'] = str_replace('.', '', $request->input('cost'));
-            $lims_product_data = Product::findOrFail($request->input('id'));
-            $data = $request->except('image', 'file', 'prev_img');
-            $data['name'] = htmlspecialchars(trim($data['name']));
-
-            if ($data['type'] == 'combo') {
-                $data['product_list'] = implode(",", $data['product_id']);
-                $data['qty_list'] = implode(",", $data['product_qty']);
-                $data['price_list'] = implode(",", $data['unit_price']);
-                $data['cost'] = $data['unit_id'] = $data['purchase_unit_id'] = $data['sale_unit_id'] = 0;
-            } elseif ($data['type'] == 'digital')
-                $data['cost'] = $data['unit_id'] = $data['purchase_unit_id'] = $data['sale_unit_id'] = 0;
-
-            if (!isset($data['featured']))
-                $data['featured'] = 0;
-
-            if (!isset($data['promotion']))
-                $data['promotion'] = null;
-
-            $data['product_details'] = str_replace('"', '@', $data['product_details']);
-            $data['product_details'] = $data['product_details'];
-            if ($data['starting_date'])
-                $data['starting_date'] = date('Y-m-d', strtotime($data['starting_date']));
-            if ($data['last_date'])
-                $data['last_date'] = date('Y-m-d', strtotime($data['last_date']));
-
-            //dealing with previous images
-            if ($request->prev_img) {
-                $lims_product_data->image = implode(",", $request->prev_img);
-                $lims_product_data->save();
-            }
-            //dealing with new images
-            $images = $request->image;
-            $image_names = [];
-            if ($images) {
-                foreach ($images as $key => $image) {
-                    $imageName = $image->getClientOriginalName();
-                    $image->move('public/images/product', $imageName);
-                    $image_names[] = $imageName;
-                }
-                if ($lims_product_data->image != 'zummXD2dvAtI.png') {
-                    $data['image'] = $lims_product_data->image . ',' . implode(",", $image_names);
-                } else {
-                    $data['image'] = implode(",", $image_names);
-                }
-            } else {
-                $data['image'] = $lims_product_data->image;
-            }
-
-            $file = $request->file;
-            if ($file) {
-                $ext = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
-                $fileName = strtotime(date('Y-m-d H:i:s'));
-                $fileName = $fileName . '.' . $ext;
-                $file->move('public/product/files', $fileName);
-                $data['file'] = $fileName;
-            }
-
-            $lims_product_variant_data = ProductVariant::where('product_id', $request->input('id'))->select('id', 'variant_id')->get();
-            foreach ($lims_product_variant_data as $key => $value) {
-                if (!in_array($value->variant_id, $data['variant_id'])) {
-                    ProductVariant::find($value->id)->delete();
-                }
-            }
-            //dealing with product variant
-            if (isset($data['is_variant'])) {
-                foreach ($data['variant_name'] as $key => $variant_name) {
-                    if ($data['product_variant_id'][$key] == 0) {
-                        $lims_variant_data = Variant::firstOrCreate(['name' => $data['variant_name'][$key]]);
-                        $lims_product_variant_data = new ProductVariant();
-
-                        $lims_product_variant_data->product_id = $lims_product_data->id;
-                        $lims_product_variant_data->variant_id = $lims_variant_data->id;
-
-                        $lims_product_variant_data->position = $key + 1;
-                        $lims_product_variant_data->item_code = $data['item_code'][$key];
-                        $lims_product_variant_data->additional_price = $data['additional_price'][$key];
-                        $lims_product_variant_data->qty = 0;
-                        $lims_product_variant_data->save();
-                    } else {
-                        Variant::find($data['variant_id'][$key])->update(['name' => $variant_name]);
-                        ProductVariant::find($data['product_variant_id'][$key])->update([
-                            'position' => $key + 1,
-                            'item_code' => $data['item_code'][$key],
-                            'additional_price' => $data['additional_price'][$key]
-                        ]);
-                    }
-                }
-            } else {
-                $data['is_variant'] = null;
-                $product_variants = ProductVariant::where('product_id', $lims_product_data->id)->get();
-                foreach ($product_variants as $key => $product_variant) {
-                    $product_variant->delete();
-                }
-            }
-            if (isset($data['is_diffPrice'])) {
-                foreach ($data['diff_price'] as $key => $diff_price) {
-                    if ($diff_price) {
-                        $lims_product_warehouse_data = Product_Warehouse::FindProductWithoutVariant($lims_product_data->id, $data['warehouse_id'][$key])->first();
-                        if ($lims_product_warehouse_data) {
-                            $lims_product_warehouse_data->price = $diff_price;
-                            $lims_product_warehouse_data->save();
-                        } else {
-                            Product_Warehouse::create([
-                                "product_id" => $lims_product_data->id,
-                                "warehouse_id" => $data["warehouse_id"][$key],
-                                "qty" => 0,
-                                "price" => $diff_price
-                            ]);
-                        }
-                    }
-                }
-            } else {
-                $data['is_diffPrice'] = false;
-                foreach ($data['warehouse_id'] as $key => $warehouse_id) {
-                    $lims_product_warehouse_data = Product_Warehouse::FindProductWithoutVariant($lims_product_data->id, $warehouse_id)->first();
-                    if ($lims_product_warehouse_data) {
-                        $lims_product_warehouse_data->price = null;
-                        $lims_product_warehouse_data->save();
-                    }
-                }
-            }
-            $lims_product_data->update($data);
-            \Session::flash('edit_message', 'Product updated successfully');
         }
     }
 
@@ -789,61 +374,50 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-            
+
             Product::destroy($id);
 
             DB::commit();
 
             return response("Data Berhasil dihapus", 200);
-
         } catch (\Exception $ex) {
 
             DB::rollBack();
-            
+
             return response("gagal: " . $ex->getMessage(), 500);
         }
-        $lims_product_data = Product::findOrFail($id);
-        $lims_product_data->is_active = false;
-        /*if($lims_product_data->image != 'zummXD2dvAtI.png') {
-            $images = explode(",", $lims_product_data->image);
-            foreach ($images as $key => $image) {
-                unlink('public/images/product/'.$image);
-            }
-        }*/
-        $lims_product_data->save();
-        return redirect('products')->with('message', 'Product deleted successfully');
     }
 
     public function productDataTable()
     {
-        $productQuery = Product::query();
+        $this->authorize('viewAny', Product::class);
 
-        $productQuery->select('id', 'code', 'price', 'discount', 'created_at', 'tag_type_id', 'gramasi_id', 'product_property_id', 'mg')
-                    ->orderBy("created_at", "desc")
-                    ->with(['tagType:id,code,color', 'productProperty:id,code,description', 'gramasi:id,code,gramasi']);
+        $productQuery = Product::query()
+            ->select('id', 'code', 'price', 'image', 'name', 'discount', 'created_at', 'tag_type_id', 'gramasi_id', 'product_property_id', 'mg')
+            ->orderBy("created_at", "desc")
+            ->with([ 'tagType:id,code,color', 'productProperty:id,code,description', 'gramasi:id,code,gramasi' ]);
 
         return DataTables::of($productQuery)
-            ->addColumn('tag_type_code', fn ($query) => $query->tagType->code ?? "-" )
-            ->addColumn('product_property_code', fn ($query) => $query->productProperty->code ?? "-")
+            ->editColumn('created_at', fn ($query) => date('d M Y', strtotime($query->created_at)))
+            ->editColumn('price', fn ($query) => number_format($query->price, 2))
             ->addColumn('product_property_description', fn ($query) => $query->productProperty->description ?? "-")
-            ->addColumn('gramasi_code', fn ($query) => $query->gramasi->code ?? "-")
+            ->addColumn('product_property_code', fn ($query) => $query->productProperty->code ?? "-")
             ->addColumn('gramasi_gramasi', fn ($query) => $query->gramasi->gramasi ?? "-")
-            ->editColumn('created_at', fn($query) => date('d M Y', strtotime($query->created_at)))
-            ->editColumn('price', fn($query) => number_format($query->price, 2))
+            ->addColumn('tag_type_code', fn ($query) => $query->tagType->code ?? "-")
+            ->addColumn('gramasi_code', fn ($query) => $query->gramasi->code ?? "-")
             ->addColumn('tag_type_color', function ($query) {
-                $color = $query->tagType->color ?? "none" ;
-                $element = '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color .'</div>';
-                return $element;
+                $color = $query->tagType->color ?? "none";
+                return '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color . '</div>';
             })
-            ->addColumn('action', function($query) {
-                $element = 
+            ->addColumn('action', function ($query) {
+                $element =
                 '<div class="dropdown">
                     <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Action
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item btn-view" href="#"><i class="fa fa-eye"></i> View</a>
-                        <a class="dropdown-item" href="'. url("products/$query->id/edit") .'"><i class="fa fa-pencil"></i> Edit</a>
+                        <a class="dropdown-item" href="' . url("products/$query->id/edit") . '"><i class="fa fa-pencil"></i> Edit</a>
                         <a class="dropdown-item btn-delete" href="#"><i class="fa fa-trash"></i> Delete</a>
                     </div>
                 </div>';

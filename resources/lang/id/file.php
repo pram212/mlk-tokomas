@@ -5,6 +5,7 @@ return [
 	"revenue" => "Pendapatan",
 	"product" => "Produk",
 	"category" => "Kategori",
+	"sub category" => "Sub Kategori",
 	"product_list" => "Daftar produk",
 	"add_product" => "Tambahkan produk",
 	"import_product" => "Import produk",

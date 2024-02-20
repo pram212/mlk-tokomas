@@ -5,6 +5,7 @@ return [
 	'revenue' => 'Revenue',
 	'product' => 'Product',
 	'category' => 'Category',
+	'sub category' => 'Sub Category',
 	'product_list' => 'Product List',
 	'add_product' => 'Add Product',
 	'import_product' => 'Import Product',

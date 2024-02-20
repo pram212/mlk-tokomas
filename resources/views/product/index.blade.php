@@ -14,6 +14,8 @@
                 <thead>
                     <tr>
                         <th>{{ trans('file.Code') }}</th>
+                        {{-- <th>{{ __('file.Product Image') }}</th> --}}
+                        <th>{{ __('file.Product Name') }}</th>
                         <th>{{ __('file.Date') }}</th>
                         <th>{{ trans('file.Price') }}</th>
                         <th>{{ __('file.Tag Type Code') }}</th>
@@ -422,8 +424,15 @@
                     dataType: "json",
                     type: "get"
                 },
-                "columns": [{
+                "columns": [
+                    {
                         "data": "code"
+                    },
+                    // {
+                    //     "data": "image"
+                    // },
+                    {
+                        "data": "name"
                     },
                     {
                         "data": "created_at"
