@@ -61,7 +61,7 @@ class ProductController extends Controller
 
             if ($request->file('image')) {
                 $file = $request->file('image');
-                $imagePath = "storage/app/" . $file->storeAs('product_images', time() . $request->file('image')->getClientOriginalName()); // Simpan file ke dalam folder 'uploads' 
+                $imagePath = "storage/app/" . $file->storeAs('product_images', time() . $request->file('image')->getClientOriginalName());
             }
 
             $request->merge(['image' => $imagePath]);
@@ -71,6 +71,7 @@ class ProductController extends Controller
             DB::commit();
 
             return back()->with('create_message', 'Product created successfully');
+
         } catch (\Exception $ex) {
 
             DB::rollBack();
@@ -380,6 +381,7 @@ class ProductController extends Controller
             DB::commit();
 
             return response("Data Berhasil dihapus", 200);
+            
         } catch (\Exception $ex) {
 
             DB::rollBack();
