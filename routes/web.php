@@ -307,5 +307,10 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::get('gramasi-datatable', 'GramasiController@gramasiData');
 	Route::post('gramasi-multi-delete', 'GramasiController@destroyMultiple');
 	Route::resource('productbaseontag', 'ProductBaseOnTagController');
+
+	Route::get('help', function() {
+		return view('help');
+	});
+	
 });
 
