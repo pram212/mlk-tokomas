@@ -107,7 +107,7 @@
                     </li>
 
                     {{-- PRODUCT CATEGORY MENU --}}
-                    <li>
+                    {{-- <li>
                         @php
                             $isExpandProductCategory = request()->is('tagtype*') || request()->is('producttype*') || request()->is('productproperty*') || request()->is('gramasi*') ? 'true' : 'false';
                         @endphp
@@ -131,7 +131,7 @@
                                 <a href="{{ route('gramasi.index') }}">{{ __('file.Gramasi List') }}</a>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
                     {{-- PRODUCT CATEGORY MENU END --}}
 
                     @php
@@ -172,7 +172,7 @@
                     @if (
                         $category_permission_active || $index_permission_active || $print_barcode_active || $stock_count_active || $adjustment_active)
                         <li>
-                            <a href="#product" aria-expanded="{{ $isExpandProductCategory }}" data-toggle="collapse"> 
+                            <a href="#product" aria-expanded="" data-toggle="collapse"> 
                                 <i class="dripicons-list"></i><span>{{ __('file.product') }}</span><span>
                             </a>
                             <ul id="product" class="collapse list-unstyled ">
