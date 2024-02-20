@@ -13,7 +13,7 @@ use App\Supplier;
 use App\Product;
 use App\Product_Warehouse;
 use App\Product_Supplier;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use DNS1D;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;

@@ -2,7 +2,7 @@
   'app' => 
   array (
     'name' => 'salepro',
-    'env' => 'local',
+    'env' => 'production',
     'debug' => true,
     'url' => 'http://mlk-pos.test/',
     'asset_url' => NULL,

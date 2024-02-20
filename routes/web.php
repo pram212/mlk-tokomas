@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::post('category/import', 'CategoryController@import')->name('category.import');
 	Route::post('category/deletebyselection', 'CategoryController@deleteBySelection');
 	Route::post('category/category-data', 'CategoryController@categoryData');
+	Route::get('category/category-datatable', 'CategoryController@categoryDatatable');
 	Route::resource('category', 'CategoryController');
 
 	Route::post('importbrand', 'BrandController@importBrand')->name('brand.import');
