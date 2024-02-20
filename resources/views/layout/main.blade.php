@@ -1242,7 +1242,7 @@
                         </li>
                         @if (Auth::user()->role_id != 5)
                             <li class="nav-item">
-                                <a class="dropdown-item" href="{{ url('read_me') }}" target="_blank"><i
+                                <a class="dropdown-item" href="{{ url('help') }}" target="_blank"><i
                                         class="dripicons-information"></i> {{ trans('file.Help') }}</a>
                             </li>
                         @endif
