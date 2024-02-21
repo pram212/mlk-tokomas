@@ -38,9 +38,7 @@ class AppServiceProvider extends ServiceProvider
             \App::setLocale('en');
         }
         //get general setting value        
-        $general_setting = [] 
-        ;
-        // DB::table('general_settings')->latest()->first();
+        $general_setting = DB::table('general_settings')->latest()->first();
         $currency = \App\Currency::find($general_setting->currency);
         View::share('general_setting', $general_setting);
         View::share('currency', $currency);
