@@ -39,7 +39,6 @@
       22 => 'App\\Providers\\AppServiceProvider',
       23 => 'App\\Providers\\AuthServiceProvider',
       24 => 'App\\Providers\\EventServiceProvider',
-      25 => 'App\\Providers\\TelescopeServiceProvider',
       26 => 'App\\Providers\\RouteServiceProvider',
       27 => 'Yajra\\DataTables\\DataTablesServiceProvider',
     ),
