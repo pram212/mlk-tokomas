@@ -31,8 +31,6 @@ class UpdateProductRequest extends FormRequest
             'mg' => ['required'],
             'code' => ['required'],
             'product_property_id' => ['required'],
-            'name' => ['required'],
-            'category_id' => ['required'],
         ];
     }
 }
