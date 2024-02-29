@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Notifications\SendNotification;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {

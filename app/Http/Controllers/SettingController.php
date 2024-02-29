@@ -50,40 +50,30 @@ class SettingController extends Controller
 
     public function generalSettingStore(Request $request)
     {
-        if(!env('USER_VERIFIED'))
-            return redirect()->back()->with('not_permitted', 'This feature is disable for demo!');
+        if(!env('USER_VERIFIED')) return redirect()->back()->with('not_permitted', 'This feature is disable for demo!');
 
         $this->validate($request, [
-            'site_logo' => 'image|mimes:jpg,jpeg,png,gif|max:100000',
+            'site_logo_file' => 'image|mimes:jpg,jpeg,png,gif|max:100000',
         ]);
 
-        $data = $request->except('site_logo');
-        //return $data;
         //writting timezone info in .env file
         $path = '.env';
         $searchArray = array('APP_TIMEZONE='.env('APP_TIMEZONE'));
-        $replaceArray = array('APP_TIMEZONE='.$data['timezone']);
+        $replaceArray = array('APP_TIMEZONE='. $request->timezone );
 
         file_put_contents($path, str_replace($searchArray, $replaceArray, file_get_contents($path)));
 
-        $general_setting = GeneralSetting::latest()->first();
-        $general_setting->id = 1;
-        $general_setting->site_title = $data['site_title'];
-        $general_setting->currency = $data['currency'];
-        $general_setting->currency_position = $data['currency_position'];
-        $general_setting->staff_access = $data['staff_access'];
-        $general_setting->date_format = $data['date_format'];
-        $general_setting->developed_by = $data['developed_by'];
-        $general_setting->invoice_format = $data['invoice_format'];
-        $general_setting->state = $data['state'];
-        $logo = $request->site_logo;
-        if ($logo) {
-            $ext = pathinfo($logo->getClientOriginalName(), PATHINFO_EXTENSION);
-            $logoName = date("Ymdhis") . '.' . $ext;
-            $logo->move('public/logo', $logoName);
-            $general_setting->site_logo = $logoName;
+        $imagePath = 'zummXD2dvAtI.png';
+
+        if ($request->file('site_logo_file')) {
+            $file = $request->file('site_logo_file');
+            $imagePath = "storage/app/" . $file->storeAs('general_images', time() . $request->file('site_logo_file')->getClientOriginalName());
         }
-        $general_setting->save();
+
+        $request->merge(['site_logo' => $imagePath]);
+
+        GeneralSetting::first()->update($request->all());
+
         return redirect()->back()->with('message', 'Data updated successfully');
     }
 

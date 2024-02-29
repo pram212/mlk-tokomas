@@ -27,7 +27,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>{{trans('file.System Logo')}} *</label>
-                                        <input type="file" name="site_logo" class="form-control" value=""/>
+                                        <input type="file" name="site_logo_file" class="form-control" value=""/>
                                     </div>
                                     @if($errors->has('site_logo'))
                                    <span>

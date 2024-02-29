@@ -69,14 +69,24 @@ class ProductController extends Controller
             Product::create($request->all());
 
             DB::commit();
+            
+            $alertSession = [
+                'type' => 'alert-success',
+                'message' => 'Product created successfully'
+            ];
 
-            return back()->with('create_message', 'Product created successfully');
+            return back()->with($alertSession);
 
         } catch (\Exception $ex) {
 
             DB::rollBack();
 
-            return back()->with('create_message', $ex->getMessage());
+            $alertSession = [
+                'type' => 'alert-danger',
+                'message' => $ex->getMessage()
+            ];
+
+            return back()->with($alertSession);
         }
     }
 

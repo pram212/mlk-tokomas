@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use DB;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
@@ -40,15 +41,21 @@ class AppServiceProvider extends ServiceProvider
         } else {
             App::setLocale('en');
         }
-        //get general setting value        
-        $general_setting = GeneralSetting::latest()->first();
-        $currency = \App\Currency::find($general_setting->currency);
-        View::share('general_setting', $general_setting);
-        View::share('currency', $currency);
-        config(['staff_access' => $general_setting->staff_access, 'date_format' => $general_setting->date_format, 'currency' => $currency->code, 'currency_position' => $general_setting->currency_position]);
-        
-        $alert_product =  Product::where('is_active', true)->whereColumn('alert_quantity', '>', 'qty')->count();
-        View::share('alert_product', $alert_product);
-        Schema::defaultStringLength(191);
+ 
+        if (! App::runningInConsole()) { // prevent autoload discover 
+
+            //get general setting value        
+            $general_setting = GeneralSetting::latest()->first();
+            $currency = \App\Currency::find($general_setting->currency);
+            View::share('general_setting', $general_setting);
+            View::share('currency', $currency);
+            config(['staff_access' => $general_setting->staff_access, 'date_format' => $general_setting->date_format, 'currency' => $currency->code, 'currency_position' => $general_setting->currency_position]);
+            
+            $alert_product =  Product::where('is_active', true)->whereColumn('alert_quantity', '>', 'qty')->count();
+            View::share('alert_product', $alert_product);
+            Schema::defaultStringLength(191);
+
+        }
+
     }
 }
