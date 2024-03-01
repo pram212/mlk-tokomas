@@ -23,9 +23,11 @@
 
                     <li class="nav-item"><a id="btnFullscreen"><i class="dripicons-expand"></i></a></li>
                     <?php if(\Auth::user()->role_id <= 2): ?>
-                        <li class="nav-item"><a href="<?php echo e(route('cashRegister.index')); ?>"
-                                title="<?php echo e(trans('file.Cash Register List')); ?>"><i
-                                    class="dripicons-archive"></i></a></li>
+                        <li class="nav-item">
+                            <a href="<?php echo e(route('cashRegister.index')); ?>" title="<?php echo e(trans('file.Cash Register List')); ?>">
+                                <i class="dripicons-archive"></i>
+                            </a>
+                        </li>
                     <?php endif; ?>
 
                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('report', App\Product::class)): ?>

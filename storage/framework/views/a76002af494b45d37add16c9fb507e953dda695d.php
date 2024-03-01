@@ -155,15 +155,13 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-12">
-                        <p>&copy; <?php echo e($general_setting->site_title); ?> | <?php echo e(trans('file.Developed')); ?>
-
-                            <?php echo e(trans('file.By')); ?> <span class="external"><?php echo e($general_setting->developed_by); ?></span></p>
+                        <p>&copy; <?php echo e($general_setting->site_title); ?> | <?php echo e(trans('file.Developed')); ?> <?php echo e(trans('file.By')); ?> <span class="external"><?php echo e($general_setting->developed_by); ?></span></p>
                     </div>
                 </div>
             </div>
         </footer>
     </div>
-
+    
     <?php echo $__env->yieldContent('scripts'); ?>
     
     <script src="<?php echo e(asset('public/js/main.js')); ?>"></script>
