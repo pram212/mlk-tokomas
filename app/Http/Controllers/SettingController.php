@@ -68,9 +68,9 @@ class SettingController extends Controller
         if ($request->file('site_logo_file')) {
             $file = $request->file('site_logo_file');
             $imagePath = "storage/app/" . $file->storeAs('general_images', time() . $request->file('site_logo_file')->getClientOriginalName());
+            $request->merge(['site_logo' => $imagePath]);
         }
 
-        $request->merge(['site_logo' => $imagePath]);
 
         GeneralSetting::first()->update($request->all());
 
