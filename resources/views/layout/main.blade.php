@@ -109,7 +109,7 @@
         <!-- end notification modal -->
         
         <!-- expense modal -->
-        @include('main_utilities.expense_modal'))
+        @include('main_utilities.expense_modal')
         <!-- end expense modal -->
         
         <!-- account modal -->
@@ -160,7 +160,7 @@
             </div>
         </footer>
     </div>
-    
+
     @yield('scripts')
     
     <script src="{{ asset('public/js/main.js') }}"></script>
