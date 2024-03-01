@@ -97,4 +97,29 @@ class ProductPolicy
     {
         //
     }
+
+    /**
+     * Determine whether the user can permanently delete the product.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Product  $product
+     * @return mixed
+     */
+    public function printBarcode(User $user)
+    {
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('print_barcode');
+    }
+
+    public function report(User $user)
+    {
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('purchase-report');
+    }
+
+    public function viewProdukQtyAlert(User $user)
+    {
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('product-qty-alert');
+    }
 }
