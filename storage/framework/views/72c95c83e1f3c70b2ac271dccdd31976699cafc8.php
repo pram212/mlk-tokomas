@@ -80,6 +80,9 @@
                             <li>
                                 <a href="<?php echo e(url('language_switch/en')); ?>" class="btn btn-link"> English</a>
                             </li>
+                            <li>
+                                <a href="<?php echo e(url('language_switch/id')); ?>" class="btn btn-link"> Indonesia</a>
+                            </li>
                         </ul>
                     </li>
                     <?php if(Auth::user()->role_id != 5): ?>

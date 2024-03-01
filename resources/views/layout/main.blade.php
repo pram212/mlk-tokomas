@@ -154,14 +154,13 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-12">
-                        <p>&copy; {{ $general_setting->site_title }} | {{ trans('file.Developed') }}
-                            {{ trans('file.By') }} <span class="external">{{ $general_setting->developed_by }}</span></p>
+                        <p>&copy; {{ $general_setting->site_title }} | {{ trans('file.Developed') }} {{ trans('file.By') }} <span class="external">{{ $general_setting->developed_by }}</span></p>
                     </div>
                 </div>
             </div>
         </footer>
     </div>
-
+    
     @yield('scripts')
     
     <script src="{{ asset('public/js/main.js') }}"></script>

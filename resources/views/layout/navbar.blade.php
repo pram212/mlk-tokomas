@@ -23,9 +23,11 @@
 
                     <li class="nav-item"><a id="btnFullscreen"><i class="dripicons-expand"></i></a></li>
                     @if (\Auth::user()->role_id <= 2)
-                        <li class="nav-item"><a href="{{ route('cashRegister.index') }}"
-                                title="{{ trans('file.Cash Register List') }}"><i
-                                    class="dripicons-archive"></i></a></li>
+                        <li class="nav-item">
+                            <a href="{{ route('cashRegister.index') }}" title="{{ trans('file.Cash Register List') }}">
+                                <i class="dripicons-archive"></i>
+                            </a>
+                        </li>
                     @endif
 
                     @can('report', App\Product::class)
@@ -79,6 +81,9 @@
                             user="menu">
                             <li>
                                 <a href="{{ url('language_switch/en') }}" class="btn btn-link"> English</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('language_switch/id') }}" class="btn btn-link"> Indonesia</a>
                             </li>
                         </ul>
                     </li>
