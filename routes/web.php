@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -95,7 +96,6 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::post('biller/deletebyselection', 'BillerController@deleteBySelection');
 	Route::get('biller/lims_biller_search', 'BillerController@limsBillerSearch')->name('biller.search');
 	Route::resource('biller', 'BillerController');
-
 	Route::post('sales/sale-data', 'SaleController@saleData');
 	Route::post('sales/sendmail', 'SaleController@sendMail')->name('sale.sendmail');
 	Route::get('sales/sale_by_csv', 'SaleController@saleByCsv');
@@ -121,7 +121,7 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::get('sales/print-last-reciept', 'SaleController@printLastReciept')->name('sales.printLastReciept');
 	Route::get('sales/today-sale', 'SaleController@todaySale');
 	Route::get('sales/today-profit/{warehouse_id}', 'SaleController@todayProfit');
-	Route::resource('sales', 'SaleController');
+	Route::resource('sales', SaleController::class);
 
 	Route::get('delivery', 'DeliveryController@index')->name('delivery.index');
 	Route::get('delivery/product_delivery/{id}','DeliveryController@productDeliveryData');
