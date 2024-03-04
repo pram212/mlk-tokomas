@@ -23,6 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => ['auth', 'active']], function () {
 
 	Route::get('/', 'HomeController@index');
+	Route::get('/home', 'HomeController@index')->name('home');
 	Route::get('/dashboard-filter/{start_date}/{end_date}', 'HomeController@dashboardFilter');
 	Route::get('language_switch/{locale}', 'LanguageController@switchLanguage');
 
@@ -35,9 +36,9 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// unit routes
 	Route::group(['prefix' => 'unit', 'as' => 'unit.'], function () {
+		Route::get('lims_unit_search', 'UnitController@limsUnitSearch')->name('search');
 		Route::post('importunit', 'UnitController@importUnit')->name('import');
 		Route::post('deletebyselection', 'UnitController@deleteBySelection');
-		Route::get('lims_unit_search', 'UnitController@limsUnitSearch')->name('search');
 		Route::resource('/', 'UnitController');
 	});
 
@@ -278,7 +279,6 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// setting routes
 	Route::group(['prefix' => 'setting', 'as' => 'setting.'], function() {
-		Route::get('general_setting', 'SettingController@generalSetting')->name('general');
 		Route::post('general_setting_store', 'SettingController@generalSettingStore')->name('generalStore');
 		Route::post('mail_setting_store', 'SettingController@mailSettingStore')->name('mailStore');
 		Route::post('hrm_setting_store', 'SettingController@hrmSettingStore')->name('hrmStore');
@@ -286,6 +286,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::post('pos_setting_store', 'SettingController@posSettingStore')->name('posStore');
 		Route::get('empty-database', 'SettingController@emptyDatabase')->name('emptyDatabase');
 		Route::get('general_setting/change-theme/{theme}', 'SettingController@changeTheme');
+		Route::get('general_setting', 'SettingController@generalSetting')->name('general');
 		Route::get('mail_setting', 'SettingController@mailSetting')->name('mail');
 		Route::get('createsms', 'SettingController@createSms')->name('createSms');
 		Route::get('sms_setting', 'SettingController@smsSetting')->name('sms');
@@ -297,9 +298,9 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// expense categories routes
 	Route::group(['prefix' => 'expense_categories', 'as' => 'expense_categories.'], function() {
-		Route::get('gencode', 'ExpenseCategoryController@generateCode');
-		Route::post('import', 'ExpenseCategoryController@import')->name('import');
 		Route::post('deletebyselection', 'ExpenseCategoryController@deleteBySelection');
+		Route::post('import', 'ExpenseCategoryController@import')->name('import');
+		Route::get('gencode', 'ExpenseCategoryController@generateCode');
 		Route::resource('/', 'ExpenseCategoryController');
 	});
 
@@ -311,24 +312,24 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// gift card routes
 	Route::group(['prefix' => 'gift_cards', 'as' => 'gift_cards.'], function() {
-		Route::get('gencode', 'GiftCardController@generateCode');
 		Route::post('recharge/{id}', 'GiftCardController@recharge')->name('recharge');
 		Route::post('deletebyselection', 'GiftCardController@deleteBySelection');
+		Route::get('gencode', 'GiftCardController@generateCode');
 		Route::resource('/', 'GiftCardController');
 	});
 
 	// coupen routes
 	Route::group(['prefix' => 'coupons', 'as' => 'coupons.'], function() {
-		Route::get('gencode', 'CouponController@generateCode');
 		Route::post('deletebyselection', 'CouponController@deleteBySelection');
+		Route::get('gencode', 'CouponController@generateCode');
 		Route::resource('/', 'CouponController');
 	});
 
 	// accounting routes
 	Route::group(['prefix' => 'accounts', 'as' => 'accounts.'], function() {
-		Route::get('make-default/{id}', 'AccountsController@makeDefault');
-		Route::get('balancesheet', 'AccountsController@balanceSheet')->name('balancesheet');
 		Route::post('account-statement', 'AccountsController@accountStatement')->name('statement');
+		Route::get('balancesheet', 'AccountsController@balanceSheet')->name('balancesheet');
+		Route::get('make-default/{id}', 'AccountsController@makeDefault');
 		Route::resource('/', 'AccountsController');
 	});
 
@@ -378,11 +379,11 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	// cash register routes
 	Route::group(['prefix' => 'cash-register', 'as' => 'cash-register.'], function() {
 		Route::get('check-availability/{warehouse_id}', 'CashRegisterController@checkAvailability')->name('checkAvailability');
+		Route::get('showDetails/{warehouse_id}', 'CashRegisterController@showDetails');
 		Route::post('store', 'CashRegisterController@store')->name('store');
 		Route::post('close', 'CashRegisterController@close')->name('close');
-		Route::get('showDetails/{warehouse_id}', 'CashRegisterController@showDetails');
-		Route::get('/', 'CashRegisterController@index')->name('index');
 		Route::get('getDetails/{id}', 'CashRegisterController@getDetails');
+		Route::get('/', 'CashRegisterController@index')->name('index');
 	});
 
 	// notifications routes
@@ -397,31 +398,30 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	// product categories routes
 	Route::group(['prefix' => 'product-categories', 'as' => 'product-categories.'], function() {
 		
-		Route::resource('tagtype', 'TagTypeController');
-		Route::get('tagtype-datatable', 'TagTypeController@tagTypeData');
 		Route::post('tagtype-multi-delete', 'TagTypeController@destroyMultiple');
+		Route::get('tagtype-datatable', 'TagTypeController@tagTypeData');
+		Route::resource('tagtype', 'TagTypeController');
 	
-		Route::resource('producttype', 'ProductTypeController');
-		Route::get('producttype-datatable', 'ProductTypeController@productTypeData');
 		Route::post('producttype-multi-delete', 'ProductTypeController@destroyMultiple');
+		Route::get('producttype-datatable', 'ProductTypeController@productTypeData');
+		Route::resource('producttype', 'ProductTypeController');
 	
-		Route::resource('productproperty', 'ProductPropertyController');
 		Route::get('productproperty-datatable', 'ProductPropertyController@productPropertyData');
 		Route::post('productproperty-multi-delete', 'ProductPropertyController@destroyMultiple');
+		Route::resource('productproperty', 'ProductPropertyController');
 	
-		Route::resource('gramasi', 'GramasiController');
-		Route::get('gramasi-datatable', 'GramasiController@gramasiData');
 		Route::post('gramasi-multi-delete', 'GramasiController@destroyMultiple');
+		Route::get('gramasi-datatable', 'GramasiController@gramasiData');
+		Route::resource('gramasi', 'GramasiController');
+
 	});
-
-
 
 	Route::resource('productbaseontag', 'ProductBaseOnTagController');
 
 	Route::get('my-transactions/{year}/{month}', 'HomeController@myTransaction');
-	Route::get('/home', 'HomeController@index')->name('home');
 
 	Route::get('help', function () {
 		return view('help');
 	});
+
 });
