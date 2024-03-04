@@ -36,7 +36,7 @@
                     <p class="italic">
                         <small>{{ trans('file.The field labels marked with * are required input fields') }}.</small></p>
                     @php
-                        $action = @$productType ? route('producttype.update', @$productType->id) : route('producttype.store');
+                        $action = @$productType ? route('product-categories.producttype.update', @$productType->id) : route('product-categories.producttype.store');
                     @endphp
                     <form action="{{ $action }}" class="row" method="POST">
                         @csrf

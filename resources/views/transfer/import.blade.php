@@ -12,7 +12,7 @@
                     </div>
                     <div class="card-body">
                         <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}</small></p>
-                        {!! Form::open(['route' => 'transfer.import', 'method' => 'post', 'files' => true, 'id' => 'transfer-form']) !!}
+                        {!! Form::open(['route' => 'transfers.import', 'method' => 'post', 'files' => true, 'id' => 'transfer-form']) !!}
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="row">

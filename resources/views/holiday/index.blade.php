@@ -148,7 +148,7 @@
 
     $(document).on('click', '.btn-approve', function() {
 	    var id = $(this).data('id');
-	    $.get('approve-holiday/'+id, function(data) {
+	    $.get('/holidays/approve-holiday/'+id, function(data) {
 	        $('.btn-approve').addClass('d-none');
 	    });
 	});

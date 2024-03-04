@@ -13,14 +13,7 @@
                 {{-- PRODUCT CATEGORY MENU --}}
                 <li>
                     @php
-                        $requestIsOnProductCategoryMenu = request()->is(
-                            'tagtype*',
-                            'producttype*',
-                            'productproperty*',
-                            'gramasi*',
-                        )
-                            ? 'true'
-                            : 'false';
+                        $requestIsOnProductCategoryMenu = request()->is('product-categories*') ? 'true' : 'false';
                     @endphp
                     <a href="#productcategory" data-toggle="collapse"
                         aria-expanded="{{ $requestIsOnProductCategoryMenu }}">
@@ -29,17 +22,17 @@
 
                     <ul id="productcategory"
                         class="collapse list-unstyled @if ($requestIsOnProductCategoryMenu === 'true') show @endif">
-                        <li id="productcategory-list-menu" class="@if (request()->is('tagtype*')) active @endif">
-                            <a href="{{ route('tagtype.index') }}">{{ __('file.Tagging Type') }}</a>
+                        <li id="productcategory-list-menu" class="@if (request()->is('product-categories/tagtype*')) active @endif">
+                            <a href="{{ route('product-categories.tagtype.index') }}">{{ __('file.Tagging Type') }}</a>
                         </li>
-                        <li id="productcategory-list-menu" class="@if (request()->is('productproperty*')) active @endif">
-                            <a href="{{ route('productproperty.index') }}">{{ __('file.Product Property') }}</a>
+                        <li id="productcategory-list-menu" class="@if (request()->is('product-categories/productproperty*')) active @endif">
+                            <a href="{{ route('product-categories.productproperty.index') }}">{{ __('file.Product Property') }}</a>
                         </li>
-                        <li id="productcategory-list-menu" class="@if (request()->is('producttype*')) active @endif">
-                            <a href="{{ route('producttype.index') }}">{{ __('file.Product Type') }}</a>
+                        <li id="productcategory-list-menu" class="@if (request()->is('product-categories/producttype*')) active @endif">
+                            <a href="{{ route('product-categories.producttype.index') }}">{{ __('file.Product Type') }}</a>
                         </li>
-                        <li id="productcategory-list-menu" class="@if (request()->is('gramasi*')) active @endif">
-                            <a href="{{ route('gramasi.index') }}">{{ __('file.Gramasi List') }}</a>
+                        <li id="productcategory-list-menu" class="@if (request()->is('product-categories/gramasi*')) active @endif">
+                            <a href="{{ route('product-categories.gramasi.index') }}">{{ __('file.Gramasi List') }}</a>
                         </li>
                     </ul>
                 </li>
@@ -47,7 +40,6 @@
 
                 <li>
                     @php
-                        $role = DB::table('roles')->find(Auth::user()->role_id);
                         $requestIsOnProductMenu = request()->is(
                             'products*',
                             'category*',
@@ -81,7 +73,7 @@
 
                         @can('printBarcode', App\Product::class)
                             <li id="printBarcode-menu" class="@if (request()->is('products/print_barcode')) active @endif">
-                                <a href="{{ route('product.printBarcode') }}">{{ __('file.print_barcode') }}</a>
+                                <a href="{{ route('products.printBarcode') }}">{{ __('file.print_barcode') }}</a>
                             </li>
                         @endcan
 
@@ -145,7 +137,7 @@
 
                         @can('create', App\Sale::class)
                             <li class="@if (request()->is('sales/')) active @endif">
-                                <a href="{{ route('sale.pos') }}" target="_blank">POS</a>
+                                <a href="{{ route('sales.pos') }}" target="_blank">POS</a>
                             </li>
                             <li id="sale-create-menu" class="@if (request()->is('sales/create')) active @endif">
                                 <a href="{{ route('sales.create') }}">{{ trans('file.Add Sale') }}</a>
@@ -365,6 +357,7 @@
                 @endif
 
                 @php
+                    $role = DB::table('roles')->find(Auth::user()->role_id);
                     // user permission query original
                     $user_index_permission_active = DB::table('permissions')
                         ->join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')

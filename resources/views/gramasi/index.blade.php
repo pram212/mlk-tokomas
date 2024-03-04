@@ -28,7 +28,7 @@
     <section>
         <div class="container-fluid">
             {{-- @if (in_array('products-add', $all_permission)) --}}
-            <a href="{{ route('gramasi.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
+            <a href="{{ route('product-categories.gramasi.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
                 {{ __('file.Add Gramasi') }}</a>
             {{-- @endif --}}
         </div>
@@ -54,7 +54,7 @@
         gramasiTable = $('#gramasi-datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('gramasi-datatable') }}",
+            ajax: "{{ url('product-categories/gramasi-datatable') }}",
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
@@ -135,7 +135,7 @@
                             "If you delete under this tags will also be deleted. Are you sure want to delete?"
                             )
                         if (confirmDeleteMultiple) {
-                            const url = "{!! url('gramasi-multi-delete') !!}"
+                            const url = "{!! url('product-categories/gramasi-multi-delete') !!}"
                             axios.post(url, {
                                     ids: ids
                                 })
@@ -195,7 +195,7 @@
 
             if (confirmation) {
                 // run delete function via ajax
-                const url = "{!! url('gramasi') !!}" + "/" + data.id
+                const url = "{!! url('product-categories/gramasi') !!}" + "/" + data.id
                 axios.delete(url)
                     .then(function (response) {
                         alert(response.data)

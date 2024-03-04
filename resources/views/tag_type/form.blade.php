@@ -37,7 +37,7 @@
                         <small>{{ trans('file.The field labels marked with * are required input fields') }}.</small>
                     </p>
                     @php
-                        $action = @$tagType ? route('tagtype.update', @$tagType->id) : route('tagtype.store');
+                        $action = @$tagType ? route('product-categories.tagtype.update', @$tagType->id) : route('product-categories.tagtype.store');
                     @endphp
                     <form action="{{ $action }}" class="row" method="POST">
                         @csrf

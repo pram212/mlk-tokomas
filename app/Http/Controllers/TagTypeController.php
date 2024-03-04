@@ -3,13 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\TagType;
-use App\User;
 use Illuminate\Http\Request;
-use DataTables;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class TagTypeController extends Controller
 {
@@ -32,7 +28,7 @@ class TagTypeController extends Controller
                     </button>
                     <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                         <li>
-                            <a href="'. route('tagtype.edit', $model->id) .'" class="btn btn-link"><i class="fa fa-pencil"></i>  '.__('file.edit').' </a>
+                            <a href="'. route('product-categories.tagtype.edit', $model->id) .'" class="btn btn-link"><i class="fa fa-pencil"></i>  '.__('file.edit').' </a>
                         </li>
                         <li>
                             <button type="button" class="btn btn-link view btn-delete"><i class="fa fa-trash"></i>  '.__('file.delete').'</button>

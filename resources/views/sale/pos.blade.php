@@ -61,7 +61,7 @@
               @endif
               @endif
               @if($print_barcode_active)
-              <li id="printBarcode-menu"><a href="{{route('product.printBarcode')}}">{{__('file.print_barcode')}}</a></li>
+              <li id="printBarcode-menu"><a href="{{route('products.printBarcode')}}">{{__('file.print_barcode')}}</a></li>
               @endif
               @if($adjustment_active)
                 <li id="adjustment-list-menu"><a href="{{route('qty_adjustment.index')}}">{{trans('file.Adjustment List')}}</a></li>
@@ -129,7 +129,7 @@
                 ])->first();
               ?>
               @if($add_permission_active)
-              <li><a href="{{route('sale.pos')}}">POS</a></li>
+              <li><a href="{{route('sales.pos')}}">POS</a></li>
               <li id="sale-create-menu"><a href="{{route('sales.create')}}">{{trans('file.Add Sale')}}</a></li>
               <li id="sale-import-menu"><a href="{{url('sales/sale_by_csv')}}">{{trans('file.Import Sale By CSV')}}</a></li>
               @endif
@@ -1530,7 +1530,7 @@
             <div id="cash-register-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
                 <div role="document" class="modal-dialog">
                   <div class="modal-content">
-                    {!! Form::open(['route' => 'cashRegister.store', 'method' => 'post']) !!}
+                    {!! Form::open(['route' => 'cash-register.store', 'method' => 'post']) !!}
                     <div class="modal-header">
                       <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Cash Register')}}</h5>
                       <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
@@ -1621,7 +1621,7 @@
                                 </table>
                             </div>
                             <div class="col-md-6" id="closing-section">
-                              <form action="{{route('cashRegister.close')}}" method="POST">
+                              <form action="{{route('cash-register.close')}}" method="POST">
                                   @csrf
                                   <input type="hidden" name="cash_register_id">
                                   <button type="submit" class="btn btn-primary">{{trans('file.Close Register')}}</button>

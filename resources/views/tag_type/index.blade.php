@@ -28,7 +28,7 @@
     <section>
         <div class="container-fluid">
             {{-- @if (in_array('products-add', $all_permission)) --}}
-            <a href="{{ route('tagtype.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
+            <a href="{{ route('product-categories.tagtype.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
                 {{ __('file.Add Tag Type') }}</a>
             {{-- @endif --}}
         </div>
@@ -54,7 +54,7 @@
         tagTypeTable = $('#tagtype-datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('tagtype-datatable') }}",
+            ajax: "{{ url('product-categories/tagtype-datatable') }}",
             columns: [{
                     data: 'DT_RowIndex',
                     orderable: false,
@@ -134,7 +134,7 @@
                             "If you delete under this tags will also be deleted. Are you sure want to delete?"
                             )
                         if (confirmDeleteMultiple) {
-                            const url = "{!! url('tagtype-multi-delete') !!}"
+                            const url = "{!! url('product-categories/tagtype-multi-delete') !!}"
                             axios.post(url, {
                                     ids: ids
                                 })
@@ -195,7 +195,7 @@
             // if user choose true
             if (confirmation) {
                 // run delete function via ajax
-                const url = "{!! url('tagtype') !!}" + "/" + data.id
+                const url = "{!! url('product-categories/tagtype') !!}" + "/" + data.id
                 axios.delete(url)
                     .then(function (response) {
                         alert(response.data)

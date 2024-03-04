@@ -366,7 +366,7 @@
     <div id="cash-register-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
         <div role="document" class="modal-dialog">
           <div class="modal-content">
-            {!! Form::open(['route' => 'cashRegister.store', 'method' => 'post']) !!}
+            {!! Form::open(['route' => 'cash-register.store', 'method' => 'post']) !!}
             <div class="modal-header">
               <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Cash Register')}}</h5>
               <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>

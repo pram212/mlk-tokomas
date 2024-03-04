@@ -96,7 +96,7 @@
         // productTypeTable = $('#producttype-datatable').DataTable({
         //     processing: true,
         //     serverSide: true,
-        //     ajax: "{{ url('producttype-datatable') }}",
+        //     ajax: "{{ url('product-categories/producttype-datatable') }}",
         //     columns: [{
         //             data: 'DT_RowIndex',
         //             name: 'DT_RowIndex',
