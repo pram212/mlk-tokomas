@@ -28,7 +28,7 @@
     <section>
         <div class="container-fluid">
             {{-- @if (in_array('products-add', $all_permission)) --}}
-            <a href="{{ route('producttype.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
+            <a href="{{ route('product-categories.producttype.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
                 {{ __('file.Add Product Type') }}</a>
             {{-- @endif --}}
         </div>
@@ -60,7 +60,7 @@
         productTypeTable = $('#producttype-datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('producttype-datatable') }}",
+            ajax: "{{ url('product-categories/producttype-datatable') }}",
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
@@ -136,7 +136,7 @@
                             "If you delete under this tags will also be deleted. Are you sure want to delete?"
                             )
                         if (confirmDeleteMultiple) {
-                            const url = "{!! url('producttype-multi-delete') !!}"
+                            const url = "{!! url('product-categories/producttype-multi-delete') !!}"
                             axios.post(url, { 
                                     ids : ids 
                                 })
@@ -195,7 +195,7 @@
             const confirmation = confirm("Apakah Anda yakin ingin menghapusnya?");
 
             if (confirmation) {
-                const url = "{!! url('producttype') !!}" + "/" + data.id
+                const url = "{!! url('product-categories/producttype') !!}" + "/" + data.id
                 axios.delete(url)
                     .then(function (response) {
                         alert(response.data)

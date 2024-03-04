@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Gramasi;
 use App\ProductType;
 use Illuminate\Http\Request;
-use DataTables;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 
 class GramasiController extends Controller
@@ -29,7 +29,7 @@ class GramasiController extends Controller
                     </button>
                     <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                         <li>
-                            <a href="'. route('gramasi.edit', $model->id) .'" class="btn btn-link"><i class="fa fa-pencil"></i>  '.__('file.edit').' </a>
+                            <a href="'. route('product-categories.gramasi.edit', $model->id) .'" class="btn btn-link"><i class="fa fa-pencil"></i>  '.__('file.edit').' </a>
                         </li>
                         <li>
                             <button type="button" class="btn btn-link view btn-delete"><i class="fa fa-trash"></i>  '.__('file.delete').'</button>

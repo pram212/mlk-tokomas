@@ -99,7 +99,7 @@
                     <div class="col-md-3">
                         <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="dripicons-print"></i> {{trans('file.Print')}}</button>
                         
-                        {{ Form::open(['route' => 'sale.sendmail', 'method' => 'post', 'class' => 'sendmail-form'] ) }}
+                        {{ Form::open(['route' => 'sales.sendmail', 'method' => 'post', 'class' => 'sendmail-form'] ) }}
                             <input type="hidden" name="sale_id">
                             <button class="btn btn-default btn-sm d-print-none"><i class="dripicons-mail"></i> {{trans('file.Email')}}</button>
                         {{ Form::close() }}
@@ -171,7 +171,7 @@
                 <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
-                {!! Form::open(['route' => 'sale.add-payment', 'method' => 'post', 'files' => true, 'class' => 'payment-form' ]) !!}
+                {!! Form::open(['route' => 'sales.add-payment', 'method' => 'post', 'files' => true, 'class' => 'payment-form' ]) !!}
                     <div class="row">
                         <input type="hidden" name="balance">
                         <div class="col-md-6">

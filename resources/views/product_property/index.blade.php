@@ -28,7 +28,7 @@
     <section>
         <div class="container-fluid">
             {{-- @if (in_array('products-add', $all_permission)) --}}
-            <a href="{{ route('productproperty.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
+            <a href="{{ route('product-categories.productproperty.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
                 {{ __('file.Add Product Property') }}</a>
             {{-- @endif --}}
         </div>
@@ -60,7 +60,7 @@
         productPropertyTable = $('#productproperty-datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('productproperty-datatable') }}",
+            ajax: "{{ url('product-categories/productproperty-datatable') }}",
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
@@ -136,7 +136,7 @@
                             "If you delete under this tags will also be deleted. Are you sure want to delete?"
                             )
                         if (confirmDeleteMultiple) {
-                            const url = "{!! url('productproperty-multi-delete') !!}"
+                            const url = "{!! url('product-categories/productproperty-multi-delete') !!}"
                             axios.post(url, { 
                                     ids : ids 
                                 })
@@ -195,7 +195,7 @@
             const confirmation = confirm("Apakah Anda yakin ingin menghapusnya?");
 
             if (confirmation) {
-                const url = "{!! url('productproperty') !!}" + "/" + data.id
+                const url = "{!! url('product-categories/productproperty') !!}" + "/" + data.id
                 axios.delete(url)
                     .then(function (response) {
                         alert(response.data)

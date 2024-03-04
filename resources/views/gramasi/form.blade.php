@@ -35,7 +35,7 @@
                     <p class="italic">
                         <small>{{ trans('file.The field labels marked with * are required input fields') }}.</small></p>
                     @php
-                        $action = @$gramasi ? route('gramasi.update', @$gramasi->id) : route('gramasi.store');
+                        $action = @$gramasi ? route('product-categories.gramasi.update', @$gramasi->id) : route('product-categories.gramasi.store');
                     @endphp
                     <form action="{{ $action }}" class="row" method="POST">
                         @csrf

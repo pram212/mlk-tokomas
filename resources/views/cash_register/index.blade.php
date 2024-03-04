@@ -109,7 +109,7 @@
                         </table>
                     </div>
                     <div class="col-md-6" id="closing-section">
-                        <form action="{{route('cashRegister.close')}}" method="POST">
+                        <form action="{{route('cash-register.close')}}" method="POST">
                             @csrf
                             <input type="hidden" name="cash_register_id">
                             <button type="submit" class="btn btn-primary" onclick="return confirmClose()">{{trans('file.Close Register')}}</button>

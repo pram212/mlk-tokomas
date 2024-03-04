@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ProductType;
 use Illuminate\Http\Request;
-use DataTables;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 
 class ProductTypeController extends Controller
@@ -28,7 +28,7 @@ class ProductTypeController extends Controller
                     </button>
                     <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                         <li>
-                            <a href="'. route('producttype.edit', $model->id) .'" class="btn btn-link"><i class="fa fa-pencil"></i>  '.__('file.edit').' </a>
+                            <a href="'. route('product-categories.producttype.edit', $model->id) .'" class="btn btn-link"><i class="fa fa-pencil"></i>  '.__('file.edit').' </a>
                         </li>
                         <li>
                             <button type="button" class="btn btn-link view btn-delete"><i class="fa fa-trash"></i>  '.__('file.delete').'</button>

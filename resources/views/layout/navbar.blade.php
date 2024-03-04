@@ -15,7 +15,7 @@
                 <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
                     @can('create', App\Sale::class)
                     <li class="nav-item">
-                        <a class="dropdown-item btn-pos btn-sm" href="{{ route('sale.pos') }}">
+                        <a class="dropdown-item btn-pos btn-sm" href="{{ route('sales.pos') }}">
                             <i class="dripicons-shopping-bag"></i><span>POS</span>
                         </a>
                     </li>
@@ -24,7 +24,7 @@
                     <li class="nav-item"><a id="btnFullscreen"><i class="dripicons-expand"></i></a></li>
                     @if (\Auth::user()->role_id <= 2)
                         <li class="nav-item">
-                            <a href="{{ route('cashRegister.index') }}" title="{{ trans('file.Cash Register List') }}">
+                            <a href="{{ route('cash-register.index') }}" title="{{ trans('file.Cash Register List') }}">
                                 <i class="dripicons-archive"></i>
                             </a>
                         </li>
