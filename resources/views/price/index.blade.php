@@ -1,35 +1,9 @@
 @extends('layout.main') @section('content')
-    @if (session()->has('create_message'))
-        <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close"
-                data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>{{ session()->get('create_message') }}</div>
-    @endif
-    @if (session()->has('edit_message'))
-        <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close"
-                data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>{{ session()->get('edit_message') }}</div>
-    @endif
-    @if (session()->has('import_message'))
-        <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close"
-                data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>{{ session()->get('import_message') }}</div>
-    @endif
-    @if (session()->has('not_permitted'))
-        <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close"
-                data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
-    @endif
-    @if (session()->has('message'))
-        <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close"
-                data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div>
-    @endif
-
     <section>
         <div class="container-fluid">
             {{-- @if (in_array('products-add', $all_permission)) --}}
             <a href="{{ route('master.price.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
-                {{  __('file.add') ."  ". __('file.Price') }}</a>
+                {{ __('file.Add Price') }}</a>
             {{-- @endif --}}
         </div>
         <div class="table-responsive">
@@ -41,7 +15,9 @@
                         <th>{{ __('file.Gramasi') }}</th>
                         <th>{{ __('file.Product Property') }}</th>
                         <th>{{ __('file.Created By') }}</th>
-                        <th>Updated By</th>
+                        <th>{{ __('file.Updated By') }}</th>
+                        <th>{{ __('file.Created At') }}</th>
+                        <th>{{ __('file.Updated At') }}</th>
                         <th class="not-exported">{{ trans('file.action') }}</th>
                     </tr>
                 </thead>
@@ -82,6 +58,12 @@
                 },
                 {
                     data: 'updated_by'
+                },
+                {
+                    data: 'created_at'
+                },
+                {
+                    data: 'updated_at'
                 },
                 {
                     data: 'action'

@@ -617,5 +617,10 @@ return [
 	"Gramasi" => "Gramasi",
 	"Gramasi Code" => "Gramasi Code",
 	"Add Product" => "Add Product",
+	"Add Price" => "Add Price",
+	"Created At" => "Created At",
+	"Updated At" => "Updated At",
+	"Created By" => "Created By",
+	"Updated By" => "Updated By",
 ];
 ?>

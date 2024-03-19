@@ -257,75 +257,7 @@
 
         Dropzone.autoDiscover = false;
 
-        // var myDropzone = new Dropzone("div#imageUpload", {
-        //     url: "{{ route('products.store') }}",
-        //     headers: {
-        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //     },
-        //     paramName: "image", // Nama parameter untuk file yang diunggah
-        //     maxFilesize: 10, // Batasan ukuran file dalam MB
-        //     acceptedFiles: '.jpg, .jpeg, .png, .pdf', // Tipe file yang diterima
-        //     addRemoveLinks: true, // Menampilkan tombol hapus untuk setiap file yang diunggah
-        //     init: function() {
-        //         this.on("success", function(file, response) {
-        //             console.log(response);
-        //         });
-        //     }
-        // });
-
-        var rupiah = document.getElementById('price');
-        rupiah.addEventListener('keyup', function(e) {
-            rupiah.value = formatRupiah(this.value, 'input');
-        });
-        // rupiah.addEventListener('mouseover', function(e) {
-        //     rupiah.value = formatRupiah(this.value, 'input');
-        // });
-
-        // var costproduk = document.getElementById('costproduk');
-        // costproduk.addEventListener('keyup', function(e) {
-        //     costproduk.value = formatRupiah(this.value, 'input');
-        // });
-        // costproduk.addEventListener('mouseover', function(e) {
-        //     costproduk.value = formatRupiah(this.value, 'input');
-        // });
-
-        function formatRupiah(angka, type) {
-            var number_string = '';
-            var split = '';
-            var sisa = '';
-            var rupiah = '';
-            var ribuan = '';
-            if (angka.toString().includes("-")) {
-                var reverse = angka.toString().split('').reverse().join(''),
-                    ribuan = reverse.match(/\d{1,3}/g);
-                ribuan = ribuan.join('.').split('').reverse().join('');
-                return "-" + ribuan;
-            }
-            if (type == 'input') {
-                number_string = angka.replace(/[^,\d]/g, '').toString(),
-                    split = number_string.split(',');
-                sisa = split[0].length % 3;
-                rupiah = split[0].substr(0, sisa);
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-            } else {
-                number_string = angka.toString();
-                split = number_string.split(',');
-                sisa = split[0].length % 3;
-                rupiah = split[0].substr(0, sisa);
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-            }
-
-
-            // tambahkan titik jika yang di input sudah menjadi angka ribuan
-            if (ribuan) {
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            // return prefix == undefined || ? rupiah : (rupiah ? '' + rupiah : '');
-            return (rupiah);
-        }
+        $("#price").maskMoney({thousands:'.', decimal:','})
 
         const getGramasi = (id_gramasi) => {
             const gramasis = JSON.parse('{!! $gramasi !!}')

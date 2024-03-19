@@ -91,6 +91,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js"></script>
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="{{ asset('public/css/custom-default.css') }}" type="text/css" id="custom-style">
+    <script src="{{ asset('public/js/jquery.maskMoney.js') }}"></script>
     
     @yield('css')
 </head>
