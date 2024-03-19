@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Gramasi;
+use App\Http\Requests\StorePriceRequest;
+use App\Http\Requests\UpdatePriceRequest;
 use App\Price;
 use App\ProductProperty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
 class PriceController extends Controller
@@ -16,7 +20,7 @@ class PriceController extends Controller
         return view('price.index');
     }
 
-    public function priceData(Request $request)
+    public function priceData()
     {
         $model = Price::query();
 
@@ -55,6 +59,12 @@ class PriceController extends Controller
             ->editColumn('updated_by', function($q) { 
                 return $q->updatedBy? $q->updatedBy->name : "-";
             })
+            ->editColumn('created_at', function($q) {
+                return date('d/m/Y', strtotime($q->created_at));
+            })
+            ->editColumn('updated_at', function($q) {
+                return date('d/m/Y', strtotime($q->updated_at));
+            })
             ->addIndexColumn()
             ->rawColumns(['action'])
             ->toJson();
@@ -77,33 +87,13 @@ class PriceController extends Controller
         return view('price.form', compact('price', 'gramasi', 'productProperty'));
     }
 
-    public function store(Request $request)
+    public function store(StorePriceRequest $request)
     {
-        $request->validate([
-            'price' => ['required'],
-            'gramasi_id' => ['required'],
-            'product_property_id' => ['required'],
-        ]);
-
-        $priceConverted = str_replace('.', '', $request->price);
-
-        $request->merge(['price' => $priceConverted]);
-
-        // get same data
-        $price = Price::where('price', $request->price)
-            ->where('gramasi_id', $request->gramasi_id)
-            ->where('product_property_id',  $request->product_property_id)
-            ->first();
-        
-        if ($price) {
-            return back()->with('message', "Data is already exist");
-        }
-
         try {
             DB::beginTransaction();
         
             Price::create([
-                'price' => $request->price,
+                'price' =>  moneyToNumeric($request->price, ","),
                 'gramasi_id' => $request->gramasi_id,
                 'product_property_id' => $request->product_property_id,
                 'created_by' => auth()->id()
@@ -111,45 +101,28 @@ class PriceController extends Controller
 
             DB::commit();
     
-            return redirect('master/price')->with('create_message', __('file.Data saved successfully'));
+            return redirect('master/price')->with(['type' => 'alert-success', 'message' => __('file.Data saved successfully')]);
 
         } catch (\Exception $exception) {
 
             DB::rollBack();
 
-            return back()->with('message', $exception->getMessage());
+            throw $exception;
+
+            return back()->with(['type' => 'alert-danger', 'message', $exception->getMessage()]);
         }
         
     }
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'price' => ['required'],
-            'gramasi_id' => ['required'],
-            'product_property_id' => ['required'],
-        ]);
-
+    public function update(UpdatePriceRequest $request, $id)
+    { 
         try {
             DB::beginTransaction();
-            
-            $priceConverted = str_replace('.', '', $request->price);
-            $request->merge(['price' => $priceConverted]);
-             // get same data
-            $priceExist = Price::where('price', $request->price)
-                ->where('gramasi_id', $request->gramasi_id)
-                ->where('product_property_id',  $request->product_property_id)
-                ->where('id', '!=', $id)
-                ->first();
-            
-            if ($priceExist) {
-                return back()->with('message', "Data is already exist");
-            }
 
             $price = Price::find($id);
-    
+            
             $price->update([
-                'price' => $request->price,
+                'price' => moneyToNumeric($request->price, ","),
                 'gramasi_id' => $request->gramasi_id,
                 'product_property_id' => $request->product_property_id,
                 'updated_by' => auth()->id()
