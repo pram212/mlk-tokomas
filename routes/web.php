@@ -395,6 +395,13 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	// currency routes
 	Route::resource('currency', 'CurrencyController');
 
+	Route::group(['prefix' => 'master', 'as' => 'master.'], function() {
+		Route::post('price-multi-delete', 'PriceController@destroyMultiple');
+		Route::get('price-datatable', 'PriceController@priceData');
+		Route::resource("price", 'PriceController');
+	});
+
+
 	// product categories routes
 	Route::group(['prefix' => 'product-categories', 'as' => 'product-categories.'], function() {
 		

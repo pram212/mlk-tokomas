@@ -13,15 +13,23 @@
                 {{-- PRODUCT CATEGORY MENU --}}
                 <li>
                     @php
-                        $requestIsOnProductCategoryMenu = request()->is('product-categories*') ? 'true' : 'false';
+                        $requestIsOnProductCategoryMenu = request()->is('product-categories*', 'master*', 'category*') ? 'true' : 'false';
                     @endphp
                     <a href="#productcategory" data-toggle="collapse"
                         aria-expanded="{{ $requestIsOnProductCategoryMenu }}">
-                        <i class="dripicons-card"></i><span>{{ __('file.Product Category') }}</span>
+                        <i class="dripicons-card"></i><span>Master</span>
                     </a>
 
                     <ul id="productcategory"
                         class="collapse list-unstyled @if ($requestIsOnProductCategoryMenu === 'true') show @endif">
+                        @can('viewAny', App\Category::class)
+                            <li id="category-menu" class="@if (request()->is('category*')) active @endif">
+                                <a href="{{ route('category.index') }}">{{ __('file.Product Category') }}</a>
+                            </li>
+                        @endcan
+                        <li id="price-list-menu" class="@if (request()->is('master/price*')) active @endif">
+                            <a href="{{ route('master.price.index') }}">{{ __('file.Price') }}</a>
+                        </li>
                         <li id="productcategory-list-menu" class="@if (request()->is('product-categories/tagtype*')) active @endif">
                             <a href="{{ route('product-categories.tagtype.index') }}">{{ __('file.Tagging Type') }}</a>
                         </li>
