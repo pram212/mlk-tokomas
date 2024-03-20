@@ -622,5 +622,6 @@ return [
 	"Updated At" => "Updated At",
 	"Created By" => "Created By",
 	"Updated By" => "Updated By",
+	"Gold Price" => "Gold Price"
 ];
 ?>
