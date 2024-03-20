@@ -621,6 +621,7 @@ return [
 	"Updated At" => "Diubah Pada",
 	"Created By" => "Dibuat Oleh",
 	"Updated By" => "Diubah Oleh",
+	"Gold Price" => "Harga Emas"
 ];
 
 ?>

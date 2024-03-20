@@ -1,6 +1,8 @@
 @extends('layout.main') @section('content')
     <section>
         <div class="container-fluid">
+            <h3>{{ trans('file.Gold Price') }} - {{ date('d M Y') }}</h3>
+            <hr>
             {{-- @if (in_array('products-add', $all_permission)) --}}
             <a href="{{ route('master.price.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
                 {{ __('file.Add Price') }}</a>
