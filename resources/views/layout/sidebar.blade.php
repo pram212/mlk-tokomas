@@ -80,8 +80,8 @@
                         @endcan
 
                         @can('printBarcode', App\Product::class)
-                            <li id="printBarcode-menu" class="@if (request()->is('products/print_barcode')) active @endif">
-                                <a href="{{ route('products.printBarcode') }}">{{ __('file.print_barcode') }}</a>
+                            <li id="printBarcode-menu" class="@if (request()->is('product-print_barcode')) active @endif">
+                                <a href="{{ route('printBarcode') }}">{{ __('file.print_barcode') }}</a>
                             </li>
                         @endcan
 
