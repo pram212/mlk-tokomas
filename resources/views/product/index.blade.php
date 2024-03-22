@@ -419,7 +419,7 @@
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-                    url: '{!! url('products/product-datatable') !!}',
+                    url: '{!! route('product-datatable') !!}',
                     dataType: "json",
                     type: "get"
                 },
@@ -607,8 +607,7 @@
             // handle button lihat untuk menapilkan detail produk
             $('#product-data-table tbody').on('click', 'a.btn-view', function(e) {
                 var tr = $(this).closest('tr'); // ambil row table (tr) dari baris terpilih
-                var data = table.row(tr)
-            .data(); // ambil isi data (data sesuai dengan yang dikirim dari backend)
+                var data = table.row(tr).data(); // ambil isi data (data sesuai dengan yang dikirim dari backend)
                 // isi inputan yang ada di modal box detail product
                 $("#dtl-code").val(data.code);
                 $("#dtl-price").val(data.price);

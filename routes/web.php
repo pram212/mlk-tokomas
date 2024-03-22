@@ -28,87 +28,88 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	Route::get('language_switch/{locale}', 'LanguageController@switchLanguage');
 
 	// role permission routes
+	Route::resource('/role', 'RoleController');
 	Route::group(['prefix' => 'role', 'as' => 'role.'], function () {
 		Route::post('set_permission', 'RoleController@setPermission')->name('setPermission');
 		Route::get('permission/{id}', 'RoleController@permission')->name('permission');
-		Route::resource('/', 'RoleController');
 	});
 
 	// unit routes
+	Route::resource('unit', 'UnitController');
 	Route::group(['prefix' => 'unit', 'as' => 'unit.'], function () {
 		Route::get('lims_unit_search', 'UnitController@limsUnitSearch')->name('search');
 		Route::post('importunit', 'UnitController@importUnit')->name('import');
 		Route::post('deletebyselection', 'UnitController@deleteBySelection');
-		Route::resource('/', 'UnitController');
 	});
 
 	// category routes
+	Route::resource('category', 'CategoryController');
 	Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
 		Route::get('category-datatable', 'CategoryController@categoryDatatable');
 		Route::post('deletebyselection', 'CategoryController@deleteBySelection');
 		Route::post('import', 'CategoryController@import')->name('import');
 		Route::post('category-data', 'CategoryController@categoryData');
-		Route::resource('/', 'CategoryController');
 	});
 
 	// brand routes
+	Route::resource('brand', 'BrandController');
 	Route::group(['prefix' => 'brand', 'as' => 'brand.'], function () {
 		Route::get('lims_brand_search', 'BrandController@limsBrandSearch')->name('search');
 		Route::post('importbrand', 'BrandController@importBrand')->name('import');
 		Route::post('deletebyselection', 'BrandController@deleteBySelection');
-		Route::resource('/', 'BrandController');
 	});
 
 	// supplier routes
+	Route::resource('supplier', 'SupplierController');
 	Route::group(['prefix' => 'supplier', 'as' => 'supplier.'], function () {
 		Route::get('lims_supplier_search', 'SupplierController@limsSupplierSearch')->name('search');
 		Route::post('importsupplier', 'SupplierController@importSupplier')->name('import');
 		Route::post('deletebyselection', 'SupplierController@deleteBySelection');
-		Route::resource('/', 'SupplierController');
 	});
 
 	// warehouse routes
+	Route::resource('warehouse', 'WarehouseController');
 	Route::group(['prefix' => 'warehouse', 'as' => 'warehouse.'], function () {
 		Route::get('lims_warehouse_search', 'WarehouseController@limsWarehouseSearch')->name('search');
 		Route::post('importwarehouse', 'WarehouseController@importWarehouse')->name('import');
 		Route::post('deletebyselection', 'WarehouseController@deleteBySelection');
-		Route::resource('/', 'WarehouseController');
 	});
 
 	// tax routes
+	Route::resource('tax', 'TaxController');
 	Route::group(['prefix' => 'tax', 'as' => 'tax.'], function () {
 		Route::get('lims_tax_search', 'TaxController@limsTaxSearch')->name('search');
 		Route::post('importtax', 'TaxController@importTax')->name('import');
 		Route::post('deletebyselection', 'TaxController@deleteBySelection');
-		Route::resource('/', 'TaxController');
 	});
 
 	// product routes
+	Route::resource('products', 'ProductController');
+	Route::get('product-datatable', 'ProductController@productDataTable')->name('product-datatable');
+	Route::get('print_barcode', 'ProductController@printBarcode')->name('printBarcode');
 	Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
 		Route::get('lims_product_search', 'ProductController@limsProductSearch')->name('search');
-		Route::get('print_barcode', 'ProductController@printBarcode')->name('printBarcode');
 		Route::post('importproduct', 'ProductController@importProduct')->name('import');
 		Route::post('exportproduct', 'ProductController@exportProduct')->name('export');
 		Route::get('product_warehouse/{id}', 'ProductController@productWarehouseData');
 		Route::post('deletebyselection', 'ProductController@deleteBySelection');
-		Route::get('product-datatable', 'ProductController@productDataTable');
 		Route::get('saleunit/{id}', 'ProductController@saleUnit');
 		// Route::get('getbarcode', 'ProductController@getBarcode');
 		Route::get('getdata/{id}', 'ProductController@getData');
 		Route::get('gencode', 'ProductController@generateCode');
 		Route::get('search', 'ProductController@search');
-		Route::resource('/', 'ProductController');
 	});
 
 	// customer group routes
+	Route::resource('customer_group', 'CustomerGroupController');
 	Route::group(['prefix' => 'customer_group', 'as' => 'customer_group.'], function () {
 		Route::get('lims_customer_group_search', 'CustomerGroupController@limsCustomerGroupSearch')->name('search');
 		Route::post('importcustomer_group', 'CustomerGroupController@importCustomerGroup')->name('import');
 		Route::post('deletebyselection', 'CustomerGroupController@deleteBySelection');
-		Route::resource('/', 'CustomerGroupController');
 	});
 
 	// customer routes
+	Route::resource('customer', 'CustomerController');
 	Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
 		Route::get('lims_customer_search', 'CustomerController@limsCustomerSearch')->name('search');
 		Route::post('update_deposit', 'CustomerController@updateDeposit')->name('updateDeposit');
@@ -117,18 +118,18 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::post('add_deposit', 'CustomerController@addDeposit')->name('addDeposit');
 		Route::post('deletebyselection', 'CustomerController@deleteBySelection');
 		Route::get('getDeposit/{id}', 'CustomerController@getDeposit');
-		Route::resource('/', 'CustomerController');
 	});
 
 	// biller routes
+	Route::resource('biller', 'BillerController');
 	Route::group(['prefix' => 'biller', 'as' => 'biller.'], function () {
 		Route::get('lims_biller_search', 'BillerController@limsBillerSearch')->name('search');
 		Route::post('importbiller', 'BillerController@importBiller')->name('import');
 		Route::post('deletebyselection', 'BillerController@deleteBySelection');
-		Route::resource('/', 'BillerController');
 	});
 
 	// sales routes
+	Route::resource('/sales', 'SaleController');
 	Route::group(['prefix' => 'sales', 'as' => 'sales.'], function () {
 		Route::get('lims_product_search', 'SaleController@limsProductSearch')->name('product_sale.search');
 		Route::get('getcustomergroup/{id}', 'SaleController@getCustomerGroup')->name('getcustomergroup');
@@ -155,7 +156,6 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('sale_by_csv', 'SaleController@saleByCsv');
 		Route::get('today-sale', 'SaleController@todaySale');
 		Route::post('sale-data', 'SaleController@saleData');
-		Route::resource('/', 'SaleController');
 	});
 
 	// delivery routes
@@ -172,6 +172,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	});
 
 	// quotation routes
+	Route::resource('/quotations', 'QuotationController');
 	Route::group(['prefix' => 'quotations', 'as' => 'quotations.'], function() {
 		Route::get('lims_product_search', 'QuotationController@limsProductSearch')->name('product_quotation.search');
 		Route::get('getcustomergroup/{id}', 'QuotationController@getCustomerGroup')->name('getcustomergroup');
@@ -181,10 +182,10 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('product_quotation/{id}', 'QuotationController@productQuotationData');
 		Route::post('sendmail', 'QuotationController@sendMail')->name('sendmail');
 		Route::post('deletebyselection', 'QuotationController@deleteBySelection');
-		Route::resource('/', 'QuotationController');
 	});
 
 	// purchase routes
+	Route::resource('/purchases', 'PurchaseController');
 	Route::group(['prefix' => 'purchases', 'as' => 'purchases.'], function() {
 		Route::get('lims_product_search', 'PurchaseController@limsProductSearch')->name('product_purchase.search');
 		Route::post('updatepayment', 'PurchaseController@updatePayment')->name('update-payment');
@@ -196,10 +197,10 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('product_purchase/{id}', 'PurchaseController@productPurchaseData');
 		Route::post('deletebyselection', 'PurchaseController@deleteBySelection');
 		Route::get('purchase_by_csv', 'PurchaseController@purchaseByCsv');
-		Route::resource('/', 'PurchaseController');
 	});
 
 	// tranfer routes
+	Route::resource('/transfers', 'TransferController');
 	Route::group(['prefix' => 'transfers', 'as' => 'transfers.'], function() {
 		Route::get('lims_product_search', 'TransferController@limsProductSearch')->name('product_transfer.search');
 		Route::post('importtransfer', 'TransferController@importTransfer')->name('import');
@@ -207,18 +208,18 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('product_transfer/{id}', 'TransferController@productTransferData');
 		Route::post('deletebyselection', 'TransferController@deleteBySelection');
 		Route::get('transfer_by_csv', 'TransferController@transferByCsv');
-		Route::resource('/', 'TransferController');
 	});
 
 	// qty adjustment routes
+	Route::resource('/qty_adjustment', 'AdjustmentController');
 	Route::group(['prefix' => 'qty_adjustment', 'as' => 'qty_adjustment.'], function() {
 		Route::get('lims_product_search', 'AdjustmentController@limsProductSearch')->name('product_adjustment.search');
 		Route::get('getproduct/{id}', 'AdjustmentController@getProduct')->name('adjustment.getproduct');
 		Route::post('deletebyselection', 'AdjustmentController@deleteBySelection');
-		Route::resource('/', 'AdjustmentController');
 	});
 
 	// return sale routes
+	Route::resource('/return-sale', 'ReturnController');
 	Route::group(['prefix' => 'return-sale', 'as' => 'return-sale.'], function() {
 		Route::get('getcustomergroup/{id}', 'ReturnController@getCustomerGroup')->name('getcustomergroup');
 		Route::get('lims_product_search', 'ReturnController@limsProductSearch')->name('product_search');
@@ -226,10 +227,10 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('product_return/{id}', 'ReturnController@productReturnData');
 		Route::post('sendmail', 'ReturnController@sendMail')->name('sendmail');
 		Route::post('deletebyselection', 'ReturnController@deleteBySelection');
-		Route::resource('/', 'ReturnController');
 	});
 
 	// return purchase routes
+	Route::resource('/return-purchase', 'ReturnPurchaseController');
 	Route::group(['prefix' => 'return-purchase', 'as' => 'return-purchase.'], function() {
 		Route::get('lims_product_search', 'ReturnPurchaseController@limsProductSearch')->name('product_return-purchase.search');
 		Route::get('getcustomergroup/{id}', 'ReturnPurchaseController@getCustomerGroup')->name('getcustomergroup');
@@ -237,7 +238,6 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('product_return/{id}', 'ReturnPurchaseController@productReturnData');
 		Route::post('deletebyselection', 'ReturnPurchaseController@deleteBySelection');
 		Route::post('sendmail', 'ReturnPurchaseController@sendMail')->name('sendmail');
-		Route::resource('/', 'ReturnPurchaseController');
 	});
 	
 	// report routes
@@ -268,13 +268,13 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	});
 
 	// user routes
+	Route::resource('/user', 'UserController');
 	Route::group(['prefix' => 'user', 'as' => 'user.'], function() {
 		Route::put('update_profile/{id}', 'UserController@profileUpdate')->name('profileUpdate');
 		Route::put('changepass/{id}', 'UserController@changePassword')->name('password');
 		Route::get('profile/{id}', 'UserController@profile')->name('profile');
 		Route::post('deletebyselection', 'UserController@deleteBySelection');
 		Route::get('genpass', 'UserController@generatePassword');
-		Route::resource('/', 'UserController');
 	});
 
 	// setting routes
@@ -297,83 +297,83 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	});
 
 	// expense categories routes
+	Route::resource('/expense_categories', 'ExpenseCategoryController');
 	Route::group(['prefix' => 'expense_categories', 'as' => 'expense_categories.'], function() {
 		Route::post('deletebyselection', 'ExpenseCategoryController@deleteBySelection');
 		Route::post('import', 'ExpenseCategoryController@import')->name('import');
 		Route::get('gencode', 'ExpenseCategoryController@generateCode');
-		Route::resource('/', 'ExpenseCategoryController');
 	});
 
 	// expenses routes
+	Route::resource('/expenses', 'ExpenseController');
 	Route::group(['prefix' => 'expenses', 'as' => 'expenses.'], function() {
 		Route::post('deletebyselection', 'ExpenseController@deleteBySelection');
-		Route::resource('/', 'ExpenseController');
 	});
 
 	// gift card routes
+	Route::resource('/gift_cards', 'GiftCardController');
 	Route::group(['prefix' => 'gift_cards', 'as' => 'gift_cards.'], function() {
 		Route::post('recharge/{id}', 'GiftCardController@recharge')->name('recharge');
 		Route::post('deletebyselection', 'GiftCardController@deleteBySelection');
 		Route::get('gencode', 'GiftCardController@generateCode');
-		Route::resource('/', 'GiftCardController');
 	});
 
 	// coupen routes
+	Route::resource('/coupons', 'CouponController');
 	Route::group(['prefix' => 'coupons', 'as' => 'coupons.'], function() {
 		Route::post('deletebyselection', 'CouponController@deleteBySelection');
 		Route::get('gencode', 'CouponController@generateCode');
-		Route::resource('/', 'CouponController');
 	});
 
 	// accounting routes
+	Route::resource('/accounts', 'AccountsController');
 	Route::group(['prefix' => 'accounts', 'as' => 'accounts.'], function() {
 		Route::post('account-statement', 'AccountsController@accountStatement')->name('statement');
 		Route::get('balancesheet', 'AccountsController@balanceSheet')->name('balancesheet');
 		Route::get('make-default/{id}', 'AccountsController@makeDefault');
-		Route::resource('/', 'AccountsController');
 	});
 
 	// money transfer routes
 	Route::resource('money-transfers', 'MoneyTransferController');
 
 	// Departments routes
+	Route::resource('/departments', 'DepartmentController');
 	Route::group(['prefix' => 'departments', 'as' => 'departments.'], function() {
 		Route::post('/deletebyselection', 'DepartmentController@deleteBySelection');
-		Route::resource('/', 'DepartmentController');
 	});
 
 	// employees routes
+	Route::resource('/employees', 'EmployeeController');
 	Route::group(['prefix' => 'employees', 'as' => 'employees.'], function() {
 		Route::post('deletebyselection', 'EmployeeController@deleteBySelection');
-		Route::resource('/', 'EmployeeController');
 	});
 
 	// payroll routes
+	Route::resource('/payroll', 'PayrollController');
 	Route::group(['prefix' => 'payroll', 'as' => 'payroll.'], function() {
 		Route::post('deletebyselection', 'PayrollController@deleteBySelection');
-		Route::resource('/', 'PayrollController');
 	});
 
 	// attendance routes
+	Route::resource('/attendance', 'AttendanceController');
 	Route::group(['prefix' => 'attendance', 'as' => 'attendance.'], function() {
 		Route::post('deletebyselection', 'AttendanceController@deleteBySelection');
-		Route::resource('/', 'AttendanceController');
 	});
 
 	// stock count routes
+	Route::resource('/stock-count', 'StockCountController');
 	Route::group(['prefix' => 'stock-count', 'as' => 'stock-count.'], function() {
 		Route::get('{id}/qty_adjustment', 'StockCountController@qtyAdjustment')->name('adjustment');
 		Route::post('finalize', 'StockCountController@finalize')->name('finalize');
 		Route::get('stockdif/{id}', 'StockCountController@stockDif');
-		Route::resource('/', 'StockCountController');
 	});
 
 	// holidays routes
+	Route::resource('/holidays', 'HolidayController');
 	Route::group(['prefix' => 'holidays', 'as' => 'holidays.'], function() {
 		Route::get('approve-holiday/{id}', 'HolidayController@approveHoliday')->name('approveHoliday');
 		Route::get('my-holiday/{year}/{month}', 'HolidayController@myHoliday')->name('myHoliday');
 		Route::post('deletebyselection', 'HolidayController@deleteBySelection');
-		Route::resource('/', 'HolidayController');
 	});
 
 	// cash register routes
@@ -398,7 +398,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	Route::group(['prefix' => 'master', 'as' => 'master.'], function() {
 		Route::post('price-multi-delete', 'PriceController@destroyMultiple');
 		Route::get('price-datatable', 'PriceController@priceData');
-		Route::resource("price", 'PriceController');
+		Route::resource("/price", 'PriceController');
 	});
 
 
