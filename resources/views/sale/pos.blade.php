@@ -61,7 +61,7 @@
               @endif
               @endif
               @if($print_barcode_active)
-              <li id="printBarcode-menu"><a href="{{route('products.printBarcode')}}">{{__('file.print_barcode')}}</a></li>
+              <li id="printBarcode-menu"><a href="{{route('printBarcode')}}">{{__('file.print_barcode')}}</a></li>
               @endif
               @if($adjustment_active)
                 <li id="adjustment-list-menu"><a href="{{route('qty_adjustment.index')}}">{{trans('file.Adjustment List')}}</a></li>

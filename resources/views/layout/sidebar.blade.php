@@ -192,7 +192,7 @@
                                 <a href="{{ route('expenses.index') }}">{{ trans('file.Expense List') }}</a>
                             </li>
                             @can('create', App\Expense::class)
-                                <li class="@if (request()->is('expenses/create')) active @endif">>
+                                <li class="@if (request()->is('expenses/create')) active @endif">
                                     <a id="add-expense" href=""> {{ trans('file.Add Expense') }}</a>
                                 </li>
                             @endcan
