@@ -121,9 +121,9 @@
                             <li id="purchase-create-menu" class="@if (request()->is('purchases/create')) active @endif">
                                 <a href="{{ route('purchases.create') }}">{{ trans('file.Add Purchase') }}</a>
                             </li>
-                            <li id="purchase-import-menu" class="@if (request()->is('purchases/purchase_by_csv')) active @endif">
+                            <li id="purchase-import-menu" class="@if (request()->is('/purchase_by_csv')) active @endif">
                                 <a
-                                    href="{{ url('purchases/purchase_by_csv') }}">{{ trans('file.Import Purchase By CSV') }}</a>
+                                    href="{{ url('/purchase_by_csv') }}">{{ trans('file.Import Purchase By CSV') }}</a>
                             </li>
                         @endcan
                     </ul>

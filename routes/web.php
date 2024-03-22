@@ -186,6 +186,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// purchase routes
 	Route::resource('/purchases', 'PurchaseController');
+	Route::get('purchase_by_csv', 'PurchaseController@purchaseByCsv');
 	Route::group(['prefix' => 'purchases', 'as' => 'purchases.'], function() {
 		Route::get('lims_product_search', 'PurchaseController@limsProductSearch')->name('product_purchase.search');
 		Route::post('updatepayment', 'PurchaseController@updatePayment')->name('update-payment');
@@ -196,7 +197,6 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::post('purchase-data', 'PurchaseController@purchaseData')->name('data');
 		Route::get('product_purchase/{id}', 'PurchaseController@productPurchaseData');
 		Route::post('deletebyselection', 'PurchaseController@deleteBySelection');
-		Route::get('purchase_by_csv', 'PurchaseController@purchaseByCsv');
 	});
 
 	// tranfer routes
