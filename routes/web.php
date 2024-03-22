@@ -129,8 +129,9 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	});
 
 	// sales routes
-	Route::resource('/sales', 'SaleController');
+	Route::resource('/sales', 'SaleController')->except('show');
 	Route::group(['prefix' => 'sales', 'as' => 'sales.'], function () {
+		Route::get('pos', 'SaleController@posSale')->name('pos');
 		Route::get('lims_product_search', 'SaleController@limsProductSearch')->name('product_sale.search');
 		Route::get('getcustomergroup/{id}', 'SaleController@getCustomerGroup')->name('getcustomergroup');
 		Route::get('print-last-reciept', 'SaleController@printLastReciept')->name('printLastReciept');
@@ -148,7 +149,6 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::post('sendmail', 'SaleController@sendMail')->name('sendmail');
 		Route::post('deletebyselection', 'SaleController@deleteBySelection');
 		Route::get('product_sale/{id}', 'SaleController@productSaleData');
-		Route::get('pos', 'SaleController@posSale')->name('pos');
 		Route::get('paypalSuccess', 'SaleController@paypalSuccess');
 		Route::get('get_gift_card', 'SaleController@getGiftCard');
 		Route::get('getfeatured', 'SaleController@getFeatured');
@@ -173,6 +173,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// quotation routes
 	Route::resource('/quotations', 'QuotationController');
+	Route::post('quotations-sendmail', 'QuotationController@sendMail')->name('quotations.sendmail');
 	Route::group(['prefix' => 'quotations', 'as' => 'quotations.'], function() {
 		Route::get('lims_product_search', 'QuotationController@limsProductSearch')->name('product_quotation.search');
 		Route::get('getcustomergroup/{id}', 'QuotationController@getCustomerGroup')->name('getcustomergroup');
@@ -180,7 +181,6 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('{id}/create_sale', 'QuotationController@createSale')->name('create_sale');
 		Route::get('getproduct/{id}', 'QuotationController@getProduct')->name('getproduct');
 		Route::get('product_quotation/{id}', 'QuotationController@productQuotationData');
-		Route::post('sendmail', 'QuotationController@sendMail')->name('sendmail');
 		Route::post('deletebyselection', 'QuotationController@deleteBySelection');
 	});
 
