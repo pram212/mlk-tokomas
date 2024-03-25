@@ -133,10 +133,10 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	Route::get('sales-getproduct/{id}', 'SaleController@getProduct')->name('getproduct');
 	Route::get('sales-getproduct/{category_id}/{brand_id}', 'SaleController@getProductByFilter');
 	Route::get('sales-getcustomergroup/{id}', 'SaleController@getCustomerGroup')->name('getcustomergroup');
+	Route::get('sales-lims_product_search', 'SaleController@limsProductSearch')->name('product_sale.search');
 
 	Route::group(['prefix' => 'sales', 'as' => 'sales.'], function () {
 		Route::get('pos', 'SaleController@posSale')->name('pos');
-		Route::get('lims_product_search', 'SaleController@limsProductSearch')->name('product_sale.search');
 		Route::get('print-last-reciept', 'SaleController@printLastReciept')->name('printLastReciept');
 		Route::post('updatepayment', 'SaleController@updatePayment')->name('update-payment');
 		Route::post('deletepayment', 'SaleController@deletePayment')->name('delete-payment');

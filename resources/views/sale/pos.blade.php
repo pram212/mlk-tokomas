@@ -2704,7 +2704,7 @@ function confirmDelete() {
 function productSearch(data) {
     $.ajax({
         type: 'GET',
-        url: 'sales/lims_product_search',
+        url: '{!! url("sales-lims_product_search") !!}',
         data: {
             data: data
         },
