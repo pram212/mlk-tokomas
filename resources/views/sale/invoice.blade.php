@@ -98,7 +98,7 @@
                 <img src="{{ asset($general_setting->site_logo)}}" height="42" width="42" style="margin:10px 0;filter: brightness(0);">
             @endif
             
-            <h2>{{ $general_setting->site_title }}</h2>
+            <h2> TOKOMAS BIMA </h2>
             
             <p>{{trans('file.Address')}}: {{$lims_warehouse_data->address}}
                 <br>{{trans('file.Phone Number')}}: {{$lims_warehouse_data->phone}}
