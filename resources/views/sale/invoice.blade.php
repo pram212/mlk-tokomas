@@ -205,10 +205,8 @@
                 </tr>                
                 @endforeach
                 <tr>
-                    <td>
-                        Perhatian :
-                    </td>
-                    <td colspan="2">
+                    <td colspan="3">
+                        <p>Perhatian:</p>
                         <ul>
                             <li>Jika barang dijual ongkos bikin hilang.</li>
                             <li>Harga jual dan beli beda.</li>
