@@ -40,6 +40,27 @@
 
                                             <div class="col-md-6">
                                                 <div class="form-group">
+                                                    <label for=""><strong>{{ __('file.Gold Content') }}</strong></label>
+                                                    <input type="text" class="form-control" name="gold_content" value="{{ old('gold_content', $product->gold_content) }}" id="input-gold_content">
+                                                    @error('gold_content')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for=""><strong>{{ __('file.Additional Code') }}</strong></label>
+                                                    <input type="text" class="form-control" name="additional_code" value="{{ old('additional_code', $product->additional_code ) }}" id="input-additional_code">
+                                                    @error('additional_code')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
                                                     <label>{{ trans('file.Product Code') }} *</strong> </label>
                                                     <div class="input-group">
                                                         <input type="text" name="code" class="form-control"
@@ -210,7 +231,7 @@
 
         // handle aksi generate genereate code 
         $('#genbutton').on("click", function() {
-            $.get("{!! url('products/gencode') !!}", function(data) {
+            $.get("{!! url('products-gencode') !!}", function(data) {
                 $("input[name='code']").val(data)
                 generateQRCode(data, "prev-qrcode")
             })

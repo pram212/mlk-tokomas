@@ -87,6 +87,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	Route::resource('products', 'ProductController');
 	Route::get('product-datatable', 'ProductController@productDataTable')->name('product-datatable');
 	Route::get('print_barcode', 'ProductController@printBarcode')->name('printBarcode');
+	Route::get('products-gencode', 'ProductController@generateCode');
 	Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
 		Route::get('lims_product_search', 'ProductController@limsProductSearch')->name('search');
 		Route::post('importproduct', 'ProductController@importProduct')->name('import');
@@ -96,7 +97,6 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('saleunit/{id}', 'ProductController@saleUnit');
 		// Route::get('getbarcode', 'ProductController@getBarcode');
 		Route::get('getdata/{id}', 'ProductController@getData');
-		Route::get('gencode', 'ProductController@generateCode');
 		Route::get('search', 'ProductController@search');
 	});
 

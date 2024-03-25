@@ -621,7 +621,9 @@ return [
 	"Updated At" => "Diubah Pada",
 	"Created By" => "Dibuat Oleh",
 	"Updated By" => "Diubah Oleh",
-	"Gold Price" => "Harga Emas"
+	"Gold Price" => "Harga Emas",
+	"Additional Code" => "Kode Tambahan",
+	"Gold Content" => "Kadar Mas",
 ];
 
 ?>
