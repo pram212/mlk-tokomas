@@ -130,17 +130,18 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// sales routes
 	Route::resource('/sales', 'SaleController')->except('show');
+	Route::get('sales-getproduct/{id}', 'SaleController@getProduct')->name('getproduct');
+	Route::get('sales-getproduct/{category_id}/{brand_id}', 'SaleController@getProductByFilter');
+	Route::get('sales-getcustomergroup/{id}', 'SaleController@getCustomerGroup')->name('getcustomergroup');
+
 	Route::group(['prefix' => 'sales', 'as' => 'sales.'], function () {
 		Route::get('pos', 'SaleController@posSale')->name('pos');
 		Route::get('lims_product_search', 'SaleController@limsProductSearch')->name('product_sale.search');
-		Route::get('getcustomergroup/{id}', 'SaleController@getCustomerGroup')->name('getcustomergroup');
 		Route::get('print-last-reciept', 'SaleController@printLastReciept')->name('printLastReciept');
-		Route::get('getproduct/{category_id}/{brand_id}', 'SaleController@getProductByFilter');
 		Route::post('updatepayment', 'SaleController@updatePayment')->name('update-payment');
 		Route::post('deletepayment', 'SaleController@deletePayment')->name('delete-payment');
 		Route::get('getpayment/{id}', 'SaleController@getPayment')->name('get-payment');
 		Route::get('lims_sale_search', 'SaleController@limsSaleSearch')->name('search');
-		Route::get('getproduct/{id}', 'SaleController@getProduct')->name('getproduct');
 		Route::get('paypalPaymentSuccess/{id}', 'SaleController@paypalPaymentSuccess');
 		Route::get('gen_invoice/{id}', 'SaleController@genInvoice')->name('invoice');
 		Route::post('add_payment', 'SaleController@addPayment')->name('add-payment');

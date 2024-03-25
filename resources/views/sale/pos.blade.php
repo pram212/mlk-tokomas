@@ -2094,12 +2094,12 @@ else {
 $('.selectpicker').selectpicker('refresh');
 
 var id = $("#customer_id").val();
-$.get('sales/getcustomergroup/' + id, function(data) {
+$.get(`{!! url('sales-getcustomergroup/${id}') !!}`, function(data) {
     customer_group_rate = (data / 100);
 });
 
 var id = $("#warehouse_id").val();
-$.get('sales/getproduct/' + id, function(data) {
+$.get(`{!! url('sales-getproduct/${id}') !!}`, function(data) {
     lims_product_array = [];
     product_code = data[0];
     product_name = data[1];
@@ -2118,7 +2118,7 @@ isCashRegisterAvailable(id);
 
 function isCashRegisterAvailable(warehouse_id) {
     $.ajax({
-        url: 'cash-register/check-availability/'+warehouse_id,
+        url: `{!! url('cash-register/check-availability/${warehouse_id}') !!}`,
         type: "GET",
         success:function(data) {
             if(data == 'false') {
@@ -2196,7 +2196,7 @@ $('.category-img').on('click', function(){
     var brand_id = 0;
 
     $(".table-container").children().remove();
-    $.get('sales/getproduct/' + category_id + '/' + brand_id, function(data) {
+    $.get('/sales-getproduct/' + category_id + '/' + brand_id, function(data) {
         populateProduct(data);
     });
 });
@@ -2213,7 +2213,7 @@ $('.brand-img').on('click', function(){
     var category_id = 0;
 
     $(".table-container").children().remove();
-    $.get('sales/getproduct/' + category_id + '/' + brand_id, function(data) {
+    $.get('/sales-getproduct/' + category_id + '/' + brand_id, function(data) {
         populateProduct(data);
     });
 });
@@ -2271,7 +2271,7 @@ function populateProduct(data) {
 $('select[name="customer_id"]').on('change', function() {
     saveValue(this);
     var id = $(this).val();
-    $.get('sales/getcustomergroup/' + id, function(data) {
+    $.get(`{!! url('sales-getcustomergroup/${id}') !!}`, function(data) {
         customer_group_rate = (data / 100);
     });
 });
@@ -2283,7 +2283,7 @@ $('select[name="biller_id"]').on('change', function() {
 $('select[name="warehouse_id"]').on('change', function() {
     saveValue(this);
     warehouse_id = $(this).val();
-    $.get('sales/getproduct/' + warehouse_id, function(data) {
+    $.get(`{!! url('sales-getproduct/${warehouse_id}') !!}`, function(data) {
         lims_product_array = [];
         product_code = data[0];
         product_name = data[1];

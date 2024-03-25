@@ -912,8 +912,10 @@ class SaleController extends Controller
             $qty_list[] = $lims_product_data->qty_list;
         }
         //retrieve product with type of digital and combo
-        $lims_product_data = Product::whereNotIn('type', ['standard'])->where('is_active', true)->get();
-        foreach ($lims_product_data as $product) 
+        // $lims_product_data = Product::whereNotIn('type', ['standard'])->where('is_active', true)->get();
+        $lims_product_data = Product::get();
+
+        foreach ($lims_product_data as $product)
         {
             $product_qty[] = $product->qty;
             $product_code[] =  $product->code;
