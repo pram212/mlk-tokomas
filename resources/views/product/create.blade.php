@@ -39,6 +39,26 @@
 
                                             <div class="col-md-6">
                                                 <div class="form-group">
+                                                    <label for=""><strong>{{ __('file.Gold Content') }}</strong></label>
+                                                    <input type="text" class="form-control" name="gold_content" value="{{ old('gold_content') }}" id="input-gold_content">
+                                                    @error('gold_content')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for=""><strong>{{ __('file.Additional Code') }}</strong></label>
+                                                    <input type="text" class="form-control" name="additional_code" value="{{ old('additional_code') }}" id="input-additional_code">
+                                                    @error('additional_code')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
                                                     <label>{{ trans('file.Product Code') }} *</strong> </label>
                                                     <div class="input-group">
                                                         <input type="text" name="code" class="form-control"
@@ -137,11 +157,14 @@
                                                     <div class="col-md-6 pt-3">
                                                         <div class="row font-weight-bold">
                                                             <div class="col-md-6 mb-3">
-                                                                <h1 id="prev-kd-gramasi"></h1>
+                                                                <h1 id="prev-gold_content"></h1>
+                                                                {{-- <h1 id="prev-kd-gramasi"></h1> --}}
                                                             </div>
 
                                                             <div class="col-md-6 text-right mb-3">
-                                                                <h1 id="prev-diskon"></h1>
+                                                                <div id="prev-diskon">
+                                                                    <span id="prev-additional_code"></span> / <span id="prev-diskon"></span>
+                                                                </div>
                                                             </div>
 
                                                             <div class="col-md-12 text-center">
@@ -195,7 +218,7 @@
         });
 
         $('#genbutton').on("click", function() {
-            $.get('gencode', function(data) {
+            $.get('{!! url("products-gencode") !!}', function(data) {
                 $("input[name='code']").val(data);
                 generateQRCode(data, "prev-qrcode")
             });
@@ -301,6 +324,18 @@
             e.preventDefault();
             const mg = e.target.value
             $("#prev-mg").text(mg);
+        });
+
+        $("#input-gold_content").bind("input", function(e) {
+            e.preventDefault();
+            const goldContent = e.target.value
+            $("#prev-gold_content").text(goldContent);
+        });
+
+        $("#input-additional_code").bind("input", function(e) {
+            e.preventDefault();
+            const code = e.target.value
+            $("#prev-additional_code").text(code);
         });
 
         $("#input-diskon").bind("input", function(e) {

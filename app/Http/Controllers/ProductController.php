@@ -418,9 +418,9 @@ class ProductController extends Controller
             ->orderBy("created_at", "desc")
             ->with([ 'tagType:id,code,color', 'productProperty:id,code,description', 'gramasi:id,code,gramasi' ]);
 
-        return DataTables::of($productQuery)
+        $datatable =  DataTables::of($productQuery)
             ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
-            ->editColumn('price', fn ($product) => number_format($product->price, 2))
+            ->editColumn('price', fn ($product) => $product->price )
             ->addColumn('product_property_description', fn ($product) => $product->productProperty->description ?? "-")
             ->addColumn('product_property_code', fn ($product) => $product->productProperty->code ?? "-")
             ->addColumn('gramasi_gramasi', fn ($product) => $product->gramasi->gramasi ?? "-")
@@ -455,5 +455,8 @@ class ProductController extends Controller
             })
             ->rawColumns(['tag_type_color', 'action'])
             ->make();
+
+            return $datatable;
+            
     }
 }

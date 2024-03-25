@@ -426,9 +426,6 @@
                 "columns": [{
                         "data": "code"
                     },
-                    // {
-                    //     "data": "image"
-                    // },
                     {
                         "data": "name"
                     },
