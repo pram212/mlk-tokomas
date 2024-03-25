@@ -95,10 +95,10 @@
     <div id="receipt-data">
         <div class="centered">
             @if($general_setting->site_logo)
-                <img src="{{url('public/logo', $general_setting->site_logo)}}" height="42" width="42" style="margin:10px 0;filter: brightness(0);">
+                <img src="{{ asset($general_setting->site_logo)}}" height="42" width="42" style="margin:10px 0;filter: brightness(0);">
             @endif
             
-            <h2>{{$lims_biller_data->company_name}}</h2>
+            <h2> TOKOMAS BIMA </h2>
             
             <p>{{trans('file.Address')}}: {{$lims_warehouse_data->address}}
                 <br>{{trans('file.Phone Number')}}: {{$lims_warehouse_data->phone}}
@@ -110,7 +110,9 @@
         </p>
         <table class="table-data">
             <tbody>
-                <?php $total_product_tax = 0;?>
+                @php
+                    $total_product_tax = 0;
+                @endphp
                 @foreach($lims_product_sale_data as $key => $product_sale_data)
                 <?php 
                     $lims_product_data = \App\Product::find($product_sale_data->product_id);
