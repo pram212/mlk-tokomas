@@ -25,6 +25,8 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'product_property_id' => ['required'],
+            'additional_code' => ['required'],
+            'gold_content' => ['required'],
             'tag_type_id' => ['required'],
             'gramasi_id' => ['required'],
             'discount' => ['required'],

@@ -147,13 +147,19 @@ class ProductController extends Controller
 
             DB::commit();
 
-            return back()->with('create_message', 'Product updated successfully');
+            return back()->with([
+                'type' => 'alert-success',
+                'message' => 'Product updated successfully'
+            ]);
 
         } catch (\Exception $ex) {
 
             DB::rollBack();
 
-            return back()->with('create_message', $ex->getMessage());
+            return back()->with([
+                'type' => 'alert-error',
+                'message' => $ex->getMessage(),
+            ]);
         }
     }
 
@@ -457,6 +463,6 @@ class ProductController extends Controller
             ->make();
 
             return $datatable;
-            
+
     }
 }
