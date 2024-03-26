@@ -1643,6 +1643,7 @@
             return "-" + ribuan;
         }
 
+        
         if (type == 'input') {
             number_string = angka.replace(/[^,\d]/g, '').toString(),
                 split = number_string.split(',');
