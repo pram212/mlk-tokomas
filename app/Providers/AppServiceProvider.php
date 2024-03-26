@@ -43,7 +43,6 @@ class AppServiceProvider extends ServiceProvider
         }
  
         if (! App::runningInConsole()) { // prevent autoload discover 
-
             //get general setting value        
             $general_setting = GeneralSetting::latest()->first();
             $currency = \App\Currency::find($general_setting->currency);

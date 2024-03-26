@@ -1,4 +1,4 @@
-<nav class="side-navbar">
+<nav class="side-navbar shrink">
     <div class="side-navbar-wrapper">
         <!-- Sidebar Header    -->
         <!-- Sidebar Navigation Menus-->

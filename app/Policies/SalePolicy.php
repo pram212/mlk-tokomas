@@ -56,7 +56,8 @@ class SalePolicy
      */
     public function update(User $user, Sale $sale)
     {
-        //
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('sales-edit');
     }
 
     /**
@@ -68,7 +69,8 @@ class SalePolicy
      */
     public function delete(User $user, Sale $sale)
     {
-        //
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('sales-delete');
     }
 
     /**
