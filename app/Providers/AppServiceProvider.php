@@ -44,15 +44,15 @@ class AppServiceProvider extends ServiceProvider
  
         if (! App::runningInConsole()) { // prevent autoload discover 
             //get general setting value        
-            // $general_setting = GeneralSetting::latest()->first();
-            // $currency = \App\Currency::find($general_setting->currency);
-            // View::share('general_setting', $general_setting);
-            // View::share('currency', $currency);
-            // config(['staff_access' => $general_setting->staff_access, 'date_format' => $general_setting->date_format, 'currency' => $currency->code, 'currency_position' => $general_setting->currency_position]);
+            $general_setting = GeneralSetting::latest()->first();
+            $currency = \App\Currency::find($general_setting->currency);
+            View::share('general_setting', $general_setting);
+            View::share('currency', $currency);
+            config(['staff_access' => $general_setting->staff_access, 'date_format' => $general_setting->date_format, 'currency' => $currency->code, 'currency_position' => $general_setting->currency_position]);
             
-            // $alert_product =  Product::where('is_active', true)->whereColumn('alert_quantity', '>', 'qty')->count();
-            // View::share('alert_product', $alert_product);
-            // Schema::defaultStringLength(191);
+            $alert_product =  Product::where('is_active', true)->whereColumn('alert_quantity', '>', 'qty')->count();
+            View::share('alert_product', $alert_product);
+            Schema::defaultStringLength(191);
 
         }
 
