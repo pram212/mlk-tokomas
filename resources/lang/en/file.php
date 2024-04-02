@@ -625,5 +625,6 @@ return [
 	"Gold Price" => "Gold Price",
 	"Additional Code" => "Additional Cod",
 	"Gold Content" => "Gold Content",
+	"Carat" => "Carat",
 ];
 ?>

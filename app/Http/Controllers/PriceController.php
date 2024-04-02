@@ -96,6 +96,7 @@ class PriceController extends Controller
                 'price' =>  moneyToNumeric($request->price, ","),
                 'gramasi_id' => $request->gramasi_id,
                 'product_property_id' => $request->product_property_id,
+                'carat' => $request->carat,
                 'created_by' => auth()->id()
             ]);
 

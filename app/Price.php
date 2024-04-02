@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Price extends Model
 {
     protected $guarded =[];
+    protected $fillable = ['price', 'carat', 'gramasi_id', 'product_property_id', 'created_by', 'updated_by'];
 
     public function createdBy() 
     {
