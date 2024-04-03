@@ -27,7 +27,9 @@ class UpdatePriceRequest extends FormRequest
         return [
             'price' => ['required'],
             'gramasi_id' => ['required'],
-            'product_property_id' => ['required']
+            'price_id' => ['required'],
+            'tag_type_id' => ['required'],
+            'categories_id' => ['required'],
         ];
     }
 
@@ -42,8 +44,9 @@ class UpdatePriceRequest extends FormRequest
         $validator->after(function ($validator) {
             $id = $this->route("price");
             $isPriceExist = Price::where('price', moneyToNumeric($this->price, ","))
-                    ->where('product_property_id',  $this->product_property_id)
                     ->where('gramasi_id', $this->gramasi_id)
+                    ->where('tag_type_id', $this->tag_type_id)
+                    ->where('categories_id', $this->categories_id)
                     ->where('id', '!=', $id)
                     ->first();
 

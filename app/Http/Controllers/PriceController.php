@@ -90,9 +90,12 @@ class PriceController extends Controller
     {
         $gramasi = Gramasi::all();
         $productProperty = ProductProperty::all();
+        $product_property_price = PriceProductPropertyDetail::where('price_id', $id)->get();
+        $category = Category::all();
+        $tagType = TagType::all();
         $price = Price::findOrFail($id);
 
-        return view('price.form', compact('price', 'gramasi', 'productProperty'));
+        return view('price.form', compact('price', 'gramasi', 'productProperty', 'category', 'tagType', 'product_property_price'));
     }
 
     public function store(StorePriceRequest $request)
@@ -146,8 +149,31 @@ class PriceController extends Controller
             $price->update([
                 'price' => moneyToNumeric($request->price, ","),
                 'gramasi_id' => $request->gramasi_id,
+                'tag_type_id' => $request->tag_type_id,
+                'categories_id' => $request->categories_id,
                 'updated_by' => auth()->id()
             ]);
+
+            $productPropertyPrice = $request->product_property_price;
+
+            foreach ($productPropertyPrice as $productPropertyId => $price) {
+                $productPropertyPrice = PriceProductPropertyDetail::where('price_id', $id)->where('product_property_id', $productPropertyId)->first();
+                if ($productPropertyPrice) {
+                    $productPropertyPrice->update([
+                        'price' => moneyToNumeric($price, ","),
+                        'updated_by' => auth()->id()
+                    ]);
+                } else {
+                    PriceProductPropertyDetail::create([
+                        'price_id' => $id,
+                        'product_property_id' => $productPropertyId,
+                        'price' => moneyToNumeric($price, ","),
+                        'created_by' => auth()->id()
+                    ]);
+                }
+            }
+
+
 
             DB::commit();
     
@@ -168,9 +194,11 @@ class PriceController extends Controller
         try {
             DB::beginTransaction();
 
+            $priceProductPropertyDetail = PriceProductPropertyDetail::where('price_id', $id)->delete();
             $price = Price::find($id);
             
             $price->delete();
+
 
             DB::commit();
 
@@ -191,7 +219,9 @@ class PriceController extends Controller
         try {
             DB::beginTransaction();
             
+            PriceProductPropertyDetail::whereIn('price_id', $request->ids)->delete();
             Price::whereIn('id', $request->ids)->delete();
+
 
             DB::commit();
 

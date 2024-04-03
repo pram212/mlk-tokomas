@@ -78,7 +78,7 @@
                                                 </option>
                                                 @endforeach
                                             </select>
-                                            @error('product_property_id')
+                                            @error('tag_type_id')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -90,14 +90,15 @@
                                                 <option value="">{{ __('file.Select') }}
                                                 </option>
                                                 @foreach ($category as $item)
-                                                <option value="{{ $item->id }}" @if ($item->id == @$price->category_id)
+                                                <option value="{{ $item->id }}" @if ($item->id ==
+                                                    @$price->categories_id)
                                                     selected
                                                     @endif>
                                                     {{ $item->name }}</option>
                                                 </option>
                                                 @endforeach
                                             </select>
-                                            @error('product_property_id')
+                                            @error('categories_id')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -155,13 +156,29 @@
                                                                 <td title="{{ $item->description }}">{{ $item->code }}
                                                                 </td>
                                                                 <td>
+                                                                    @php
+                                                                    if(@$price){
+                                                                    $productPropertyPrice =
+                                                                    $product_property_price->where('product_property_id',
+                                                                    $item->id)->first();
+                                                                    $priceValue = $productPropertyPrice ?
+                                                                    $productPropertyPrice->price : '';
+                                                                    }else{
+                                                                    $priceValue = '';
+                                                                    }
+                                                                    @endphp
                                                                     <input type="text"
                                                                         name="product_property_price[{{ $item->id }}]"
                                                                         class="form-control product_property_price"
-                                                                        value="{{ old('product_property.'.$item->id, @$price->product_property_id[$item->id]) }}">
+                                                                        value="{{ $priceValue }}">
+
                                                                 </td>
                                                             </tr>
                                                             @endforeach
+                                                            @if(@$price)
+                                                            <input type="hidden" name="price_id"
+                                                                value="{{ $product_property_price->isNotEmpty() ? $product_property_price->first()->price_id : '' }}">
+                                                            @endif
                                                         </tbody>
                                                     </table>
                                                 </div>
