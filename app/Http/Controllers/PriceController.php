@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
+use App\Category;
+use App\TagType;
+use App\PriceProductPropertyDetail;
 
 class PriceController extends Controller
 {
@@ -50,8 +53,11 @@ class PriceController extends Controller
             ->addColumn('gramasi', function($q) { 
                 return $q->gramasi->gramasi;
             })
-            ->addColumn('property', function($q) { 
-                return $q->productProperty->code ?? "-";
+            ->addColumn('tag_type', function($q) { 
+                return $q->tagType->code ?? "-";
+            })
+            ->addColumn('categories', function($q) { 
+                return $q->categories->name ?? "-";
             })
             ->editColumn('created_by', function($q) { 
                 return $q->createdBy?  $q->createdBy->name : "-";
@@ -74,8 +80,10 @@ class PriceController extends Controller
     {
         $gramasi = Gramasi::all();
         $productProperty = ProductProperty::all();
+        $category = Category::all();
+        $tagType = TagType::all();
 
-        return view('price.form', compact('gramasi', 'productProperty'));
+        return view('price.form', compact('gramasi', 'productProperty', 'category', 'tagType'));
     }
 
     public function edit($id)
@@ -91,14 +99,27 @@ class PriceController extends Controller
     {
         try {
             DB::beginTransaction();
-        
+            
             Price::create([
                 'price' =>  moneyToNumeric($request->price, ","),
                 'gramasi_id' => $request->gramasi_id,
-                'product_property_id' => $request->product_property_id,
+                'tag_type_id' => $request->tag_type_id,
+                'categories_id' => $request->categories_id,
                 'carat' => $request->carat,
                 'created_by' => auth()->id()
             ]);
+            $price_created_id = Price::latest()->first()->id;
+            $productPropertyPrice = $request->product_property_price;
+
+            foreach ($productPropertyPrice as $productPropertyId => $price) {
+                PriceProductPropertyDetail::create([
+                    'price_id' => $price_created_id,
+                    'product_property_id' => $productPropertyId,
+                    'price' => moneyToNumeric($price, ","),
+                    'created_by' => auth()->id()
+                ]);
+            }
+
 
             DB::commit();
     
@@ -125,7 +146,6 @@ class PriceController extends Controller
             $price->update([
                 'price' => moneyToNumeric($request->price, ","),
                 'gramasi_id' => $request->gramasi_id,
-                'product_property_id' => $request->product_property_id,
                 'updated_by' => auth()->id()
             ]);
 

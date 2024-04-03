@@ -626,6 +626,7 @@ return [
 	"Gold Content" => "Kadar Mas",
 	"Carat" => "Karat",
 	"Type category name" => "Tulis nama kategori",
+	"Tag Type" => "Jenis Tag",
 ];
 
 ?>

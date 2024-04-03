@@ -55,48 +55,121 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>{{ __('file.Product Property') }} *</strong></label>
-                            <select name="product_property_id" class="form-control" id="input-kd-gramasi">
-                                <option value="">{{ __('file.Select') }}
-                                </option>
-                                @foreach ($productProperty as $item)
-                                <option value="{{ $item->id }}" @if ($item->id == @$price->product_property_id) selected
-                                    @endif>
-                                    {{ $item->code }}</option>
-                                @endforeach
-                            </select>
-                            @error('product_property_id')
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
 
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>{{ __('file.Gramasi Code') }} *</strong></label>
-                            <select name="gramasi_id" class="form-control" id="input-kd-gramasi">
-                                <option value="">{{ __('file.Select') }}
-                                </option>
-                                @foreach ($gramasi as $item)
-                                <option value="{{ $item->id }}" @if ($item->id == @$price->gramasi_id) selected @endif>
-                                    {{ $item->code }} - {{ $item->gramasi }} gr</option>
-                                @endforeach
-                            </select>
-                            @error('gramasi_id')
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>{{ __('file.Created By') }} *</strong></label>
-                            <input type="text" name="created_by" class="form-control" id="created_by"
-                                value="{{ auth()->user()->name }}" disabled>
-                            @error('code')
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
+
+
+
+
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>{{ __('file.Tag Type') }} *</strong></label>
+                                            <select name="tag_type_id" class="form-control" id="input-kd-tag-type">
+                                                <option value="">{{ __('file.Select') }}
+                                                </option>
+                                                @foreach ($tagType as $item)
+                                                <option value="{{ $item->id }}" @if ($item->id == @$price->tag_type_id)
+                                                    selected
+                                                    @endif>
+                                                    {{ $item->code.' - '.$item->description }}</option>
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                            @error('product_property_id')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>{{ __('file.category') }} *</strong></label>
+                                            <select name="categories_id" class="form-control" id="input-kd-tag-type">
+                                                <option value="">{{ __('file.Select') }}
+                                                </option>
+                                                @foreach ($category as $item)
+                                                <option value="{{ $item->id }}" @if ($item->id == @$price->category_id)
+                                                    selected
+                                                    @endif>
+                                                    {{ $item->name }}</option>
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                            @error('product_property_id')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>{{ __('file.Gramasi Code') }} *</strong></label>
+                                            <select name="gramasi_id" class="form-control" id="input-kd-gramasi">
+                                                <option value="">{{ __('file.Select') }}
+                                                </option>
+                                                @foreach ($gramasi as $item)
+                                                <option value="{{ $item->id }}" @if ($item->id == @$price->gramasi_id)
+                                                    selected @endif>
+                                                    {{ $item->code }} - {{ $item->gramasi }} gr</option>
+                                                @endforeach
+                                            </select>
+                                            @error('gramasi_id')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>{{ __('file.Created By') }} *</strong></label>
+                                            <input type="text" name="created_by" class="form-control" id="created_by"
+                                                value="{{ auth()->user()->name }}" disabled>
+                                            @error('code')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group mt-4">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    {{ trans('file.Product Property') }}
+                                                </div>
+                                                <div class="card-body">
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No</th>
+                                                                <th>{{ trans('file.Product Property') }}</th>
+                                                                <th>{{ trans('file.Price') }}</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($productProperty as $item)
+                                                            <tr>
+                                                                <td>{{ $loop->iteration }}</td>
+                                                                <td title="{{ $item->description }}">{{ $item->code }}
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text"
+                                                                        name="product_property_price[{{ $item->id }}]"
+                                                                        class="form-control product_property_price"
+                                                                        value="{{ old('product_property.'.$item->id, @$price->product_property_id[$item->id]) }}">
+                                                                </td>
+                                                            </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -113,6 +186,8 @@
 @section('scripts')
 <script>
     $("#price").maskMoney()
+
+    $('.product_property_price').maskMoney()
     
     // carat handle number
     $("#carat").on("input", function() {

@@ -16,7 +16,8 @@
                     <th>{{ __('file.Price') }}</th>
                     <th>{{ __('file.Gramasi') }}</th>
                     <th>{{ __('file.Carat') }}</th>
-                    <th>{{ __('file.Product Property') }}</th>
+                    <th>{{ __('file.Tag Type') }}</th>
+                    <th>{{ __('file.category') }}</th>
                     <th>{{ __('file.Created By') }}</th>
                     <th>{{ __('file.Updated By') }}</th>
                     <th>{{ __('file.Created At') }}</th>
@@ -57,7 +58,10 @@
                     data: 'carat'
                 },
                 {
-                    data: 'property'
+                    data: 'tag_type'
+                },
+                {
+                    data: 'categories'
                 },
                 {
                     data: 'created_by'

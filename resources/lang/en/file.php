@@ -627,6 +627,7 @@ return [
 	"Gold Content" => "Gold Content",
 	"Carat" => "Carat",
 	"Type category name" => "Type category name",
+	"Tag Type" => "Tag Type",
 	
 ];
 ?>
