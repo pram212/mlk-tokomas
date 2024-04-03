@@ -14,11 +14,15 @@ class RemoveFieldCategoriesTable extends Migration
     public function up()
     {
         Schema::table('categories', function (Blueprint $table) {
-            $table->removeColumn('image');
-            $table->removeColumn('parent_id');
-            $table->removeColumn('category');
-            $table->removeColumn('sub_category');
+            $columns = ['image', 'parent_id', 'category', 'sub_category'];
+        
+            foreach ($columns as $column) {
+                if (Schema::hasColumn('categories', $column)) {
+                    $table->dropColumn($column);
+                }
+            }
         });
+        
     }
 
     /**
