@@ -624,6 +624,8 @@ return [
 	"Gold Price" => "Harga Emas",
 	"Additional Code" => "Kode Tambahan",
 	"Gold Content" => "Kadar Mas",
+	"Carat" => "Karat",
+	"Type category name" => "Tulis nama kategori",
 ];
 
 ?>

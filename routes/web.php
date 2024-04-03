@@ -45,7 +45,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	// category routes
 	Route::resource('category', 'CategoryController');
 	Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
-		Route::get('category-datatable', 'CategoryController@categoryDatatable');
+		Route::post('category-datatable', 'CategoryController@categoryDatatable')->name('category-datatable');
 		Route::post('deletebyselection', 'CategoryController@deleteBySelection');
 		Route::post('import', 'CategoryController@import')->name('import');
 		Route::post('category-data', 'CategoryController@categoryData');

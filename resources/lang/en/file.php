@@ -626,5 +626,7 @@ return [
 	"Additional Code" => "Additional Cod",
 	"Gold Content" => "Gold Content",
 	"Carat" => "Carat",
+	"Type category name" => "Type category name",
+	
 ];
 ?>
