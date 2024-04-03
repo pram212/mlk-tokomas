@@ -16,7 +16,6 @@ class CreatePricesTable extends Migration
         Schema::create('prices', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->double('price')->default(0);
-            $table->double('carat')->default(0);
             $table->tinyInteger('gramasi_id')->nullable();
             $table->tinyInteger('product_property_id')->nullable();
             $table->string('created_by')->nullable();
