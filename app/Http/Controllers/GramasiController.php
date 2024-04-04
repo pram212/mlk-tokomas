@@ -7,6 +7,8 @@ use App\ProductType;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
+use App\Category;
+use App\Http\Requests\StoreGramasiRequest;
 
 class GramasiController extends Controller
 {
@@ -39,6 +41,9 @@ class GramasiController extends Controller
                
                 return $action;
             })
+            ->addColumn('category', function($model) {
+                return @$model->category->name;
+            })
             ->addColumn('product_type', function($model) {
                 return @$model->productType->code . " - " . @$model->productType->description;
             })
@@ -49,9 +54,9 @@ class GramasiController extends Controller
 
     public function create()
     {
-        $productType = ProductType::select('id', 'code', 'description')->get();
+        $category = Category::all();
 
-        return view('gramasi.form', compact('productType'));
+        return view('gramasi.form', compact('category'));
     }
 
     public function edit($id)
@@ -63,18 +68,14 @@ class GramasiController extends Controller
         return view('gramasi.form', compact('gramasi', 'productType'));
     }
 
-    public function store(Request $request)
+    public function store(StoreGramasiRequest $request)
     {
-        $request->validate([
-            'product_type_id' => ['required'],
-            'gramasi' => ['required', 'numeric'],
-            'code' => ['required'],
-        ]);
 
         try {
             DB::beginTransaction();
     
             Gramasi::create([
+                'categories_id' => $request->categories_id,
                 'product_type_id' => $request->product_type_id,
                 'gramasi' => $request->gramasi,
                 'code' => $request->code,
@@ -82,7 +83,7 @@ class GramasiController extends Controller
 
             DB::commit();
     
-            return redirect('gramasi')->with('create_message', __('file.Data saved successfully'));
+            return redirect('product-categories/gramasi')->with('create_message', __('file.Data saved successfully'));
 
         } catch (\Exception $exception) {
 
@@ -165,6 +166,8 @@ class GramasiController extends Controller
         }
 
     }
+
+   
 
 
 

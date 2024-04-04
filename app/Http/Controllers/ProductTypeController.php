@@ -167,5 +167,25 @@ class ProductTypeController extends Controller
 
     }
 
+     // get product type by category
+     public function getByCategory($categories_id)
+     {
+        $response = [];
+         try {
+             $productType = ProductType::where('categories_id', $categories_id)->get();
+                $response = [
+                    'status' => 'success',
+                    'data' => $productType
+                ];
+         } catch (\Exception $exception) {
+                $response = [
+                    'status' => 'error',
+                    'message' => $exception->getMessage()
+                ];
+         }
+         
+            return response()->json($response);
+     }
+
 
 }

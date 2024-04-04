@@ -412,6 +412,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	
 		Route::post('producttype-multi-delete', 'ProductTypeController@destroyMultiple');
 		Route::get('producttype-datatable', 'ProductTypeController@productTypeData');
+		Route::get('producttype-getByCategory/{id}', 'ProductTypeController@getByCategory');
 		Route::resource('producttype', 'ProductTypeController');
 	
 		Route::get('productproperty-datatable', 'ProductPropertyController@productPropertyData');
