@@ -40,6 +40,7 @@ class ProductController extends Controller
         $productType = ProductType::all();
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
+        $category = Category::all();
 
         return view('product.create', compact(
             'lims_category_list',
@@ -47,6 +48,7 @@ class ProductController extends Controller
             'productType',
             'tagType',
             'gramasi',
+            'category'
         ));
     }
 

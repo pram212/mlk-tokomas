@@ -78,7 +78,7 @@ return [
 	"Select Product" => "Pilih Produk",
 	"Order" => "Pemesanan",
 	"Order Table" => "Tabel Pemesanan",
-	"Discount" => "Diskon",
+	"Discount" => "Potongan",
 	"Unit Cost" => "Biaya satuan",
 	"Unit Price" => "Harga satuan",
 	"Net Unit Cost" => "Biaya Unit Bersih",
