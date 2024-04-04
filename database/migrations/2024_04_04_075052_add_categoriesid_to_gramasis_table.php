@@ -14,7 +14,8 @@ class AddCategoriesidToGramasisTable extends Migration
     public function up()
     {
         Schema::table('gramasis', function (Blueprint $table) {
-            if (!Schema::hasColumn('gramasis', 'categories_id')) $table->unsignedInteger('categories_id')->after('code');
+            if (Schema::hasColumn('gramasis', 'categories_id')) $table->dropColumn('categories_id');
+            $table->unsignedInteger('categories_id')->after('code');
         });
     }
 
