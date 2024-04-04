@@ -78,7 +78,7 @@ return [
 	"Select Product" => "Pilih Produk",
 	"Order" => "Pemesanan",
 	"Order Table" => "Tabel Pemesanan",
-	"Discount" => "Diskon",
+	"Discount" => "Potongan",
 	"Unit Cost" => "Biaya satuan",
 	"Unit Price" => "Harga satuan",
 	"Net Unit Cost" => "Biaya Unit Bersih",
@@ -624,6 +624,9 @@ return [
 	"Gold Price" => "Harga Emas",
 	"Additional Code" => "Kode Tambahan",
 	"Gold Content" => "Kadar Mas",
+	"Carat" => "Karat",
+	"Type category name" => "Tulis nama kategori",
+	"Tag Type" => "Jenis Tag",
 ];
 
 ?>

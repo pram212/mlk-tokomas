@@ -6,6 +6,10 @@ use App\ProductType;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
+use App\Category;
+use App\Http\Requests\StoreProductTypeRequest;
+use App\Http\Requests\UpdateProductTypeRequest;
+
 
 class ProductTypeController extends Controller
 {
@@ -38,6 +42,9 @@ class ProductTypeController extends Controller
                
                 return $action;
             })
+            ->addColumn('categories', function($q) { 
+                return $q->categories->name ?? "-";
+            })
             ->addIndexColumn()
             ->rawColumns(['action', 'color'])
             ->toJson();
@@ -45,23 +52,20 @@ class ProductTypeController extends Controller
 
     public function create()
     {
-        return view('product_type.form');
+        $productCategories = Category::all();
+        return view('product_type.form', compact('productCategories'));
     }
 
     public function edit($id)
     {
+        $productCategories = Category::all();
         $productType = ProductType::findOrFail($id);
 
-        return view('product_type.form', compact('productType'));
+        return view('product_type.form', compact('productType', 'productCategories'));
     }
 
-    public function store(Request $request)
+    public function store(StoreProductTypeRequest $request)
     {
-        $request->validate([
-            'code' => ['required'],
-            'description' => ['required'],
-
-        ]);
 
         try {
             DB::beginTransaction();
@@ -70,28 +74,25 @@ class ProductTypeController extends Controller
             ProductType::create([
                 'code' => $request->code,
                 'description' => $request->description,
-                'color' => $request->color,
+                'categories_id' => $request->categories_id,
             ]);
 
             DB::commit();
     
-            return redirect('producttype')->with('create_message', __('file.Data saved successfully'));
+            return redirect('product-categories/producttype')->with('create_message', __('file.Data saved successfully'));
 
         } catch (\Exception $exception) {
 
             DB::rollBack();
+            throw $exception;
 
             return back()->with('message', $exception->getMessage());
         }
         
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateProductTypeRequest $request, $id)
     {
-        $request->validate([
-            'code' => ['required'],
-            'description' => ['required'],
-        ]);
 
         try {
             DB::beginTransaction();
@@ -102,12 +103,12 @@ class ProductTypeController extends Controller
             $productType->update([
                 'code' => $request->code,
                 'description' => $request->description,
-                'color' => $request->color,
+                'categories_id' => $request->categories_id,
             ]);
 
             DB::commit();
     
-            return redirect('producttype')->with('create_message', __('file.Data updated successfully'));
+            return redirect('product-categories/producttype')->with('create_message', __('file.Data updated successfully'));
 
         } catch (\Exception $exception) {
 
@@ -165,6 +166,26 @@ class ProductTypeController extends Controller
         }
 
     }
+
+     // get product type by category
+     public function getByCategory($categories_id)
+     {
+        $response = [];
+         try {
+             $productType = ProductType::where('categories_id', $categories_id)->get();
+                $response = [
+                    'status' => 'success',
+                    'data' => $productType
+                ];
+         } catch (\Exception $exception) {
+                $response = [
+                    'status' => 'error',
+                    'message' => $exception->getMessage()
+                ];
+         }
+         
+            return response()->json($response);
+     }
 
 
 }

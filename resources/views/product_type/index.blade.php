@@ -1,55 +1,53 @@
 @extends('layout.main') @section('content')
-    @if (session()->has('create_message'))
-        <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close"
-                data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>{{ session()->get('create_message') }}</div>
-    @endif
-    @if (session()->has('edit_message'))
-        <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close"
-                data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>{{ session()->get('edit_message') }}</div>
-    @endif
-    @if (session()->has('import_message'))
-        <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close"
-                data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>{{ session()->get('import_message') }}</div>
-    @endif
-    @if (session()->has('not_permitted'))
-        <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close"
-                data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
-    @endif
-    @if (session()->has('message'))
-        <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close"
-                data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div>
-    @endif
+@if (session()->has('create_message'))
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('create_message') }}</div>
+@endif
+@if (session()->has('edit_message'))
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('edit_message') }}</div>
+@endif
+@if (session()->has('import_message'))
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('import_message') }}</div>
+@endif
+@if (session()->has('not_permitted'))
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
+@endif
+@if (session()->has('message'))
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div>
+@endif
 
-    <section>
-        <div class="container-fluid">
-            {{-- @if (in_array('products-add', $all_permission)) --}}
-            <a href="{{ route('product-categories.producttype.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
-                {{ __('file.Add Product Type') }}</a>
-            {{-- @endif --}}
-        </div>
-        <div class="table-responsive">
-            <table id="producttype-datatable" class="table" style="width: 100%">
-                <thead>
-                    <tr>
-                        <th class="not-exported"></th>
-                        <th>{{ __('file.Code') }}</th>
-                        <th>{{ __('file.Description') }}</th>
-                        <th class="not-exported">{{ trans('file.action') }}</th>
-                    </tr>
-                </thead>
+<section>
+    <div class="container-fluid">
+        {{-- @if (in_array('products-add', $all_permission)) --}}
+        <a href="{{ route('product-categories.producttype.create') }}" class="btn btn-info"><i
+                class="dripicons-plus"></i>
+            {{ __('file.Add Product Type') }}</a>
+        {{-- @endif --}}
+    </div>
+    <div class="table-responsive">
+        <table id="producttype-datatable" class="table" style="width: 100%">
+            <thead>
+                <tr>
+                    <th class="not-exported"></th>
+                    <th>{{ __('file.Code') }}</th>
+                    <th>{{ __('file.category') }}</th>
+                    <th>{{ __('file.Description') }}</th>
+                    <th class="not-exported">{{ trans('file.action') }}</th>
+                    <th></th>
+                </tr>
+            </thead>
 
-            </table>
-        </div>
-    </section>
+        </table>
+    </div>
+</section>
 
-    <script src="{{ asset('public/js/axios.min.js') }}"></script>
-    <script>
-        $.ajaxSetup({
+<script src="{{ asset('public/js/axios.min.js') }}"></script>
+<script>
+    $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
@@ -71,19 +69,25 @@
                     data: 'code'
                 },
                 {
+                    data: 'categories'
+                },
+                {
                     data: 'description'
                 },
                 {
-                    data: 'action'
+                    data: 'action',
+                    orderable: false,
+                    searchable: false
                 },
+                {
+                    data: 'created_at',
+                    visible: false
+                }
             ],
             order: [
-                ['2', 'asc']
+                ['5', 'desc']
             ],
-            columnDefs: [{
-                    "orderable": false,
-                    'targets': [0, 3]
-                },
+            columnDefs: [
                 {
                     'render': function(data, type, row, meta) {
                         if (type === 'display') {
@@ -208,5 +212,5 @@
             }
 
         });
-    </script>
+</script>
 @endsection

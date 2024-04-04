@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Price;
+use App\Gramasi;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePriceRequest extends FormRequest
+class StoreGramasiRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,10 +25,10 @@ class StorePriceRequest extends FormRequest
     public function rules()
     {
         return [
-            'price' => ['required'],
-            'gramasi_id' => ['required'],
-            'tag_type_id' => ['required'],
-            'categories_id' => ['required'],
+            'code' => 'required',
+            'categories_id' => 'required',
+            'product_type_id' => 'required',
+            'gramasi' => 'required'
         ];
     }
 
@@ -41,14 +41,12 @@ class StorePriceRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $isPriceExist = Price::where('price', moneyToNumeric($this->price, ","))
-                    ->where('gramasi_id', $this->gramasi_id)
-                    ->where('tag_type_id', $this->tag_type_id)
-                    ->where('categories_id', $this->categories_id)
+            $isGramasiExist = Gramasi::
+                    where('code', $this->code)
                     ->first();
 
-            if ($isPriceExist) {
-                $validator->errors()->add('duplicate_data', 'Failed! price is already exist!');
+            if ($isGramasiExist) {
+                $validator->errors()->add('duplicate_data', 'Failed! Gramasi is already exist!');
             }
         });
     }

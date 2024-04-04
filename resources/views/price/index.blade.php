@@ -1,36 +1,38 @@
 @extends('layout.main') @section('content')
-    <section>
-        <div class="container-fluid">
-            <h3>{{ trans('file.Gold Price') }} - {{ date('d M Y') }}</h3>
-            <hr>
-            {{-- @if (in_array('products-add', $all_permission)) --}}
-            <a href="{{ route('master.price.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
-                {{ __('file.Add Price') }}</a>
-            {{-- @endif --}}
-        </div>
-        <div class="table-responsive">
-            <table id="price-datatable" class="table" style="width: 100%">
-                <thead>
-                    <tr>
-                        <th class="not-exported"></th>
-                        <th>{{ __('file.Price') }}</th>
-                        <th>{{ __('file.Gramasi') }}</th>
-                        <th>{{ __('file.Product Property') }}</th>
-                        <th>{{ __('file.Created By') }}</th>
-                        <th>{{ __('file.Updated By') }}</th>
-                        <th>{{ __('file.Created At') }}</th>
-                        <th>{{ __('file.Updated At') }}</th>
-                        <th class="not-exported">{{ trans('file.action') }}</th>
-                    </tr>
-                </thead>
+<section>
+    <div class="container-fluid">
+        <h3>{{ trans('file.Gold Price') }} - {{ date('d M Y') }}</h3>
+        <hr>
+        {{-- @if (in_array('products-add', $all_permission)) --}}
+        <a href="{{ route('master.price.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
+            {{ __('file.Add Price') }}</a>
+        {{-- @endif --}}
+    </div>
+    <div class="table-responsive">
+        <table id="price-datatable" class="table" style="width: 100%">
+            <thead>
+                <tr>
+                    <th class="not-exported"></th>
+                    <th>{{ __('file.Price') }}</th>
+                    <th>{{ __('file.Gramasi') }}</th>
+                    <th>{{ __('file.Carat') }}</th>
+                    <th>{{ __('file.Tag Type') }}</th>
+                    <th>{{ __('file.category') }}</th>
+                    <th>{{ __('file.Created By') }}</th>
+                    <th>{{ __('file.Updated By') }}</th>
+                    <th>{{ __('file.Created At') }}</th>
+                    <th>{{ __('file.Updated At') }}</th>
+                    <th class="not-exported">{{ trans('file.action') }}</th>
+                </tr>
+            </thead>
 
-            </table>
-        </div>
-    </section>
+        </table>
+    </div>
+</section>
 
-    <script src="{{ asset('public/js/axios.min.js') }}"></script>
-    <script>
-        $.ajaxSetup({
+<script src="{{ asset('public/js/axios.min.js') }}"></script>
+<script>
+    $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
@@ -53,7 +55,13 @@
                     data: 'gramasi'
                 },
                 {
-                    data: 'property'
+                    data: 'carat'
+                },
+                {
+                    data: 'tag_type'
+                },
+                {
+                    data: 'categories'
                 },
                 {
                     data: 'created_by'
@@ -72,7 +80,7 @@
                 },
             ],
             order: [
-                ['2', 'asc']
+                ['7', 'desc']
             ],
             columnDefs: [{
                     "orderable": false,
@@ -202,5 +210,5 @@
             }
 
         });
-    </script>
+</script>
 @endsection

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Price extends Model
 {
     protected $guarded =[];
+    protected $fillable = ['price', 'carat', 'gramasi_id', 'tag_type_id','categories_id', 'created_by', 'updated_by'];
 
     public function createdBy() 
     {
@@ -23,9 +24,14 @@ class Price extends Model
         return $this->belongsTo('App\Gramasi', 'gramasi_id');
     }
 
-    public function productProperty() 
+    public function tagType() 
     {
-        return $this->belongsTo('App\ProductProperty', 'product_property_id');
+        return $this->belongsTo('App\TagType', 'tag_type_id');
+    }
+
+    public function categories() 
+    {
+        return $this->belongsTo('App\Category', 'categories_id');
     }
 
 }

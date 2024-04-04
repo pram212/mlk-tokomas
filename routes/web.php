@@ -45,7 +45,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	// category routes
 	Route::resource('category', 'CategoryController');
 	Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
-		Route::get('category-datatable', 'CategoryController@categoryDatatable');
+		Route::post('category-datatable', 'CategoryController@categoryDatatable')->name('category-datatable');
 		Route::post('deletebyselection', 'CategoryController@deleteBySelection');
 		Route::post('import', 'CategoryController@import')->name('import');
 		Route::post('category-data', 'CategoryController@categoryData');
@@ -412,6 +412,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	
 		Route::post('producttype-multi-delete', 'ProductTypeController@destroyMultiple');
 		Route::get('producttype-datatable', 'ProductTypeController@productTypeData');
+		Route::get('producttype-getByCategory/{id}', 'ProductTypeController@getByCategory');
 		Route::resource('producttype', 'ProductTypeController');
 	
 		Route::get('productproperty-datatable', 'ProductPropertyController@productPropertyData');
