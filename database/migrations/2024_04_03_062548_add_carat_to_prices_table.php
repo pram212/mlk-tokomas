@@ -14,7 +14,7 @@ class AddCaratToPricesTable extends Migration
     public function up()
     {
         Schema::table('prices', function (Blueprint $table) {
-            $table->decimal('carat', 8, 2)->after('price');
+            if (!Schema::hasColumn('prices', 'carat')) $table->decimal('carat', 8, 2)->after('price');
         });
     }
 
@@ -26,7 +26,7 @@ class AddCaratToPricesTable extends Migration
     public function down()
     {
         Schema::table('prices', function (Blueprint $table) {
-            $table->dropColumn('carat');
+            if (Schema::hasColumn('prices', 'carat')) $table->dropColumn('carat');
         });
     }
 }
