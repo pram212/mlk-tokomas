@@ -14,7 +14,7 @@ class AddCategoryIdColumnToProductTypesTable extends Migration
     public function up()
     {
         Schema::table('product_types', function (Blueprint $table) {
-            $table->unsignedInteger('categories_id')->after('description');
+            if (!Schema::hasColumn('product_types', 'categories_id')) $table->unsignedInteger('categories_id')->after('description');
         });
     }
 
@@ -26,7 +26,7 @@ class AddCategoryIdColumnToProductTypesTable extends Migration
     public function down()
     {
         Schema::table('product_types', function (Blueprint $table) {
-            //
+            if (Schema::hasColumn('product_types', 'categories_id')) $table->dropColumn('categories_id');
         });
     }
 }
