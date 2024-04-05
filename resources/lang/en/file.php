@@ -629,6 +629,7 @@ return [
 	"Type category name" => "Type category name",
 	"Tag Type" => "Tag Type",
 	"Failed to be deleted because it was used by prices" =>  "Failed to be deleted because it was used by prices",
+	"Image must be in .jpg, .jpeg, .png format and maximum 2MB" => "Image must be in .jpg, .jpeg, .png format dan maksimal 2MB",
 	
 ];
 ?>

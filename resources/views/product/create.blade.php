@@ -19,6 +19,31 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label>{{trans('file.Product Image')}} *</label>
+                                            <div class="row d-flex justify-content-center">
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <input type="file" name="image" class="form-control" id="image"
+                                                            onchange="readURL(this)">
+                                                        <small><i>*{{ trans('Image must be in .jpg, .jpeg, .png
+                                                                format
+                                                                and maximum 2MB')
+                                                                }}</i></small>
+                                                        <div id="image-preview"
+                                                            style="height: 110px; width: 100%; padding: 5px; border-radius: 5px; border: solid #ccc 1px; margin: auto; text-align: center;">
+                                                            <!-- Gambar akan ditampilkan di sini -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @if($errors->has('image'))
+                                                <span>
+                                                    <strong>{{ $errors->first('image') }}</strong>
+                                                </span>
+                                                @endif
+                                            </div>
+                                        </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>{{ __('file.Tag Type Code') }} *</strong> </label>
@@ -32,28 +57,6 @@
                                                     @endforeach
                                                 </select>
                                                 @error('tag_type_id')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for=""><strong>{{ __('file.Gold Content') }}</strong></label>
-                                                <input type="text" class="form-control" name="gold_content"
-                                                    value="{{ old('gold_content') }}" id="input-gold_content">
-                                                @error('gold_content')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for=""><strong>{{ __('file.Additional Code') }}</strong></label>
-                                                <input type="text" class="form-control" name="additional_code"
-                                                    value="{{ old('additional_code') }}" id="input-additional_code">
-                                                @error('additional_code')
                                                 <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
@@ -81,17 +84,10 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>{{ __('file.Gramasi Code') }} *</strong></label>
-                                                <select name="gramasi_id" class="form-control" id="input-kd-gramasi">
-                                                    <option value="">{{ __('file.Select') }}
-                                                    </option>
-                                                    @foreach ($gramasi as $item)
-                                                    <option value="{{ $item->id }}" @if ($item->id ==
-                                                        @$productBaseOnTag->gramasi_id) selected @endif>
-                                                        {{ $item->code }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('gramasi_id')
+                                                <label for="">{{ __('file.Gold Content') }}</label>
+                                                <input type="text" class="form-control" name="gold_content"
+                                                    value="{{ old('gold_content') }}" id="input-gold_content">
+                                                @error('gold_content')
                                                 <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
@@ -99,53 +95,114 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>{{ __('file.category') }} *</strong></label>
-                                                <select name="category_id" class="form-control" id="input-kd-category">
-                                                    <option value="">{{ __('file.Select') }}
-                                                    </option>
-                                                    @foreach ($category as $item)
-                                                    <option value="{{ $item->id }}" @if ($item->id ==
-                                                        @$productBaseOnTag->category_id) selected @endif>
-                                                        {{ $item->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('category_id')
+                                                <label for="">{{ __('file.Additional Code') }}</label>
+                                                <input type="text" class="form-control" name="additional_code"
+                                                    value="{{ old('additional_code') }}" id="input-additional_code">
+                                                @error('additional_code')
                                                 <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>{{ __('file.Discount') }} *</strong> </label>
-                                                <input type="number" class="form-control" name="discount"
-                                                    id="input-diskon">
-                                                @error('discount')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>{{ __('file.category') }} *</strong></label>
+                                                        <select name="category_id" class="form-control"
+                                                            id="input-kd-category">
+                                                            <option value="">{{ __('file.Select') }}
+                                                            </option>
+                                                            @foreach ($category as $item)
+                                                            <option value="{{ $item->id }}" @if ($item->id ==
+                                                                @$productBaseOnTag->category_id) selected @endif>
+                                                                {{ $item->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('category_id')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>{{ __('file.Product Type') }} * </label>
+                                                        <select name="product_type_id" class="form-control selectpicker"
+                                                            id="product_type_id" @if(!@$price)disabled @endif
+                                                            data-live-search="true">
+                                                            <option value="" disabled>{{ __('file.Select') }}</option>
+                                                            @if (@$price)
+                                                            @foreach ($product_type as $item)
+                                                            <option value="{{ $item->id }}" @if ($item->id ==
+                                                                @$price->product_type_id)
+                                                                selected
+                                                                @endif>
+                                                                {{ $item->code }}</option>
+                                                            @endforeach
+                                                            @endif
+                                                        </select>
+                                                        @error('product_type_id')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="">Miligram</label>
-                                                <input type="number" class="form-control" name="mg" class="mg"
-                                                    id="input-mg">
-                                                @error('mg')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>{{ trans('file.Product Price') }} *</strong> </label>
+                                                        <input type="text" id="price" name="price" class="form-control"
+                                                            step="any">
+                                                        @error('price')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                        <span class="validation-msg"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>{{ __('file.Discount') }} *</strong> </label>
+                                                        <input type="number" class="form-control" name="discount"
+                                                            id="input-diskon">
+                                                        @error('discount')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>{{ trans('file.Product Price') }} *</strong> </label>
-                                                <input type="text" id="price" name="price" class="form-control"
-                                                    step="any">
-                                                @error('price')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                                <span class="validation-msg"></span>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>{{ __('file.Gramasi') }} *</strong></label>
+                                                        <div id="text-kd-gramasi">{{ $price->gramasi->gramasi ?? '-' }}
+                                                        </div>
+                                                        <input class="form-control" type="hidden" name="gramasi_id"
+                                                            id="input-kd-gramasi"
+                                                            value="{{ old('gramasi_id',@$price->gramasi_id) }}">
+                                                        @error('gramasi_id')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="">Miligram</label>
+                                                        <input type="number" class="form-control" name="mg" class="mg"
+                                                            id="input-mg">
+                                                        @error('mg')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -171,7 +228,7 @@
 
                                         <div class="col-md-6"></div>
 
-                                        <div class="col-md-9 border">
+                                        <div class="col-md-9 border mt-3">
                                             <div class="row" id="product-preview"
                                                 style="background-color: {{ @$productBaseOnTag->tagType->color }}">
                                                 <div class="col-md-6 pt-3">
@@ -230,6 +287,93 @@
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
 <script type="text/javascript">
+    let input_categories_id = $('#input-kd-category');
+    let input_product_type_id = $('#product_type_id');
+    let input_gramasi_id = $('#input-kd-gramasi');
+    let text_gramasi_id = $('#text-kd-gramasi');
+    
+    input_categories_id.change(function() {
+        let categories_id = $(this).val();
+        let product_type_id = $('#product_type_id');
+        let button_product_type_id = $('button[data-id="product_type_id"]');
+        $.ajax({
+            type: "GET",
+            url: "{{ url('product-categories/producttype-getByCategory/') }}/" + categories_id,
+            success: function(data) {
+                let res =data;
+                button_product_type_id.toggleClass('disabled', res.data.length == 0);
+                product_type_id.prop('disabled', res.data.length == 0);
+
+                let options = '<option value="">{{ __('file.Select') }}</option>';
+                if (res.data.length != 0)
+                res.data.forEach(element => {
+                    options += `<option value="${element.id}">${element.code}</option>`;
+                });
+                
+                product_type_id.html(options);
+
+                // trigger change to set the value
+                $('.selectpicker').selectpicker('refresh');
+            }
+        });
+    });
+
+    input_product_type_id.change(function() {
+        let product_type_id = $(this).val();
+        let categories_id = input_categories_id.val();
+        
+        $.ajax({
+            type: "GET",
+            url: "{{ url('product-categories/gramasi-getByCategoryAndProductType') }}/" + categories_id+"/"+product_type_id,
+            success: function(data) {
+                if(data.data){
+                    input_gramasi_id.val(data.data.id);
+                    text_gramasi_id.text(data.data.gramasi);
+
+                    prevGramasi(data.data.id);
+                }
+            }
+        });
+    });
+
+    input_categories_id.add(input_product_type_id).change(function() {
+        input_gramasi_id.val('');
+        text_gramasi_id.text('-');
+    });
+
+    // preview image
+    function readURL(input) {
+        let image_preview = $('#image-preview');
+        let image    = $('#image');
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            // batasi ukuran gambar
+            if (input.files[0].size > 2000000) {
+                // hapus file yang sudah dipilih
+                image.val('');
+                image_preview.html('');
+
+                alert("Max file size is 2MB");
+                return;
+            }
+
+            // batasi tipe gambar
+            if (input.files[0].type != 'image/jpeg' && input.files[0].type != 'image/png') {
+                // hapus file yang sudah dipilih
+                image.val('');
+                image_preview.html('');
+
+                alert("Only jpeg and png file type are allowed");
+                return;
+            }
+
+            reader.onload = function(e) {
+                image_preview.html('<img style="max-height:100px" src="' + e.target.result + '" class="img-fluid" />');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     $('[data-toggle="tooltip"]').tooltip();
 
         $.ajaxSetup({
@@ -254,18 +398,6 @@
                 height: 200
             });
         }
-
-        // tinymce.init({
-        //     selector: 'textarea',
-        //     height: 130,
-        //     plugins: [
-        //         'advlist autolink lists link image charmap print preview anchor textcolor',
-        //         'searchreplace visualblocks code fullscreen',
-        //         'insertdatetime media table contextmenu paste code wordcount'
-        //     ],
-        //     toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
-        //     branding: false
-        // });
 
 
         //Delete product
@@ -326,13 +458,19 @@
             $("#product-preview").css("background-color", color);
         });
 
-        $("#input-kd-gramasi").change(function(e) {
-            e.preventDefault();
-            id = parseInt(e.target.value)
+        // $("#input-kd-gramasi").change(function(e) {
+        //     e.preventDefault();
+        //     id = parseInt(e.target.value)
+        //     const gramasi = getGramasi(id)
+        //     $("#prev-gramasi").text(gramasi.gramasi);
+        //     $("#prev-kd-gramasi").text(gramasi.code);
+        // });
+
+        function prevGramasi(id) {
             const gramasi = getGramasi(id)
             $("#prev-gramasi").text(gramasi.gramasi);
             $("#prev-kd-gramasi").text(gramasi.code);
-        });
+        }
 
         $("#input-kd-sifat").change(function(e) {
             e.preventDefault();

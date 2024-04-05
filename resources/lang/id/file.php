@@ -628,6 +628,7 @@ return [
 	"Type category name" => "Tulis nama kategori",
 	"Tag Type" => "Jenis Tag",
 	"Failed to be deleted because it was used by prices" =>  "Gagal dihapus karena digunakan di oleh Master Harga",
+	"Image must be in .jpg, .jpeg, .png format and maximum 2MB" => "Gambar harus dalam format .jpg, .jpeg, .png",
 
 ];
 
