@@ -421,6 +421,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	
 		Route::post('gramasi-multi-delete', 'GramasiController@destroyMultiple');
 		Route::get('gramasi-datatable', 'GramasiController@gramasiData');
+		Route::get('gramasi-getByCategoryAndProductType/{category_id}/{product_type_id}', 'GramasiController@getByCategoryAndProductType');
 		Route::resource('gramasi', 'GramasiController');
 
 	});

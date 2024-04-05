@@ -627,6 +627,8 @@ return [
 	"Carat" => "Karat",
 	"Type category name" => "Tulis nama kategori",
 	"Tag Type" => "Jenis Tag",
+	"Failed to be deleted because it was used by prices" =>  "Gagal dihapus karena digunakan di oleh Master Harga",
+
 ];
 
 ?>
