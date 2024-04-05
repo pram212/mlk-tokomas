@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Gramasi;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreGramasiRequest extends FormRequest
+class UpdateGramasiRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,7 +32,7 @@ class StoreGramasiRequest extends FormRequest
         ];
     }
 
-    /**
+     /**
      * Configure the validator instance.
      *
      * @param  \Illuminate\Validation\Validator  $validator
@@ -41,9 +41,10 @@ class StoreGramasiRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $isGramasiExist = Gramasi::
-                    where('categories_id', $this->categories_id)
+            $id = $this->route("Gramasi");
+            $isGramasiExist = Gramasi::where('categories_id', $this->categories_id)
                     ->where('product_type_id', $this->product_type_id)
+                    ->where('id', '!=', $id)
                     ->first();
 
             if ($isGramasiExist) {

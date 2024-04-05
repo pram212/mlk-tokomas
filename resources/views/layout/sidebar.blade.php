@@ -35,8 +35,8 @@
                         </li>
                         <li id="productcategory-list-menu"
                             class="@if (request()->is('product-categories/productproperty*')) active @endif">
-                            <a href="{{ route('product-categories.productproperty.index') }}">{{ __('file.Product
-                                Property') }}</a>
+                            <a href="{{ route('product-categories.productproperty.index') }}">
+                                {{ __('file.Product Property') }}</a>
                         </li>
                         <li id="productcategory-list-menu"
                             class="@if (request()->is('product-categories/producttype*')) active @endif">

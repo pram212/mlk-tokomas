@@ -18,6 +18,7 @@
                     <th>{{ __('file.Carat') }}</th>
                     <th>{{ __('file.Tag Type') }}</th>
                     <th>{{ __('file.category') }}</th>
+                    <th>{{ __('file.Product Type') }}</th>
                     <th>{{ __('file.Created By') }}</th>
                     <th>{{ __('file.Updated By') }}</th>
                     <th>{{ __('file.Created At') }}</th>
@@ -64,6 +65,9 @@
                     data: 'categories'
                 },
                 {
+                    data: 'product_type'
+                },
+                {
                     data: 'created_by'
                 },
                 {
@@ -80,7 +84,7 @@
                 },
             ],
             order: [
-                ['7', 'desc']
+                ['9', 'desc']
             ],
             columnDefs: [{
                     "orderable": false,

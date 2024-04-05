@@ -30,6 +30,7 @@ class UpdatePriceRequest extends FormRequest
             'price_id' => ['required'],
             'tag_type_id' => ['required'],
             'categories_id' => ['required'],
+            'product_type_id' => ['required'],
         ];
     }
 
@@ -47,6 +48,7 @@ class UpdatePriceRequest extends FormRequest
                     ->where('gramasi_id', $this->gramasi_id)
                     ->where('tag_type_id', $this->tag_type_id)
                     ->where('categories_id', $this->categories_id)
+                    ->where('product_type_id', $this->product_type_id)
                     ->where('id', '!=', $id)
                     ->first();
 

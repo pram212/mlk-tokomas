@@ -55,11 +55,6 @@
                         </div>
                     </div>
 
-
-
-
-
-
                     <div class="col-12">
                         <div class="row">
                             <div class="col-6">
@@ -86,7 +81,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>{{ __('file.category') }} *</strong></label>
-                                            <select name="categories_id" class="form-control" id="input-kd-tag-type">
+                                            <select name="categories_id" class="form-control" id="input-kd-category">
                                                 <option value="">{{ __('file.Select') }}
                                                 </option>
                                                 @foreach ($category as $item)
@@ -105,16 +100,33 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>{{ __('file.Gramasi Code') }} *</strong></label>
-                                            <select name="gramasi_id" class="form-control" id="input-kd-gramasi">
-                                                <option value="">{{ __('file.Select') }}
-                                                </option>
-                                                @foreach ($gramasi as $item)
-                                                <option value="{{ $item->id }}" @if ($item->id == @$price->gramasi_id)
-                                                    selected @endif>
-                                                    {{ $item->code }} - {{ $item->gramasi }} gr</option>
+                                            <label>{{ __('file.Product Type') }} * </label>
+                                            <select name="product_type_id" class="form-control selectpicker"
+                                                id="product_type_id" @if(!@$price)disabled @endif
+                                                data-live-search="true">
+                                                <option value="" disabled>{{ __('file.Select') }}</option>
+                                                @if (@$price)
+                                                @foreach ($product_type as $item)
+                                                <option value="{{ $item->id }}" @if ($item->id ==
+                                                    @$price->product_type_id)
+                                                    selected
+                                                    @endif>
+                                                    {{ $item->code }}</option>
                                                 @endforeach
+                                                @endif
                                             </select>
+                                            @error('product_type_id')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>{{ __('file.Gramasi') }} *</strong></label>
+                                            <div id="text-kd-gramasi">{{ $price->gramasi->gramasi ?? '-' }}</div>
+                                            <input class="form-control" type="hidden" name="gramasi_id"
+                                                id="input-kd-gramasi"
+                                                value="{{ old('gramasi_id',@$price->gramasi_id) }}">
                                             @error('gramasi_id')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -170,7 +182,7 @@
                                                                     <input type="text"
                                                                         name="product_property_price[{{ $item->id }}]"
                                                                         class="form-control product_property_price"
-                                                                        value="{{ $priceValue }}">
+                                                                        value="{{ $priceValue }}" required>
 
                                                                 </td>
                                                             </tr>
@@ -202,12 +214,69 @@
 
 @section('scripts')
 <script>
-    $("#price").maskMoney()
+    let price = $("#price");
+    let input_categories_id = $('#input-kd-category');
+    let input_product_type_id = $('#product_type_id');
+    let input_gramasi_id = $('#input-kd-gramasi');
+    let text_gramasi_id = $('#text-kd-gramasi');
+    let carat = $("#carat");
+    let product_property_price= $('.product_property_price');
 
-    $('.product_property_price').maskMoney()
+    input_categories_id.change(function() {
+        let categories_id = $(this).val();
+        let product_type_id = $('#product_type_id');
+        let button_product_type_id = $('button[data-id="product_type_id"]');
+        $.ajax({
+            type: "GET",
+            url: "{{ url('product-categories/producttype-getByCategory/') }}/" + categories_id,
+            success: function(data) {
+                let res =data;
+                button_product_type_id.toggleClass('disabled', res.data.length == 0);
+                product_type_id.prop('disabled', res.data.length == 0);
+
+                let options = '<option value="">{{ __('file.Select') }}</option>';
+                if (res.data.length != 0)
+                res.data.forEach(element => {
+                    options += `<option value="${element.id}">${element.code}</option>`;
+                });
+                
+                product_type_id.html(options);
+
+                // trigger change to set the value
+                $('.selectpicker').selectpicker('refresh');
+            }
+        });
+    });
+
+    input_product_type_id.change(function() {
+        let product_type_id = $(this).val();
+        let categories_id = input_categories_id.val();
+        
+        $.ajax({
+            type: "GET",
+            url: "{{ url('product-categories/gramasi-getByCategoryAndProductType') }}/" + categories_id+"/"+product_type_id,
+            success: function(data) {
+                if(data.data){
+                    input_gramasi_id.val(data.data.id);
+                    text_gramasi_id.text(data.data.gramasi);
+                }
+            }
+        });
+    });
+
+    input_categories_id.add(input_product_type_id).change(function() {
+        input_gramasi_id.val('');
+        text_gramasi_id.text('-');
+    });
+
+
+
+    price.maskMoney()
+
+    product_property_type.maskMoney()
     
     // carat handle number
-    $("#carat").on("input", function() {
+    carat.on("input", function() {
         var value = $(this).val();
         var value = value.replace(/[^0-9.]/g, '');
         $(this).val(value);

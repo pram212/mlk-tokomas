@@ -58,8 +58,10 @@
                                 data-live-search="true">
                                 <option value="">{{ __('file.Select') }}</option>
                                 @foreach ($category as $item)
-                                <option value="{{ $item->id }}" @if ($item->id == @$gramasi->categories_id) selected
-                                    @endif>{{ $item->name }}</option>
+                                <option value="{{ $item->id }}" {{ old('categories_id', @$gramasi->categories_id) ==
+                                    $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }}
+                                </option>
                                 @endforeach
                             </select>
                             @error('categories_id')
@@ -70,7 +72,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label><strong>{{ __('file.Product Gramasi Type Code') }} *</strong> </label>
-                            <input type="text" name="code" class="form-control" id="code" value="{{ @$gramasi->code }}">
+                            <input type="text" name="code" class="form-control" id="code"
+                                value="{{ old('code', @$gramasi->code) }}">
                         </div>
                     </div>
                     <div class="col-md-6">

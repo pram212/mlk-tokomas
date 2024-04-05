@@ -15,6 +15,7 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Category;
 use App\TagType;
 use App\PriceProductPropertyDetail;
+use App\ProductType;
 
 class PriceController extends Controller
 {
@@ -51,7 +52,10 @@ class PriceController extends Controller
                 return number_format($q->price, 2, ',', '.');
             })
             ->addColumn('gramasi', function($q) { 
-                return $q->gramasi->gramasi;
+                return $q->gramasi->gramasi ?? "-";
+            })
+            ->addColumn('product_type', function($q) { 
+                return $q->product_type->description ?? "-";
             })
             ->addColumn('tag_type', function($q) { 
                 return $q->tagType->code ?? "-";
@@ -78,12 +82,11 @@ class PriceController extends Controller
 
     public function create()
     {
-        $gramasi = Gramasi::all();
         $productProperty = ProductProperty::all();
         $category = Category::all();
         $tagType = TagType::all();
 
-        return view('price.form', compact('gramasi', 'productProperty', 'category', 'tagType'));
+        return view('price.form', compact('productProperty', 'category', 'tagType'));
     }
 
     public function edit($id)
@@ -94,8 +97,9 @@ class PriceController extends Controller
         $category = Category::all();
         $tagType = TagType::all();
         $price = Price::findOrFail($id);
+        $product_type = ProductType::where('categories_id', $price->categories_id)->get();
 
-        return view('price.form', compact('price', 'gramasi', 'productProperty', 'category', 'tagType', 'product_property_price'));
+        return view('price.form', compact('price', 'gramasi', 'productProperty', 'category', 'tagType', 'product_property_price', 'product_type'));
     }
 
     public function store(StorePriceRequest $request)
@@ -108,6 +112,7 @@ class PriceController extends Controller
                 'gramasi_id' => $request->gramasi_id,
                 'tag_type_id' => $request->tag_type_id,
                 'categories_id' => $request->categories_id,
+                'product_type_id' => $request->product_type_id,
                 'carat' => $request->carat,
                 'created_by' => auth()->id()
             ]);
@@ -151,6 +156,7 @@ class PriceController extends Controller
                 'gramasi_id' => $request->gramasi_id,
                 'tag_type_id' => $request->tag_type_id,
                 'categories_id' => $request->categories_id,
+                'product_type_id' => $request->product_type_id,
                 'updated_by' => auth()->id()
             ]);
 

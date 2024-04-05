@@ -9,6 +9,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Category;
 use App\Http\Requests\StoreGramasiRequest;
+use App\Http\Requests\UpdateGramasiRequest;
 
 class GramasiController extends Controller
 {
@@ -94,13 +95,8 @@ class GramasiController extends Controller
         
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateGramasiRequest $request, $id)
     {
-        $request->validate([
-            'product_type_id' => ['required'],
-            'gramasi' => ['required', 'numeric'],
-            'code' => ['required'],
-        ]);
 
         try {
             DB::beginTransaction();
@@ -166,6 +162,32 @@ class GramasiController extends Controller
         }
 
     }
+
+    public function getByCategoryAndProductType(Request $request, $categories_id, $product_type_id)
+    {
+        try {
+            $gramasi = Gramasi::where('categories_id', $categories_id)
+                ->where('product_type_id', $product_type_id)
+                ->firstOrFail();
+
+            $response = [
+                'status' => 200,
+                'data' => $gramasi,
+                'message' => 'success'
+            ];
+
+            return response()->json($response);
+        } catch (\Exception $e) {
+            $response = [
+                'status' => 500,
+                'message' => 'An error occurred while fetching data',
+                'error' => $e->getMessage() 
+            ];
+
+            return response()->json($response, 500);
+        }
+    }
+
 
    
 
