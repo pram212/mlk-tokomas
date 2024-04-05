@@ -33,6 +33,8 @@ class StoreProductRequest extends FormRequest
             'price' => ['required'],
             'code' => ['required'],
             'mg' => ['required'],
+            'product_type_id' => ['required'],
+            'image' => ['required'],
         ];
     }
 }

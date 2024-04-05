@@ -1,198 +1,199 @@
 @extends('layout.main') @section('content')
-    <section>
-        <div class="container-fluid">
-            @can('create', App\Product::class)
-                <a href="{{ route('products.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
-                    {{ __('file.add_product') }}</a>
-                <a href="#" data-toggle="modal" data-target="#importProduct" class="btn btn-primary"><i
-                        class="dripicons-copy"></i> {{ __('file.import_product') }}</a>
-            @endcan
-        </div>
-        <div class="table-responsive">
+<section>
+    <div class="container-fluid">
+        @can('create', App\Product::class)
+        <a href="{{ route('products.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
+            {{ __('file.add_product') }}</a>
+        <a href="#" data-toggle="modal" data-target="#importProduct" class="btn btn-primary"><i
+                class="dripicons-copy"></i> {{ __('file.import_product') }}</a>
+        @endcan
+    </div>
+    <div class="table-responsive">
 
-            <table id="product-data-table" class="table" style="width: 100%">
-                <thead>
-                    <tr>
-                        <th>{{ trans('file.Code') }}</th>
-                        {{-- <th>{{ __('file.Product Image') }}</th> --}}
-                        <th>{{ __('file.Product Name') }}</th>
-                        <th>{{ __('file.Date') }}</th>
-                        <th>{{ trans('file.Price') }}</th>
-                        <th>{{ __('file.Tag Type Code') }}</th>
-                        <th>{{ __('file.Color') }}</th>
-                        <th>Miligram</th>
-                        <th>Gramasi</th>
-                        <th>{{ __('file.Product Property') }}</th>
-                        <th class="not-exported">{{ trans('file.action') }}</th>
-                    </tr>
-                </thead>
+        <table id="product-data-table" class="table" style="width: 100%">
+            <thead>
+                <tr>
+                    <th class="not-exported"></th>
+                    <th>{{ trans('file.Code') }}</th>
+                    <th>{{ __('file.Product Name') }}</th>
+                    <th>{{ __('file.Product Image') }}</th>
+                    <th>{{ __('file.Date') }}</th>
+                    <th>{{ trans('file.Price') }}</th>
+                    <th>{{ __('file.Tag Type Code') }}</th>
+                    <th>{{ __('file.Color') }}</th>
+                    <th>Miligram</th>
+                    <th>Gramasi</th>
+                    <th>{{ __('file.Product Property') }}</th>
+                    <th class="not-exported">{{ trans('file.action') }}</th>
+                </tr>
+            </thead>
 
-            </table>
-        </div>
-    </section>
+        </table>
+    </div>
+</section>
 
-    <div id="importProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
-        class="modal fade text-left">
-        <div role="document" class="modal-dialog">
-            <div class="modal-content">
-                {!! Form::open(['route' => 'products.import', 'method' => 'post', 'files' => true]) !!}
-                <div class="modal-header">
-                    <h5 id="exampleModalLabel" class="modal-title">Import Product</h5>
-                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
-                            aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-                </div>
-                <div class="modal-body">
-                    <p class="italic">
-                        <small>{{ trans('file.The field labels marked with * are required input fields') }}.</small>
-                    </p>
-                    <p>{{ trans('file.The correct column order is') }} (image, name*, code*, type*, brand, category*,
-                        unit_code*, cost*, price*, product_details, variant_name, item_code, additional_price)
-                        {{ trans('file.and you must follow this') }}.</p>
-                    <p>{{ trans('file.To display Image it must be stored in') }} public/images/product
-                        {{ trans('file.directory') }}. {{ trans('file.Image name must be same as product name') }}</p>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>{{ trans('file.Upload CSV File') }} *</label>
-                                {{ Form::file('file', ['class' => 'form-control', 'required']) }}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label> {{ trans('file.Sample File') }}</label>
-                                <a href="public/sample_file/sample_products.csv" class="btn btn-info btn-block btn-md"><i
-                                        class="dripicons-download"></i> {{ trans('file.Download') }}</a>
-                            </div>
+<div id="importProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            {!! Form::open(['route' => 'products.import', 'method' => 'post', 'files' => true]) !!}
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title">Import Product</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
+            </div>
+            <div class="modal-body">
+                <p class="italic">
+                    <small>{{ trans('file.The field labels marked with * are required input fields') }}.</small>
+                </p>
+                <p>{{ trans('file.The correct column order is') }} (image, name*, code*, type*, brand, category*,
+                    unit_code*, cost*, price*, product_details, variant_name, item_code, additional_price)
+                    {{ trans('file.and you must follow this') }}.</p>
+                <p>{{ trans('file.To display Image it must be stored in') }} public/images/product
+                    {{ trans('file.directory') }}. {{ trans('file.Image name must be same as product name') }}</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>{{ trans('file.Upload CSV File') }} *</label>
+                            {{ Form::file('file', ['class' => 'form-control', 'required']) }}
                         </div>
                     </div>
-                    {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
-                </div>
-                {!! Form::close() !!}
-            </div>
-        </div>
-    </div>
-
-    <div id="product-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
-        class="modal fade text-left">
-        <div role="document" class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 id="exampleModalLabel" class="modal-title">{{ trans('Product Details') }}</h5>
-                    <button id="print-btn" type="button" class="btn btn-default btn-sm ml-3"><i
-                            class="dripicons-print"></i> {{ trans('file.Print') }}</button>
-                    <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close"><span
-                            aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-5" id="slider-content"></div>
-                        <div class="col-md-5 offset-1" id="product-content"></div>
-                        <div class="col-md-5 mt-2" id="product-warehouse-section">
-                            <h5>{{ trans('file.Warehouse Quantity') }}</h5>
-                            <table class="table table-bordered table-hover product-warehouse-list">
-                                <thead>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col-md-7 mt-2" id="product-variant-warehouse-section">
-                            <h5>{{ trans('file.Warehouse quantity of product variants') }}</h5>
-                            <table class="table table-bordered table-hover product-variant-warehouse-list">
-                                <thead>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <h5 id="combo-header"></h5>
-                    <table class="table table-bordered table-hover item-list">
-                        <thead>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detailModalLabel">{{ __('file.Product Details') }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-
-                        <div class="col-12 mb-3 border">
-                            <div class="h-100 d-flex align-items-center justify-content-center">
-                                <div class="text-center" id="prev-qrcode">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="code">{{ __('file.Product Code') }} :</label>
-                                <input type="text" id="dtl-code" class="form-control" readonly>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="code">{{ __('file.Price') }} :</label>
-                                <input type="text" id="dtl-price" class="form-control" readonly>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="code">{{ __('file.Tag Type Code') }} :</label>
-                                <input type="text" id="dtl-tag-code" class="form-control" readonly>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="code">{{ __('file.Gramasi Code') }} :</label>
-                                <input type="text" id="dtl-gramasi-code" class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="code">{{ __('file.Discount') }} :</label>
-                                <input type="text" id="dtl-discount" class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="code">{{ __('file.Product Property Code') }} :</label>
-                                <input type="text" id="dtl-product-property" class="form-control" readonly>
-                            </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> {{ trans('file.Sample File') }}</label>
+                            <a href="public/sample_file/sample_products.csv" class="btn btn-info btn-block btn-md"><i
+                                    class="dripicons-download"></i> {{ trans('file.Download') }}</a>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
+            </div>
+            {!! Form::close() !!}
+        </div>
+    </div>
+</div>
+
+<div id="product-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title">{{ trans('Product Details') }}</h5>
+                <button id="print-btn" type="button" class="btn btn-default btn-sm ml-3"><i class="dripicons-print"></i>
+                    {{ trans('file.Print') }}</button>
+                <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close"><span
+                        aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-5" id="slider-content"></div>
+                    <div class="col-md-5 offset-1" id="product-content"></div>
+                    <div class="col-md-5 mt-2" id="product-warehouse-section">
+                        <h5>{{ trans('file.Warehouse Quantity') }}</h5>
+                        <table class="table table-bordered table-hover product-warehouse-list">
+                            <thead>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-7 mt-2" id="product-variant-warehouse-section">
+                        <h5>{{ trans('file.Warehouse quantity of product variants') }}</h5>
+                        <table class="table table-bordered table-hover product-variant-warehouse-list">
+                            <thead>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
+                <h5 id="combo-header"></h5>
+                <table class="table table-bordered table-hover item-list">
+                    <thead>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailModalLabel">{{ __('file.Product Details') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-12 mb-3 border">
+                        <div class="h-100 d-flex align-items-center justify-content-center">
+                            <div class="text-center" id="prev-qrcode">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="code">{{ __('file.Product Code') }} :</label>
+                            <input type="text" id="dtl-code" class="form-control" readonly>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="code">{{ __('file.Price') }} :</label>
+                            <input type="text" id="dtl-price" class="form-control" readonly>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="code">{{ __('file.Tag Type Code') }} :</label>
+                            <input type="text" id="dtl-tag-code" class="form-control" readonly>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="code">{{ __('file.Gramasi Code') }} :</label>
+                            <input type="text" id="dtl-gramasi-code" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="code">{{ __('file.Discount') }} :</label>
+                            <input type="text" id="dtl-discount" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="code">{{ __('file.Product Property Code') }} :</label>
+                            <input type="text" id="dtl-product-property" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
-    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-
-    <script>
-        $("ul#product").siblings('a').attr('aria-expanded', 'true');
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script src="{{ asset('public/js/axios.min.js') }}"></script>
+<script>
+    $("ul#product").siblings('a').attr('aria-expanded', 'true');
         $("ul#product").addClass("show");
         $("ul#product #product-list-menu").addClass("active");
 
@@ -424,10 +425,18 @@
                     type: "get"
                 },
                 "columns": [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },{
                         "data": "code"
                     },
                     {
                         "data": "name"
+                    },
+                    {
+                        data: 'image_preview'
                     },
                     {
                         "data": "created_at"
@@ -465,32 +474,28 @@
                 //     }
                 // },
                 order: [
-                    ['2', 'asc']
+                    ['3', 'desc']
                 ],
-                // 'columnDefs': [
-                //     {
-                //         "orderable": false,
-                //         'targets': [0, 1, 9]
-                //     },
-                //     {
-                //         'render': function(data, type, row, meta){
-                //             if(type === 'display'){
-                //                 data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
-                //             }
+                columnDefs: [{
+                    "orderable": false,
+                    'targets': [0, 3]
+                    },
+                    {
+                        'render': function(data, type, row, meta) {
+                            if (type === 'display') {
+                                data =
+                                    '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                            }
 
-                //            return data;
-                //         },
-                //         'checkboxes': {
-                //            'selectRow': true,
-                //            'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
-                //         },
-                //         'targets': [0]
-                //     },
-                //     {
-                //         'targets': [8],
-                //         render: $.fn.dataTable.render.number( '.', ',', 0, '')
-                //     },
-                // ],
+                            return data;
+                        },
+                        'checkboxes': {
+                            'selectRow': true,
+                            'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                        },
+                        'targets': [0]
+                    }
+                ],
                 'select': {
                     style: 'multi',
                     selector: 'td:first-child'
@@ -560,37 +565,38 @@
                         text: '{{ trans('file.delete') }}',
                         className: 'buttons-delete',
                         action: function(e, dt, node, config) {
-                            if (user_verified == '1') {
-                                product_id.length = 0;
-                                $(':checkbox:checked').each(function(i) {
-                                    if (i) {
-                                        var product_data = $(this).closest('tr').data(
-                                            'product');
-                                        product_id[i - 1] = product_data[12];
-                                    }
-                                });
-                                if (product_id.length && confirmDelete()) {
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: 'products/deletebyselection',
-                                        data: {
-                                            productIdArray: product_id
-                                        },
-                                        success: function(data) {
-                                            dt.rows({
-                                                page: 'current',
-                                                selected: true
-                                            }).deselect();
-                                            dt.rows({
-                                                page: 'current',
-                                                selected: true
-                                            }).remove().draw(false);
-                                        }
-                                    });
-                                } else if (!product_id.length)
-                                    alert('No product is selected!');
-                            } else
-                                alert('This feature is disable for demo!');
+                            var user_verified = '{!! env('USER_VERIFIED') !!}'
+                            if (!user_verified) {
+                                return alert('This feature is disable for demo!')
+                            }
+                            ids = []
+                            $.each($('.dt-checkboxes:checked'), function(indexInArray, valueOfElement) {
+                                const tr = $(this).closest('tr'); // get the row target
+                                const data = table.row(tr).data(); // get detail data
+                                if (data !== undefined) ids.push(data.id)
+                            });
+
+                            if (ids.length < 1) {
+                                return alert('No data selected!')
+                            }
+                            const confirmDeleteMultiple = confirm(
+                                "Are you sure want to delete?");
+                            if (confirmDeleteMultiple) {
+                                const url = "{!! url('products/deletebyselection') !!}"
+                                axios.post(url, { 
+                                        ids : ids 
+                                    })
+                                    .then(function (response) {
+                                        alert(response.data.message)
+                                        table.ajax.reload();
+                                    })
+                                    .catch(function (error) {
+                                        const errorMessage = error.response.data
+                                        alert(errorMessage)
+                                    })
+
+                                return
+                            }
                         }
                     },
                     {
@@ -650,5 +656,5 @@
         });
 
         $('select').selectpicker();
-    </script>
+</script>
 @endsection

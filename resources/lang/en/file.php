@@ -630,6 +630,8 @@ return [
 	"Tag Type" => "Tag Type",
 	"Failed to be deleted because it was used by prices" =>  "Failed to be deleted because it was used by prices",
 	"Image must be in .jpg, .jpeg, .png format and maximum 2MB" => "Image must be in .jpg, .jpeg, .png format dan maksimal 2MB",
+	"Drop files here or click to upload" => "Drop files here or click to upload",
+	"Maximum upload size 2MB" => "Maximum upload size 2MB",
 	
 ];
 ?>

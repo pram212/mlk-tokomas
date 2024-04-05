@@ -37,15 +37,15 @@ class ProductController extends Controller
 
         $lims_category_list = Category::where('is_active', true)->get();
         $productProperty = ProductProperty::all();
-        $productType = ProductType::all();
+        $product_type = ProductType::all();
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
         $category = Category::all();
 
-        return view('product.create', compact(
+        return view('product.form', compact(
             'lims_category_list',
             'productProperty',
-            'productType',
+            'product_type',
             'tagType',
             'gramasi',
             'category'
@@ -63,12 +63,30 @@ class ProductController extends Controller
 
             if ($request->file('image')) {
                 $file = $request->file('image');
-                $imagePath = "storage/app/" . $file->storeAs('product_images', time() . $request->file('image')->getClientOriginalName());
+                $imagePath = "storage/app/" . $file->storeAs('product_images', time().date('YmdHms').".".$file->extension());
+                
+                $request->merge(['image' => $imagePath]);
+            } else {
+                // Jika tidak ada file gambar yang diunggah, pertahankan jalur gambar yang ada
+                $imagePath = $request->image;
             }
 
-            $request->merge(['image' => $imagePath]);
-
-            Product::create($request->all());
+            Product::create([
+                'tag_type_id' => $request->tag_type_id,
+                'code' => $request->code,
+                'gold_content' => $request->gold_content,
+                'additional_code' => $request->additional_code,
+                'category_id' => $request->category_id,
+                'product_type_id' => $request->product_type_id,
+                'price' => $request->price,
+                'discount' => $request->discount,
+                'gramasi_id' => $request->gramasi_id,
+                'mg' => $request->mg,
+                'product_property_id' => $request->product_property_id,
+                'image' => $imagePath,
+                'is_active' => true,
+                ]
+            );
 
             DB::commit();
             
@@ -77,7 +95,9 @@ class ProductController extends Controller
                 'message' => 'Product created successfully'
             ];
 
-            return back()->with($alertSession);
+            // return back()->with($alertSession);
+
+            return redirect(url('products'))->with($alertSession);
 
         } catch (\Exception $ex) {
 
@@ -108,6 +128,8 @@ class ProductController extends Controller
         $productType = ProductType::all();
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
+        $category = Category::all();
+        $product_type = ProductType::where('categories_id', $product->category_id)->get();
 
         $product = Product::find($id)->load([
             'productProperty:id,code,description',
@@ -116,13 +138,15 @@ class ProductController extends Controller
             'category'
         ]);
 
-        return view('product.edit', compact(
+        return view('product.form', compact(
             'lims_category_list',
             'productProperty',
             'productType',
             'tagType',
             'gramasi',
-            'product'
+            'product',
+            'category',
+            'product_type'
         ));
     }
 
@@ -140,12 +164,33 @@ class ProductController extends Controller
 
             if ($request->file('image')) {
                 $file = $request->file('image');
-                $imagePath = "storage/app/" . $file->storeAs('product_images', time() . $request->file('image')->getClientOriginalName());
+                $imagePath = "storage/app/" . $file->storeAs('product_images', time().date('YmdHms').".".$file->extension());
+                
+                // Jika ada file gambar yang diunggah, hapus file gambar lama
+                if ($product->image) {
+                    unlink($product->image);
+                }
+                
+                $request->merge(['image' => $imagePath]);
+            } else {
+                // Jika tidak ada file gambar yang diunggah, pertahankan jalur gambar yang ada
+                $imagePath = $request->image;
             }
 
-            $request->merge(['image' => $imagePath]);
-
-            $product->update($request->all());
+            $product->update([
+                'tag_type_id' => $request->tag_type_id,
+                'code' => $request->code,
+                'gold_content' => $request->gold_content,
+                'additional_code' => $request->additional_code,
+                'category_id' => $request->category_id,
+                'product_type_id' => $request->product_type_id,
+                'price' => $request->price,
+                'discount' => $request->discount,
+                'gramasi_id' => $request->gramasi_id,
+                'mg' => $request->mg,
+                'product_property_id' => $request->product_property_id,
+                'image' => $imagePath,
+            ]);
 
             DB::commit();
 
@@ -387,13 +432,29 @@ class ProductController extends Controller
 
     public function deleteBySelection(Request $request)
     {
-        $product_id = $request['productIdArray'];
-        foreach ($product_id as $id) {
-            $lims_product_data = Product::findOrFail($id);
-            $lims_product_data->is_active = false;
-            $lims_product_data->save();
+        try {
+            $product_ids = $request->ids;
+            DB::beginTransaction();
+            foreach ($product_ids as $id) {
+                $product = Product::find($id);
+                $product->is_active = false;
+                $product->save();
+            }
+            DB::commit();
+
+            $res = [
+                'status' => 'success',
+                'message' => 'Product deleted successfully'
+            ];
+            return response()->json($res);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $res = [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
+            return response()->json($res);
         }
-        return 'Product deleted successfully!';
     }
 
     public function destroy($id)
@@ -423,10 +484,12 @@ class ProductController extends Controller
 
         $productQuery = Product::query()
             ->select('id', 'code', 'price', 'image', 'name', 'discount', 'created_at', 'tag_type_id', 'gramasi_id', 'product_property_id', 'mg')
+            ->where('is_active', true)
             ->orderBy("created_at", "desc")
             ->with([ 'tagType:id,code,color', 'productProperty:id,code,description', 'gramasi:id,code,gramasi' ]);
 
         $datatable =  DataTables::of($productQuery)
+            ->addIndexColumn()
             ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
             ->editColumn('price', fn ($product) => $product->price )
             ->addColumn('product_property_description', fn ($product) => $product->productProperty->description ?? "-")
@@ -434,6 +497,9 @@ class ProductController extends Controller
             ->addColumn('gramasi_gramasi', fn ($product) => $product->gramasi->gramasi ?? "-")
             ->addColumn('tag_type_code', fn ($product) => $product->tagType->code ?? "-")
             ->addColumn('gramasi_code', fn ($product) => $product->gramasi->code ?? "-")
+            ->addColumn('image_preview', function($q) {
+                return '<img src="'.asset($q->image).'" class="img-thumbnail" width="100" height="100">';
+            })
             ->addColumn('tag_type_color', function ($product) {
                 $color = $product->tagType->color ?? "none";
                 return '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color . '</div>';
@@ -461,7 +527,7 @@ class ProductController extends Controller
 
                 return $element;
             })
-            ->rawColumns(['tag_type_color', 'action'])
+            ->rawColumns(['tag_type_color', 'action', 'image_preview'])
             ->make();
 
             return $datatable;
