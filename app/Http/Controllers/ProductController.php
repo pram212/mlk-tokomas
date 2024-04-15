@@ -21,6 +21,8 @@ use App\Brand;
 use App\Unit;
 use DNS1D;
 use Keygen;
+use Dompdf\Dompdf;
+use View;
 
 class ProductController extends Controller
 {
@@ -510,7 +512,7 @@ class ProductController extends Controller
                 $btnEdit = $user->can('update', $product) 
                     ? '<a class="dropdown-item" href="' . url("products/$product->id/edit") . '"><i class="fa fa-pencil"></i> Edit</a>'
                     : '';
-                $btnPrint = '<a class="dropdown-item btn-print" data-id="'.$product->id.'" href="#"><i class="fa fa-print"></i> Print</a>';
+                $btnPrint = '<a class="dropdown-item btn-print" target="_BLANK" data-id="'.$product->id.'" href="'.url("products/print/$product->id").'"><i class="fa fa-print"></i> Print</a>';
                 $btnDelete = $user->can('delete', $product)
                     ? '<a class="dropdown-item btn-delete" href="#"><i class="fa fa-trash"></i> Delete</a>'
                     : '';
@@ -537,15 +539,41 @@ class ProductController extends Controller
 
     }
 
-    // handle print from axios
     public function print(Request $request,$id)
     {
-        $product = Product::find($id);
-        // $barcode = DNS1D::getBarcodePNG($product->code);
-        // $product->barcode = $barcode;
-        // $product->currency = config('currency');
-        // $product->currency_position = config('currency_position');
-        return view('product.print', compact('product'));
+        $product = Product::find($id)->load([
+            'productProperty:id,code,description',
+            'gramasi:id,code,gramasi',
+            'tagType:id,code,color',
+            'category'
+        ]);
+
+        $dompdf = new Dompdf();
+        $options = $dompdf->getOptions();
+        $options->setDefaultFont('Courier');
+        $dompdf->setOptions($options);
+        $dompdf->setPaper('A4', 'portrait');
+
+        $datetime = date('YmdHis');
+
+        $filename = 'report.pdf';
+
+        // $img = asset($product->image);
+
+        // Load view
+        $html = View::make('product.print', ['data' => $product, 'filename' => $filename]);
+        $html = $html->render();
+
+        // return $html;
+
+        // Load HTML
+        $dompdf->loadHtml($html);
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Open pdf in browser
+        $dompdf->stream($filename, array("Attachment" => false));
     }
 
 }

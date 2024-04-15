@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2",
         "doctrine/dbal": "^2.11",
+        "dompdf/dompdf": "^2.0",
         "fideloper/proxy": "^4.0",
         "gladcodes/keygen": "^1.1",
         "intervention/image": "^2.5",
