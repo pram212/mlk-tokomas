@@ -89,6 +89,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	Route::get('print_barcode', 'ProductController@printBarcode')->name('printBarcode');
 	Route::get('products-gencode', 'ProductController@generateCode');
 	Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
+		Route::GET('print/{id}', 'ProductController@print')->name('print');
 		Route::POST('update/{id}', 'ProductController@update')->name('update');
 		Route::get('lims_product_search', 'ProductController@limsProductSearch')->name('search');
 		Route::post('importproduct', 'ProductController@importProduct')->name('import');
@@ -400,6 +401,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	Route::group(['prefix' => 'master', 'as' => 'master.'], function() {
 		Route::post('price-multi-delete', 'PriceController@destroyMultiple');
 		Route::get('price-datatable', 'PriceController@priceData');
+		Route::get('price-getProductPrice/{category_id}/{product_type_id}', 'PriceController@getProductPrice');
 		Route::resource("/price", 'PriceController');
 	});
 

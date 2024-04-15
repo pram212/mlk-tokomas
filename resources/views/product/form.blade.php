@@ -47,6 +47,16 @@
                                                 @endif
                                             </div>
                                         </div>
+                                        <div class="col-md-12 mb-3">
+                                            <div class="form-group">
+                                                <label for="">{{ __('file.Product Name') }} *</label>
+                                                <input type="text" class="form-control" name="name"
+                                                    value="{{ old('name', @$product->name) }}" id="input-name" required>
+                                                @error('name')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
                                         {{-- <div class="col-md-12">
                                             <div class="form-group mb-3">
                                                 <label>{{ __('file.Product Image') }} *</strong> </label>
@@ -176,7 +186,7 @@
                                                     <div class="form-group">
                                                         <label>{{ trans('file.Product Price') }} *</strong> </label>
                                                         <input type="text" id="price" name="price" class="form-control"
-                                                            step="any" value="{{ @$product->price ?? '' }}">
+                                                            step="any" value="{{ @$product->price ?? '' }}" readonly>
                                                         @error('price')
                                                         <span class="text-danger">{{ $message }}</span>
                                                         @enderror
@@ -357,6 +367,18 @@
                     text_gramasi_id.text(data.data.gramasi);
 
                     prevGramasi(data.data.id);
+                }
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "{{ url('master/price-getProductPrice') }}/" + categories_id+"/"+product_type_id,
+            success: function(data) {
+                if(data[0]){
+                    let price = data[0].price;
+
+                    $('#price').val(price);
                 }
             }
         });

@@ -85,6 +85,7 @@ class ProductController extends Controller
                 'product_property_id' => $request->product_property_id,
                 'image' => $imagePath,
                 'is_active' => true,
+                'name' => $request->name,
                 ]
             );
 
@@ -190,6 +191,7 @@ class ProductController extends Controller
                 'mg' => $request->mg,
                 'product_property_id' => $request->product_property_id,
                 'image' => $imagePath,
+                'name' => $request->name,
             ]);
 
             DB::commit();
@@ -437,8 +439,7 @@ class ProductController extends Controller
             DB::beginTransaction();
             foreach ($product_ids as $id) {
                 $product = Product::find($id);
-                $product->is_active = false;
-                $product->save();
+                $product->delete();
             }
             DB::commit();
 
@@ -509,6 +510,7 @@ class ProductController extends Controller
                 $btnEdit = $user->can('update', $product) 
                     ? '<a class="dropdown-item" href="' . url("products/$product->id/edit") . '"><i class="fa fa-pencil"></i> Edit</a>'
                     : '';
+                $btnPrint = '<a class="dropdown-item btn-print" data-id="'.$product->id.'" href="#"><i class="fa fa-print"></i> Print</a>';
                 $btnDelete = $user->can('delete', $product)
                     ? '<a class="dropdown-item btn-delete" href="#"><i class="fa fa-trash"></i> Delete</a>'
                     : '';
@@ -521,6 +523,7 @@ class ProductController extends Controller
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item btn-view" href="#"><i class="fa fa-eye"></i> View</a>'
                         . $btnEdit
+                        . $btnPrint
                         . $btnDelete .
                     '</div>
                 </div>';
@@ -533,4 +536,16 @@ class ProductController extends Controller
             return $datatable;
 
     }
+
+    // handle print from axios
+    public function print(Request $request,$id)
+    {
+        $product = Product::find($id);
+        // $barcode = DNS1D::getBarcodePNG($product->code);
+        // $product->barcode = $barcode;
+        // $product->currency = config('currency');
+        // $product->currency_position = config('currency_position');
+        return view('product.print', compact('product'));
+    }
+
 }

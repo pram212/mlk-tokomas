@@ -4,38 +4,40 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use App\Customer;
-use App\CustomerGroup;
-use App\Warehouse;
-use App\Biller;
-use App\Brand;
-use App\Category;
-use App\Product;
-use App\Unit;
-use App\Tax;
-use App\Sale;
-use App\Delivery;
-use App\PosSetting;
-use App\Product_Sale;
-use App\Product_Warehouse;
-use App\Payment;
-use App\Account;
-use App\Coupon;
-use App\GiftCard;
-use App\PaymentWithCheque;
-use App\PaymentWithGiftCard;
-use App\PaymentWithCreditCard;
-use App\PaymentWithPaypal;
-use App\User;
-use App\Variant;
-use App\ProductVariant;
-use App\CashRegister;
-use App\Returns;
-use App\Expense;
-use App\ProductPurchase;
-use App\Purchase;
+use App\{
+    Customer,
+    CustomerGroup,
+    Warehouse,
+    Biller,
+    Brand,
+    Category,
+    Product,
+    Unit,
+    Tax,
+    Sale,
+    Delivery,
+    PosSetting,
+    Product_Sale,
+    Product_Warehouse,
+    Payment,
+    Account,
+    Coupon,
+    GiftCard,
+    PaymentWithCheque,
+    PaymentWithGiftCard,
+    PaymentWithCreditCard,
+    PaymentWithPaypal,
+    User,
+    Variant,
+    ProductVariant,
+    CashRegister,
+    Returns,
+    Expense,
+    ProductPurchase,
+    Purchase,
+    GeneralSetting
+};
 use DB;
-use App\GeneralSetting;
 use Stripe\Stripe;
 use NumberToWords\NumberToWords;
 use Auth;
@@ -942,18 +944,6 @@ class SaleController extends Controller
         $flag = 0;
 
         return view('sale.pos', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag'));
-
-        // $role = Role::find(Auth::user()->role_id);
-        // if($role->hasPermissionTo('sales-add')){
-        //     $permissions = Role::findByName($role->name)->permissions;
-        //     foreach ($permissions as $permission)
-        //         $all_permission[] = $permission->name;
-        //     if(empty($all_permission))
-        //         $all_permission[] = 'dummy text';
-
-        // }
-        // else
-        //     return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
     public function getProductByFilter($category_id, $brand_id)
@@ -990,7 +980,6 @@ class SaleController extends Controller
                 ->get();
         } else
             $lims_product_list = Product::where('is_active', true)->get();
-
         $index = 0;
         foreach ($lims_product_list as $product) {
             if ($product->is_variant) {
@@ -1054,6 +1043,7 @@ class SaleController extends Controller
 
     public function limsProductSearch(Request $request)
     {
+        // dd($request->all());
         $todayDate = date('Y-m-d');
         $product_code = explode("(", $request['data']);
         $product_code[0] = rtrim($product_code[0], " ");
@@ -1069,10 +1059,12 @@ class SaleController extends Controller
                     ['product_variants.item_code', $product_code[0]],
                     ['products.is_active', true]
                 ])->first();
-            $product_variant_id = $lims_product_data->product_variant_id;
+            $product_variant_id = $lims_product_data->product_variant_id ?? null;
         }
 
-        $product[] = $lims_product_data->name;
+        $product[] = $lims_product_data->name ?? $lims_product_data->code ?? '-';
+
+        
         if ($lims_product_data->is_variant) {
             $product[] = $lims_product_data->item_code;
             $lims_product_data->price += $lims_product_data->additional_price;

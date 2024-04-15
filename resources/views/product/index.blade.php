@@ -552,15 +552,15 @@
                             }
                         }
                     },
-                    {
-                        extend: 'print',
-                        text: '{{ trans('file.Print') }}',
-                        exportOptions: {
-                            columns: ':visible:not(.not-exported)',
-                            rows: ':visible',
-                            stripHtml: false
-                        }
-                    },
+                    // {
+                    //     extend: 'print',
+                    //     text: '{{ trans('file.Print') }}',
+                    //     exportOptions: {
+                    //         columns: ':visible:not(.not-exported)',
+                    //         rows: ':visible',
+                    //         stripHtml: false
+                    //     }
+                    // },
                     {
                         text: '{{ trans('file.delete') }}',
                         className: 'buttons-delete',
@@ -651,6 +651,35 @@
                     });
                     return
                 }
+            });
+
+            // handle button print untuk mencetak data
+            $('#product-data-table tbody').on('click', 'a.btn-print', function(e) {
+                var tr = $(this).closest('tr') // ambil row table (tr) dari baris terpilih
+                var data = table.row(tr)
+                .data() // ambil isi data (data sesuai dengan yang dikirim dari backend)
+
+                console.log(data)
+                
+                // lakukan proses pencetakan data dengan axios
+                axios.get("{!! url('products/print') !!}" + "/" + data.id)
+                .then(function(response) {
+                    // tampilkan data yang telah dicetak
+                    var newWin = window.open("", "Print-Window")
+                    newWin.document.open()
+                    newWin.document.write(
+                    '<link rel="stylesheet" href="<?php echo asset('public/vendor/bootstrap/css/bootstrap.min.css'); ?>" type="text/css"><style type="text/css">@media print {.modal-dialog { max-width: 1000px;} }</style><body onload="window.print()">' +
+                    response.data + "</body>")
+                    newWin.document.close()
+                    setTimeout(function() {
+                        newWin.close()
+                    }, 10)
+                })
+                .catch(function(error) {
+                    // tampilkan pesan error jika terjadi kesalahan
+                    alert(error.response.data)
+                })
+
             });
 
         });
