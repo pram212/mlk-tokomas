@@ -401,7 +401,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	Route::group(['prefix' => 'master', 'as' => 'master.'], function() {
 		Route::post('price-multi-delete', 'PriceController@destroyMultiple');
 		Route::get('price-datatable', 'PriceController@priceData');
-		Route::get('price-getProductPrice/{category_id}/{product_type_id}', 'PriceController@getProductPrice');
+		Route::get('price-getProductPrice/{category_id}/{product_type_id}/{product_property_id}', 'PriceController@getProductPrice');
 		Route::resource("/price", 'PriceController');
 	});
 

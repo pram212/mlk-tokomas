@@ -166,6 +166,7 @@ class ProductController extends Controller
 
             $imagePath = 'zummXD2dvAtI.png';
 
+            
             if ($request->file('image')) {
                 $file = $request->file('image');
                 $imagePath = "storage/app/" . $file->storeAs('product_images', time().date('YmdHms').".".$file->extension());
@@ -176,11 +177,13 @@ class ProductController extends Controller
                 }
                 
                 $request->merge(['image' => $imagePath]);
-            } else {
-                // Jika tidak ada file gambar yang diunggah, pertahankan jalur gambar yang ada
-                $imagePath = $request->image;
-            }
 
+                $product->image = $imagePath;
+                $product->update([
+                    'image' => $imagePath
+                ]);
+            }
+            
             $product->update([
                 'tag_type_id' => $request->tag_type_id,
                 'code' => $request->code,
@@ -193,7 +196,6 @@ class ProductController extends Controller
                 'gramasi_id' => $request->gramasi_id,
                 'mg' => $request->mg,
                 'product_property_id' => $request->product_property_id,
-                'image' => $imagePath,
                 'name' => $request->name,
             ]);
 

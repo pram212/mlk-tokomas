@@ -15,7 +15,7 @@
                         </p>
                         <form id="product-form" method="POST"
                             action=" {{ !isset($product) ? url('products') : url('products/update/' . $product->id) }}"
-                            class="dropzone" enctype="multipart/form-data">
+                            enctype="multipart/form-data">
 
                             @csrf
                             <div class="card">
@@ -110,29 +110,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="">{{ __('file.Gold Content') }} *</label>
-                                                <input type="text" class="form-control" name="gold_content"
-                                                    value="{{ old('gold_content', @$product->gold_content) }}"
-                                                    id="input-gold_content" required>
-                                                @error('gold_content')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
 
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="">{{ __('file.Additional Code') }} *</label>
-                                                <input type="text" class="form-control" name="additional_code"
-                                                    value="{{ old('additional_code', @$product->additional_code ) }}"
-                                                    id="input-additional_code" required>
-                                                @error('additional_code')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
 
                                         <div class="col-md-6">
                                             <div class="row">
@@ -177,6 +155,54 @@
                                                         @enderror
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="">{{ __('file.Gold Content') }} *</label>
+                                                        <input type="text" class="form-control" name="gold_content"
+                                                            value="{{ old('gold_content', @$product->gold_content) }}"
+                                                            id="input-gold_content" required>
+                                                        @error('gold_content')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="">{{ __('file.Additional Code') }} *</label>
+                                                        <input type="text" class="form-control" name="additional_code"
+                                                            value="{{ old('additional_code', @$product->additional_code ) }}"
+                                                            id="input-additional_code" required>
+                                                        @error('additional_code')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>{{ __('file.Product Property Code') }}*</strong> </label>
+                                                <select name="product_property_id" class="form-control"
+                                                    id="input-kd-sifat">
+                                                    <option value="">{{ __('file.Select') }}
+                                                    </option>
+                                                    @foreach ($productProperty as $item)
+                                                    <option value="{{ $item->id }}" @if ($item->id ==
+                                                        @$product->product_property_id) selected @endif>
+                                                        {{ $item->code }} -
+                                                        {{ $item->description }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('product_property_id')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
 
@@ -238,25 +264,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>{{ __('file.Product Property Code') }}*</strong> </label>
-                                                <select name="product_property_id" class="form-control"
-                                                    id="input-kd-sifat">
-                                                    <option value="">{{ __('file.Select') }}
-                                                    </option>
-                                                    @foreach ($productProperty as $item)
-                                                    <option value="{{ $item->id }}" @if ($item->id ==
-                                                        @$product->product_property_id) selected @endif>
-                                                        {{ $item->code }} -
-                                                        {{ $item->description }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('product_property_id')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
+
 
                                         <div class="col-md-6"></div>
 
@@ -325,6 +333,8 @@
     let text_gramasi_id = $('#text-kd-gramasi');
     let old_image = '{{ $product->image ?? '' }}';
     let image_preview = $('#image-preview');
+    let product_property_id = $('#input-kd-sifat');
+    let price_col = $('#price');
     
     const produk = @if(@$product) JSON.parse('{!! $product  !!}') @else null @endif;
     
@@ -371,18 +381,38 @@
             }
         });
 
+        setPrice();
+
+        
+    });
+
+    product_property_id.change(function() {
+        setPrice();
+    });
+
+    function setPrice (){
+        let product_property_id_val = product_property_id.val();
+        let categories_id = input_categories_id.val();
+        let product_type_id = input_product_type_id.val();
+
+        // make sure categories_id and product_type_id is not empty
+        if (!categories_id || !product_type_id) {
+            return;
+        }
+        
+        price_col.val('');
         $.ajax({
             type: "GET",
-            url: "{{ url('master/price-getProductPrice') }}/" + categories_id+"/"+product_type_id,
+            url: "{{ url('master/price-getProductPrice') }}/" + categories_id+"/"+product_type_id+"/"+product_property_id_val,
             success: function(data) {
-                if(data[0]){
-                    let price = data[0].price;
+                if(data){
+                    let price = data.price;
 
-                    $('#price').val(price);
+                    price_col.val(price);
                 }
             }
         });
-    });
+    }
 
     input_categories_id.add(input_product_type_id).change(function() {
         input_gramasi_id.val('');
@@ -591,6 +621,8 @@
             $("#prev-kd-gramasi").text(produk.gramasi.code)
             $("#prev-gramasi").text(produk.gramasi.gramasi)
             $("#prev-diskon").text(produk.discount)
+            $("#prev-gold_content").text(produk.gold_content)
+            $("#prev-additional_code").text(produk.additional_code)
             $("#prev-mg").text(produk.mg)
             generateQRCode(produk.code, "prev-qrcode");
         }

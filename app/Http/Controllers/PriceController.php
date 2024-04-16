@@ -241,10 +241,11 @@ class PriceController extends Controller
     }
 
     // get price by categories_id and product_type_id
-    public function getProductPrice(Request $request,$categories_id, $product_type_id)
+    public function getProductPrice(Request $request,$categories_id, $product_type_id,$product_property_id)
     {
         $price = Price::where('categories_id', $categories_id)->where('product_type_id', $product_type_id)->get();
-
-        return response()->json($price);
+        $product_property_price = PriceProductPropertyDetail::where('price_id', $price[0]->id)->where('product_property_id', $product_property_id)->first();
+        
+        return response()->json($product_property_price);
     }
 }
