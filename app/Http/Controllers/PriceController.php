@@ -48,9 +48,6 @@ class PriceController extends Controller
                
                 return $action;
             })
-            ->editColumn('price', function($q) {
-                return number_format($q->price, 2, ',', '.');
-            })
             ->addColumn('gramasi', function($q) { 
                 return $q->gramasi->gramasi ?? "-";
             })
@@ -108,7 +105,7 @@ class PriceController extends Controller
             DB::beginTransaction();
             
             Price::create([
-                'price' =>  moneyToNumeric($request->price, ","),
+                // 'price' =>  moneyToNumeric($request->price, ","),
                 'gramasi_id' => $request->gramasi_id,
                 'tag_type_id' => $request->tag_type_id,
                 'categories_id' => $request->categories_id,
@@ -152,8 +149,9 @@ class PriceController extends Controller
             $price = Price::find($id);
             
             $price->update([
-                'price' => moneyToNumeric($request->price, ","),
+                // 'price' => moneyToNumeric($request->price, ","),
                 'gramasi_id' => $request->gramasi_id,
+                'carat' => $request->carat,
                 'tag_type_id' => $request->tag_type_id,
                 'categories_id' => $request->categories_id,
                 'product_type_id' => $request->product_type_id,

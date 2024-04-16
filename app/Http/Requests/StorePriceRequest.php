@@ -25,7 +25,7 @@ class StorePriceRequest extends FormRequest
     public function rules()
     {
         return [
-            'price' => ['required'],
+            // 'price' => ['required'],
             'gramasi_id' => ['required'],
             'tag_type_id' => ['required'],
             'categories_id' => ['required'],
@@ -42,8 +42,7 @@ class StorePriceRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $isPriceExist = Price::where('price', moneyToNumeric($this->price, ","))
-                    ->where('gramasi_id', $this->gramasi_id)
+            $isPriceExist = Price::where('gramasi_id', $this->gramasi_id)
                     ->where('tag_type_id', $this->tag_type_id)
                     ->where('categories_id', $this->categories_id)
                     ->where('product_type_id', $this->product_type_id)
