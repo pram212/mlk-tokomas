@@ -23,6 +23,7 @@ use DNS1D;
 use Keygen;
 use Dompdf\Dompdf;
 use View;
+use QrCode;
 
 class ProductController extends Controller
 {
@@ -558,16 +559,18 @@ class ProductController extends Controller
 
         $filename = 'report.pdf';
 
-        // $img = asset($product->image);
+        $path = public_path('temp_'.$product->code.'_'.date('YmdHis').'.png');
+        QrCode::size(150)->generate($product->code, $path);
 
         // Load view
-        $html = View::make('product.print', ['data' => $product, 'filename' => $filename]);
+        $html = View::make('product.print', ['data' => $product, 'path'=>$path,'filename' => $filename]);
         $html = $html->render();
-
-        // return $html;
 
         // Load HTML
         $dompdf->loadHtml($html);
+
+        // remove qr code
+        unlink($path);
 
         // Render the HTML as PDF
         $dompdf->render();

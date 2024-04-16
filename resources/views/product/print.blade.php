@@ -25,35 +25,40 @@
         }
 
         .product-tag {
-            width: 300px;
+            width: 250px;
             height: 150px;
             margin: 0 auto;
-            padding: 0;
-            margin-top: 10px;
             padding: 10px;
-            background-color: #ccc;
+            /* Pindahkan padding ke baris ini */
+            margin-top: 10px;
+            background-color: <?php echo $data->tagType->color;
+            ?>;
+            /* Pastikan $data->color berisi nilai warna yang valid */
             min-height: 150px;
-            min-width: 350px;
+            min-width: 300px;
+            /* Perbarui nilai min-width sesuai kebutuhan */
         }
+
 
         .gramasi {
             /* text center */
             text-align: center;
             /* middle */
             display: flex;
-            justify-content: center;
             align-items: center;
-            height: 100%;
-
+            justify-content: center;
+            /* height: 100%; */
+            position: relative;
+            top: -25px;
         }
 
-        .gramasi h3 {
-            font-size: 30px;
-            margin: 0;
-            padding: 0;
+        .gramasi h1 {
+            font-size: 40px;
+            /* margin: 0; */
+            /* padding: 0; */
         }
 
-        .gramasi h3 sup {
+        .gramasi h1 sup {
             font-size: 15px;
             /* posisikan agak keatas */
             position: relative;
@@ -75,19 +80,30 @@
         .additional_cod {
             text-align: right;
             font-size: 20px;
+            position: relative;
+            top: -25px;
+            /* right: -250px; */
 
         }
 
         .bottom_right {
             text-align: right;
+            position: relative;
             font-size: 20px;
+            bottom: 20px;
+        }
+
+        /* td dengan jarak */
+        td {
+            padding: 10px;
         }
     </style>
 </head>
 
 <body>
     @php
-    $productImage = asset($data->image);
+    // $productImage = asset($data->image);
+    // $productImage = asset($path);
     @endphp
     <div class="container">
 
@@ -97,39 +113,33 @@
                     <div class="product-tag">
                         <div class="container-box">
                             <div class="gold_content">
-                                gold content
+                                {{ $data->gold_content }}
                             </div>
                             <div class="additional_cod">
-                                additional_cod
+                                {{ $data->additional_code }}/{{ $data->discount }}
                             </div>
                         </div>
                         <div class="gramasi">
-                            <h3>1000
-                                <sup>90</sup>
-                            </h3>
+                            <h1>{{ $data->gramasi->gramasi }}
+                                <sup>{{ $data->mg }}</sup>
+                            </h1>
                         </div>
 
                         <div class="bottom_right">
-                            1000
+                            {{ $data->productProperty->code }}
                         </div>
                     </div>
                 </td>
                 <td>
                     <div class="product-tag" style="text-align: center;">
-                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents($productImage)) }}"
-                            alt="Product Image" style="width: 100px; height: 100px;">
+                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents($path)) }}"
+                            alt="{{ $data->code }}">
                     </div>
                 </td>
             </tr>
         </table>
 
     </div>
-
-    <script>
-        // window.onload = function() {
-        //     window.print();
-        // }
-    </script>
 </body>
 
 </html>
