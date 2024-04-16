@@ -271,7 +271,7 @@
                                                         </div>
 
                                                         <div class="col-md-6 text-right mb-3">
-                                                            <div id="prev-diskon">
+                                                            <div class="add_disc">
                                                                 <span id="prev-additional_code"></span> / <span
                                                                     id="prev-diskon"></span>
                                                             </div>
@@ -484,7 +484,7 @@
             }
         });
 
-        Dropzone.autoDiscover = false;
+        // Dropzone.autoDiscover = false;
 
         // // Inisialisasi Dropzone hanya untuk tampilan frontend
         // var myDropzone = new Dropzone("#image-preview", {

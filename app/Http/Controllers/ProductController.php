@@ -557,7 +557,7 @@ class ProductController extends Controller
 
         $datetime = date('YmdHis');
 
-        $filename = 'report.pdf';
+        $filename = "product_$product->code.pdf";
 
         $path = public_path('temp_'.$product->code.'_'.date('YmdHis').'.png');
         QrCode::size(150)->generate($product->code, $path);
