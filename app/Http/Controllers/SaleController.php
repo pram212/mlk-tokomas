@@ -1590,7 +1590,7 @@ class SaleController extends Controller
     public function genInvoice($id)
     {
         $lims_sale_data = Sale::find($id);
-        $lims_product_sale_data = Product_Sale::where('sale_id', $id)->get();
+        $lims_product_sale_data = Product_Sale::with('product')->where('sale_id', $id)->get();
         $lims_biller_data = Biller::find($lims_sale_data->biller_id);
         $lims_warehouse_data = Warehouse::find($lims_sale_data->warehouse_id);
         $lims_customer_data = Customer::find($lims_sale_data->customer_id);

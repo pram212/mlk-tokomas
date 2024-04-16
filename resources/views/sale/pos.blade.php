@@ -354,10 +354,10 @@
                             id="category-filter">{{trans('file.category')}}</button>
                     </div>
                     <div class="col-md-4">
-                        <button class="btn btn-block btn-info" id="brand-filter">{{trans('file.Brand')}}</button>
+                        <button class="btn btn-block btn-info d-none" id="brand-filter">{{trans('file.Brand')}}</button>
                     </div>
                     <div class="col-md-4">
-                        <button class="btn btn-block btn-danger"
+                        <button class="btn btn-block btn-danger d-none"
                             id="featured-filter">{{trans('file.Featured')}}</button>
                     </div>
                     <div class="col-md-12 mt-1 table-container">

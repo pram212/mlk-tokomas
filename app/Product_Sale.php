@@ -10,4 +10,9 @@ class Product_Sale extends Model
     protected $fillable =[
         "sale_id", "product_id", "variant_id", "qty", "sale_unit_id", "net_unit_price", "discount", "tax_rate", "tax", "total"
     ];
+
+    public function product()
+    {
+        return $this->belongsTo('App\Product');
+    }
 }
