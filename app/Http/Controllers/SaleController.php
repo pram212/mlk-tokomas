@@ -49,6 +49,7 @@ use Srmklive\PayPal\Services\ExpressCheckout;
 use Srmklive\PayPal\Services\AdaptivePayments;
 use GeniusTS\HijriDate\Date;
 use Illuminate\Support\Facades\Validator;
+use Dompdf\Dompdf;
 
 class SaleController extends Controller
 {
@@ -1595,6 +1596,7 @@ class SaleController extends Controller
         $lims_warehouse_data = Warehouse::find($lims_sale_data->warehouse_id);
         $lims_customer_data = Customer::find($lims_sale_data->customer_id);
         $lims_payment_data = Payment::where('sale_id', $id)->get();
+        $mode = 'view';
 
         $numberToWords = new NumberToWords();
         if (\App::getLocale() == 'ar' || \App::getLocale() == 'hi' || \App::getLocale() == 'vi' || \App::getLocale() == 'en-gb')
@@ -1603,7 +1605,46 @@ class SaleController extends Controller
             $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
         $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
 
-        return view('sale.invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords'));
+        return view('sale.invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords','mode'));
+    }
+
+    public function printInvoice($id){
+        $lims_sale_data = Sale::find($id);
+        $lims_product_sale_data = Product_Sale::with('product')->where('sale_id', $id)->get();
+        $lims_biller_data = Biller::find($lims_sale_data->biller_id);
+        $lims_warehouse_data = Warehouse::find($lims_sale_data->warehouse_id);
+        $lims_customer_data = Customer::find($lims_sale_data->customer_id);
+        $lims_payment_data = Payment::where('sale_id', $id)->get();
+
+        $numberToWords = new NumberToWords();
+        if (\App::getLocale() == 'ar' || \App::getLocale() == 'hi' || \App::getLocale() == 'vi' || \App::getLocale() == 'en-gb')
+            $numberTransformer = $numberToWords->getNumberTransformer('en');
+        else
+            $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
+        $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
+
+        // return view('sale.invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords'));
+
+        $dompdf = new Dompdf();
+        $options = $dompdf->getOptions();
+        $options->setDefaultFont('Courier');
+        $dompdf->setOptions($options);
+        $dompdf->setPaper('A4', 'landscape');
+
+        $mode = 'print';
+        
+        $html = view('sale.invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords','mode'))->render();
+
+        $dompdf->loadHtml($html);
+
+        $dompdf->render();
+
+        $filename = 'invoice-' . $lims_sale_data->reference_no . '.pdf';
+
+        // Open pdf in browser
+        $dompdf->stream($filename, array("Attachment" => false));
+
+
     }
 
     public function addPayment(Request $request)

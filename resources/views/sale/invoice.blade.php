@@ -163,28 +163,34 @@
         @else
         @php $url = url()->previous(); @endphp
         @endif
+
+        @if($mode != 'print')
         <div class="hidden-print">
             <table>
                 <tr>
                     <td><a href="{{$url}}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
                             {{trans('file.Back')}}</a> </td>
-                    <td><button onclick="window.print();" class="btn btn-primary"><i class="dripicons-print"></i>
-                            {{trans('file.Print')}}</button></td>
+                    <td><a target="_BLANK" href="{{ url('sales-print/'.$lims_sale_data->id) }}"
+                            class="btn btn-primary"><i class="dripicons-print"></i>{{trans('file.Print')}}</a></td>
                 </tr>
             </table>
             <br>
         </div>
+        @endif
     </div>
     <div style="max-width:150vh;margin:0 auto">
-
-
         <div id="receipt-data">
             <div class="head">
                 <table style="width: 100%" id="table_head">
                     <tbody>
                         <tr>
-                            <td style="width:300px;min-width: 300px"><img
-                                    src="{{ asset('public/logo/bima_text_1.png') }}" width="250px"></td>
+                            <td style="width:300px;min-width: 300px">
+                                @php
+                                $logo = public_path('logo/bima_text_1.png');
+                                @endphp
+                                <img src="data:image/png;base64,{{ base64_encode(file_get_contents($logo)) }}"
+                                    width="200px" alt="">
+                            </td>
                             <td>
                                 <center>
                                     <div>Jl. Diponegoro No. 105 (Jurusan Pasar) <br>
@@ -205,8 +211,8 @@
                 <table style="width: 100%;" id="table_body">
                     <thead>
                         <tr>
-                            <th class="title">Item</th>
                             <th class="title">Gambar</th>
+                            <th class="title">Catatan</th>
                             <th class="title">Keterangan</th>
                             <th class="title">Berat (Gram)</th>
                             <th class="title">Harga (Rp)</th>
@@ -214,10 +220,17 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="center title" style="vertical-align: top;font-weight:bold">{{
-                                $lims_sale_data['total_qty'] }} pcs</td>
-                            <td class="center"><img src="{{ asset($lims_product_sale_data[0]['product']['image']) }}"
-                                    alt="" width="200px"></td>
+                            <td class="center">
+                                @php
+                                $gambar_produk = $lims_product_sale_data[0]['product']['image'];
+                                @endphp
+                                <img src="data:image/png;base64,{{ base64_encode(file_get_contents($gambar_produk)) }}"
+                                    width="200px" alt="">
+                                {{-- <img src="{{ asset($lims_product_sale_data[0]['product']['image']) }}" alt=""
+                                    width="200px">
+                            </td> --}}
+                            <td class=" title" style="vertical-align: top;font-weight:bold">{{
+                                $lims_sale_data['sale_note'] }} pcs</td>
                             <td class="title" style="vertical-align: top;font-weight:bold">{{
                                 $lims_product_sale_data[0]['product']['name'] }}</td>
                             <td class="center title" style="vertical-align: top;font-weight:bold">{{
