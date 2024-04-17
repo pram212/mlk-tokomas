@@ -33,17 +33,26 @@
                     @if (@$price)
                     @method('put')
                     @endif
+
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>{{ __('file.Price') }} *</strong> </label>
-                            <input type="text" name="price" class="form-control" id="price"
-                                value="{{ old('price', @$price->price) }}">
-                            @error('price')
+                            <label>{{ __('file.Tag Type') }} *</strong></label>
+                            <select name="tag_type_id" class="form-control" id="input-kd-tag-type">
+                                <option value="">{{ __('file.Select') }}
+                                </option>
+                                @foreach ($tagType as $item)
+                                <option value="{{ $item->id }}" @if ($item->id == @$price->tag_type_id)
+                                    selected
+                                    @endif>
+                                    {{ $item->code.' - '.$item->description }}</option>
+                                </option>
+                                @endforeach
+                            </select>
+                            @error('tag_type_id')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
-
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>{{ __('file.Carat') }} *</strong> </label>
@@ -59,25 +68,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>{{ __('file.Tag Type') }} *</strong></label>
-                                            <select name="tag_type_id" class="form-control" id="input-kd-tag-type">
-                                                <option value="">{{ __('file.Select') }}
-                                                </option>
-                                                @foreach ($tagType as $item)
-                                                <option value="{{ $item->id }}" @if ($item->id == @$price->tag_type_id)
-                                                    selected
-                                                    @endif>
-                                                    {{ $item->code.' - '.$item->description }}</option>
-                                                </option>
-                                                @endforeach
-                                            </select>
-                                            @error('tag_type_id')
-                                            <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
+
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>{{ __('file.category') }} *</strong></label>
@@ -273,7 +264,8 @@
 
     price.maskMoney()
 
-    product_property_type.maskMoney()
+    product_property_price.maskMoney()
+    // product_property_type.maskMoney()
     
     // carat handle number
     carat.on("input", function() {

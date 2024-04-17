@@ -629,6 +629,8 @@ return [
 	"Tag Type" => "Jenis Tag",
 	"Failed to be deleted because it was used by prices" =>  "Gagal dihapus karena digunakan di oleh Master Harga",
 	"Image must be in .jpg, .jpeg, .png format and maximum 2MB" => "Gambar harus dalam format .jpg, .jpeg, .png",
+	"Drop files here or click to upload" => "Tarik file ke sini atau klik untuk mengunggah",
+	"Maximum upload size 2MB" => "Ukuran unggah maksimum 2MB",
 
 ];
 

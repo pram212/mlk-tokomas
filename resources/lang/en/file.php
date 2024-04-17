@@ -114,9 +114,9 @@ return [
 	'Company Name' => 'Company Name',
 	'Phone Number' => 'Phone Number',
 	'Role' => 'Role',
-	'UserName' => 'UserName',
+	'UserName' => 'User ID',
 	'Password' => 'Password',
-	'LogIn' => 'LogIn',
+	'LogIn' => 'Sign In',
 	'Change Password' => 'Change Password',
 	'Active' => 'Active',
 	'Customer Group' => 'Customer Group',
@@ -630,6 +630,8 @@ return [
 	"Tag Type" => "Tag Type",
 	"Failed to be deleted because it was used by prices" =>  "Failed to be deleted because it was used by prices",
 	"Image must be in .jpg, .jpeg, .png format and maximum 2MB" => "Image must be in .jpg, .jpeg, .png format dan maksimal 2MB",
+	"Drop files here or click to upload" => "Drop files here or click to upload",
+	"Maximum upload size 2MB" => "Maximum upload size 2MB",
 	
 ];
 ?>

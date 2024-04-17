@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="icon" type="image/png" href="{{url('public/logo', $general_setting->site_logo)}}" />
@@ -16,6 +17,7 @@
             font-family: 'Ubuntu', sans-serif;
             text-transform: capitalize;
         }
+
         .btn {
             padding: 7px 10px;
             text-decoration: none;
@@ -23,7 +25,7 @@
             display: block;
             text-align: center;
             margin: 7px;
-            cursor:pointer;
+            cursor: pointer;
         }
 
         .btn-info {
@@ -36,210 +38,266 @@
             color: #FFF;
             width: 100%;
         }
+
         td,
         th,
         tr,
         table {
             border-collapse: collapse;
         }
-        tr {border-bottom: 1px dotted #ddd;}
-        td,th {padding: 7px 0;width: 50%;}
 
-        table {width: 100%;}
-        tfoot tr th:first-child {text-align: left;}
+        table {
+            width: 100%;
+        }
 
         .centered {
             text-align: center;
             align-content: center;
         }
-        small{font-size:11px;}
+
+        .center {
+            text-align: center;
+        }
+
+        small {
+            font-size: 11px;
+        }
 
         @media print {
             * {
-                font-size:12px;
+                font-size: 12px;
                 line-height: 20px;
             }
-            td,th {padding: 5px 0;}
+
+            td,
+            th {
+                padding: 5px 0;
+            }
+
             .hidden-print {
                 display: none !important;
             }
-            @page { margin: 0; } body { margin: 0.5cm; margin-bottom:1.6cm; }
+
+            @page {
+                margin: 0;
+            }
+
+            body {
+                margin: 0.5cm;
+                margin-bottom: 1.6cm;
+            }
+
             tbody::after {
                 content: '';
                 display: block;
                 page-break-after: always;
                 page-break-inside: always;
-                page-break-before: avoid;        
+                page-break-before: avoid;
             }
         }
+
+        #table_body td,
+        #table_body th {
+            border: 1px solid #ccc;
+        }
+
+        #table_body td {
+            /* Atur lebar maksimum untuk sel item */
+            max-width: 200px;
+            /* Sembunyikan teks yang melebihi lebar maksimum */
+            overflow: hidden;
+            /* Tambahkan elipsis untuk menandakan bahwa teks dipotong */
+            text-overflow: ellipsis;
+            /* Hindari pemisahan kata yang terlalu panjang */
+            /* white-space: nowrap; */
+        }
+
+        .npwp {
+            font-size: 12px;
+            text-align: right;
+            /* margin-top: 10px; */
+            font-weight: bold;
+        }
+
+        #receipt-data {
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .total_harga {
+            font-weight: bold;
+            font-style: italic;
+            text-align: center;
+
+            color: #1858D4;
+        }
+
+        .note {
+            color: red;
+            font-size: 12px;
+            font-weight: bold;
+            font-style: italic;
+            vertical-align: top;
+        }
+
+        .note_thanks {
+            font-size: 12px;
+            font-weight: bold;
+            font-style: italic;
+            text-align: right;
+            vertical-align: top;
+        }
+
+        .title {
+            font-style: italic;
+        }
     </style>
-  </head>
+</head>
+
 <body>
 
-<div style="max-width:400px;margin:0 auto">
-    @if(preg_match('~[0-9]~', url()->previous()))
+    <div style="max-width:400px;margin:0 auto">
+        @if(preg_match('~[0-9]~', url()->previous()))
         @php $url = '../../pos'; @endphp
-    @else
+        @else
         @php $url = url()->previous(); @endphp
-    @endif
-    <div class="hidden-print">
-        <table>
-            <tr>
-                <td><a href="{{$url}}" class="btn btn-info"><i class="fa fa-arrow-left"></i> {{trans('file.Back')}}</a> </td>
-                <td><button onclick="window.print();" class="btn btn-primary"><i class="dripicons-print"></i> {{trans('file.Print')}}</button></td>
-            </tr>
-        </table>
-        <br>
-    </div>
-        
-    <div id="receipt-data">
-        <div class="centered">
-            @if($general_setting->site_logo)
-                <img src="{{ asset($general_setting->site_logo)}}" height="42" width="42" style="margin:10px 0;filter: brightness(0);">
-            @endif
-            
-            <h2> TOKOMAS BIMA </h2>
-            
-            <p>{{trans('file.Address')}}: {{$lims_warehouse_data->address}}
-                <br>{{trans('file.Phone Number')}}: {{$lims_warehouse_data->phone}}
-            </p>
+        @endif
+
+        @if($mode != 'print')
+        <div class="hidden-print">
+            <table>
+                <tr>
+                    <td><a href="{{$url}}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
+                            {{trans('file.Back')}}</a> </td>
+                    <td><a target="_BLANK" href="{{ url('sales-print/'.$lims_sale_data->id) }}"
+                            class="btn btn-primary"><i class="dripicons-print"></i>{{trans('file.Print')}}</a></td>
+                </tr>
+            </table>
+            <br>
         </div>
-        <p>{{trans('file.Date')}}: {{$lims_sale_data->created_at}}<br>
-            {{trans('file.reference')}}: {{$lims_sale_data->reference_no}}<br>
-            {{trans('file.customer')}}: {{$lims_customer_data->name}}
-        </p>
-        <table class="table-data">
-            <tbody>
-                @php
-                    $total_product_tax = 0;
-                @endphp
-                @foreach($lims_product_sale_data as $key => $product_sale_data)
-                <?php 
-                    $lims_product_data = \App\Product::find($product_sale_data->product_id);
-                    if($product_sale_data->variant_id) {
-                        $variant_data = \App\Variant::find($product_sale_data->variant_id);
-                        $product_name = $lims_product_data->name.' ['.$variant_data->name.']';
-                    }
-                    else
-                        $product_name = $lims_product_data->name;
-                ?>
-                <tr>
-                    <td colspan="2">
-                        {{$product_name}}
-                        <br>{{$product_sale_data->qty}} x {{number_format($product_sale_data->total / $product_sale_data->qty,0, ',' , '.')}}
-
-                        @if($product_sale_data->tax_rate)
-                            <?php $total_product_tax += $product_sale_data->tax ?>
-                            [{{trans('file.Tax')}} ({{$product_sale_data->tax_rate}}%): {{number_format($product_sale_data->tax,0, ',' , '.') }}]
-                        @endif
-                    </td>
-                    <td style="text-align:right;vertical-align:bottom">{{number_format($product_sale_data->total,0, ',' , '.')}}</td>
-                </tr>
-                @endforeach
-            
-            <!-- <tfoot> -->
-                <tr>
-                    <th colspan="2" style="text-align:left">{{trans('file.Total')}}</th>
-                    <th style="text-align:right">{{number_format($lims_sale_data->total_price,0, ',' , '.')}}</th>
-                </tr>
-                @if($general_setting->invoice_format == 'gst' && $general_setting->state == 1)
-                <tr>
-                    <td colspan="2">IGST</td>
-                    <td style="text-align:right">{{number_format($total_product_tax,0, ',' , '.')}}</td>
-                </tr>
-                @elseif($general_setting->invoice_format == 'gst' && $general_setting->state == 2)
-                <tr>
-                    <td colspan="2">SGST</td>
-                    <td style="text-align:right">{{number_format(($total_product_tax / 2),0, ',' , '.')}}</td>
-                </tr>
-                <tr>
-                    <td colspan="2">CGST</td>
-                    <td style="text-align:right">{{number_format(($total_product_tax / 2),0, ',' , '.')}}</td>
-                </tr>
-                @endif
-                @if($lims_sale_data->order_tax)
-                <tr>
-                    <th colspan="2" style="text-align:left">{{trans('file.Order Tax')}}</th>
-                    <th style="text-align:right">{{number_format($lims_sale_data->order_tax,0, ',' , '.')}}</th>
-                </tr>
-                @endif
-                @if($lims_sale_data->order_discount)
-                <tr>
-                    <th colspan="2" style="text-align:left">{{trans('file.Order Discount')}}</th>
-                    <th style="text-align:right">{{number_format($lims_sale_data->order_discount,0, ',' , '.') }}</th>
-                </tr>
-                @endif
-                @if($lims_sale_data->coupon_discount)
-                <tr>
-                    <th colspan="2" style="text-align:left">{{trans('file.Coupon Discount')}}</th>
-                    <th style="text-align:right">{{number_format($lims_sale_data->coupon_discount,0, ',' , '.') }}</th>
-                </tr>
-                @endif
-                @if($lims_sale_data->shipping_cost)
-                <tr>
-                    <th colspan="2" style="text-align:left">{{trans('file.Shipping Cost')}}</th>
-                    <th style="text-align:right">{{number_format($lims_sale_data->shipping_cost,0, ',' , '.') }}</th>
-                </tr>
-                @endif
-                <tr>
-                    <th colspan="2" style="text-align:left">{{trans('file.grand total')}}</th>
-                    <th style="text-align:right">{{number_format($lims_sale_data->grand_total,0, ',' , '.')}}</th>
-                </tr>
-                <tr>
-                    @if($general_setting->currency_position == 'prefix')
-                    <th class="centered" colspan="3">{{trans('file.In Words')}}: <span>{{$currency->code}}</span> <span>{{str_replace("-"," ",$numberInWords)}}</span></th>
-                    @else
-                    <th class="centered" colspan="3">{{trans('file.In Words')}}: <span>{{str_replace("-"," ",$numberInWords)}}</span> <span>{{$currency->code}}</span></th>
-                    @endif
-                </tr>
-            </tbody>
-            <!-- </tfoot> -->
-        </table>
-        <table>
-            <tbody>
-                @foreach($lims_payment_data as $payment_data)
-                <tr style="background-color:#ddd;">
-                    <td style="padding: 5px;width:30%">{{trans('file.Paid By')}}: {{$payment_data->paying_method}}</td>
-                    <td style="padding: 5px;width:40%">{{trans('file.Amount')}}: {{number_format($payment_data->amount,0, ',' , '.') }}</td>
-                    <td style="padding: 5px;width:30%">{{trans('file.Change')}}: {{number_format($payment_data->change,0, ',' , '.') }}</td>
-                </tr>                
-                @endforeach
-                <tr>
-                    <td colspan="3">
-                        <p>Perhatian:</p>
-                        <ul>
-                            <li>Jika barang dijual ongkos bikin hilang.</li>
-                            <li>Harga jual dan beli beda.</li>
-                            <li>Permata yang pecah, rusak tidka diterima.</li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="centered" colspan="3">{{trans('file.Thank you for shopping with us. Please come again')}}</td>
-                </tr>
-                <tr>
-                    <td class="centered" colspan="3">
-                    <?php echo '<img style="margin-top:10px;" src="data:image/png;base64,' . DNS1D::getBarcodePNG($lims_sale_data->reference_no, 'C128') . '" width="300" alt="barcode"   />';?>
-                    <br>
-                    <?php echo '<img style="margin-top:10px;" src="data:image/png;base64,' . DNS2D::getBarcodePNG($lims_sale_data->reference_no, 'QRCODE') . '" alt="barcode"   />';?>    
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <!-- <div class="centered" style="margin:30px 0 50px">
-            <small>{{trans('file.Invoice Generated By')}} {{$general_setting->site_title}}.
-            {{trans('file.Developed By')}} LionCoders</strong></small>
-        </div> -->
+        @endif
     </div>
-</div>
+    <div style="max-width:150vh;margin:0 auto">
+        <div id="receipt-data">
+            <div class="head">
+                <table style="width: 100%" id="table_head">
+                    <tbody>
+                        <tr>
+                            <td style="width:300px;min-width: 300px">
+                                @php
+                                $logo = public_path('logo/bima_text_1.png');
+                                @endphp
+                                <img src="data:image/png;base64,{{ base64_encode(file_get_contents($logo)) }}"
+                                    width="200px" alt="">
+                            </td>
+                            <td>
+                                <center>
+                                    <div>Jl. Diponegoro No. 105 (Jurusan Pasar) <br>
+                                        Ketanggungan Timur - Brebes</div>
+                                </center>
+                            </td>
+                            <td style="text-align: right; vertical-align: top;">
+                                Ketanggungan, {{$lims_sale_data->created_at}}
+                                <br>
+                                Kepada : {{$lims_customer_data->name}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="npwp">
+                    NPWP : 04.011.521.4.501.00
+                </div>
+                <table style="width: 100%;" id="table_body">
+                    <thead>
+                        <tr>
+                            <th class="title">Gambar</th>
+                            <th class="title">Catatan</th>
+                            <th class="title">Keterangan</th>
+                            <th class="title">Berat (Gram)</th>
+                            <th class="title">Harga (Rp)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="center">
+                                @php
+                                $gambar_produk = $lims_product_sale_data[0]['product']['image'];
+                                @endphp
+                                <img src="data:image/png;base64,{{ base64_encode(file_get_contents($gambar_produk)) }}"
+                                    width="200px" alt="">
+                                {{-- <img src="{{ asset($lims_product_sale_data[0]['product']['image']) }}" alt=""
+                                    width="200px">
+                            </td> --}}
+                            <td class=" title" style="vertical-align: top;font-weight:bold">{{
+                                $lims_sale_data['sale_note'] }} pcs</td>
+                            <td class="title" style="vertical-align: top;font-weight:bold">{{
+                                $lims_product_sale_data[0]['product']['name'] }}</td>
+                            <td class="center title" style="vertical-align: top;font-weight:bold">{{
+                                $lims_product_sale_data[0]['product']->gramasi['gramasi'] }} gram</td>
+                            @php
+                            $totalPrice = number_format(
+                            floatval(str_replace(',', '.', $lims_product_sale_data[0]['product']['price'])),
+                            2,
+                            ',',
+                            '.'
+                            );
+                            @endphp
+                            <td class="center title" style="vertical-align: top; font-weight: bold;">
+                                {{$totalPrice }}
+                            </td>
 
-<script type="text/javascript">
-    localStorage.clear();
-    function auto_print() {     
-        window.print()
-    }
-    setTimeout(auto_print, 1000);
-</script>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold; font-style: italic;border:0" colspan="3">
+                                {{trans('file.In Words')}}:
+                                <span>{{str_replace("-"," ",$numberInWords)}}</span>
+                            </td>
+                            <td class="total_harga">Total Harga</td>
+                            <td class="total_harga">{{$totalPrice }}</td>
+                        </tr>
+                        <tr style="height: 50px;">
+                            <td colspan="5" style="border:0px">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="border:0px">
+                                <hr>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border: 0; padding: 5px;">
+                                <p class="note">Perhatian : </p>
+                                <p class="note">
+                                    - Jika barang dijual ongkos bikin hilang. <br>
+                                    - Harga jual dan beli berbeda <br>
+                                    - Permata yang pecah, rusak tidak diterima<br>
+                                </p>
+                            </td>
+                            <td class="note_thanks" colspan="2" style="border: 0px">
+                                Terimakasih</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        localStorage.clear();
+    // function auto_print() {     
+    //     window.print()
+    // }
+    // setTimeout(auto_print, 1000);
+    </script>
 
 </body>
+
 </html>

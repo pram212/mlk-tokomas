@@ -13,7 +13,6 @@
             <thead>
                 <tr>
                     <th class="not-exported"></th>
-                    <th>{{ __('file.Price') }}</th>
                     <th>{{ __('file.Gramasi') }}</th>
                     <th>{{ __('file.Carat') }}</th>
                     <th>{{ __('file.Tag Type') }}</th>
@@ -48,9 +47,6 @@
                     name: 'DT_RowIndex',
                     orderable: false,
                     searchable: false
-                },
-                {
-                    data: 'price'
                 },
                 {
                     data: 'gramasi'

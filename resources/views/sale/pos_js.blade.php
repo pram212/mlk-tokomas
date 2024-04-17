@@ -1017,23 +1017,23 @@
             },
             success: function(data) {
                 var flag = 1;
-                $(".product-code").each(function(i) {
-                    if ($(this).val() == data[1]) {
-                        rowindex = i;
-                        var pre_qty = $('table.order-list tbody tr:nth-child(' + (rowindex + 1) +
-                            ') .qty').val();
-                        if (pre_qty)
-                            var qty = parseInt(pre_qty) + 1;
-                        else
-                            var qty = 1;
-                        $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ') .qty').val(
-                            qty);
-                        flag = 0;
-                        checkQuantity(String(qty), true);
-                        flag = 0;
-                        localStorage.setItem("tbody-id", $("table.order-list tbody").html());
-                    }
-                });
+                // $(".product-code").each(function(i) {
+                //     if ($(this).val() == data[1]) {
+                //         rowindex = i;
+                //         var pre_qty = $('table.order-list tbody tr:nth-child(' + (rowindex + 1) +
+                //             ') .qty').val();
+                //         if (pre_qty)
+                //             var qty = parseInt(pre_qty) + 1;
+                //         else
+                //             var qty = 1;
+                //         $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ') .qty').val(
+                //             qty);
+                //         flag = 0;
+                //         checkQuantity(String(qty), true);
+                //         flag = 0;
+                //         localStorage.setItem("tbody-id", $("table.order-list tbody").html());
+                //     }
+                // });
                 $("input[name='product_code_name']").val('');
                 if (flag) {
                     addNewProduct(data);
@@ -1043,6 +1043,11 @@
     }
 
     function addNewProduct(data) {
+        if(!checkTotalProduct()){
+            alert('You just can add 1 products and 1 Qty!');
+            return;
+        }
+
         var newRow = $("<tr>");
         var cols = '';
         temp_unit_name = (data[6]).split(',');
@@ -1051,7 +1056,7 @@
             data[0] + '</strong></button> [' + data[1] + '] <p>In Stock: <span class="in-stock"></span></p></td>';
         cols += '<td class="col-sm-2 product-price"></td>';
         cols +=
-            '<td class="col-sm-3"><div class="input-group"><span class="input-group-btn"><button type="button" class="btn btn-default minus"><span class="dripicons-minus"></span></button></span><input type="text" name="qty[]" class="form-control qty numkey input-number" step="any" required><span class="input-group-btn"><button type="button" class="btn btn-default plus"><span class="dripicons-plus"></span></button></span></div></td>';
+            '<td class="col-sm-3"><div class="input-group"><span class="input-group-btn d-none"><button type="button" class="btn btn-default minus"><span class="dripicons-minus"></span></button></span><input type="text" name="qty[]" class="form-control qty numkey input-number" step="any" required><span class="input-group-btn d-none"><button type="button" class="btn btn-default plus"><span class="dripicons-plus"></span></button></span></div></td>';
         cols += '<td class="col-sm-2 sub-total"></td>';
         cols +=
             '<td class="col-sm-1"><button type="button" class="ibtnDel btn btn-danger btn-sm"><i class="dripicons-cross"></i></button></td>';
@@ -1145,6 +1150,13 @@
         localStorage.setItem("tbody-id", $("table.order-list tbody").html());
     }
 
+    function checkTotalProduct() {
+        // hitung jumlah row di tbody-id
+        var totalProduct = $('#tbody-id tr').length;
+        
+        return totalProduct < 1 ? true : false;
+    }
+
     function edit() {
         var row_product_name_code = $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find(
             'td:nth-child(1)').text();
@@ -1187,7 +1199,8 @@
         var rownumber = $('table.order-list tbody tr:last').index();
         if (rownumber < 0) {
             alert("Please insert product to order table!")
-        } else if ($("#coupon-code").val() != '') {
+        }
+        else if ($("#coupon-code").val() != '') {
             valid = 0;
             $.each(coupon_list, function(key, value) {
                 if ($("#coupon-code").val() == value['code']) {
@@ -1355,7 +1368,6 @@
         localStorageTaxValue.splice(rowindex, 1, parseInt(tax));
         localStorageSubTotalUnit.splice(rowindex, 1, parseInt(sub_total_unit));
         localStorageSubTotal.splice(rowindex, 1, parseInt(sub_total));
-        console.log(localStorageNetUnitPrice);
 
         localStorage.setItem("localStorageProductDiscount", localStorageProductDiscount);
         localStorage.setItem("localStorageTaxRate", localStorageTaxRate);
@@ -1363,7 +1375,7 @@
         localStorage.setItem("localStorageTaxValue", localStorageTaxValue);
         localStorage.setItem("localStorageSubTotalUnit", localStorageSubTotalUnit);
         localStorage.setItem("localStorageSubTotal", localStorageSubTotal);
-
+        
         calculateTotal();
     }
 
