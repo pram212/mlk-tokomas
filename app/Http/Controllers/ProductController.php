@@ -607,7 +607,8 @@ class ProductController extends Controller
         $options = $dompdf->getOptions();
         $options->setDefaultFont('Courier');
         $dompdf->setOptions($options);
-        $dompdf->setPaper('A4', 'portrait');
+        // $dompdf->setPaper('A4', 'portrait');
+        $dompdf->setPaper(array(0, 0, 580, 250), 'portrait');
 
         $datetime = date('YmdHis');
 
