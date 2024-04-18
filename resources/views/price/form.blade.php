@@ -102,7 +102,7 @@
                                                     @$price->product_type_id)
                                                     selected
                                                     @endif>
-                                                    {{ $item->code }}</option>
+                                                    {{ $item->code." - ".$item->description }}</option>
                                                 @endforeach
                                                 @endif
                                             </select>
@@ -228,7 +228,7 @@
                 let options = '<option value="">{{ __('file.Select') }}</option>';
                 if (res.data.length != 0)
                 res.data.forEach(element => {
-                    options += `<option value="${element.id}">${element.code}</option>`;
+                    options += `<option value="${element.id}">${element.code+' - '+element.description}</option>`;
                 });
                 
                 product_type_id.html(options);
