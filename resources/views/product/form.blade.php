@@ -541,37 +541,6 @@
             }
         });
 
-        // Dropzone.autoDiscover = false;
-
-        // // Inisialisasi Dropzone hanya untuk tampilan frontend
-        // var myDropzone = new Dropzone("#image-preview", {
-        //     url: "{{ url('dummy-url') }}", // URL palsu untuk menghindari kesalahan
-        //     maxFilesize: 2,
-        //     maxFiles: 1,
-        //     acceptedFiles: ".jpeg,.jpg,.png",
-        //     addRemoveLinks: true,
-        // });
-
-        // $('#product-form').on('submit', function(e) {
-        //     e.preventDefault(); // Mencegah pengiriman formulir biasa
-
-        //     // Periksa apakah ada file yang dipilih di Dropzone
-        //     if (myDropzone.getQueuedFiles().length > 0) {
-        //         // Lakukan unggahan file menggunakan AJAX
-        //         myDropzone.processQueue();
-        //         // Tangani hasil unggahan dalam peristiwa success Dropzone
-        //         myDropzone.on('success', function(file, response) {
-        //             // Setel nilai input tersembunyi dengan URL gambar yang diunggah
-        //             $('#image').val(response.url);
-        //             // Submit formulir secara manual
-        //             $(this).off('submit').submit();
-        //         });
-        //     } else {
-        //         // Jika tidak ada file yang dipilih, lanjutkan dengan pengiriman formulir tanpa gambar
-        //         $(this).off('submit').submit();
-        //     }
-        // });
-
         $("#price").maskMoney({thousands:'.', decimal:','})
 
         const getGramasi = (id_gramasi) => {
