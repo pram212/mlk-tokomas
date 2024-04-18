@@ -426,13 +426,17 @@
                     dataType: "json",
                     type: "get"
                 },
-                "columns": [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
-                },{
-                        "data": "code"
+                    "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        "data": "code",
+                        render: function(data, type, row) {
+                            return '<a href="{{ url("products/4700") }}" class="btn-detail-product" style="color:blue">' + data + '</a>';
+                        }
                     },
                     {
                         "data": "name"

@@ -44,6 +44,7 @@ class ProductController extends Controller
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
         $category = Category::all();
+        $mode = 'create';
 
         return view('product.form', compact(
             'lims_category_list',
@@ -51,7 +52,8 @@ class ProductController extends Controller
             'product_type',
             'tagType',
             'gramasi',
-            'category'
+            'category',
+            'mode'
         ));
     }
 
@@ -116,6 +118,47 @@ class ProductController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        $product = Product::find($id)->load([
+            'productProperty:id,code,description',
+            'gramasi:id,code,gramasi',
+            'tagType:id,code,color',
+            'category'
+        ]);
+
+        $this->authorize('update', $product);
+
+        $lims_category_list = Category::where('is_active', true)->get();
+        $productProperty = ProductProperty::all();
+        $productType = ProductType::all();
+        $tagType = TagType::all();
+        $gramasi = Gramasi::all();
+        $category = Category::all();
+        $product_type = ProductType::where('categories_id', $product->category_id)->get();
+
+        $product = Product::find($id)->load([
+            'productProperty:id,code,description',
+            'gramasi:id,code,gramasi',
+            'tagType:id,code,color',
+            'category'
+        ]);
+
+        $mode = 'show';
+
+        return view('product.form', compact(
+            'lims_category_list',
+            'productProperty',
+            'productType',
+            'tagType',
+            'gramasi',
+            'product',
+            'category',
+            'product_type',
+            'mode'
+        ));
+    }
+
     public function edit($id)
     {
         $product = Product::find($id)->load([
@@ -142,6 +185,8 @@ class ProductController extends Controller
             'category'
         ]);
 
+        $mode = 'edit';
+
         return view('product.form', compact(
             'lims_category_list',
             'productProperty',
@@ -150,7 +195,8 @@ class ProductController extends Controller
             'gramasi',
             'product',
             'category',
-            'product_type'
+            'product_type',
+            'mode'
         ));
     }
 

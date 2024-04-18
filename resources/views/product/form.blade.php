@@ -1,13 +1,26 @@
 @extends('layout.main')
 
 @section('content')
+
 <section class="forms">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex align-items-center">
-                        <h4>{{ trans('file.add_product') }}</h4>
+                        <h4>
+                            @switch($mode)
+                            @case('create')
+                            {{ trans('file.Create') }} {{ trans('file.product') }}
+                            @break
+                            @case('edit')
+                            {{ trans('file.Edit') }} {{ trans('file.product') }}
+                            @break
+                            @case('show')
+                            {{ trans('file.Detail') }} {{ trans('file.product') }}
+                            @break
+                            @endswitch
+                        </h4>
                     </div>
                     <div class="card-body">
                         <p class="italic">
@@ -26,9 +39,11 @@
                                             <div class="row d-flex justify-content-center">
                                                 <div class="col-6">
                                                     <div class="form-group">
+                                                        @if($mode !='show')
                                                         <input type="file" name="image" class="form-control" id="image"
                                                             onchange="readURL(this)"
                                                             value="@if(@$product){{ @$product->image }}@endif">
+                                                        @endif
                                                         <small><i>*{{ trans('Image must be in .jpg, .jpeg, .png
                                                                 format
                                                                 and maximum 2MB')
@@ -51,7 +66,8 @@
                                             <div class="form-group">
                                                 <label for="">{{ __('file.Product Name') }} *</label>
                                                 <input type="text" class="form-control" name="name"
-                                                    value="{{ old('name', @$product->name) }}" id="input-name" required>
+                                                    value="{{ old('name', @$product->name) }}" id="input-name"
+                                                    @if($mode=='show' ) readonly @endif required>
                                                 @error('name')
                                                 <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -73,7 +89,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>{{ __('file.Tag Type Code') }} *</strong> </label>
-                                                <select name="tag_type_id" class="form-control" id="tag_type_id">
+                                                <select name="tag_type_id" class="form-control" @if($mode=='show' )
+                                                    readonly @endif id="tag_type_id">
                                                     <option value="">{{ __('file.Select') }}</option>
                                                     @foreach ($tagType as $item)
                                                     <option value="{{ $item->id }}"
@@ -94,8 +111,9 @@
                                             <div class="form-group">
                                                 <label>{{ trans('file.Product Code') }} *</strong> </label>
                                                 <div class="input-group">
-                                                    <input type="text" name="code" class="form-control" id="code"
-                                                        aria-describedby="code" value="{{ @$product->code}}">
+                                                    <input type="text" name="code" @if($mode=='show' ) readonly @endif
+                                                        class="form-control" id="code" aria-describedby="code"
+                                                        value="{{ @$product->code}}">
                                                     <div class="input-group-append">
                                                         <button id="genbutton" type="button"
                                                             class="btn btn-sm btn-default"
@@ -117,8 +135,8 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>{{ __('file.category') }} *</strong></label>
-                                                        <select name="category_id" class="form-control"
-                                                            id="input-kd-category">
+                                                        <select name="category_id" @if($mode=='show' ) readonly @endif
+                                                            class="form-control" id="input-kd-category">
                                                             <option value="">{{ __('file.Select') }}
                                                             </option>
                                                             @foreach ($category as $item)
@@ -136,7 +154,8 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>{{ __('file.Product Type') }} * </label>
-                                                        <select name="product_type_id" class="form-control selectpicker"
+                                                        <select name="product_type_id" @if($mode=='show' ) readonly
+                                                            @endif class="form-control selectpicker"
                                                             id="product_type_id" @if(!@$product) disabled @endif
                                                             data-live-search="true">
                                                             <option value="" disabled>{{ __('file.Select') }}</option>
@@ -163,7 +182,8 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="">{{ __('file.Gold Content') }} *</label>
-                                                        <input type="text" class="form-control" name="gold_content"
+                                                        <input type="text" @if($mode=='show' ) readonly @endif
+                                                            class="form-control" name="gold_content"
                                                             value="{{ old('gold_content', @$product->gold_content) }}"
                                                             id="input-gold_content" required>
                                                         @error('gold_content')
@@ -175,7 +195,8 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="">{{ __('file.Additional Code') }} *</label>
-                                                        <input type="text" class="form-control" name="additional_code"
+                                                        <input type="text" class="form-control" @if($mode=='show' )
+                                                            readonly @endif name="additional_code"
                                                             value="{{ old('additional_code', @$product->additional_code ) }}"
                                                             id="input-additional_code" required>
                                                         @error('additional_code')
@@ -189,8 +210,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>{{ __('file.Product Property Code') }}*</strong> </label>
-                                                <select name="product_property_id" class="form-control"
-                                                    id="input-kd-sifat">
+                                                <select name="product_property_id" @if($mode=='show' ) readonly @endif
+                                                    class="form-control" id="input-kd-sifat">
                                                     <option value="">{{ __('file.Select') }}
                                                     </option>
                                                     @foreach ($productProperty as $item)
@@ -211,8 +232,9 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>{{ trans('file.Product Price') }} *</strong> </label>
-                                                        <input type="text" id="price" name="price" class="form-control"
-                                                            step="any" value="{{ @$product->price ?? '' }}" readonly>
+                                                        <input type="text" id="price" name="price" @if($mode=='show' )
+                                                            readonly @endif class="form-control" step="any"
+                                                            value="{{ @$product->price ?? '' }}" readonly>
                                                         @error('price')
                                                         <span class="text-danger">{{ $message }}</span>
                                                         @enderror
@@ -222,8 +244,9 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>{{ __('file.Discount') }} *</strong> </label>
-                                                        <input type="number" class="form-control" name="discount"
-                                                            id="input-diskon" value="{{ @$product->discount ?? '' }}">
+                                                        <input type="number" class="form-control" @if($mode=='show' )
+                                                            readonly @endif name="discount" id="input-diskon"
+                                                            value="{{ @$product->discount ?? '' }}">
                                                         @error('discount')
                                                         <span class="text-danger">{{ $message }}</span>
                                                         @enderror
@@ -254,8 +277,9 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="">Miligram *</label>
-                                                        <input type="number" class="form-control" name="mg" class="mg"
-                                                            id="input-mg" value="{{ @$product->mg  ?? ''}}">
+                                                        <input type="number" class="form-control" @if($mode=='show' )
+                                                            readonly @endif name="mg" class="mg" id="input-mg"
+                                                            value="{{ @$product->mg  ?? ''}}">
                                                         @error('mg')
                                                         <span class="text-danger">{{ $message }}</span>
                                                         @enderror
@@ -313,8 +337,11 @@
                             </div>
 
                             <div class="form-group">
+                                <a href="{{url('products')}}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
+                                    {{trans('file.Back')}}</a>
                                 <input type="submit" value="{{ trans('file.submit') }}" id="submit-btn"
                                     class="btn btn-primary">
+
                             </div>
                         </form>
                     </div>
@@ -626,5 +653,15 @@
             $("#prev-mg").text(produk.mg)
             generateQRCode(produk.code, "prev-qrcode");
         }
+
+        @if($mode == 'show')
+
+        $("#tag_type_id").prop('disabled', true);
+        $("#input-kd-category").prop('disabled', true);
+        $("#product_type_id").prop('disabled', true);
+        $("#input-kd-sifat").prop('disabled', true);
+        $('#submit-btn').remove();
+
+        @endif
 </script>
 @endsection
