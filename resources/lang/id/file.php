@@ -136,6 +136,7 @@ return [
 	"Best Seller" => "Penjualan Terbaik",
 	"Best Seller From" => "Penjualan Terbaik Dari",
 	"Product Report" => "Laporan Produk",
+	"Product Status" => "Status Produk",
 	"Purchased" => "Dibeli",
 	"Sold" => "Dijual",
 	"In Stock" => "Dalam Stok",

@@ -24,6 +24,8 @@
                     <th>Miligram</th>
                     <th>Gramasi</th>
                     <th>{{ __('file.Product Property') }}</th>
+                    <th>{{ __('file.Product Status') }}</th>
+                    <th>{{ __('file.Invoice') }}</th>
                     <th class="not-exported">{{ trans('file.action') }}</th>
                 </tr>
             </thead>
@@ -458,6 +460,12 @@
                     },
                     {
                         "data": "product_property_description"
+                    },
+                    {
+                        "data": "product_status"
+                    },
+                    {
+                        "data": "invoice_number"
                     },
                     {
                         "data": "action"

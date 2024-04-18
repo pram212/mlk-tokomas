@@ -276,6 +276,7 @@ return [
 	'Supplier List' => 'Supplier List',
 	'Add Supplier' => 'Add Supplier',
 	'Product Report' => 'Product Report',
+	'Product Status' => 'Product Status',
 	'Sale Report' => 'Sale Report',
 	'Purchase Report' => 'Purchase Report',
 	'Payment Report' => 'Payment Report',

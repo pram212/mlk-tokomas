@@ -489,7 +489,7 @@ class ProductController extends Controller
         $this->authorize('viewAny', Product::class);
 
         $productQuery = Product::query()
-            ->select('id', 'code', 'price', 'image', 'name', 'discount', 'created_at', 'tag_type_id', 'gramasi_id', 'product_property_id', 'mg')
+            ->select('id', 'code', 'price', 'image', 'name', 'discount', 'created_at', 'tag_type_id', 'gramasi_id', 'product_property_id', 'mg','product_status','invoice_number')
             ->where('is_active', true)
             ->orderBy("created_at", "desc")
             ->with([ 'tagType:id,code,color', 'productProperty:id,code,description', 'gramasi:id,code,gramasi' ]);
@@ -503,6 +503,12 @@ class ProductController extends Controller
             ->addColumn('gramasi_gramasi', fn ($product) => $product->gramasi->gramasi ?? "-")
             ->addColumn('tag_type_code', fn ($product) => $product->tagType->code ?? "-")
             ->addColumn('gramasi_code', fn ($product) => $product->gramasi->code ?? "-")
+            ->addColumn('product_status', function ($product) {
+                return $product->product_status == 1 ? 'STORE' : 'SOLD';
+            })
+            ->addColumn('invoice_number', function ($product) {
+                return $product->invoice_number ?? "-";
+            })
             ->addColumn('image_preview', function($q) {
                 return '<img src="'.asset($q->image).'" class="img-thumbnail" width="100" height="100">';
             })
