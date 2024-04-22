@@ -298,7 +298,8 @@
                                                     <label for="detail_split_set_qty">{{ __('file.Product Qty')
                                                         }}</label>
                                                     <input class="form-control" type="number"
-                                                        name="detail_split_set_qty" id="detail_split_set_qty">
+                                                        name="detail_split_set_qty" id="detail_split_set_qty"
+                                                        value="{{ $product->qty ?? 0 }}">
                                                 </div>
                                                 <table>
                                                     <tbody>
@@ -775,6 +776,10 @@
             $("#prev-additional_code").text(produk.additional_code)
             $("#prev-mg").text(produk.mg)
             generateQRCode(produk.code, "prev-qrcode");
+
+            input_split_type.trigger('change');
+
+            detail_split_add.bind(this)();
         }
 
         @if($mode == 'show')
