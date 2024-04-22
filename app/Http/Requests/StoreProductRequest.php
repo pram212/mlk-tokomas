@@ -35,6 +35,7 @@ class StoreProductRequest extends FormRequest
             'mg' => ['required'],
             'product_type_id' => ['required'],
             'image' => ['required'],
+            'split_set_type' => ['required'],
         ];
     }
 }

@@ -45,6 +45,15 @@ class ProductController extends Controller
         $gramasi = Gramasi::all();
         $category = Category::all();
         $mode = 'create';
+        $split_set_type = [
+            [
+                'id' => 1,
+                'name' => 'Full Set'
+            ], [
+                'id' => 2,
+                'name' => 'Split Set'
+            ]
+        ];
 
         return view('product.form', compact(
             'lims_category_list',
@@ -53,7 +62,8 @@ class ProductController extends Controller
             'tagType',
             'gramasi',
             'category',
-            'mode'
+            'mode',
+            'split_set_type'
         ));
     }
 
@@ -91,8 +101,36 @@ class ProductController extends Controller
                 'image' => $imagePath,
                 'is_active' => true,
                 'name' => $request->name,
+                'split_set_type' => $request->split_set_type,
                 ]
             );
+
+            // handle if split set type is split set (2)
+            if ($request->split_set_type == 2) {
+                // get product id
+                $product_id = Product::where('name', $request->name)->first()->id;
+
+                // update qty product (name=detail_split_set_qty) to products.qty
+                $product = Product::find($product_id);
+                $product->qty = $request->qty_product;
+
+                // save product detail split set to product_split_set_detail split_set_code[] and split_set_qty[]
+                $split_set_code = $request->split_set_code;
+                $split_set_qty = $request->split_set_qty;
+                $split_set_detail = [];
+                for ($i=0; $i < count($split_set_code); $i++) { 
+                    $split_set_detail[] = [
+                        'product_id' => $product_id,
+                        'split_set_code' => $split_set_code[$i],
+                        'qty_product' => $split_set_qty[$i]
+                    ];
+                }
+
+                // save to product_split_set_detail
+                $product->productSplitSetDetail()->createMany($split_set_detail);
+
+                $product->save();
+            }
 
             DB::commit();
             

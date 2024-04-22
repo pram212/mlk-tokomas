@@ -73,19 +73,7 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        {{-- <div class="col-md-12">
-                                            <div class="form-group mb-3">
-                                                <label>{{ __('file.Product Image') }} *</strong> </label>
-                                                <div id="image-preview" class="dropzone">
-                                                    <div class="dz-message">
-                                                        <h3>{{ __('file.Drop files here or click to upload') }}</h3>
-                                                        <p class="text-muted">{{ __('file.Maximum upload size 2MB') }}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" name="image" id="image">
-                                            </div>
-                                        </div> --}}
+
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>{{ __('file.Tag Type Code') }} *</strong> </label>
@@ -113,7 +101,7 @@
                                                 <div class="input-group">
                                                     <input type="text" name="code" @if($mode=='show' ) readonly @endif
                                                         class="form-control" id="code" aria-describedby="code"
-                                                        value="{{ @$product->code}}">
+                                                        value="{{ @$product->code}}" readonly>
                                                     <div class="input-group-append">
                                                         <button id="genbutton" type="button"
                                                             class="btn btn-sm btn-default"
@@ -127,8 +115,6 @@
                                                 <span class="validation-msg" id="code-error"></span>
                                             </div>
                                         </div>
-
-
 
                                         <div class="col-md-6">
                                             <div class="row">
@@ -288,7 +274,39 @@
                                             </div>
                                         </div>
 
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>{{ trans('file.Split Set Type') }} *</strong> </label>
+                                                <select name="split_set_type" @if($mode=='show' ) readonly @endif
+                                                    class="form-control" id="input-split-type">
+                                                    <option value="">{{ __('file.Select') }}
+                                                    </option>
+                                                    @foreach ($split_set_type as $item)
+                                                    <option value="{{ $item['id'] }}" @if ( $item['id']==@$product->
+                                                        split_set_type) selected @endif>
+                                                        {{ $item['name'] }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('split_set_type')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div id="detail_split_set" class="bg-dark text-light p-2 d-none">
+                                                {{ __('file.Detail Split Set') }}
+                                                <div class="form-group">
+                                                    <label for="detail_split_set_qty">{{ __('file.Product Qty')
+                                                        }}</label>
+                                                    <input class="form-control" type="number"
+                                                        name="detail_split_set_qty" id="detail_split_set_qty">
+                                                </div>
+                                                <table>
+                                                    <tbody>
 
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
 
                                         <div class="col-md-6"></div>
 
@@ -354,17 +372,157 @@
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
 <script type="text/javascript">
-    let input_categories_id = $('#input-kd-category');
-    let input_product_type_id = $('#product_type_id');
-    let input_gramasi_id = $('#input-kd-gramasi');
-    let text_gramasi_id = $('#text-kd-gramasi');
+    const input_categories_id = $('#input-kd-category');
+    const input_product_type_id = $('#product_type_id');
+    const input_gramasi_id = $('#input-kd-gramasi');
+    const text_gramasi_id = $('#text-kd-gramasi');
     let old_image = '{{ $product->image ?? '' }}';
-    let image_preview = $('#image-preview');
-    let product_property_id = $('#input-kd-sifat');
-    let price_col = $('#price');
+    const image_preview = $('#image-preview');
+    const product_property_id = $('#input-kd-sifat');
+    const price_col = $('#price');
+    const input_split_type = $('#input-split-type');
+    const detail_split_set = $('#detail_split_set');
+    const genbutton = $('#genbutton');
+    const btn_detail_split_add = $('.btn_detail_split_add');
+    const btn_detail_split_delete = $('.btn_detail_split_delete');
+    let code = $("input[name='code']");
+    const table_detail_split_set = $('#detail_split_set table tbody')
+    const detail_split_set_qty = $('#detail_split_set_qty');
     
     const produk = @if(@$product) JSON.parse('{!! $product  !!}') @else null @endif;
-    
+
+    $(document).ready(function() {
+        input_split_type.attr('disabled', true);
+        detail_split_add();
+        
+    });
+
+    input_split_type.change(function() {
+        let split_set_type = $(this).val();
+        if (split_set_type == 2) {
+            detail_split_set.removeClass('d-none');
+            detail_split_set.find('table tbody').html('');
+            detail_split_add();
+        } else {
+            detail_split_set.addClass('d-none');
+        }
+    });
+
+    detail_split_set_qty.change(function() {
+        let qty = $(this).val();
+        let last_btn = table_detail_split_set.find('.detail_split_add').last();
+        // jumlah qty tidak boleh kurang dari split_set_qty[]
+        let split_set_qty = table_detail_split_set.find('input[name="split_set_qty[]"]');
+
+        let total_qty = 0;
+
+        split_set_qty.each(function() {
+            if($(this).val() == '') {
+                return;
+            }
+            total_qty += parseInt($(this).val());
+        });
+
+        if (qty < total_qty) {
+            alert('Jumlah qty tidak boleh kurang dari split set qty');
+            $(this).val('');
+            
+            last_btn.prop('disabled', true);
+        }
+        
+        if (qty > total_qty) {
+            last_btn.prop('disabled', false);
+        }
+
+        if (qty == total_qty) {
+            last_btn.prop('disabled', true);
+        }
+    });
+
+    // onchange split_set_qty[]
+    $(document).on('change', 'input[name="split_set_qty[]"]', function() {
+        let product_qty = detail_split_set_qty.val() ? parseInt(detail_split_set_qty.val()) : 0;
+        let split_set_qty = table_detail_split_set.find('input[name="split_set_qty[]"]');
+        let last_btn = table_detail_split_set.find('.detail_split_add').last();
+
+        let total_qty = 0;
+
+        split_set_qty.each(function() {
+            if($(this).val() == '') {
+                return;
+            }
+            total_qty += parseInt($(this).val());
+        });
+
+        if (total_qty > product_qty) {
+            alert('Jumlah qty tidak boleh lebih dari Qty Product');
+            $(this).val('');
+            last_btn.prop('disabled', true);
+        }
+
+        if (product_qty > total_qty) {
+            last_btn.prop('disabled', false);
+        }
+
+        if (product_qty == total_qty) {
+            last_btn.prop('disabled', true);
+        }
+
+    });
+
+
+    function detail_split_delete(){
+            let table = table_detail_split_set;
+            const last_row = table_detail_split_set.find('tr').last();
+            last_row.remove();
+
+            // show add button
+            table_detail_split_set.find('.detail_split_add').last().show();
+            table_detail_split_set.find('.btn_detail_split_delete').last().show();
+
+            if (table.find('tr').length == 1) {
+                table.find('.btn_detail_split_delete').hide();
+            }
+    }
+
+    function detail_split_add(){
+            let table = table_detail_split_set;
+            table.find('.detail_split_add').hide();
+            btn_detail_split_delete.hide();
+            table.find('.btn_detail_split_delete').hide();
+
+            const row_number = table.find('tr').length + 1;
+            const code_split = `${code.val()} - SP${row_number}`;
+
+            let tr = `<tr>
+                <td>
+                    <div class="form-group">
+                        <label for="">Kode Split Set ${row_number}</label>
+                        <input type="text" name="split_set_code[]" class="form-control" value="${code_split}" readonly>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label for="">Qty Product Split Set ${row_number}</label>
+                        <div class="input-group">
+                            <input type="number" name="split_set_qty[]" class="form-control">
+                            <button type="button" class="btn btn-danger ml-1 btn_detail_split_delete"><i class="fa fa-times" onclick="detail_split_delete()"></i></button>
+                            <button type="button" class="btn btn-success ml-2 detail_split_add" onclick="detail_split_add()"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                </td>
+            </tr>`;
+
+            table.append(tr);
+
+            // check if there is only one row
+            if (table.find('tr').length == 1) {
+                table.find('.btn_detail_split_delete').hide();
+            }
+    }
+
+        
+
     input_categories_id.change(function() {
         let categories_id = $(this).val();
         let product_type_id = $('#product_type_id');
@@ -484,7 +642,7 @@
         }
     }
 
-        $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
 
         $.ajaxSetup({
             headers: {
@@ -492,11 +650,15 @@
             }
         });
 
-        $('#genbutton').on("click", function() {
+        genbutton.on("click", function() {
             $.get('{!! url("products-gencode") !!}', function(data) {
                 $("input[name='code']").val(data);
                 generateQRCode(data, "prev-qrcode")
             });
+
+            input_split_type.attr('disabled', false);
+            input_split_type.val('');
+            input_split_type.trigger('change');
         });
 
         // Fungsi untuk menghasilkan QR code
@@ -566,14 +728,6 @@
             $("#product-preview").css("background-color", color);
         });
 
-        // $("#input-kd-gramasi").change(function(e) {
-        //     e.preventDefault();
-        //     id = parseInt(e.target.value)
-        //     const gramasi = getGramasi(id)
-        //     $("#prev-gramasi").text(gramasi.gramasi);
-        //     $("#prev-kd-gramasi").text(gramasi.code);
-        // });
-
         function prevGramasi(id) {
             const gramasi = getGramasi(id)
             $("#prev-gramasi").text(gramasi.gramasi);
@@ -632,5 +786,13 @@
         $('#submit-btn').remove();
 
         @endif
+
+        
+
+        
+
+        
+        
+        
 </script>
 @endsection

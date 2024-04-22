@@ -70,6 +70,13 @@ class Product extends Model
         return $this->hasMany(ProductWarehouse::class);
     }
 
+    public function productSplitSetDetail()
+    {
+        return $this->hasMany(ProductSplitSetDetail::class);
+    }
+
+    
+
     protected static function boot()
     {
         parent::boot();

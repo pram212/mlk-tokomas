@@ -635,6 +635,11 @@ return [
 	"Maximum upload size 2MB" => "Maximum upload size 2MB",
 	"Detail" => "Detail",
 	"Edit" => "Edit",
-	"Create" => "Create"
+	"Create" => "Create",
+	"Split Set Type" => "Split Set Type",
+	"Detail Split Set" => "Detail Split Set",
+	"Product Qty" => "Product Qty",
+
+
 ];
 ?>

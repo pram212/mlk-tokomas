@@ -634,7 +634,10 @@ return [
 	"Maximum upload size 2MB" => "Ukuran unggah maksimum 2MB",
 	"Detail" => "Detail",
 	"Edit" => "Ubah",
-	"Create" => "Tambahkan"
+	"Create" => "Tambahkan",
+	"Split Set Type" => "Jenis Split Set",
+	"Detail Split Set" => "Detail Split Set",
+	"Product Qty" => "Qty Produk",
 
 ];
 
