@@ -128,6 +128,7 @@ class ProductController extends Controller
 
                 // save to product_split_set_detail
                 $product->productSplitSetDetail()->createMany($split_set_detail);
+                $product->productDetailSplitHistory()->createMany($split_set_detail);
 
                 $product->save();
             }
@@ -313,6 +314,9 @@ class ProductController extends Controller
                 $product = Product::find($id);
                 $product->qty = $request->detail_split_set_qty;
 
+                // get all product_split_set_detail by product_id
+                $product_split_set_detail_old = $product->productSplitSetDetail;
+
                 // delete all product_split_set_detail by product_id
                 $product->productSplitSetDetail()->delete();
 
@@ -320,13 +324,30 @@ class ProductController extends Controller
                 $split_set_code = $request->split_set_code;
                 $split_set_qty = $request->split_set_qty;
                 $split_set_detail = [];
-                for ($i=0; $i < count($split_set_code); $i++) { 
-                    $split_set_detail[] = [
+                foreach ($split_set_code as $index => $code) {
+                    $detail = [
                         'product_id' => $id,
-                        'split_set_code' => $split_set_code[$i],
-                        'qty_product' => $split_set_qty[$i]
+                        'split_set_code' => $code,
+                        'qty_product' => $split_set_qty[$index]
                     ];
+                
+                    // Cek apakah terdapat detail produk lama dengan kode yang sama
+                    $oldDetail = $product_split_set_detail_old->where('split_set_code', $code)->first();
+                
+                    // Simpan detail produk baru
+                    $product->productSplitSetDetail()->create($detail);
+                
+                    // Jika detail produk lama ditemukan dan kuantitasnya berbeda, simpan ke history
+                    if ($oldDetail && $oldDetail->qty_product != $split_set_qty[$index]) {
+                        $product->productDetailSplitHistory()->create($detail);
+                    }
+                
+                    // Jika detail produk lama tidak ditemukan, simpan ke history
+                    if (!$oldDetail) {
+                        $product->productDetailSplitHistory()->create($detail);
+                    }
                 }
+                
 
                 // save to product_split_set_detail
                 $product->productSplitSetDetail()->createMany($split_set_detail);
@@ -751,6 +772,14 @@ class ProductController extends Controller
 
         // Open pdf in browser
         $dompdf->stream($filename, array("Attachment" => false));
+    }
+
+    public function getProductDetailSplitSetHistory($id)
+    {
+        $product = Product::find($id);
+        $productDetailSplitHistory = $product->productDetailSplitHistory;
+
+        return response()->json($productDetailSplitHistory);
     }
 
 }

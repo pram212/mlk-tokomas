@@ -75,6 +75,11 @@ class Product extends Model
         return $this->hasMany(ProductSplitSetDetail::class);
     }
 
+    public function productDetailSplitHistory()
+    {
+        return $this->hasMany(ProductDetailSplitHistory::class);
+    }
+
     
 
     protected static function boot()

@@ -637,6 +637,7 @@ return [
 	"Create" => "Tambahkan",
 	"Split Set Type" => "Jenis Split Set",
 	"Detail Split Set" => "Detail Split Set",
+	"Historical Split Set" => "Historical Split Set",
 	"Product Qty" => "Qty Produk",
 
 ];

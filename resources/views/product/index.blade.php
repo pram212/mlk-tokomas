@@ -193,7 +193,7 @@
 
 
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-<script src="{{ asset('public/js/axios.min.js') }}"></script>
+
 <script>
     $("ul#product").siblings('a').attr('aria-expanded', 'true');
         $("ul#product").addClass("show");

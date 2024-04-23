@@ -85,6 +85,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// product routes
 	Route::resource('products', 'ProductController');
+	Route::get('product-detail-split-set-history/{id}', 'ProductController@getProductDetailSplitSetHistory');
 	Route::get('product-datatable', 'ProductController@productDataTable')->name('product-datatable');
 	Route::get('print_barcode', 'ProductController@printBarcode')->name('printBarcode');
 	Route::get('products-gencode', 'ProductController@generateCode');

@@ -6,6 +6,52 @@ $(document).ready(function () {
     }
 });
 
+btn_historical_split_set.click(function () {
+    let split_set_id = input_split_type.val();
+    if (!split_set_id) {
+        alert("Please select split set type first");
+        return;
+    }
+
+    // axios to GET products/product-detail-split-set-history/{product_id}
+    axios
+        .get(baseUrl + "/product-detail-split-set-history/" + product_id)
+        .then((response) => {
+            let data = response.data;
+            if (data.length == 0) {
+                let table = historical_split_set_modal.find("table tbody");
+                table.html("");
+                table.append(
+                    `<tr>
+                        <td colspan="3" class="text-center">No data found</td>
+                    </tr>`
+                );
+                return;
+            }
+
+            let table = historical_split_set_modal.find("table tbody");
+            table.html("");
+
+            data.forEach((item) => {
+                let tr = `<tr>
+                    <td>${item.split_set_code}</td>
+                    <td>${item.qty_product}</td>
+                    <td>${item.created_at}</td>
+                </tr>`;
+
+                table.append(tr);
+            });
+
+            historical_split_set_modal.find("table").DataTable({
+                searching: false,
+                order: [[2, "desc"]],
+            });
+        });
+
+    // test show modal
+    historical_split_set_modal.modal("show");
+});
+
 input_split_type.change(function () {
     let split_set_type = $(this).val();
     if (split_set_type == 2) {
@@ -445,4 +491,8 @@ if (mode == "show") {
     $("input[name='split_set_qty[]']").prop("disabled", true);
     $(".btn_detail_split_delete").remove();
     $(".detail_split_add").remove();
+}
+
+if (mode == "create") {
+    btn_historical_split_set.hide();
 }

@@ -158,6 +158,7 @@
             <script>
                 var baseUrl = "{{ url('/') }}";
             </script>
+            <script src="{{ asset('public/js/axios.min.js') }}"></script>
             @yield('content')
 
         </div>

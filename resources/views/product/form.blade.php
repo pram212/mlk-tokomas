@@ -293,7 +293,12 @@
                                                 @enderror
                                             </div>
                                             <div id="detail_split_set" class="bg-dark text-light p-2 d-none">
-                                                {{ __('file.Detail Split Set') }}
+                                                <div class="row">
+                                                    <div class="col-6">{{ __('file.Detail Split Set') }}</div>
+                                                    <div class="col-6 d-flex justify-content-end"><button type="button"
+                                                            class="btn btn-xs btn_historical_split_set">{{
+                                                            __('file.Historical Split Set') }}</button></div>
+                                                </div>
                                                 <div class="form-group">
                                                     <label for="detail_split_set_qty">{{ __('file.Product Qty')
                                                         }}</label>
@@ -370,10 +375,40 @@
     </div>
 </section>
 
+{{-- modal --}}
+<div class="modal fade" id="historical_split_set_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{ __('file.Historical Split Set') }}</h5>
+                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped" id="modal_table_detail_split_set">
+                    <thead>
+                        <tr>
+                            <th>Kode Split Set</th>
+                            <th>{{ __('file.Product Qty') }}</th>
+                            <th>Waktu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
 <script type="text/javascript">
     const mode = '{{ $mode }}';
+    const product_id = '{{ @$product->id }}';
     const input_categories_id = $('#input-kd-category');
     const input_product_type_id = $('#product_type_id');
     const input_gramasi_id = $('#input-kd-gramasi');
@@ -399,6 +434,11 @@
     
     const gramasis = @if(@$gramasi) JSON.parse('{!! $gramasi  !!}') @else null @endif;
     const properties = @if(@$productProperty) JSON.parse('{!! $productProperty  !!}') @else null @endif;
+
+    const btn_historical_split_set = $('.btn_historical_split_set');
+    const historical_split_set_modal = $('#historical_split_set_modal');
+
+    const modal_table_detail_split_set = $('#modal_table_detail_split_set tbody');
 </script>
 <script src="{{ asset('public/js/pages/products/product_form.js') }}"></script>
 @endsection

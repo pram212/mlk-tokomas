@@ -638,6 +638,7 @@ return [
 	"Create" => "Create",
 	"Split Set Type" => "Split Set Type",
 	"Detail Split Set" => "Detail Split Set",
+	"Historical Split Set" => "Historical Split Set",
 	"Product Qty" => "Product Qty",
 
 
