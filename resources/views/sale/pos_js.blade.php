@@ -581,9 +581,12 @@
     lims_productcodeSearch.autocomplete({
         source: function(request, response) {
             var matcher = new RegExp(".?" + $.ui.autocomplete.escapeRegex(request.term), "i");
+            // response($.grep(lims_product_array, function(item) {
+            //     return matcher.test(item);
+            // }).slice(0, 20));
             response($.grep(lims_product_array, function(item) {
                 return matcher.test(item);
-            }).slice(0, 20));
+            }));
         },
         response: function(event, ui) {
             if (ui.content.length == 1) {
