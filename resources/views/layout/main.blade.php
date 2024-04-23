@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -46,7 +47,8 @@
     <link rel="stylesheet" href="{{ asset('public/css/style.default.css') }}" id="theme-stylesheet" type="text/css">
     <link rel="stylesheet" href="{{ asset('public/css/dropzone.css') }}">
     <link rel="stylesheet" href="{{ asset('public/css/style.css') }}">
-    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+    <!-- Tweaks for older IEs-->
+    <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
 
@@ -56,15 +58,19 @@
     <script type="text/javascript" src="{{ asset('public/vendor/jquery/jquery.timepicker.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/vendor/popper.js/umd/popper.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('public/vendor/bootstrap-toggle/js/bootstrap-toggle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('public/vendor/bootstrap-toggle/js/bootstrap-toggle.min.js') }}">
+    </script>
     <script type="text/javascript" src="{{ asset('public/vendor/bootstrap/js/bootstrap-select.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/vendor/keyboard/js/jquery.keyboard.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('public/vendor/keyboard/js/jquery.keyboard.extension-autocomplete.js') }}"></script>
+    <script type="text/javascript"
+        src="{{ asset('public/vendor/keyboard/js/jquery.keyboard.extension-autocomplete.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/js/grasp_mobile_progress_circle-1.0.0.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/vendor/jquery.cookie/jquery.cookie.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/vendor/chart.js/Chart.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/vendor/jquery-validation/jquery.validate.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('public/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+    <script type="text/javascript"
+        src="{{ asset('public/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js') }}">
+    </script>
     <script type="text/javascript" src="{{ asset('public/js/charts-custom.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/js/front.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/vendor/daterange/js/moment.min.js') }}"></script>
@@ -83,16 +89,19 @@
     <script type="text/javascript" src="{{ asset('public/vendor/datatable/buttons.colVis.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/vendor/datatable/buttons.html5.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/vendor/datatable/buttons.print.min.js') }}"></script>
-    
+
     <script type="text/javascript" src="{{ asset('public/vendor/datatable/sum().js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/vendor/datatable/dataTables.checkboxes.min.js') }}"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js">
+    </script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js">
+    </script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js">
+    </script>
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="{{ asset('public/css/custom-default.css') }}" type="text/css" id="custom-style">
     <script src="{{ asset('public/js/jquery.maskMoney.js') }}"></script>
-    
+
     @yield('css')
 </head>
 
@@ -102,37 +111,37 @@
     @include('layout.sidebar')
     <!-- navbar-->
     @include('layout.navbar')
-    
+
     <div class="page">
 
         <!-- notification modal -->
         @include('main_utilities.notification_modal')
         <!-- end notification modal -->
-        
+
         <!-- expense modal -->
         @include('main_utilities.expense_modal')
         <!-- end expense modal -->
-        
+
         <!-- account modal -->
         @include('main_utilities.account_modal')
         <!-- end account modal -->
-        
+
         <!-- account statement modal -->
         @include('main_utilities.account_statement_modal')
         <!-- end account statement modal -->
-        
+
         <!-- warehouse modal -->
         @include('main_utilities.warehouse_modal')
         <!-- end warehouse modal -->
-        
+
         <!-- user modal -->
         @include('main_utilities.user_modal')
         <!-- end user modal -->
-        
+
         <!-- customer modal -->
         @include('main_utilities.customer_modal')
         <!-- end customer modal -->
-        
+
         <!-- supplier modal -->
         @include('main_utilities.supplier_modal')
         <!-- end supplier modal -->
@@ -140,22 +149,25 @@
         <div style="display:none" id="content" class="animate-bottom">
 
             @if (session()->has('type'))
-                <div class="alert {{ session()->get('type') }} alert-dismissible text-center">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button> {{ session()->get('message') }}
-                </div>
+            <div class="alert {{ session()->get('type') }} alert-dismissible text-center">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button> {{ session()->get('message') }}
+            </div>
             @endif
-
+            <script>
+                var baseUrl = "{{ url('/') }}";
+            </script>
             @yield('content')
-            
+
         </div>
-        
+
         <footer class="main-footer">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-12">
-                        <p>&copy; {{ $general_setting->site_title }} | {{ trans('file.Developed') }} {{ trans('file.By') }} <span class="external">{{ $general_setting->developed_by }}</span></p>
+                        <p>&copy; {{ $general_setting->site_title }} | {{ trans('file.Developed') }} {{ trans('file.By')
+                            }} <span class="external">{{ $general_setting->developed_by }}</span></p>
                     </div>
                 </div>
             </div>
@@ -163,8 +175,8 @@
     </div>
 
     @yield('scripts')
-    
     <script src="{{ asset('public/js/main.js') }}"></script>
 
 </body>
+
 </html>

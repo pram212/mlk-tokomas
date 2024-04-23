@@ -83,6 +83,7 @@ class Product extends Model
 
         static::deleting(function($product) {
             $product->productWarehouse()->delete();
+            $product->productSplitSetDetail()->delete();
         });
         
         // tambah data product_id dan warehouse_id ke product_warehouse

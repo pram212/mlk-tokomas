@@ -435,7 +435,8 @@
                     {
                         "data": "code",
                         render: function(data, type, row) {
-                            return '<a href="{{ url("products/4700") }}" class="btn-detail-product" style="color:blue">' + data + '</a>';
+                            const product_id = row.id
+                            return '<a href="{{ url("products") }}/'+product_id+'" class="btn-detail-product" style="color:blue">' + data + '</a>';
                         }
                     },
                     {
