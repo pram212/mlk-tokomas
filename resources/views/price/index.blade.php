@@ -13,9 +13,9 @@
             <thead>
                 <tr>
                     <th class="not-exported"></th>
+                    <th>{{ __('file.Tag Type') }}</th>
                     <th>{{ __('file.Gramasi') }}</th>
                     <th>{{ __('file.Carat') }}</th>
-                    <th>{{ __('file.Tag Type') }}</th>
                     <th>{{ __('file.category') }}</th>
                     <th>{{ __('file.Product Type') }}</th>
                     <th>{{ __('file.Created By') }}</th>
@@ -49,14 +49,15 @@
                     searchable: false
                 },
                 {
+                    data: 'tag_type'
+                },
+                {
                     data: 'gramasi'
                 },
                 {
                     data: 'carat'
                 },
-                {
-                    data: 'tag_type'
-                },
+                
                 {
                     data: 'categories'
                 },
@@ -120,7 +121,6 @@
                     text: '{{ trans('file.delete') }}',
                     className: 'buttons-delete',
                     action: function(e, dt, node, config) {
-                        var user_verified = '{!! env('USER_VERIFIED') !!}'
                         if (!user_verified) {
                             return alert('This feature is disable for demo!')
                         }

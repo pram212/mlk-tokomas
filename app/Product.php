@@ -70,12 +70,25 @@ class Product extends Model
         return $this->hasMany(ProductWarehouse::class);
     }
 
+    public function productSplitSetDetail()
+    {
+        return $this->hasMany(ProductSplitSetDetail::class);
+    }
+
+    public function productDetailSplitHistory()
+    {
+        return $this->hasMany(ProductDetailSplitHistory::class);
+    }
+
+    
+
     protected static function boot()
     {
         parent::boot();
 
         static::deleting(function($product) {
             $product->productWarehouse()->delete();
+            $product->productSplitSetDetail()->delete();
         });
         
         // tambah data product_id dan warehouse_id ke product_warehouse

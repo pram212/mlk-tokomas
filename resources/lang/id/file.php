@@ -136,6 +136,7 @@ return [
 	"Best Seller" => "Penjualan Terbaik",
 	"Best Seller From" => "Penjualan Terbaik Dari",
 	"Product Report" => "Laporan Produk",
+	"Product Status" => "Status Produk",
 	"Purchased" => "Dibeli",
 	"Sold" => "Dijual",
 	"In Stock" => "Dalam Stok",
@@ -631,6 +632,15 @@ return [
 	"Image must be in .jpg, .jpeg, .png format and maximum 2MB" => "Gambar harus dalam format .jpg, .jpeg, .png",
 	"Drop files here or click to upload" => "Tarik file ke sini atau klik untuk mengunggah",
 	"Maximum upload size 2MB" => "Ukuran unggah maksimum 2MB",
+	"Detail" => "Detail",
+	"Edit" => "Ubah",
+	"Create" => "Tambahkan",
+	"Split Set Type" => "Jenis Split Set",
+	"Detail Split Set" => "Detail Split Set",
+	"Historical Split Set" => "Historical Split Set",
+	"Product Qty" => "Qty Produk",
+	"buy back" => "Buy Back",
+	"Filter" => "Filter",
 
 ];
 

@@ -1,13 +1,26 @@
 @extends('layout.main')
 
 @section('content')
+
 <section class="forms">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex align-items-center">
-                        <h4>{{ trans('file.add_product') }}</h4>
+                        <h4>
+                            @switch($mode)
+                            @case('create')
+                            {{ trans('file.Create') }} {{ trans('file.product') }}
+                            @break
+                            @case('edit')
+                            {{ trans('file.Edit') }} {{ trans('file.product') }}
+                            @break
+                            @case('show')
+                            {{ trans('file.Detail') }} {{ trans('file.product') }}
+                            @break
+                            @endswitch
+                        </h4>
                     </div>
                     <div class="card-body">
                         <p class="italic">
@@ -26,9 +39,11 @@
                                             <div class="row d-flex justify-content-center">
                                                 <div class="col-6">
                                                     <div class="form-group">
+                                                        @if($mode !='show')
                                                         <input type="file" name="image" class="form-control" id="image"
                                                             onchange="readURL(this)"
                                                             value="@if(@$product){{ @$product->image }}@endif">
+                                                        @endif
                                                         <small><i>*{{ trans('Image must be in .jpg, .jpeg, .png
                                                                 format
                                                                 and maximum 2MB')
@@ -51,29 +66,19 @@
                                             <div class="form-group">
                                                 <label for="">{{ __('file.Product Name') }} *</label>
                                                 <input type="text" class="form-control" name="name"
-                                                    value="{{ old('name', @$product->name) }}" id="input-name" required>
+                                                    value="{{ old('name', @$product->name) }}" id="input-name"
+                                                    @if($mode=='show' ) readonly @endif required>
                                                 @error('name')
                                                 <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                         </div>
-                                        {{-- <div class="col-md-12">
-                                            <div class="form-group mb-3">
-                                                <label>{{ __('file.Product Image') }} *</strong> </label>
-                                                <div id="image-preview" class="dropzone">
-                                                    <div class="dz-message">
-                                                        <h3>{{ __('file.Drop files here or click to upload') }}</h3>
-                                                        <p class="text-muted">{{ __('file.Maximum upload size 2MB') }}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" name="image" id="image">
-                                            </div>
-                                        </div> --}}
+
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>{{ __('file.Tag Type Code') }} *</strong> </label>
-                                                <select name="tag_type_id" class="form-control" id="tag_type_id">
+                                                <select name="tag_type_id" class="form-control" @if($mode=='show' )
+                                                    readonly @endif id="tag_type_id">
                                                     <option value="">{{ __('file.Select') }}</option>
                                                     @foreach ($tagType as $item)
                                                     <option value="{{ $item->id }}"
@@ -94,8 +99,9 @@
                                             <div class="form-group">
                                                 <label>{{ trans('file.Product Code') }} *</strong> </label>
                                                 <div class="input-group">
-                                                    <input type="text" name="code" class="form-control" id="code"
-                                                        aria-describedby="code" value="{{ @$product->code}}">
+                                                    <input type="text" name="code" @if($mode=='show' ) readonly @endif
+                                                        class="form-control" id="code" aria-describedby="code"
+                                                        value="{{ @$product->code}}" readonly>
                                                     <div class="input-group-append">
                                                         <button id="genbutton" type="button"
                                                             class="btn btn-sm btn-default"
@@ -110,15 +116,13 @@
                                             </div>
                                         </div>
 
-
-
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>{{ __('file.category') }} *</strong></label>
-                                                        <select name="category_id" class="form-control"
-                                                            id="input-kd-category">
+                                                        <select name="category_id" @if($mode=='show' ) readonly @endif
+                                                            class="form-control" id="input-kd-category">
                                                             <option value="">{{ __('file.Select') }}
                                                             </option>
                                                             @foreach ($category as $item)
@@ -136,7 +140,8 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>{{ __('file.Product Type') }} * </label>
-                                                        <select name="product_type_id" class="form-control selectpicker"
+                                                        <select name="product_type_id" @if($mode=='show' ) readonly
+                                                            @endif class="form-control selectpicker"
                                                             id="product_type_id" @if(!@$product) disabled @endif
                                                             data-live-search="true">
                                                             <option value="" disabled>{{ __('file.Select') }}</option>
@@ -163,7 +168,8 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="">{{ __('file.Gold Content') }} *</label>
-                                                        <input type="text" class="form-control" name="gold_content"
+                                                        <input type="text" @if($mode=='show' ) readonly @endif
+                                                            class="form-control" name="gold_content"
                                                             value="{{ old('gold_content', @$product->gold_content) }}"
                                                             id="input-gold_content" required>
                                                         @error('gold_content')
@@ -175,7 +181,8 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="">{{ __('file.Additional Code') }} *</label>
-                                                        <input type="text" class="form-control" name="additional_code"
+                                                        <input type="text" class="form-control" @if($mode=='show' )
+                                                            readonly @endif name="additional_code"
                                                             value="{{ old('additional_code', @$product->additional_code ) }}"
                                                             id="input-additional_code" required>
                                                         @error('additional_code')
@@ -189,8 +196,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>{{ __('file.Product Property Code') }}*</strong> </label>
-                                                <select name="product_property_id" class="form-control"
-                                                    id="input-kd-sifat">
+                                                <select name="product_property_id" @if($mode=='show' ) readonly @endif
+                                                    class="form-control" id="input-kd-sifat">
                                                     <option value="">{{ __('file.Select') }}
                                                     </option>
                                                     @foreach ($productProperty as $item)
@@ -211,8 +218,9 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>{{ trans('file.Product Price') }} *</strong> </label>
-                                                        <input type="text" id="price" name="price" class="form-control"
-                                                            step="any" value="{{ @$product->price ?? '' }}" readonly>
+                                                        <input type="text" id="price" name="price" @if($mode=='show' )
+                                                            readonly @endif class="form-control" step="any"
+                                                            value="{{ @$product->price ?? '' }}" readonly>
                                                         @error('price')
                                                         <span class="text-danger">{{ $message }}</span>
                                                         @enderror
@@ -222,8 +230,9 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>{{ __('file.Discount') }} *</strong> </label>
-                                                        <input type="number" class="form-control" name="discount"
-                                                            id="input-diskon" value="{{ @$product->discount ?? '' }}">
+                                                        <input type="number" class="form-control" @if($mode=='show' )
+                                                            readonly @endif name="discount" id="input-diskon"
+                                                            value="{{ @$product->discount ?? '' }}">
                                                         @error('discount')
                                                         <span class="text-danger">{{ $message }}</span>
                                                         @enderror
@@ -254,8 +263,9 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="">Miligram *</label>
-                                                        <input type="number" class="form-control" name="mg" class="mg"
-                                                            id="input-mg" value="{{ @$product->mg  ?? ''}}">
+                                                        <input type="number" class="form-control" @if($mode=='show' )
+                                                            readonly @endif name="mg" class="mg" id="input-mg"
+                                                            value="{{ @$product->mg  ?? ''}}">
                                                         @error('mg')
                                                         <span class="text-danger">{{ $message }}</span>
                                                         @enderror
@@ -264,7 +274,45 @@
                                             </div>
                                         </div>
 
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>{{ trans('file.Split Set Type') }} *</strong> </label>
+                                                <select name="split_set_type" @if($mode=='show' ) readonly @endif
+                                                    class="form-control" id="input-split-type">
+                                                    <option value="">{{ __('file.Select') }}
+                                                    </option>
+                                                    @foreach ($split_set_type as $item)
+                                                    <option value="{{ $item['id'] }}" @if ( $item['id']==@$product->
+                                                        split_set_type) selected @endif>
+                                                        {{ $item['name'] }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('split_set_type')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div id="detail_split_set" class="bg-dark text-light p-2 d-none">
+                                                <div class="row">
+                                                    <div class="col-6">{{ __('file.Detail Split Set') }}</div>
+                                                    <div class="col-6 d-flex justify-content-end"><button type="button"
+                                                            class="btn btn-xs btn_historical_split_set">{{
+                                                            __('file.Historical Split Set') }}</button></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="detail_split_set_qty">{{ __('file.Product Qty')
+                                                        }}</label>
+                                                    <input class="form-control" type="number"
+                                                        name="detail_split_set_qty" id="detail_split_set_qty"
+                                                        value="{{ $product->qty ?? 0 }}">
+                                                </div>
+                                                <table>
+                                                    <tbody>
 
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
 
                                         <div class="col-md-6"></div>
 
@@ -313,8 +361,11 @@
                             </div>
 
                             <div class="form-group">
+                                <a href="{{url('products')}}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
+                                    {{trans('file.Back')}}</a>
                                 <input type="submit" value="{{ trans('file.submit') }}" id="submit-btn"
                                     class="btn btn-primary">
+
                             </div>
                         </form>
                     </div>
@@ -324,307 +375,70 @@
     </div>
 </section>
 
-<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+{{-- modal --}}
+<div class="modal fade" id="historical_split_set_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{ __('file.Historical Split Set') }}</h5>
+                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped" id="modal_table_detail_split_set">
+                    <thead>
+                        <tr>
+                            <th>Kode Split Set</th>
+                            <th>{{ __('file.Product Qty') }}</th>
+                            <th>Waktu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ asset('public/js/qrcode.min.js') }}"></script>
 
 <script type="text/javascript">
-    let input_categories_id = $('#input-kd-category');
-    let input_product_type_id = $('#product_type_id');
-    let input_gramasi_id = $('#input-kd-gramasi');
-    let text_gramasi_id = $('#text-kd-gramasi');
+    const mode = '{{ $mode }}';
+    const product_id = '{{ @$product->id }}';
+    const input_categories_id = $('#input-kd-category');
+    const input_product_type_id = $('#product_type_id');
+    const input_gramasi_id = $('#input-kd-gramasi');
+    const text_gramasi_id = $('#text-kd-gramasi');
     let old_image = '{{ $product->image ?? '' }}';
-    let image_preview = $('#image-preview');
-    let product_property_id = $('#input-kd-sifat');
-    let price_col = $('#price');
+    const image_preview = $('#image-preview');
+    const product_property_id = $('#input-kd-sifat');
+    const price_col = $('#price');
+    const input_split_type = $('#input-split-type');
+    const detail_split_set = $('#detail_split_set');
+    const genbutton = $('#genbutton');
+    const btn_detail_split_add = $('.btn_detail_split_add');
+    const btn_detail_split_delete = $('.btn_detail_split_delete');
+    let code = $("input[name='code']");
+    const table_detail_split_set = $('#detail_split_set table tbody')
+    const detail_split_set_qty = $('#detail_split_set_qty');
     
     const produk = @if(@$product) JSON.parse('{!! $product  !!}') @else null @endif;
+    const product_split_set_detail = @if(@$product) produk['product_split_set_detail'] @else null @endif;
+    const split_set_id = @if(@$split_set_id) {!! $split_set_id  !!} @else null @endif;
+
+    const lang_select = '{!! __('file.Select') !!}';
     
-    input_categories_id.change(function() {
-        let categories_id = $(this).val();
-        let product_type_id = $('#product_type_id');
-        let button_product_type_id = $('button[data-id="product_type_id"]');
-        $.ajax({
-            type: "GET",
-            url: "{{ url('product-categories/producttype-getByCategory/') }}/" + categories_id,
-            success: function(data) {
-                let res =data;
-                button_product_type_id.toggleClass('disabled', res.data.length == 0);
-                product_type_id.prop('disabled', res.data.length == 0);
+    const gramasis = @if(@$gramasi) JSON.parse('{!! $gramasi  !!}') @else null @endif;
+    const properties = @if(@$productProperty) JSON.parse('{!! $productProperty  !!}') @else null @endif;
 
-                let options = '<option value="">{{ __('file.Select') }}</option>';
-                if (res.data.length != 0)
-                res.data.forEach(element => {
-                    options += `<option value="${element.id}">${element.code}</option>`;
-                });
-                
-                product_type_id.html(options);
+    const btn_historical_split_set = $('.btn_historical_split_set');
+    const historical_split_set_modal = $('#historical_split_set_modal');
 
-                // trigger change to set the value
-                $('.selectpicker').selectpicker('refresh');
-            }
-        });
-    });
-
-    input_product_type_id.change(function() {
-        let product_type_id = $(this).val();
-        let categories_id = input_categories_id.val();
-        
-        $.ajax({
-            type: "GET",
-            url: "{{ url('product-categories/gramasi-getByCategoryAndProductType') }}/" + categories_id+"/"+product_type_id,
-            success: function(data) {
-                if(data.data){
-                    input_gramasi_id.val(data.data.id);
-                    text_gramasi_id.text(data.data.gramasi);
-
-                    prevGramasi(data.data.id);
-                }
-            }
-        });
-
-        setPrice();
-
-        
-    });
-
-    product_property_id.change(function() {
-        setPrice();
-    });
-
-    function setPrice (){
-        let product_property_id_val = product_property_id.val();
-        let categories_id = input_categories_id.val();
-        let product_type_id = input_product_type_id.val();
-
-        // make sure categories_id and product_type_id is not empty
-        if (!categories_id || !product_type_id) {
-            return;
-        }
-        
-        price_col.val('');
-        $.ajax({
-            type: "GET",
-            url: "{{ url('master/price-getProductPrice') }}/" + categories_id+"/"+product_type_id+"/"+product_property_id_val,
-            success: function(data) {
-                if(data){
-                    let price = data.price;
-
-                    price_col.val(price);
-                }
-            }
-        });
-    }
-
-    input_categories_id.add(input_product_type_id).change(function() {
-        input_gramasi_id.val('');
-        text_gramasi_id.text('-');
-    });
-
-    // old image
-    if (old_image) {
-        image_preview.html('<img style="max-height:100px" src="{{ asset('') }}/' + old_image + '" class="img-fluid" />');
-    }
-
-    // preview image
-    function readURL(input) {
-        let image_preview = $('#image-preview');
-        let image    = $('#image');
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            // batasi ukuran gambar
-            if (input.files[0].size > 2000000) {
-                // hapus file yang sudah dipilih
-                image.val('');
-                image_preview.html('');
-
-                alert("Max file size is 2MB");
-                return;
-            }
-
-            // batasi tipe gambar
-            if (input.files[0].type != 'image/jpeg' && input.files[0].type != 'image/png') {
-                // hapus file yang sudah dipilih
-                image.val('');
-                image_preview.html('');
-
-                alert("Only jpeg and png file type are allowed");
-                return;
-            }
-
-            reader.onload = function(e) {
-                image_preview.html('<img style="max-height:100px" src="' + e.target.result + '" class="img-fluid" />');
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-        $('[data-toggle="tooltip"]').tooltip();
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $('#genbutton').on("click", function() {
-            $.get('{!! url("products-gencode") !!}', function(data) {
-                $("input[name='code']").val(data);
-                generateQRCode(data, "prev-qrcode")
-            });
-        });
-
-        // Fungsi untuk menghasilkan QR code
-        function generateQRCode(data, elementId) {
-            document.getElementById(elementId).innerHTML = "";
-            var qrcode = new QRCode(document.getElementById(elementId), {
-                text: data,
-                width: 200,
-                height: 200
-            });
-        }
-
-
-        //Delete product
-        $("table.order-list tbody").on("click", ".ibtnDel", function(event) {
-            $(this).closest("tr").remove();
-            calculate_price();
-        });
-
-        //Delete variant
-        $("table#variant-table tbody").on("click", ".vbtnDel", function(event) {
-            $(this).closest("tr").remove();
-        });
-
-        $(window).keydown(function(e) {
-            if (e.which == 13) {
-                var $targ = $(e.target);
-
-                if (!$targ.is("textarea") && !$targ.is(":button,:submit")) {
-                    var focusNext = false;
-                    $(this).find(":input:visible:not([disabled],[readonly]), a").each(function() {
-                        if (this === e.target) {
-                            focusNext = true;
-                        } else if (focusNext) {
-                            $(this).focus();
-                            return false;
-                        }
-                    });
-
-                    return false;
-                }
-            }
-        });
-
-        // Dropzone.autoDiscover = false;
-
-        // // Inisialisasi Dropzone hanya untuk tampilan frontend
-        // var myDropzone = new Dropzone("#image-preview", {
-        //     url: "{{ url('dummy-url') }}", // URL palsu untuk menghindari kesalahan
-        //     maxFilesize: 2,
-        //     maxFiles: 1,
-        //     acceptedFiles: ".jpeg,.jpg,.png",
-        //     addRemoveLinks: true,
-        // });
-
-        // $('#product-form').on('submit', function(e) {
-        //     e.preventDefault(); // Mencegah pengiriman formulir biasa
-
-        //     // Periksa apakah ada file yang dipilih di Dropzone
-        //     if (myDropzone.getQueuedFiles().length > 0) {
-        //         // Lakukan unggahan file menggunakan AJAX
-        //         myDropzone.processQueue();
-        //         // Tangani hasil unggahan dalam peristiwa success Dropzone
-        //         myDropzone.on('success', function(file, response) {
-        //             // Setel nilai input tersembunyi dengan URL gambar yang diunggah
-        //             $('#image').val(response.url);
-        //             // Submit formulir secara manual
-        //             $(this).off('submit').submit();
-        //         });
-        //     } else {
-        //         // Jika tidak ada file yang dipilih, lanjutkan dengan pengiriman formulir tanpa gambar
-        //         $(this).off('submit').submit();
-        //     }
-        // });
-
-        $("#price").maskMoney({thousands:'.', decimal:','})
-
-        const getGramasi = (id_gramasi) => {
-            const gramasis = JSON.parse('{!! $gramasi !!}')
-            const selectedGramasi = gramasis.find(({
-                id
-            }) => id === id_gramasi);
-            return selectedGramasi
-        }
-
-        const getKdSifat = (id_kd_sifat) => {
-            const properties = JSON.parse('{!! $productProperty !!}')
-            const selectedProerties = properties.find(({
-                id
-            }) => id === id_kd_sifat);
-            return selectedProerties.code
-        }
-
-        $("#tag_type_id").change(function(e) {
-            e.preventDefault();
-            var selectedText = $(this).find('option:selected').text();
-            var color = selectedText.split('-')[1];
-            $("#product-preview").css("background-color", color);
-        });
-
-        // $("#input-kd-gramasi").change(function(e) {
-        //     e.preventDefault();
-        //     id = parseInt(e.target.value)
-        //     const gramasi = getGramasi(id)
-        //     $("#prev-gramasi").text(gramasi.gramasi);
-        //     $("#prev-kd-gramasi").text(gramasi.code);
-        // });
-
-        function prevGramasi(id) {
-            const gramasi = getGramasi(id)
-            $("#prev-gramasi").text(gramasi.gramasi);
-            $("#prev-kd-gramasi").text(gramasi.code);
-        }
-
-        $("#input-kd-sifat").change(function(e) {
-            e.preventDefault();
-            id = parseInt(e.target.value)
-            const property = getKdSifat(id)
-            $("#prev-kd-sifat").text(property);
-        });
-
-        $("#input-mg").bind("input", function(e) {
-            e.preventDefault();
-            const mg = e.target.value
-            $("#prev-mg").text(mg);
-        });
-
-        $("#input-gold_content").bind("input", function(e) {
-            e.preventDefault();
-            const goldContent = e.target.value
-            $("#prev-gold_content").text(goldContent);
-        });
-
-        $("#input-additional_code").bind("input", function(e) {
-            e.preventDefault();
-            const code = e.target.value
-            $("#prev-additional_code").text(code);
-        });
-
-        $("#input-diskon").bind("input", function(e) {
-            e.preventDefault();
-            const diskon = e.target.value
-            $("#prev-diskon").text(diskon);
-        });
-
-        // if edit mode
-        if (produk) {
-            $("#prev-kd-sifat").text(produk.product_property.code)
-            $("#prev-kd-gramasi").text(produk.gramasi.code)
-            $("#prev-gramasi").text(produk.gramasi.gramasi)
-            $("#prev-diskon").text(produk.discount)
-            $("#prev-gold_content").text(produk.gold_content)
-            $("#prev-additional_code").text(produk.additional_code)
-            $("#prev-mg").text(produk.mg)
-            generateQRCode(produk.code, "prev-qrcode");
-        }
+    const modal_table_detail_split_set = $('#modal_table_detail_split_set tbody');
 </script>
+<script src="{{ asset('public/js/pages/products/product_form.js') }}"></script>
 @endsection

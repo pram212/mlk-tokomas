@@ -1,23 +1,31 @@
 @extends('layout.main') @section('content')
 @if($errors->has('title'))
 <div class="alert alert-danger alert-dismissible text-center">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ $errors->first('title') }}</div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>{{ $errors->first('title') }}
+</div>
 @endif
 @if($errors->has('image'))
 <div class="alert alert-danger alert-dismissible text-center">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ $errors->first('image') }}</div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>{{ $errors->first('image') }}
+</div>
 @endif
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
     <div class="container-fluid">
-        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i> {{trans('file.Add Brand')}} </button>&nbsp;
-        <button class="btn btn-primary" data-toggle="modal" data-target="#importBrand"><i class="dripicons-copy"></i> {{trans('file.Import Brand')}}</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i>
+            {{trans('file.Add Brand')}} </button>&nbsp;
+        <button class="btn btn-primary" data-toggle="modal" data-target="#importBrand"><i class="dripicons-copy"></i>
+            {{trans('file.Import Brand')}}</button>
     </div>
     <div class="table-responsive">
         <table id="biller-table" class="table">
@@ -42,16 +50,22 @@
                     <td>{{ $brand->title }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
-                                <li><button type="button" data-id="{{$brand->id}}" class="open-EditbrandDialog btn btn-link" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</button></li>
+                                <li><button type="button" data-id="{{$brand->id}}"
+                                        class="open-EditbrandDialog btn btn-link" data-toggle="modal"
+                                        data-target="#editModal"><i class="dripicons-document-edit"></i>
+                                        {{trans('file.edit')}}</button></li>
                                 <li class="divider"></li>
                                 {{ Form::open(['route' => ['brand.destroy', $brand->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirm('Are you sure want to delete?')"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link"
+                                        onclick="return confirm('Are you sure want to delete?')"><i
+                                            class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -64,103 +78,114 @@
     </div>
 </section>
 
-<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
-      <div class="modal-content">
-        {!! Form::open(['route' => 'brand.store', 'method' => 'post', 'files' => true]) !!}
-        <div class="modal-header">
-          <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Brand')}}</h5>
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-        </div>
-        <div class="modal-body">
-          <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-            <div class="form-group">
-                <label>{{trans('file.Title')}} *</label>
-                {{Form::text('title',null,array('required' => 'required', 'class' => 'form-control', 'placeholder' => 'Type brand title...'))}}
+        <div class="modal-content">
+            {!! Form::open(['route' => 'brand.store', 'method' => 'post', 'files' => true]) !!}
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Brand')}}</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
-            <div class="form-group">
-                <label>{{trans('file.Image')}}</label>
-                {{Form::file('image', array('class' => 'form-control'))}}
-            </div>                
-            <div class="form-group">       
-              <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+            <div class="modal-body">
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
+                <div class="form-group">
+                    <label>{{trans('file.Title')}} *</label>
+                    {{Form::text('title',null,array('required' => 'required', 'class' => 'form-control', 'placeholder'
+                    => 'Type brand title...'))}}
+                </div>
+                <div class="form-group">
+                    <label>{{trans('file.Image')}}</label>
+                    {{Form::file('image', array('class' => 'form-control'))}}
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+                </div>
             </div>
+            {{ Form::close() }}
         </div>
-        {{ Form::close() }}
-      </div>
     </div>
 </div>
 
-<div id="importBrand" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="importBrand" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
-      <div class="modal-content">
-        {!! Form::open(['route' => 'brand.import', 'method' => 'post', 'files' => true]) !!}
-        <div class="modal-header">
-          <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Import Brand')}}</h5>
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-        </div>
-        <div class="modal-body">
-            <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-            <p>{{trans('file.The correct column order is')}} (title*, image [file name]) {{trans('file.and you must follow this')}}.</p>
-            <p>{{trans('file.To display Image it must be stored in')}} public/images/brand {{trans('file.directory')}}</p>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>{{trans('file.Upload CSV File')}} *</label>
-                        {{Form::file('file', array('class' => 'form-control','required'))}}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label> {{trans('file.Sample File')}}</label>
-                        <a href="public/sample_file/sample_brand.csv" class="btn btn-info btn-block btn-md"><i class="dripicons-download"></i>  {{trans('file.Download')}}</a>
-                    </div>
-                </div>
+        <div class="modal-content">
+            {!! Form::open(['route' => 'brand.import', 'method' => 'post', 'files' => true]) !!}
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Import Brand')}}</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
-            <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+            <div class="modal-body">
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
+                <p>{{trans('file.The correct column order is')}} (title*, image [file name]) {{trans('file.and you must
+                    follow this')}}.</p>
+                <p>{{trans('file.To display Image it must be stored in')}} public/images/brand
+                    {{trans('file.directory')}}</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>{{trans('file.Upload CSV File')}} *</label>
+                            {{Form::file('file', array('class' => 'form-control','required'))}}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> {{trans('file.Sample File')}}</label>
+                            <a href="public/sample_file/sample_brand.csv" class="btn btn-info btn-block btn-md"><i
+                                    class="dripicons-download"></i> {{trans('file.Download')}}</a>
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+            </div>
+            {{ Form::close() }}
         </div>
-        {{ Form::close() }}
-      </div>
     </div>
 </div>
 
-<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-  <div role="document" class="modal-dialog">
-    <div class="modal-content">
-        {{ Form::open(['route' => ['brand.update', 1], 'method' => 'PUT', 'files' => true] ) }}
-      <div class="modal-header">
-        <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Update Brand')}}</h5>
-        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-      </div>
-      <div class="modal-body">
-        <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-          <div class="form-group">
-            <label>{{trans('file.Title')}} *</label>
-            {{Form::text('title',null, array('required' => 'required', 'class' => 'form-control'))}}
+<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            {{ Form::open(['route' => ['brand.update', 1], 'method' => 'PUT', 'files' => true] ) }}
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Update Brand')}}</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
+            </div>
+            <div class="modal-body">
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
+                <div class="form-group">
+                    <label>{{trans('file.Title')}} *</label>
+                    {{Form::text('title',null, array('required' => 'required', 'class' => 'form-control'))}}
+                </div>
+                <input type="hidden" name="brand_id">
+                <div class="form-group">
+                    <label>{{trans('file.Image')}}</label>
+                    {{Form::file('image', array('class' => 'form-control'))}}
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+                </div>
+            </div>
+            {{ Form::close() }}
         </div>
-        <input type="hidden" name="brand_id">
-        <div class="form-group">
-            <label>{{trans('file.Image')}}</label>
-            {{Form::file('image', array('class' => 'form-control'))}}
-        </div>
-        <div class="form-group">       
-            <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
-          </div>
-        </div>
-      {{ Form::close() }}
     </div>
-  </div>
 </div>
 
 
 <script type="text/javascript">
-
     $("ul#setting").siblings('a').attr('aria-expanded','true');
     $("ul#setting").addClass("show");
     $("ul#setting #brand-menu").addClass("active");
 
     var brand_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     
     $.ajaxSetup({
         headers: {

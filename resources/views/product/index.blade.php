@@ -24,6 +24,8 @@
                     <th>Miligram</th>
                     <th>Gramasi</th>
                     <th>{{ __('file.Product Property') }}</th>
+                    <th>{{ __('file.Product Status') }}</th>
+                    <th>{{ __('file.Invoice') }}</th>
                     <th class="not-exported">{{ trans('file.action') }}</th>
                 </tr>
             </thead>
@@ -190,8 +192,7 @@
 </div>
 
 
-<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-<script src="{{ asset('public/js/axios.min.js') }}"></script>
+
 <script>
     $("ul#product").siblings('a').attr('aria-expanded', 'true');
         $("ul#product").addClass("show");
@@ -210,7 +211,6 @@
         var htmltext;
         var slidertext;
         var product_id = [];
-        var user_verified = <?php echo json_encode(env('USER_VERIFIED')); ?>;
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -424,13 +424,18 @@
                     dataType: "json",
                     type: "get"
                 },
-                "columns": [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
-                },{
-                        "data": "code"
+                    "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        "data": "code",
+                        render: function(data, type, row) {
+                            const product_id = row.id
+                            return '<a href="{{ url("products") }}/'+product_id+'" class="btn-detail-product" style="color:blue">' + data + '</a>';
+                        }
                     },
                     {
                         "data": "name"
@@ -458,6 +463,12 @@
                     },
                     {
                         "data": "product_property_description"
+                    },
+                    {
+                        "data": "product_status"
+                    },
+                    {
+                        "data": "invoice_number"
                     },
                     {
                         "data": "action"
@@ -565,7 +576,6 @@
                         text: '{{ trans('file.delete') }}',
                         className: 'buttons-delete',
                         action: function(e, dt, node, config) {
-                            var user_verified = '{!! env('USER_VERIFIED') !!}'
                             if (!user_verified) {
                                 return alert('This feature is disable for demo!')
                             }

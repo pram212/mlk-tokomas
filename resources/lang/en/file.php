@@ -276,6 +276,7 @@ return [
 	'Supplier List' => 'Supplier List',
 	'Add Supplier' => 'Add Supplier',
 	'Product Report' => 'Product Report',
+	'Product Status' => 'Product Status',
 	'Sale Report' => 'Sale Report',
 	'Purchase Report' => 'Purchase Report',
 	'Payment Report' => 'Payment Report',
@@ -632,6 +633,15 @@ return [
 	"Image must be in .jpg, .jpeg, .png format and maximum 2MB" => "Image must be in .jpg, .jpeg, .png format dan maksimal 2MB",
 	"Drop files here or click to upload" => "Drop files here or click to upload",
 	"Maximum upload size 2MB" => "Maximum upload size 2MB",
-	
+	"Detail" => "Detail",
+	"Edit" => "Edit",
+	"Create" => "Create",
+	"Split Set Type" => "Split Set Type",
+	"Detail Split Set" => "Detail Split Set",
+	"Historical Split Set" => "Historical Split Set",
+	"Product Qty" => "Product Qty",
+	"buy back" => "Buy Back",
+	"Filter" => "Filter",
+
 ];
 ?>

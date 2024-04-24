@@ -1,14 +1,17 @@
 @extends('layout.main') @section('content')
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
     <div class="container-fluid">
-        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i> {{trans('file.Add Attendance')}} </button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i>
+            {{trans('file.Add Attendance')}} </button>
     </div>
     <div class="table-responsive">
         <table id="attendance-table" class="table">
@@ -26,9 +29,9 @@
             </thead>
             <tbody>
                 @foreach($lims_attendance_all as $key=>$attendance)
-                @php 
-                    $employee = \App\Employee::find($attendance->employee_id);
-                    $user = \App\User::find($attendance->user_id);
+                @php
+                $employee = \App\Employee::find($attendance->employee_id);
+                $user = \App\User::find($attendance->user_id);
                 @endphp
                 <tr data-id="{{$attendance->id}}">
                     <td>{{$key}}</td>
@@ -37,15 +40,21 @@
                     <td>{{ $attendance->checkin }}</td>
                     <td>{{ $attendance->checkout }}</td>
                     @if($attendance->status)
-                        <td><div class="badge badge-success">{{trans('file.Present')}}</div></td>
+                    <td>
+                        <div class="badge badge-success">{{trans('file.Present')}}</div>
+                    </td>
                     @else()
-                        <td><div class="badge badge-danger">{{trans('file.Late')}}</div></td>
+                    <td>
+                        <div class="badge badge-danger">{{trans('file.Late')}}</div>
+                    </td>
                     @endif
                     <td>{{$user->name}}</td>
                     <td>
                         <div class="btn-group">
-                            {{ Form::open(['route' => ['attendance.destroy', $attendance->id], 'method' => 'DELETE'] ) }}
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirmDelete()" title="{{trans('file.delete')}}"><i class="dripicons-trash"></i></button>
+                            {{ Form::open(['route' => ['attendance.destroy', $attendance->id], 'method' => 'DELETE'] )
+                            }}
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirmDelete()"
+                                title="{{trans('file.delete')}}"><i class="dripicons-trash"></i></button>
                             {{ Form::close() }}
                         </div>
                     </td>
@@ -56,20 +65,24 @@
     </div>
 </section>
 
-<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Attendance')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
-              <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
                 {!! Form::open(['route' => 'attendance.store', 'method' => 'post', 'files' => true]) !!}
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label>{{trans('file.Employee')}} *</label>
-                        <select class="form-control selectpicker" name="employee_id[]" required data-live-search="true" data-live-search-style="begins" title="Select Employee..." multiple>
+                        <select class="form-control selectpicker" name="employee_id[]" required data-live-search="true"
+                            data-live-search-style="begins" title="Select Employee..." multiple>
                             @foreach($lims_employee_list as $employee)
                             <option value="{{$employee->id}}">{{$employee->name}}</option>
                             @endforeach
@@ -77,15 +90,18 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label>{{trans('file.date')}} *</label>
-                        <input type="text" name="date" class="form-control date" value="{{date($general_setting->date_format)}}" required>
+                        <input type="text" name="date" class="form-control date"
+                            value="{{date($general_setting->date_format)}}" required>
                     </div>
                     <div class="col-md-6 form-group">
                         <label>{{trans('file.CheckIn')}} *</label>
-                        <input type="text" id="checkin" name="checkin" class="form-control" value="{{$lims_hrm_setting_data->checkin}}" required>
+                        <input type="text" id="checkin" name="checkin" class="form-control"
+                            value="{{$lims_hrm_setting_data->checkin}}" required>
                     </div>
                     <div class="col-md-6 form-group">
                         <label>{{trans('file.CheckOut')}} *</label>
-                        <input type="text" id="checkout" name="checkout" class="form-control" value="{{$lims_hrm_setting_data->checkout}}" required>
+                        <input type="text" id="checkout" name="checkout" class="form-control"
+                            value="{{$lims_hrm_setting_data->checkout}}" required>
                     </div>
                     <div class="col-md-12 form-group">
                         <label>{{trans('file.Note')}}</label>
@@ -102,8 +118,7 @@
 </div>
 
 <script type="text/javascript">
-
-	$("ul#hrm").siblings('a').attr('aria-expanded','true');
+    $("ul#hrm").siblings('a').attr('aria-expanded','true');
     $("ul#hrm").addClass("show");
     $("ul#hrm #attendance-menu").addClass("active");
 
@@ -115,7 +130,6 @@
     }
 
     var attendance_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     
     $.ajaxSetup({
         headers: {

@@ -44,6 +44,16 @@ class ProductController extends Controller
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
         $category = Category::all();
+        $mode = 'create';
+        $split_set_type = [
+            [
+                'id' => 1,
+                'name' => 'Full Set'
+            ], [
+                'id' => 2,
+                'name' => 'Split Set'
+            ]
+        ];
 
         return view('product.form', compact(
             'lims_category_list',
@@ -51,7 +61,9 @@ class ProductController extends Controller
             'product_type',
             'tagType',
             'gramasi',
-            'category'
+            'category',
+            'mode',
+            'split_set_type'
         ));
     }
 
@@ -89,8 +101,37 @@ class ProductController extends Controller
                 'image' => $imagePath,
                 'is_active' => true,
                 'name' => $request->name,
+                'split_set_type' => $request->split_set_type,
                 ]
             );
+
+            // handle if split set type is split set (2)
+            if ($request->split_set_type == 2) {
+                // get product id
+                $product_id = Product::where('name', $request->name)->first()->id;
+
+                // update qty product (name=detail_split_set_qty) to products.qty
+                $product = Product::find($product_id);
+                $product->qty = $request->detail_split_set_qty;
+
+                // save product detail split set to product_split_set_detail split_set_code[] and split_set_qty[]
+                $split_set_code = $request->split_set_code;
+                $split_set_qty = $request->split_set_qty;
+                $split_set_detail = [];
+                for ($i=0; $i < count($split_set_code); $i++) { 
+                    $split_set_detail[] = [
+                        'product_id' => $product_id,
+                        'split_set_code' => $split_set_code[$i],
+                        'qty_product' => $split_set_qty[$i]
+                    ];
+                }
+
+                // save to product_split_set_detail
+                $product->productSplitSetDetail()->createMany($split_set_detail);
+                $product->productDetailSplitHistory()->createMany($split_set_detail);
+
+                $product->save();
+            }
 
             DB::commit();
             
@@ -116,7 +157,7 @@ class ProductController extends Controller
         }
     }
 
-    public function edit($id)
+    public function show($id)
     {
         $product = Product::find($id)->load([
             'productProperty:id,code,description',
@@ -134,13 +175,25 @@ class ProductController extends Controller
         $gramasi = Gramasi::all();
         $category = Category::all();
         $product_type = ProductType::where('categories_id', $product->category_id)->get();
+        $split_set_type = [
+            [
+                'id' => 1,
+                'name' => 'Full Set'
+            ], [
+                'id' => 2,
+                'name' => 'Split Set'
+            ]
+        ];
 
         $product = Product::find($id)->load([
             'productProperty:id,code,description',
             'gramasi:id,code,gramasi',
             'tagType:id,code,color',
-            'category'
+            'category',
+            'productSplitSetDetail'
         ]);
+
+        $mode = 'show';
 
         return view('product.form', compact(
             'lims_category_list',
@@ -150,7 +203,63 @@ class ProductController extends Controller
             'gramasi',
             'product',
             'category',
-            'product_type'
+            'product_type',
+            'mode',
+            'split_set_type'
+        ));
+    }
+
+    public function edit($id, Request $request)
+    {
+        $product = Product::find($id)->load([
+            'productProperty:id,code,description',
+            'gramasi:id,code,gramasi',
+            'tagType:id,code,color',
+            'category'
+        ]);
+
+        $this->authorize('update', $product);
+
+        $lims_category_list = Category::where('is_active', true)->get();
+        $productProperty = ProductProperty::all();
+        $productType = ProductType::all();
+        $tagType = TagType::all();
+        $gramasi = Gramasi::all();
+        $category = Category::all();
+        $product_type = ProductType::where('categories_id', $product->category_id)->get();
+        $split_set_type = [
+            [
+                'id' => 1,
+                'name' => 'Full Set'
+            ], [
+                'id' => 2,
+                'name' => 'Split Set'
+            ]
+        ];
+
+        $product = Product::find($id)->load([
+            'productProperty:id,code,description',
+            'gramasi:id,code,gramasi',
+            'tagType:id,code,color',
+            'category',
+            'productSplitSetDetail'
+        ]);
+
+        $mode = 'edit';
+        $split_set_id = $request->split_set_id ?? null;
+
+        return view('product.form', compact(
+            'lims_category_list',
+            'productProperty',
+            'productType',
+            'tagType',
+            'gramasi',
+            'product',
+            'category',
+            'product_type',
+            'mode',
+            'split_set_type',
+            'split_set_id'
         ));
     }
 
@@ -197,7 +306,54 @@ class ProductController extends Controller
                 'mg' => $request->mg,
                 'product_property_id' => $request->product_property_id,
                 'name' => $request->name,
+                'split_set_type' => $request->split_set_type,
             ]);
+
+            // handle if split set type is split set (2)
+            if ($request->split_set_type == 2) {
+                $product = Product::find($id);
+                $product->qty = $request->detail_split_set_qty;
+
+                // get all product_split_set_detail by product_id
+                $product_split_set_detail_old = $product->productSplitSetDetail;
+
+                // delete all product_split_set_detail by product_id
+                $product->productSplitSetDetail()->delete();
+
+                // save product detail split set to product_split_set_detail split_set_code[] and split_set_qty[]
+                $split_set_code = $request->split_set_code;
+                $split_set_qty = $request->split_set_qty;
+                $split_set_detail = [];
+                foreach ($split_set_code as $index => $code) {
+                    $detail = [
+                        'product_id' => $id,
+                        'split_set_code' => $code,
+                        'qty_product' => $split_set_qty[$index]
+                    ];
+                
+                    // Cek apakah terdapat detail produk lama dengan kode yang sama
+                    $oldDetail = $product_split_set_detail_old->where('split_set_code', $code)->first();
+                
+                    // Simpan detail produk baru
+                    $product->productSplitSetDetail()->create($detail);
+                
+                    // Jika detail produk lama ditemukan dan kuantitasnya berbeda, simpan ke history
+                    if ($oldDetail && $oldDetail->qty_product != $split_set_qty[$index]) {
+                        $product->productDetailSplitHistory()->create($detail);
+                    }
+                
+                    // Jika detail produk lama tidak ditemukan, simpan ke history
+                    if (!$oldDetail) {
+                        $product->productDetailSplitHistory()->create($detail);
+                    }
+                }
+                
+
+                // save to product_split_set_detail
+                $product->productSplitSetDetail()->createMany($split_set_detail);
+
+                $product->save();
+            }
 
             DB::commit();
 
@@ -329,10 +485,6 @@ class ProductController extends Controller
         return $product;
     }
 
-    /*public function getBarcode()
-    {
-        return DNS1D::getBarcodePNG('72782608', 'C128');
-    }*/
 
     public function importProduct(Request $request)
     {
@@ -489,10 +641,35 @@ class ProductController extends Controller
         $this->authorize('viewAny', Product::class);
 
         $productQuery = Product::query()
-            ->select('id', 'code', 'price', 'image', 'name', 'discount', 'created_at', 'tag_type_id', 'gramasi_id', 'product_property_id', 'mg')
-            ->where('is_active', true)
-            ->orderBy("created_at", "desc")
-            ->with([ 'tagType:id,code,color', 'productProperty:id,code,description', 'gramasi:id,code,gramasi' ]);
+        ->select([
+            'products.id',
+            DB::raw("COALESCE(split.split_set_code, code) as code"),
+            'split.split_set_code',
+            'split.id as split_id',
+            'price',
+            'image',
+            'name',
+            'discount',
+            DB::raw("COALESCE(split.created_at, products.created_at) as created_at"),
+            'tag_type_id',
+            'gramasi_id',
+            'product_property_id',
+            'mg',
+            'product_status',
+            'invoice_number'
+        ])
+        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+        ->where('is_active', true);
+
+        $productQuery = $productQuery
+        ->orderByDesc('products.created_at')
+        ->with([
+            'tagType:id,code,color',
+            'productProperty:id,code,description',
+            'gramasi:id,code,gramasi'
+        ])
+        ->get();
+
 
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
@@ -503,6 +680,12 @@ class ProductController extends Controller
             ->addColumn('gramasi_gramasi', fn ($product) => $product->gramasi->gramasi ?? "-")
             ->addColumn('tag_type_code', fn ($product) => $product->tagType->code ?? "-")
             ->addColumn('gramasi_code', fn ($product) => $product->gramasi->code ?? "-")
+            ->addColumn('product_status', function ($product) {
+                return $product->product_status == 1 ? 'STORE' : 'SOLD';
+            })
+            ->addColumn('invoice_number', function ($product) {
+                return $product->invoice_number ?? "-";
+            })
             ->addColumn('image_preview', function($q) {
                 return '<img src="'.asset($q->image).'" class="img-thumbnail" width="100" height="100">';
             })
@@ -512,9 +695,18 @@ class ProductController extends Controller
             })
             ->addColumn('action', function ($product) {
                 $user = auth()->user();
-                $btnEdit = $user->can('update', $product) 
-                    ? '<a class="dropdown-item" href="' . url("products/$product->id/edit") . '"><i class="fa fa-pencil"></i> Edit</a>'
+                
+                // handle if split set type is split set (2)
+                $urlEdit = url("products/$product->id/edit");
+                if($product->split_set_code) {
+                    $urlEdit = url("products/$product->id/edit?split_set_id=$product->split_id");
+                }
+
+                $btnEdit = $user->can('update', $product)
+                    ? '<a class="dropdown-item btn-edit" href="'.$urlEdit.'"><i class="fa fa-edit"></i> Edit</a>'
                     : '';
+
+                
                 $btnPrint = '<a class="dropdown-item btn-print" target="_BLANK" data-id="'.$product->id.'" href="'.url("products/print/$product->id").'"><i class="fa fa-print"></i> Print</a>';
                 $btnDelete = $user->can('delete', $product)
                     ? '<a class="dropdown-item btn-delete" href="#"><i class="fa fa-trash"></i> Delete</a>'
@@ -555,7 +747,8 @@ class ProductController extends Controller
         $options = $dompdf->getOptions();
         $options->setDefaultFont('Courier');
         $dompdf->setOptions($options);
-        $dompdf->setPaper('A4', 'portrait');
+        // $dompdf->setPaper('A4', 'portrait');
+        $dompdf->setPaper(array(0, 0, 580, 250), 'portrait');
 
         $datetime = date('YmdHis');
 
@@ -579,6 +772,14 @@ class ProductController extends Controller
 
         // Open pdf in browser
         $dompdf->stream($filename, array("Attachment" => false));
+    }
+
+    public function getProductDetailSplitSetHistory($id)
+    {
+        $product = Product::find($id);
+        $productDetailSplitHistory = $product->productDetailSplitHistory;
+
+        return response()->json($productDetailSplitHistory);
     }
 
 }

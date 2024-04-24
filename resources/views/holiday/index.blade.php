@@ -1,13 +1,16 @@
 @extends('layout.main') @section('content')
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 <section>
     <div class="container-fluid">
-        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i> {{trans('file.Add Holiday')}} </button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i>
+            {{trans('file.Add Holiday')}} </button>
     </div>
     <div class="table-responsive">
         <table id="holiday-table" class="table">
@@ -33,12 +36,20 @@
                     <td>{{$holiday->note}}</td>
                     <td>
                         <div class="btn-group">
-                        	@if(!$holiday->is_approved && $approve_permission)
-                        	<button type="button" class="btn btn-sm btn-success btn-approve" title="{{trans('file.Approve')}}" data-id="{{$holiday->id}}"><i class="fa fa-check"></i></button>
-                        	@endif
-                        	<button type="button" class="btn btn-sm btn-primary btn-edit" title="{{trans('file.edit')}}" data-id="{{$holiday->id}}" data-from="{{date($general_setting->date_format, strtotime($holiday->from_date))}}" data-to="{{date($general_setting->date_format, strtotime($holiday->to_date))}}" data-note="{{$holiday->note}}" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i></button>
+                            @if(!$holiday->is_approved && $approve_permission)
+                            <button type="button" class="btn btn-sm btn-success btn-approve"
+                                title="{{trans('file.Approve')}}" data-id="{{$holiday->id}}"><i
+                                    class="fa fa-check"></i></button>
+                            @endif
+                            <button type="button" class="btn btn-sm btn-primary btn-edit" title="{{trans('file.edit')}}"
+                                data-id="{{$holiday->id}}"
+                                data-from="{{date($general_setting->date_format, strtotime($holiday->from_date))}}"
+                                data-to="{{date($general_setting->date_format, strtotime($holiday->to_date))}}"
+                                data-note="{{$holiday->note}}" data-toggle="modal" data-target="#editModal"><i
+                                    class="dripicons-document-edit"></i></button>
                             {{ Form::open(['route' => ['holidays.destroy', $holiday->id], 'method' => 'DELETE'] ) }}
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirmDelete()" title="{{trans('file.delete')}}"><i class="dripicons-trash"></i></button>
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirmDelete()"
+                                title="{{trans('file.delete')}}"><i class="dripicons-trash"></i></button>
                             {{ Form::close() }}
                         </div>
                     </td>
@@ -49,24 +60,29 @@
     </div>
 </section>
 
-<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Holiday')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
-              <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
                 {!! Form::open(['route' => 'holidays.store', 'method' => 'post']) !!}
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label>{{trans('file.From')}} *</label>
-                        <input type="text" name="from_date" class="form-control date" value="{{date($general_setting->date_format)}}" required>
+                        <input type="text" name="from_date" class="form-control date"
+                            value="{{date($general_setting->date_format)}}" required>
                     </div>
                     <div class="col-md-6 form-group">
                         <label>{{trans('file.To')}} *</label>
-                        <input type="text" name="to_date" class="form-control date" value="{{date($general_setting->date_format)}}" required>
+                        <input type="text" name="to_date" class="form-control date"
+                            value="{{date($general_setting->date_format)}}" required>
                     </div>
                     <div class="col-md-12 form-group">
                         <label>{{trans('file.Note')}}</label>
@@ -82,15 +98,18 @@
     </div>
 </div>
 
-<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Holiday')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
-              <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
                 {!! Form::open(['route' => ['holidays.update', 1], 'method' => 'put']) !!}
                 <div class="row">
                     <div class="col-md-6 form-group">
@@ -117,8 +136,7 @@
 </div>
 
 <script type="text/javascript">
-
-	$("ul#hrm").siblings('a').attr('aria-expanded','true');
+    $("ul#hrm").siblings('a').attr('aria-expanded','true');
     $("ul#hrm").addClass("show");
     $("ul#hrm #holiday-menu").addClass("active");
 
@@ -136,7 +154,6 @@
     }
 
     var holiday_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     
 	var date = $('.date');
     date.datepicker({

@@ -138,6 +138,8 @@
                     </ul>
                 </li>
 
+
+
                 <li>
                     @php
                     $requestIsOnSalesMenu = request()->is('sales*') ? 'true' : 'false';
@@ -182,6 +184,12 @@
                         </li>
                         @endcan
                     </ul>
+                </li>
+
+                <li id="buyback">
+                    <a href="{{ url('buyback') }}">
+                        <i class="dripicons-return"></i><span>{{ __('file.buy back') }}</span>
+                    </a>
                 </li>
 
                 @can('viewAny', App\Expense::class)

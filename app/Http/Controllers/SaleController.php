@@ -437,6 +437,9 @@ class SaleController extends Controller
         $total = $data['subtotal'];
         $product_sale = [];
 
+        // db start transaction
+        DB::beginTransaction();
+
         foreach ($product_id as $i => $id) {
             $lims_product_data = Product::where('id', $id)->first();
             $product_sale['variant_id'] = null;
@@ -444,10 +447,6 @@ class SaleController extends Controller
                 $product_list = explode(",", $lims_product_data->product_list);
                 $qty_list = explode(",", $lims_product_data->qty_list);
                 $price_list = explode(",", $lims_product_data->price_list);
-                // riki belum sini
-                // error_log($product_list);
-                // error_log($qty_list);
-                // error_log($price_list);
 
                 foreach ($product_list as $key => $child_id) {
                     $child_data = Product::find($child_id);
@@ -518,30 +517,17 @@ class SaleController extends Controller
             $product_sale['tax_rate'] = (str_replace('.', '', $tax_rate[$i]) == '' ? 0 : str_replace('.', '', $tax_rate[$i]));
             $product_sale['tax'] = (str_replace('.', '', $tax[$i]) == '' ? 0 : str_replace('.', '', $tax[$i]));
             $product_sale['total'] = $mail_data['total'][$i] = (str_replace('.', '', $total[$i]) == '' ? 0 : str_replace('.', '', $total[$i]));
-            // error_log("qty");
-            // error_log($product_sale['qty']);
-            // error_log("net_unit_price");
-            // error_log($product_sale['net_unit_price']);
-            // error_log("discount");
-            // error_log($product_sale['discount']);
-            // error_log("tax_rate");
-            // error_log($product_sale['tax_rate']);
-            // error_log("tax");
-            // error_log($product_sale['tax']);
-            // error_log("total");
-            // error_log($product_sale['total']);
-
-            // error_log("net_unit_price=======");
-            // error_log($product_sale['net_unit_price']);
-            // error_log("tax==========");
-            // error_log($product_sale['tax']);
-            // error_log("tax_rate==========");
-            // error_log($product_sale['tax_rate']);
-
-            // return 0;
 
             Product_Sale::create($product_sale);
+            // update product_status to sold (0)
+            $lims_product_data->product_status = 0;
+            $lims_product_data->invoice_number = $lims_sale_data->reference_no;
+            $lims_product_data->save();
         }
+
+        // db commit transaction
+        DB::commit();
+
         if ($data['sale_status'] == 3)
             $message = 'Sale successfully added to draft';
         else

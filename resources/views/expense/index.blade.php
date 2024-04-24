@@ -1,9 +1,11 @@
 @extends('layout.main') @section('content')
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
@@ -19,7 +21,8 @@
                         <label class="d-tc mt-2"><strong>{{trans('file.Choose Your Date')}}</strong> &nbsp;</label>
                         <div class="d-tc">
                             <div class="input-group">
-                                <input type="text" class="daterangepicker-field form-control" value="{{$start_date}} To {{$end_date}}" required />
+                                <input type="text" class="daterangepicker-field form-control"
+                                    value="{{$start_date}} To {{$end_date}}" required />
                                 <input type="hidden" name="start_date" value="{{$start_date}}" />
                                 <input type="hidden" name="end_date" value="{{$end_date}}" />
                             </div>
@@ -35,7 +38,8 @@
             {!! Form::close() !!}
         </div>
         @if(in_array("expenses-add", $all_permission))
-            <button class="btn btn-info" data-toggle="modal" data-target="#expense-modal"><i class="dripicons-plus"></i> {{trans('file.Add Expense')}}</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#expense-modal"><i class="dripicons-plus"></i>
+            {{trans('file.Add Expense')}}</button>
         @endif
     </div>
     <div class="table-responsive">
@@ -60,7 +64,8 @@
                 ?>
                 <tr data-id="{{$expense->id}}">
                     <td>{{$key}}</td>
-                    <td>{{date($general_setting->date_format, strtotime($expense->created_at->toDateString())) . ' '. $expense->created_at->toTimeString() }}</td>
+                    <td>{{date($general_setting->date_format, strtotime($expense->created_at->toDateString())) . ' '.
+                        $expense->created_at->toTimeString() }}</td>
                     <td>{{ $expense->reference_no }}</td>
                     <td>{{ $warehouse->name }}</td>
                     <td>{{ $expense_category->name }}</td>
@@ -68,19 +73,24 @@
                     <td>{{ $expense->note }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 @if(in_array("expenses-edit", $all_permission))
-                                <li><button type="button" data-id="{{$expense->id}}" class="open-Editexpense_categoryDialog btn btn-link" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</button></li>
+                                <li><button type="button" data-id="{{$expense->id}}"
+                                        class="open-Editexpense_categoryDialog btn btn-link" data-toggle="modal"
+                                        data-target="#editModal"><i class="dripicons-document-edit"></i>
+                                        {{trans('file.edit')}}</button></li>
                                 @endif
                                 @if(in_array("expenses-delete", $all_permission))
                                 <li class="divider"></li>
                                 {{ Form::open(['route' => ['expenses.destroy', $expense->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i
+                                            class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                                 @endif
@@ -104,15 +114,18 @@
     </div>
 </section>
 
-<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Expense')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
-              <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
                 {!! Form::open(['route' => ['expenses.update', 1], 'method' => 'put']) !!}
                 <?php 
                     $lims_expense_category_list = DB::table('expense_categories')->where('is_active', true)->get();
@@ -124,52 +137,56 @@
                     else
                         $lims_warehouse_list = DB::table('warehouses')->where('is_active', true)->get();
                 ?>
-                  <div class="form-group">
-                      <input type="hidden" name="expense_id">
-                      <label>{{trans('file.reference')}}</label>
-                      <p id="reference">{{'er-' . date("Ymd") . '-'. date("his")}}</p>
-                  </div>
-                    <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label>{{trans('file.Expense Category')}} *</label>
-                            <select name="expense_category_id" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select Expense Category...">
-                                @foreach($lims_expense_category_list as $expense_category)
-                                <option value="{{$expense_category->id}}">{{$expense_category->name . ' (' . $expense_category->code. ')'}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label>{{trans('file.Warehouse')}} *</label>
-                            <select name="warehouse_id" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select Warehouse...">
-                                @foreach($lims_warehouse_list as $warehouse)
-                                <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label>{{trans('file.Amount')}} *</label>
-                            <input type="text" id="amountidedit" name="amount" step="any" required class="form-control">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label> {{trans('file.Account')}}</label>
-                            <select class="form-control selectpicker" name="account_id">
-                            @foreach($lims_account_list as $account)
-                                @if($account->is_default)
-                                <option selected value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
-                                @else
-                                <option value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
-                                @endif
+                <div class="form-group">
+                    <input type="hidden" name="expense_id">
+                    <label>{{trans('file.reference')}}</label>
+                    <p id="reference">{{'er-' . date("Ymd") . '-'. date("his")}}</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>{{trans('file.Expense Category')}} *</label>
+                        <select name="expense_category_id" class="selectpicker form-control" required
+                            data-live-search="true" data-live-search-style="begins" title="Select Expense Category...">
+                            @foreach($lims_expense_category_list as $expense_category)
+                            <option value="{{$expense_category->id}}">{{$expense_category->name . ' (' .
+                                $expense_category->code. ')'}}</option>
                             @endforeach
-                            </select>
-                        </div>
+                        </select>
                     </div>
-                  <div class="form-group">
-                      <label>{{trans('file.Note')}}</label>
-                      <textarea name="note" rows="3" class="form-control"></textarea>
-                  </div>
-                  <div class="form-group">
-                      <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
-                  </div>
+                    <div class="col-md-6 form-group">
+                        <label>{{trans('file.Warehouse')}} *</label>
+                        <select name="warehouse_id" class="selectpicker form-control" required data-live-search="true"
+                            data-live-search-style="begins" title="Select Warehouse...">
+                            @foreach($lims_warehouse_list as $warehouse)
+                            <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>{{trans('file.Amount')}} *</label>
+                        <input type="text" id="amountidedit" name="amount" step="any" required class="form-control">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label> {{trans('file.Account')}}</label>
+                        <select class="form-control selectpicker" name="account_id">
+                            @foreach($lims_account_list as $account)
+                            @if($account->is_default)
+                            <option selected value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]
+                            </option>
+                            @else
+                            <option value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
+                            @endif
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>{{trans('file.Note')}}</label>
+                    <textarea name="note" rows="3" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
+                </div>
                 {{ Form::close() }}
             </div>
         </div>
@@ -177,13 +194,11 @@
 </div>
 
 <script type="text/javascript">
-
     $("ul#expense").siblings('a').attr('aria-expanded','true');
     $("ul#expense").addClass("show");
     $("ul#expense #exp-list-menu").addClass("active");
 
     var expense_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     var all_permission = <?php echo json_encode($all_permission) ?>;
     
     $.ajaxSetup({

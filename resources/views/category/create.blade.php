@@ -157,7 +157,6 @@
         }
 
         var category_id = [];
-        var user_verified = "{{ env('USER_VERIFIED') }}";
 
         $.ajaxSetup({
             headers: {

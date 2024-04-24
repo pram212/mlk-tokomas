@@ -1,15 +1,18 @@
 @extends('layout.main')
 @section('content')
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
     <div class="container-fluid">
-        <a href="{{route('qty_adjustment.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Adjustment')}}</a>
+        <a href="{{route('qty_adjustment.create')}}" class="btn btn-info"><i class="dripicons-plus"></i>
+            {{trans('file.Add Adjustment')}}</a>
     </div>
     <div class="table-responsive">
         <table id="adjustment-table" class="table purchase-list">
@@ -28,12 +31,13 @@
                 @foreach($lims_adjustment_all as $key=>$adjustment)
                 <tr data-id="{{$adjustment->id}}">
                     <td>{{$key}}</td>
-                    <td>{{ date('d-m-Y', strtotime($adjustment->created_at->toDateString())) . ' '. $adjustment->created_at->toTimeString() }}</td>
+                    <td>{{ date('d-m-Y', strtotime($adjustment->created_at->toDateString())) . ' '.
+                        $adjustment->created_at->toTimeString() }}</td>
                     <td>{{ $adjustment->reference_no }}</td>
                     <?php $warehouse = DB::table('warehouses')->find($adjustment->warehouse_id) ?>
                     <td>{{ $warehouse->name }}</td>
                     <td>
-                    <?php
+                        <?php
                     	$product_adjustment_data = DB::table('product_adjustments')->where('adjustment_id', $adjustment->id)->get();
                     	foreach ($product_adjustment_data as $key => $product_adjustment) {
                             if($product_adjustment->variant_id) {
@@ -58,16 +62,22 @@
                     <td>{{$adjustment->note}}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}<span
+                                    class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li>
-                                    <a href="{{ route('qty_adjustment.edit', $adjustment->id) }}" class="btn btn-link"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</a> 
+                                    <a href="{{ route('qty_adjustment.edit', $adjustment->id) }}"
+                                        class="btn btn-link"><i class="dripicons-document-edit"></i>
+                                        {{trans('file.edit')}}</a>
                                 </li>
                                 <li class="divider"></li>
-                                {{ Form::open(['route' => ['qty_adjustment.destroy', $adjustment->id], 'method' => 'DELETE'] ) }}
+                                {{ Form::open(['route' => ['qty_adjustment.destroy', $adjustment->id], 'method' =>
+                                'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i
+                                            class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -92,7 +102,6 @@
     }
 
     var adjustment_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
 
     $.ajaxSetup({
         headers: {
