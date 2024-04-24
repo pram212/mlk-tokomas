@@ -439,4 +439,10 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		return view('help');
 	});
 
+	// route for BuyBack Controller
+	Route::group(['prefix' => 'buyback', 'as' => 'buyback.'], function() {
+		Route::get('/', 'BuyBackController@index')->name('index');
+		Route::get('buyback-datatable', 'BuyBackController@buybackDataTable')->name('buyback-datatable');
+	});
+
 });
