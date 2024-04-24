@@ -445,6 +445,8 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('buyback-datatable', 'BuyBackController@buybackDataTable')->name('buyback-datatable');
 		Route::get('getInvoiceNumber', 'BuyBackController@getInvoiceNumber')->name('getInvoiceNumber');
 		Route::get('getCode', 'BuyBackController@getCode')->name('getCode');
+		Route::get('getDataModalProductBuyBack/{id}', 'BuyBackController@getDataModalProductBuyBack')->name('getDataModalProductBuyBack');
+		Route::post('store', 'BuyBackController@store')->name('store');
 		
 	});
 

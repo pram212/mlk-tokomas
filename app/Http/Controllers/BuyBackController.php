@@ -8,6 +8,8 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Product;
+use App\ProductProperty;
+use App\ProductBuyback;
 
 
 class BuyBackController extends Controller
@@ -15,8 +17,8 @@ class BuyBackController extends Controller
     public function index()
     {
         $this->authorize('viewAny', Product::class);
-
-        return view('buyback.index');
+        $productProperties = ProductProperty::all();
+        return view('buyback.index', compact('productProperties'));
     }
 
     public function buybackDataTable(Request $request)
@@ -93,7 +95,7 @@ class BuyBackController extends Controller
             ->addColumn('action', function ($product) {
                 $user = auth()->user();
                 
-                $btnBuyBack = '<a class="dropdown-item btn-buyback" href="#"><i class="fa fa-arrow-left"></i> Buy Back</a>';
+                $btnBuyBack = '<a class="dropdown-item btn-buyback" href="#" data-productId="'.$product->id.'"><i class="fa fa-arrow-left"></i> Buy Back</a>';
 
                 $element =
                 '<div class="dropdown">
@@ -125,6 +127,40 @@ class BuyBackController extends Controller
     {
         $result = Product::select('code')->where('product_status', 0)->where('is_active', true)->get();
         return response()->json($result);
+    }
+
+    public function getDataModalProductBuyBack(Request $request)
+    {
+        $product = Product::where('id', $request->id)->first();
+        return response()->json($product);
+    }
+
+    public function store(Request $request)
+    {
+        DB::beginTransaction();
+        $product = Product::where('id', $request->product_id)->first();
+        $product->product_status = 1; // ubah status product menjadi STORE
+        $product->save();
+
+        $productBuyback = new ProductBuyback();
+        $productBuyback->product_id = $request->product_id;
+        $productBuyback->code = $request->code;
+        $productBuyback->price = $request->price;
+        $productBuyback->discount = $request->discount;
+        $productBuyback->additional_cost = $request->additional_cost;
+        $productBuyback->final_price = $request->final_price;
+        $productBuyback->description = $request->description;
+        $productBuyback->product_property_id = $request->product_property_id;
+        $productBuyback->save();
+
+        DB::commit();
+
+        $response = [
+            'status' => true,
+            'message' => 'Product has been buyback'
+        ];
+        
+        return response()->json($response);
     }
 
 }
