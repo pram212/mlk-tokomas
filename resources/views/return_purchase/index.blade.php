@@ -1,15 +1,18 @@
 @extends('layout.main') @section('content')
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
     <div class="container-fluid">
         @if(in_array("purchase-return-add", $all_permission))
-            <a href="{{route('return-purchase.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Return')}}</a>
+        <a href="{{route('return-purchase.create')}}" class="btn btn-info"><i class="dripicons-plus"></i>
+            {{trans('file.Add Return')}}</a>
         @endif
     </div>
     <div class="table-responsive">
@@ -34,9 +37,11 @@
                         $supplier = new App\Supplier();
                     $account = DB::table('accounts')->find($return->account_id);
                 ?>
-                <tr class="return-link" data-return='["{{date($general_setting->date_format, strtotime($return->created_at->toDateString()))}}", "{{$return->reference_no}}", "{{$return->warehouse->name}}", "{{$return->warehouse->phone}}", "{{$return->warehouse->address}}", "{{$supplier->name}}", "{{$supplier->company_name}}","{{$supplier->email}}", "{{$supplier->phone_number}}", "{{$supplier->address}}", "{{$supplier->city}}", "{{$return->id}}", "{{$return->total_tax}}", "{{$return->total_discount}}", "{{$return->total_cost}}", "{{$return->order_tax}}", "{{$return->order_tax_rate}}", "{{$return->grand_total}}", "{{$return->return_note}}", "{{$return->staff_note}}", "{{$return->user->name}}", "{{$return->user->email}}"]'>
+                <tr class="return-link"
+                    data-return='["{{date($general_setting->date_format, strtotime($return->created_at->toDateString()))}}", "{{$return->reference_no}}", "{{$return->warehouse->name}}", "{{$return->warehouse->phone}}", "{{$return->warehouse->address}}", "{{$supplier->name}}", "{{$supplier->company_name}}","{{$supplier->email}}", "{{$supplier->phone_number}}", "{{$supplier->address}}", "{{$supplier->city}}", "{{$return->id}}", "{{$return->total_tax}}", "{{$return->total_discount}}", "{{$return->total_cost}}", "{{$return->order_tax}}", "{{$return->order_tax_rate}}", "{{$return->grand_total}}", "{{$return->return_note}}", "{{$return->staff_note}}", "{{$return->user->name}}", "{{$return->user->email}}"]'>
                     <td>{{$key}}</td>
-                    <td>{{ date($general_setting->date_format, strtotime($return->created_at->toDateString())) . ' '. $return->created_at->toTimeString() }}</td>
+                    <td>{{ date($general_setting->date_format, strtotime($return->created_at->toDateString())) . ' '.
+                        $return->created_at->toTimeString() }}</td>
                     <td>{{ $return->reference_no }}</td>
                     <td>{{ $return->warehouse->name }}</td>
                     <td>{{ $supplier->name }}</td>
@@ -44,24 +49,29 @@
                     <td class="grand-total">{{ $return->grand_total }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li>
-                                    <button type="button" class="btn btn-link view"><i class="fa fa-eye"></i> {{trans('file.View')}}</button>
+                                    <button type="button" class="btn btn-link view"><i class="fa fa-eye"></i>
+                                        {{trans('file.View')}}</button>
                                 </li>
                                 @if(in_array("purchase-return-edit", $all_permission))
                                 <li>
-                                    <a href="{{ route('return-purchase.edit', $return->id) }}" class="btn btn-link"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</a>
+                                    <a href="{{ route('return-purchase.edit', $return->id) }}" class="btn btn-link"><i
+                                            class="dripicons-document-edit"></i> {{trans('file.edit')}}</a>
                                 </li>
                                 @endif
                                 <li class="divider"></li>
                                 @if(in_array("purchase-return-delete", $all_permission))
-                                {{ Form::open(['route' => ['return-purchase.destroy', $return->id], 'method' => 'DELETE'] ) }}
+                                {{ Form::open(['route' => ['return-purchase.destroy', $return->id], 'method' =>
+                                'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i
+                                            class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                                 @endif
@@ -83,29 +93,36 @@
             </tfoot>
         </table>
     </div>
-    <div id="return-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+    <div id="return-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        class="modal fade text-left">
         <div role="document" class="modal-dialog">
-          <div class="modal-content">
-            <div class="container mt-3 pb-2 border-bottom">
-            <div class="row">
-                <div class="col-md-3">
-                    <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="dripicons-print"></i> {{trans('file.Print')}}</button>
-                    {{ Form::open(['route' => 'return-purchase.sendmail', 'method' => 'post', 'class' => 'sendmail-form'] ) }}
-                        <input type="hidden" name="return_id">
-                        <button class="btn btn-default btn-sm d-print-none"><i class="dripicons-mail"></i> {{trans('file.Email')}}</button>
-                    {{ Form::close() }}
+            <div class="modal-content">
+                <div class="container mt-3 pb-2 border-bottom">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i
+                                    class="dripicons-print"></i> {{trans('file.Print')}}</button>
+                            {{ Form::open(['route' => 'return-purchase.sendmail', 'method' => 'post', 'class' =>
+                            'sendmail-form'] ) }}
+                            <input type="hidden" name="return_id">
+                            <button class="btn btn-default btn-sm d-print-none"><i class="dripicons-mail"></i>
+                                {{trans('file.Email')}}</button>
+                            {{ Form::close() }}
+                        </div>
+                        <div class="col-md-6">
+                            <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">
+                                {{$general_setting->site_title}}</h3>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close"
+                                class="close d-print-none"><span aria-hidden="true"><i
+                                        class="dripicons-cross"></i></span></button>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <i style="font-size: 15px;">{{trans('file.Return Details')}}</i>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">{{$general_setting->site_title}}</h3>
-                </div>
-                <div class="col-md-3">
-                    <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close d-print-none"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-                </div>
-                <div class="col-md-12 text-center">
-                    <i style="font-size: 15px;">{{trans('file.Return Details')}}</i>
-                </div>
-            </div>
-        </div>
                 <div id="return-content" class="modal-body">
                 </div>
                 <br>
@@ -123,7 +140,7 @@
                     </tbody>
                 </table>
                 <div id="return-footer" class="modal-body"></div>
-          </div>
+            </div>
         </div>
     </div>
 </section>
@@ -134,7 +151,6 @@
 
     var all_permission = <?php echo json_encode($all_permission) ?>;
     var return_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

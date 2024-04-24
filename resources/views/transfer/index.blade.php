@@ -1,16 +1,20 @@
 @extends('layout.main') @section('content')
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
     <div class="container-fluid">
         @if(in_array("transfers-add", $all_permission))
-            <a href="{{route('transfers.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.add')}} {{trans('file.Transfer')}}</a>
-            <a href="{{url('transfers/transfer_by_csv')}}" class="btn btn-primary"><i class="dripicons-copy"></i> {{trans('file.import')}} {{trans('file.Transfer')}}</a>
+        <a href="{{route('transfers.create')}}" class="btn btn-info"><i class="dripicons-plus"></i>
+            {{trans('file.add')}} {{trans('file.Transfer')}}</a>
+        <a href="{{url('transfers/transfer_by_csv')}}" class="btn btn-primary"><i class="dripicons-copy"></i>
+            {{trans('file.import')}} {{trans('file.Transfer')}}</a>
         @endif
     </div>
     <div class="table-responsive">
@@ -39,9 +43,16 @@
                     elseif($transfer->status == 3)
                         $status = trans('file.Sent');
                 ?>
-                <tr class="transfer-link" data-transfer='["{{date($general_setting->date_format, strtotime($transfer->created_at->toDateString()))}}", "{{$transfer->reference_no}}", "{{$status}}", "{{$transfer->id}}", "{{$transfer->fromWarehouse->name}}", "{{$transfer->fromWarehouse->phone}}", "{{preg_replace('/\s+/S', " ", $transfer->fromWarehouse->address)}}", "{{$transfer->toWarehouse->name}}", "{{$transfer->toWarehouse->phone}}", "{{preg_replace('/\s+/S', " ", $transfer->toWarehouse->address)}}", "{{$transfer->total_tax}}", "{{$transfer->total_cost}}", "{{$transfer->shipping_cost}}", "{{$transfer->grand_total}}", "{{$transfer->note}}", "{{$transfer->user->name}}", "{{$transfer->user->email}}"]'>
+                <tr class="transfer-link"
+                    data-transfer='["{{date($general_setting->date_format, strtotime($transfer->created_at->toDateString()))}}", "{{$transfer->reference_no}}", "{{$status}}", "{{$transfer->id}}", "{{$transfer->fromWarehouse->name}}", "{{$transfer->fromWarehouse->phone}}", "{{preg_replace('
+                    /\s+/S', " " , $transfer->fromWarehouse->address)}}", "{{$transfer->toWarehouse->name}}",
+                    "{{$transfer->toWarehouse->phone}}", "{{preg_replace('/\s+/S', " ",
+                    $transfer->toWarehouse->address)}}", "{{$transfer->total_tax}}", "{{$transfer->total_cost}}",
+                    "{{$transfer->shipping_cost}}", "{{$transfer->grand_total}}", "{{$transfer->note}}",
+                    "{{$transfer->user->name}}", "{{$transfer->user->email}}"]'>
                     <td>{{$key}}</td>
-                    <td>{{ date($general_setting->date_format, strtotime($transfer->created_at->toDateString())) . ' '. $transfer->created_at->toTimeString() }}</td>
+                    <td>{{ date($general_setting->date_format, strtotime($transfer->created_at->toDateString())) . ' '.
+                        $transfer->created_at->toTimeString() }}</td>
                     <td>{{ $transfer->reference_no }}</td>
                     <td>{{ $transfer->fromWarehouse->name }}</td>
                     <td>{{ $transfer->toWarehouse->name }}</td>
@@ -49,30 +60,42 @@
                     <td class="total-tax">{{ $transfer->total_tax }}</td>
                     <td class="grand-total">{{ $transfer->grand_total }}</td>
                     @if($transfer->status == 1)
-                        <td><div class="badge badge-success">{{$status}}</div></td>
+                    <td>
+                        <div class="badge badge-success">{{$status}}</div>
+                    </td>
                     @elseif($transfer->status == 2)
-                        <td><div class="badge badge-danger">{{$status}}</div></td>
+                    <td>
+                        <div class="badge badge-danger">{{$status}}</div>
+                    </td>
                     @else
-                        <td><div class="badge badge-warning">{{$status}}</div></td>
+                    <td>
+                        <div class="badge badge-warning">{{$status}}</div>
+                    </td>
                     @endif
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}<span
+                                    class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li>
-                                    <button type="button" class="btn btn-link view"><i class="fa fa-eye"></i> {{trans('file.View')}}</button>
+                                    <button type="button" class="btn btn-link view"><i class="fa fa-eye"></i>
+                                        {{trans('file.View')}}</button>
                                 </li>
                                 @if(in_array("transfers-edit", $all_permission))
                                 <li>
-                                    <a href="{{ route('transfers.edit', $transfer->id) }}" class="btn btn-link"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</a> 
+                                    <a href="{{ route('transfers.edit', $transfer->id) }}" class="btn btn-link"><i
+                                            class="dripicons-document-edit"></i> {{trans('file.edit')}}</a>
                                 </li>
                                 @endif
                                 <li class="divider"></li>
                                 @if(in_array("transfers-delete", $all_permission))
-                                {{ Form::open(['route' => ['transfers.destroy', $transfer->id], 'method' => 'DELETE'] ) }}
+                                {{ Form::open(['route' => ['transfers.destroy', $transfer->id], 'method' => 'DELETE'] )
+                                }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i
+                                            class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                                 @endif
@@ -98,25 +121,30 @@
     </div>
 </section>
 
-<div id="transfer-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="transfer-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
-      <div class="modal-content">
-        <div class="container mt-3 pb-2 border-bottom">
-            <div class="row">
-                <div class="col-md-3">
-                    <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="dripicons-print"></i> {{trans('file.Print')}}</button>
-                </div>
-                <div class="col-md-6">
-                    <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">{{$general_setting->site_title}}</h3>
-                </div>
-                <div class="col-md-3">
-                    <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close d-print-none"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-                </div>
-                <div class="col-md-12 text-center">
-                    <i style="font-size: 15px;">{{trans('file.Transfer Details')}}</i>
+        <div class="modal-content">
+            <div class="container mt-3 pb-2 border-bottom">
+                <div class="row">
+                    <div class="col-md-3">
+                        <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i
+                                class="dripicons-print"></i> {{trans('file.Print')}}</button>
+                    </div>
+                    <div class="col-md-6">
+                        <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">
+                            {{$general_setting->site_title}}</h3>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close"
+                            class="close d-print-none"><span aria-hidden="true"><i
+                                    class="dripicons-cross"></i></span></button>
+                    </div>
+                    <div class="col-md-12 text-center">
+                        <i style="font-size: 15px;">{{trans('file.Transfer Details')}}</i>
+                    </div>
                 </div>
             </div>
-        </div>
             <div id="transfer-content" class="modal-body">
             </div>
             <br>
@@ -133,7 +161,7 @@
                 </tbody>
             </table>
             <div id="transfer-footer" class="modal-body"></div>
-      </div>
+        </div>
     </div>
 </div>
 
@@ -144,7 +172,6 @@
 
     var all_permission = <?php echo json_encode($all_permission) ?>;
     var transfer_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     
     $.ajaxSetup({
         headers: {

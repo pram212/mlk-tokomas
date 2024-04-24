@@ -1,9 +1,11 @@
 @extends('layout.main') @section('content')
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
@@ -34,33 +36,44 @@
                     
                     $barcode = \DNS2D::getBarcodePNG($delivery->reference_no, 'QRCODE');
                 ?>
-                <tr class="delivery-link" data-barcode="{{$barcode}}" data-delivery='["{{date($general_setting->date_format, strtotime($delivery->created_at->toDateString()))}}", "{{$delivery->reference_no}}", "{{$delivery->sale->reference_no}}", "{{$status}}", "{{$delivery->id}}", "{{$delivery->sale->customer->name}}", "{{$delivery->sale->customer->phone_number}}", "{{$delivery->sale->customer->address}}", "{{$delivery->sale->customer->city}}", "{{$delivery->note}}", "{{$delivery->user->name}}", "{{$delivery->delivered_by}}", "{{$delivery->recieved_by}}"]'>
+                <tr class="delivery-link" data-barcode="{{$barcode}}"
+                    data-delivery='["{{date($general_setting->date_format, strtotime($delivery->created_at->toDateString()))}}", "{{$delivery->reference_no}}", "{{$delivery->sale->reference_no}}", "{{$status}}", "{{$delivery->id}}", "{{$delivery->sale->customer->name}}", "{{$delivery->sale->customer->phone_number}}", "{{$delivery->sale->customer->address}}", "{{$delivery->sale->customer->city}}", "{{$delivery->note}}", "{{$delivery->user->name}}", "{{$delivery->delivered_by}}", "{{$delivery->recieved_by}}"]'>
                     <td>{{$key}}</td>
                     <td>{{ $delivery->reference_no }}</td>
                     <td>{{ $customer_sale[0]->reference_no }}</td>
                     <td>{{ $customer_sale[0]->name }}</td>
                     <td>{{ $delivery->address }}</td>
                     @if($delivery->status == 1)
-                    <td><div class="badge badge-info">{{$status}}</div></td>
+                    <td>
+                        <div class="badge badge-info">{{$status}}</div>
+                    </td>
                     @elseif($delivery->status == 2)
-                    <td><div class="badge badge-primary">{{$status}}</div></td>
+                    <td>
+                        <div class="badge badge-primary">{{$status}}</div>
+                    </td>
                     @else
-                    <td><div class="badge badge-success">{{$status}}</div></td>
+                    <td>
+                        <div class="badge badge-success">{{$status}}</div>
+                    </td>
                     @endif
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
-                              <span class="caret"></span>
-                              <span class="sr-only">Toggle Dropdown</span>
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li>
-                                    <button type="button" data-id="{{$delivery->id}}" class="open-EditCategoryDialog btn btn-link"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</button>
+                                    <button type="button" data-id="{{$delivery->id}}"
+                                        class="open-EditCategoryDialog btn btn-link"><i
+                                            class="dripicons-document-edit"></i> {{trans('file.edit')}}</button>
                                 </li>
                                 <li class="divider"></li>
                                 {{ Form::open(['route' => ['delivery.delete', $delivery->id], 'method' => 'post'] ) }}
                                 <li>
-                                  <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button> 
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i
+                                            class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -71,126 +84,132 @@
             </tbody>
         </table>
     </div>
-</seaction>
+    </seaction>
 
-<!-- Modal -->
-<div id="delivery-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-    <div role="document" class="modal-dialog">
-      <div class="modal-content">
-        <div class="container mt-3 pb-2 border-bottom">
-            <div class="row">
-                <div class="col-md-3">
-                    <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="dripicons-print"></i> {{trans('file.Print')}}</button>
+    <!-- Modal -->
+    <div id="delivery-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        class="modal fade text-left">
+        <div role="document" class="modal-dialog">
+            <div class="modal-content">
+                <div class="container mt-3 pb-2 border-bottom">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i
+                                    class="dripicons-print"></i> {{trans('file.Print')}}</button>
 
-                    {{ Form::open(['route' => 'delivery.sendMail', 'method' => 'post', 'class' => 'sendmail-form'] ) }}
-                        <input type="hidden" name="delivery_id">
-                        <button class="btn btn-default btn-sm d-print-none"><i class="dripicons-mail"></i> {{trans('file.Email')}}</button>
+                            {{ Form::open(['route' => 'delivery.sendMail', 'method' => 'post', 'class' =>
+                            'sendmail-form'] ) }}
+                            <input type="hidden" name="delivery_id">
+                            <button class="btn btn-default btn-sm d-print-none"><i class="dripicons-mail"></i>
+                                {{trans('file.Email')}}</button>
+                            {{ Form::close() }}
+                        </div>
+                        <div class="col-md-6">
+                            <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">
+                                <img src="{{url('public/logo', $general_setting->site_logo)}}" width="30">
+                                {{$general_setting->site_title}}
+                            </h3>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close"
+                                class="close d-print-none"><span aria-hidden="true"><i
+                                        class="dripicons-cross"></i></span></button>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <i style="font-size: 15px;">{{trans('file.Delivery Details')}}</i>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered" id="delivery-content">
+                        <tbody></tbody>
+                    </table>
+                    <br>
+                    <table class="table table-bordered product-delivery-list">
+                        <thead>
+                            <th>No</th>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Qty</th>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div id="delivery-footer" class="row">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-delivery" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        class="modal fade text-left">
+        <div role="document" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Delivery')}}</h5>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
+                            aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                </div>
+                <div class="modal-body">
+                    {!! Form::open(['route' => 'delivery.update', 'method' => 'post', 'files' => true]) !!}
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label>{{trans('file.Delivery Reference')}}</label>
+                            <p id="dr"></p>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>{{trans('file.Sale Reference')}}</label>
+                            <p id="sr"></p>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label>{{trans('file.Status')}} *</label>
+                            <select name="status" required class="form-control selectpicker">
+                                <option value="1">{{trans('file.Packing')}}</option>
+                                <option value="2">{{trans('file.Delivering')}}</option>
+                                <option value="3">{{trans('file.Delivered')}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mt-2 form-group">
+                            <label>{{trans('file.Delivered By')}}</label>
+                            <input type="text" name="delivered_by" class="form-control">
+                        </div>
+                        <div class="col-md-6 mt-2 form-group">
+                            <label>{{trans('file.Recieved By')}}</label>
+                            <input type="text" name="recieved_by" class="form-control">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>{{trans('file.customer')}} *</label>
+                            <p id="customer"></p>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>{{trans('file.Attach File')}}</label>
+                            <input type="file" name="file" class="form-control">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>{{trans('file.Address')}} *</label>
+                            <textarea rows="3" name="address" class="form-control" required></textarea>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>{{trans('file.Note')}}</label>
+                            <textarea rows="3" name="note" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <input type="hidden" name="reference_no">
+                    <input type="hidden" name="delivery_id">
+                    <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
                     {{ Form::close() }}
                 </div>
-                <div class="col-md-6">
-                    <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">
-                        <img src="{{url('public/logo', $general_setting->site_logo)}}" width="30">
-                        {{$general_setting->site_title}}
-                    </h3>
-                </div>
-                <div class="col-md-3">
-                    <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close d-print-none"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-                </div>
-                <div class="col-md-12 text-center">
-                    <i style="font-size: 15px;">{{trans('file.Delivery Details')}}</i>
-                </div>
-            </div>
-        </div>
-        <div class="modal-body">
-            <table class="table table-bordered" id="delivery-content">
-                <tbody></tbody>
-            </table>
-            <br>
-            <table class="table table-bordered product-delivery-list">
-                <thead>
-                    <th>No</th>
-                    <th>Code</th>
-                    <th>Description</th>
-                    <th>Qty</th>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            <div id="delivery-footer" class="row">
-            </div>            
-        </div>    
-      </div>
-    </div>
-</div>
-
-<div id="edit-delivery" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-    <div role="document" class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Delivery')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-            </div>
-            <div class="modal-body">
-                {!! Form::open(['route' => 'delivery.update', 'method' => 'post', 'files' => true]) !!}
-                <div class="row">
-                    <div class="col-md-6 form-group">
-                        <label>{{trans('file.Delivery Reference')}}</label>
-                        <p id="dr"></p>
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label>{{trans('file.Sale Reference')}}</label>
-                        <p id="sr"></p>
-                    </div>
-                    <div class="col-md-12 form-group">
-                        <label>{{trans('file.Status')}} *</label>
-                        <select name="status" required class="form-control selectpicker">
-                            <option value="1">{{trans('file.Packing')}}</option>
-                            <option value="2">{{trans('file.Delivering')}}</option>
-                            <option value="3">{{trans('file.Delivered')}}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mt-2 form-group">
-                        <label>{{trans('file.Delivered By')}}</label>
-                        <input type="text" name="delivered_by" class="form-control">
-                    </div>
-                    <div class="col-md-6 mt-2 form-group">
-                        <label>{{trans('file.Recieved By')}}</label>
-                        <input type="text" name="recieved_by" class="form-control">
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label>{{trans('file.customer')}} *</label>
-                        <p id="customer"></p>
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label>{{trans('file.Attach File')}}</label>
-                        <input type="file" name="file" class="form-control">
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label>{{trans('file.Address')}} *</label>
-                        <textarea rows="3" name="address" class="form-control" required></textarea>
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label>{{trans('file.Note')}}</label>
-                        <textarea rows="3" name="note" class="form-control"></textarea>
-                    </div>
-                </div>
-                <input type="hidden" name="reference_no">
-                <input type="hidden" name="delivery_id">
-                <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
-                {{ Form::close() }}
             </div>
         </div>
     </div>
-</div>
 
-<script type="text/javascript">
-
-    $("ul#sale").siblings('a').attr('aria-expanded','true');
+    <script type="text/javascript">
+        $("ul#sale").siblings('a').attr('aria-expanded','true');
     $("ul#sale").addClass("show");
     $("ul#sale #delivery-menu").addClass("active");
 
     var delivery_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     
     $.ajaxSetup({
         headers: {
@@ -386,5 +405,5 @@
             },
         ],
     } );
-</script>
-@endsection
+    </script>
+    @endsection

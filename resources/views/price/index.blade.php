@@ -121,7 +121,6 @@
                     text: '{{ trans('file.delete') }}',
                     className: 'buttons-delete',
                     action: function(e, dt, node, config) {
-                        var user_verified = '{!! env('USER_VERIFIED') !!}'
                         if (!user_verified) {
                             return alert('This feature is disable for demo!')
                         }

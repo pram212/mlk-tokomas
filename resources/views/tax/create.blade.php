@@ -2,23 +2,31 @@
 
 @if($errors->has('name'))
 <div class="alert alert-danger alert-dismissible text-center">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ $errors->first('name') }}</div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>{{ $errors->first('name') }}
+</div>
 @endif
 @if($errors->has('rate'))
 <div class="alert alert-danger alert-dismissible text-center">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ $errors->first('rate') }}</div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>{{ $errors->first('rate') }}
+</div>
 @endif
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
     <div class="container-fluid">
-        <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Tax')}}</a>
-        <a href="#" data-toggle="modal" data-target="#importTax" class="btn btn-primary"><i class="dripicons-copy"></i> {{trans('file.Import Tax')}}</a>
+        <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-info"><i class="dripicons-plus"></i>
+            {{trans('file.Add Tax')}}</a>
+        <a href="#" data-toggle="modal" data-target="#importTax" class="btn btn-primary"><i class="dripicons-copy"></i>
+            {{trans('file.Import Tax')}}</a>
     </div>
     <div class="table-responsive">
         <table id="tax-table" class="table">
@@ -38,19 +46,23 @@
                     <td>{{ $tax->rate }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li>
-                                    <button type="button" data-id="{{$tax->id}}" class="open-EdittaxDialog btn btn-link" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}
-                                </button>
+                                    <button type="button" data-id="{{$tax->id}}" class="open-EdittaxDialog btn btn-link"
+                                        data-toggle="modal" data-target="#editModal"><i
+                                            class="dripicons-document-edit"></i> {{trans('file.edit')}}
+                                    </button>
                                 </li>
                                 <li class="divider"></li>
                                 {{ Form::open(['route' => ['tax.destroy', $tax->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i
+                                            class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -63,91 +75,104 @@
     </div>
 </section>
 
-<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             {!! Form::open(['route' => 'tax.store', 'method' => 'post']) !!}
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Tax')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
-                <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
                 <form>
                     <div class="form-group">
-                    <label>{{trans('file.Tax Name')}} *</label>
-                    {{Form::text('name',null,array('required' => 'required', 'class' => 'form-control'))}}
+                        <label>{{trans('file.Tax Name')}} *</label>
+                        {{Form::text('name',null,array('required' => 'required', 'class' => 'form-control'))}}
                     </div>
                     <div class="form-group">
                         <label>{{trans('file.Rate')}}(%) *</label>
-                        {{Form::number('rate',null,array('required' => 'required', 'class' => 'form-control', 'step' => 'any'))}}
+                        {{Form::number('rate',null,array('required' => 'required', 'class' => 'form-control', 'step' =>
+                        'any'))}}
                     </div>
                     <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
-            	</form>
-        	</div>
-        {{ Form::close() }}
-    	</div>
-	</div>
-</div>
-
-<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-	<div role="document" class="modal-dialog">
-		  <div class="modal-content">
-		    {!! Form::open(['route' => ['tax.update',1], 'method' => 'put']) !!}
-		    <div class="modal-header">
-		      <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Update Tax')}}</h5>
-		      <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-		    </div>
-		    <div class="modal-body">
-		      <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-		        <form>
-		            <input type="hidden" name="tax_id">
-		            <div class="form-group">
-		                <label>{{trans('file.Tax Name')}} *</label>
-		                {{Form::text('name',null,array('required' => 'required', 'class' => 'form-control'))}}
-		            </div>
-		            <div class="form-group">
-		                <label>{{trans('file.Rate')}}(%) *</label>
-		                {{Form::number('rate',null,array('required' => 'required', 'class' => 'form-control', 'step' => 'any'))}}
-		            </div>
-		            <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
-		        </form>
-		    </div>
-		    {{ Form::close() }}
-		  </div>
-	</div>
-</div>
-
-<div id="importTax" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-    <div role="document" class="modal-dialog">
-      <div class="modal-content">
-        {!! Form::open(['route' => 'tax.import', 'method' => 'post', 'files' => true]) !!}
-        <div class="modal-header">
-          <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Import Tax')}}</h5>
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-        </div>
-        <div class="modal-body">
-            <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-           <p>{{trans('file.The correct column order is')}} (name*, rate*) {{trans('file.and you must follow this')}}.</p>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>{{trans('file.Upload CSV File')}} *</label>
-                        {{Form::file('file', array('class' => 'form-control','required'))}}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label> {{trans('file.Sample File')}}</label>
-                        <a href="public/sample_file/sample_tax.csv" class="btn btn-info btn-block btn-md"><i class="dripicons-download"></i>  {{trans('file.Download')}}</a>
-                    </div>
-                </div>
+                </form>
             </div>
-            <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+            {{ Form::close() }}
         </div>
-        {{ Form::close() }}
-      </div>
+    </div>
+</div>
+
+<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            {!! Form::open(['route' => ['tax.update',1], 'method' => 'put']) !!}
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Update Tax')}}</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
+            </div>
+            <div class="modal-body">
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
+                <form>
+                    <input type="hidden" name="tax_id">
+                    <div class="form-group">
+                        <label>{{trans('file.Tax Name')}} *</label>
+                        {{Form::text('name',null,array('required' => 'required', 'class' => 'form-control'))}}
+                    </div>
+                    <div class="form-group">
+                        <label>{{trans('file.Rate')}}(%) *</label>
+                        {{Form::number('rate',null,array('required' => 'required', 'class' => 'form-control', 'step' =>
+                        'any'))}}
+                    </div>
+                    <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+                </form>
+            </div>
+            {{ Form::close() }}
+        </div>
+    </div>
+</div>
+
+<div id="importTax" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            {!! Form::open(['route' => 'tax.import', 'method' => 'post', 'files' => true]) !!}
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Import Tax')}}</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
+            </div>
+            <div class="modal-body">
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
+                <p>{{trans('file.The correct column order is')}} (name*, rate*) {{trans('file.and you must follow
+                    this')}}.</p>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>{{trans('file.Upload CSV File')}} *</label>
+                            {{Form::file('file', array('class' => 'form-control','required'))}}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> {{trans('file.Sample File')}}</label>
+                            <a href="public/sample_file/sample_tax.csv" class="btn btn-info btn-block btn-md"><i
+                                    class="dripicons-download"></i> {{trans('file.Download')}}</a>
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+            </div>
+            {{ Form::close() }}
+        </div>
     </div>
 </div>
 
@@ -157,7 +182,6 @@
     $("ul#setting #tax-menu").addClass("active");
 
     var tax_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     
     $.ajaxSetup({
         headers: {

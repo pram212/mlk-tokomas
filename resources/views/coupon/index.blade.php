@@ -1,18 +1,23 @@
 @extends('layout.main') @section('content')
 @if($errors->has('coupon_no'))
 <div class="alert alert-danger alert-dismissible text-center">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ $errors->first('coupon_no') }}</div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>{{ $errors->first('coupon_no') }}
+</div>
 @endif
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
     <div class="container-fluid">
-        <button class="btn btn-info" data-toggle="modal" data-target="#create-modal"><i class="dripicons-plus"></i> {{trans('file.Add Coupon')}}</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#create-modal"><i class="dripicons-plus"></i>
+            {{trans('file.Add Coupon')}}</button>
     </div>
     <div class="table-responsive">
         <table id="coupon-table" class="table">
@@ -39,9 +44,13 @@
                     <td>{{$key}}</td>
                     <td>{{ $coupon->code }}</td>
                     @if($coupon->type == 'percentage')
-                    <td><div class="badge badge-primary">{{$coupon->type}}</div></td>
+                    <td>
+                        <div class="badge badge-primary">{{$coupon->type}}</div>
+                    </td>
                     @else
-                    <td><div class="badge badge-info">{{$coupon->type}}</div></td>
+                    <td>
+                        <div class="badge badge-info">{{$coupon->type}}</div>
+                    </td>
                     @endif
                     <td>{{ $coupon->amount }}</td>
                     @if($coupon->minimum_amount)
@@ -51,27 +60,43 @@
                     @endif
                     <td>{{ $coupon->quantity }}</td>
                     @if($coupon->quantity - $coupon->used)
-                    <td class="text-center"><div class="badge badge-success">{{ $coupon->quantity - $coupon->used }}</div></td>
+                    <td class="text-center">
+                        <div class="badge badge-success">{{ $coupon->quantity - $coupon->used }}</div>
+                    </td>
                     @else
-                    <td class="text-center"><div class="badge badge-danger">{{ $coupon->quantity - $coupon->used }}</div></td>
+                    <td class="text-center">
+                        <div class="badge badge-danger">{{ $coupon->quantity - $coupon->used }}</div>
+                    </td>
                     @endif
                     @if($coupon->expired_date >= date("Y-m-d"))
-                      <td><div class="badge badge-success">{{date('d-m-Y', strtotime($coupon->expired_date))}}</div></td>
+                    <td>
+                        <div class="badge badge-success">{{date('d-m-Y', strtotime($coupon->expired_date))}}</div>
+                    </td>
                     @else
-                      <td><div class="badge badge-danger">{{date('d-m-Y', strtotime($coupon->expired_date))}}</div></td>
+                    <td>
+                        <div class="badge badge-danger">{{date('d-m-Y', strtotime($coupon->expired_date))}}</div>
+                    </td>
                     @endif
                     <td>{{ $created_by->name }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
-                                <li><button type="button" data-id="{{$coupon->id}}" data-code="{{$coupon->code}}" data-type="{{$coupon->type}}" data-amount="{{$coupon->amount}}" data-minimum_amount="{{$coupon->minimum_amount}}" data-quantity="{{$coupon->quantity}}" data-expired_date="{{$coupon->expired_date}}" class="edit-btn btn btn-link" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</button></li>
+                                <li><button type="button" data-id="{{$coupon->id}}" data-code="{{$coupon->code}}"
+                                        data-type="{{$coupon->type}}" data-amount="{{$coupon->amount}}"
+                                        data-minimum_amount="{{$coupon->minimum_amount}}"
+                                        data-quantity="{{$coupon->quantity}}"
+                                        data-expired_date="{{$coupon->expired_date}}" class="edit-btn btn btn-link"
+                                        data-toggle="modal" data-target="#editModal"><i
+                                            class="dripicons-document-edit"></i> {{trans('file.edit')}}</button></li>
                                 {{ Form::open(['route' => ['coupons.destroy', $coupon->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i
+                                            class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -96,131 +121,140 @@
     </div>
 </section>
 
-<div id="create-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="create-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Coupon')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
-              <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
                 {!! Form::open(['route' => 'coupons.store', 'method' => 'post']) !!}
-                  <div class="row">
-                      <div class="col-md-6 form-group">
-                          <label>{{trans('file.Coupon Code')}} *</label>
-                          <div class="input-group">
-                              {{Form::text('code',null,array('required' => 'required', 'class' => 'form-control'))}}
-                              <div class="input-group-append">
-                                  <button type="button" class="btn btn-default btn-sm genbutton">{{trans('file.Generate')}}</button>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="col-md-6 form-group">
-                          <label>{{trans('file.Type')}} *</label>
-                          <select class="form-control" name="type">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>{{trans('file.Coupon Code')}} *</label>
+                        <div class="input-group">
+                            {{Form::text('code',null,array('required' => 'required', 'class' => 'form-control'))}}
+                            <div class="input-group-append">
+                                <button type="button"
+                                    class="btn btn-default btn-sm genbutton">{{trans('file.Generate')}}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>{{trans('file.Type')}} *</label>
+                        <select class="form-control" name="type">
                             <option value="percentage">Percentage</option>
                             <option value="fixed">Fixed Amount</option>
-                          </select>
-                      </div>
-                      <div class="col-md-6 form-group minimum-amount">
-                          <label>{{trans('file.Minimum Amount')}} *</label>
-                          <input type="text" id="minimum_amountid" name="minimum_amount" step="any" class="form-control">
-                      </div>
-                      <div class="col-md-6 form-group">
-                          <label>{{trans('file.Amount')}} *</label>
-                          <div class="input-group">
-                              <input type="text" id="amountid" name="amount" step="any" required class="form-control">&nbsp;&nbsp;
-                              <div class="input-group-append mt-1">
-                                  <span class="icon-text" style="font-size: 22px;"><strong>%</strong></span>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="col-md-6 form-group">
-                          <label>Qty *</label>
-                          <input type="number" name="quantity" step="any" required class="form-control">
-                      </div>
-                      <div class="col-md-6 form-group">
-                          <label>{{trans('file.Expired Date')}}</label>
-                          <input type="text" name="expired_date" class="expired_date form-control">
-                      </div>
-                  </div>
-                  <div class="form-group">
-                      <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
-                  </div>
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group minimum-amount">
+                        <label>{{trans('file.Minimum Amount')}} *</label>
+                        <input type="text" id="minimum_amountid" name="minimum_amount" step="any" class="form-control">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>{{trans('file.Amount')}} *</label>
+                        <div class="input-group">
+                            <input type="text" id="amountid" name="amount" step="any" required
+                                class="form-control">&nbsp;&nbsp;
+                            <div class="input-group-append mt-1">
+                                <span class="icon-text" style="font-size: 22px;"><strong>%</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Qty *</label>
+                        <input type="number" name="quantity" step="any" required class="form-control">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>{{trans('file.Expired Date')}}</label>
+                        <input type="text" name="expired_date" class="expired_date form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
+                </div>
                 {{ Form::close() }}
             </div>
         </div>
     </div>
 </div>
 
-<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-  <div role="document" class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Coupon')}}</h5>
-              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-          </div>
-          <div class="modal-body">
-            <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-              {!! Form::open(['route' => ['coupons.update', 1], 'method' => 'put']) !!}
-              <div class="row">
-                <div class="col-md-6 form-group">
-                    <label>{{trans('file.Coupon')}} {{trans('file.Code')}} *</label>
-                    <div class="input-group">
-                        <input type="hidden" name="coupon_id">
-                        {{Form::text('code',null,array('required' => 'required', 'class' => 'form-control'))}}
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-default btn-sm genbutton">{{trans('file.Generate')}}</button>
+<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Coupon')}}</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
+            </div>
+            <div class="modal-body">
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
+                {!! Form::open(['route' => ['coupons.update', 1], 'method' => 'put']) !!}
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>{{trans('file.Coupon')}} {{trans('file.Code')}} *</label>
+                        <div class="input-group">
+                            <input type="hidden" name="coupon_id">
+                            {{Form::text('code',null,array('required' => 'required', 'class' => 'form-control'))}}
+                            <div class="input-group-append">
+                                <button type="button"
+                                    class="btn btn-default btn-sm genbutton">{{trans('file.Generate')}}</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-6 form-group">
-                    <label>{{trans('file.Type')}} * </label>
-                    <select class="form-control" name="type">
-                      <option value="percentage">Percentage</option>
-                      <option value="fixed"  >Fixed Amount</option>
-                    </select>
-                </div>
-                <div class="col-md-6 form-group minimum-amount">
-                    <label>{{trans('file.Minimum Amount')}} *</label>
-                    <input type="text" id="minimum_amountidupdate" name="minimum_amount" step="any" class="form-control">
-                </div>
-                <div class="col-md-6 form-group">
-                    <label>{{trans('file.Amount')}} *</label>
-                    <div class="input-group">
-                        <input type="text" id="amountidupdate" name="amount" step="any" required class="form-control">&nbsp;&nbsp;
-                        <div class="input-group-append mt-1">
-                            <span class="icon-text" style="font-size: 22px;"><strong>%</strong></span>
+                    <div class="col-md-6 form-group">
+                        <label>{{trans('file.Type')}} * </label>
+                        <select class="form-control" name="type">
+                            <option value="percentage">Percentage</option>
+                            <option value="fixed">Fixed Amount</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group minimum-amount">
+                        <label>{{trans('file.Minimum Amount')}} *</label>
+                        <input type="text" id="minimum_amountidupdate" name="minimum_amount" step="any"
+                            class="form-control">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>{{trans('file.Amount')}} *</label>
+                        <div class="input-group">
+                            <input type="text" id="amountidupdate" name="amount" step="any" required
+                                class="form-control">&nbsp;&nbsp;
+                            <div class="input-group-append mt-1">
+                                <span class="icon-text" style="font-size: 22px;"><strong>%</strong></span>
+                            </div>
                         </div>
                     </div>
+                    <div class="col-md-6 form-group">
+                        <label>Qty *</label>
+                        <input type="number" name="quantity" step="any" required class="form-control">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>{{trans('file.Expired Date')}}</label>
+                        <input type="text" name="expired_date" class="expired_date form-control">
+                    </div>
                 </div>
-                <div class="col-md-6 form-group">
-                    <label>Qty *</label>
-                    <input type="number" name="quantity" step="any" required class="form-control">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
                 </div>
-                <div class="col-md-6 form-group">
-                    <label>{{trans('file.Expired Date')}}</label>
-                    <input type="text" name="expired_date" class="expired_date form-control">
-                </div>
-              </div>
-              <div class="form-group">
-                  <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
-              </div>
-              {{ Form::close() }}
-          </div>
-      </div>
-  </div>
+                {{ Form::close() }}
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">
-
     $("ul#sale").siblings('a').attr('aria-expanded','true');
     $("ul#sale").addClass("show");
     $("ul#sale #coupon-menu").addClass("active");
 
     var coupon_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
 
     var typeriki = "";
     

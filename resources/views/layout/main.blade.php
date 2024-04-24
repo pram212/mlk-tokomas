@@ -156,7 +156,8 @@
             </div>
             @endif
             <script>
-                var baseUrl = "{{ url('/') }}";
+                const baseUrl = "{{ url('/') }}";
+                const user_verified = "{{ env('USER_VERIFIED') }}";
             </script>
             <script src="{{ asset('public/js/axios.min.js') }}"></script>
             @yield('content')

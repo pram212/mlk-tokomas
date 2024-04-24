@@ -1,9 +1,11 @@
 @extends('layout.main') @section('content')
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
@@ -19,7 +21,8 @@
                         <label class="d-tc mt-2"><strong>{{trans('file.Choose Your Date')}}</strong> &nbsp;</label>
                         <div class="d-tc">
                             <div class="input-group">
-                                <input type="text" class="daterangepicker-field form-control" value="{{$starting_date}} To {{$ending_date}}" required />
+                                <input type="text" class="daterangepicker-field form-control"
+                                    value="{{$starting_date}} To {{$ending_date}}" required />
                                 <input type="hidden" name="starting_date" value="{{$starting_date}}" />
                                 <input type="hidden" name="ending_date" value="{{$ending_date}}" />
                             </div>
@@ -30,14 +33,15 @@
                     <div class="form-group row">
                         <label class="d-tc mt-2"><strong>{{trans('file.Choose Warehouse')}}</strong> &nbsp;</label>
                         <div class="d-tc">
-                            <select id="warehouse_id" name="warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" >
+                            <select id="warehouse_id" name="warehouse_id" class="selectpicker form-control"
+                                data-live-search="true" data-live-search-style="begins">
                                 <option value="0">{{trans('file.All Warehouse')}}</option>
                                 @foreach($lims_warehouse_list as $warehouse)
-                                    @if($warehouse->id == $warehouse_id)
-                                        <option selected value="{{$warehouse->id}}">{{$warehouse->name}}</option>
-                                    @else
-                                        <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
-                                    @endif
+                                @if($warehouse->id == $warehouse_id)
+                                <option selected value="{{$warehouse->id}}">{{$warehouse->name}}</option>
+                                @else
+                                <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
+                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -52,8 +56,10 @@
             {!! Form::close() !!}
         </div>
         @if(in_array("purchases-add", $all_permission))
-            <a href="{{route('purchases.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Purchase')}}</a>&nbsp;
-            <a href="{{url('purchases/purchase_by_csv')}}" class="btn btn-primary"><i class="dripicons-copy"></i> {{trans('file.Import Purchase')}}</a>
+        <a href="{{route('purchases.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add
+            Purchase')}}</a>&nbsp;
+        <a href="{{url('purchases/purchase_by_csv')}}" class="btn btn-primary"><i class="dripicons-copy"></i>
+            {{trans('file.Import Purchase')}}</a>
         @endif
     </div>
     <div class="table-responsive">
@@ -72,7 +78,7 @@
                     <th class="not-exported">{{trans('file.action')}}</th>
                 </tr>
             </thead>
-            
+
             <tfoot class="tfoot active">
                 <th></th>
                 <th>{{trans('file.Total')}}</th>
@@ -89,25 +95,30 @@
     </div>
 </section>
 
-<div id="purchase-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="purchase-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
-      <div class="modal-content">
-        <div class="container mt-3 pb-2 border-bottom">
-            <div class="row">
-                <div class="col-md-3">
-                    <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="dripicons-print"></i> {{trans('file.Print')}}</button>
-                </div>
-                <div class="col-md-6">
-                    <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">{{$general_setting->site_title}}</h3>
-                </div>
-                <div class="col-md-3">
-                    <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close d-print-none"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-                </div>
-                <div class="col-md-12 text-center">
-                    <i style="font-size: 15px;">{{trans('file.Purchase Details')}}</i>
+        <div class="modal-content">
+            <div class="container mt-3 pb-2 border-bottom">
+                <div class="row">
+                    <div class="col-md-3">
+                        <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i
+                                class="dripicons-print"></i> {{trans('file.Print')}}</button>
+                    </div>
+                    <div class="col-md-6">
+                        <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">
+                            {{$general_setting->site_title}}</h3>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close"
+                            class="close d-print-none"><span aria-hidden="true"><i
+                                    class="dripicons-cross"></i></span></button>
+                    </div>
+                    <div class="col-md-12 text-center">
+                        <i style="font-size: 15px;">{{trans('file.Purchase Details')}}</i>
+                    </div>
                 </div>
             </div>
-        </div>
             <div id="purchase-content" class="modal-body"></div>
             <br>
             <table class="table table-bordered product-purchase-list">
@@ -124,16 +135,18 @@
                 </tbody>
             </table>
             <div id="purchase-footer" class="modal-body"></div>
-      </div>
+        </div>
     </div>
 </div>
 
-<div id="view-payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="view-payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.All Payment')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
                 <table class="table table-hover payment-list">
@@ -155,133 +168,141 @@
     </div>
 </div>
 
-<div id="add-payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="add-payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Payment')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
                 {!! Form::open(['route' => 'purchases.add-payment', 'method' => 'post', 'class' => 'payment-form' ]) !!}
-                    <div class="row">
-                        <input type="hidden" name="balance">
-                        <div class="col-md-6">
-                            <label>{{trans('file.Recieved AmountPurchase')}} *</label>
-                            <input type="text" id="idpaying_amount" readonly  name="paying_amount" class="form-control numkey"  step="any" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label>{{trans('file.Paying AmountPurchase')}} *</label>
-                            <input type="text" id="amount" name="amount" class="form-control"  step="any" required>
-                        </div>
-                        <div class="col-md-6 mt-1">
-                            <label>{{trans('file.Change')}} : </label>
-                            <p class="change ml-2">0</p>
-                        </div>
-                        <div class="col-md-6 mt-1">
-                            <label>{{trans('file.Paid By')}}</label>
-                            <select name="paid_by_id" class="form-control">
-                                <option value="1">Cash</option>
-                                <option value="3">Credit Card</option>
-                                <option value="4">Cheque</option>
-                            </select>
-                        </div>
+                <div class="row">
+                    <input type="hidden" name="balance">
+                    <div class="col-md-6">
+                        <label>{{trans('file.Recieved AmountPurchase')}} *</label>
+                        <input type="text" id="idpaying_amount" readonly name="paying_amount"
+                            class="form-control numkey" step="any" required>
                     </div>
-                    <div class="form-group mt-2">
-                        <div class="card-element" class="form-control">
-                        </div>
-                        <div class="card-errors" role="alert"></div>
+                    <div class="col-md-6">
+                        <label>{{trans('file.Paying AmountPurchase')}} *</label>
+                        <input type="text" id="amount" name="amount" class="form-control" step="any" required>
                     </div>
-                    <div id="cheque">
-                        <div class="form-group">
-                            <label>{{trans('file.Cheque Number')}} *</label>
-                            <input type="text" name="cheque_no" class="form-control">
-                        </div>
+                    <div class="col-md-6 mt-1">
+                        <label>{{trans('file.Change')}} : </label>
+                        <p class="change ml-2">0</p>
                     </div>
-                    <div class="form-group">
-                        <label> {{trans('file.Account')}}</label>
-                        <select class="form-control selectpicker" name="account_id">
-                        @foreach($lims_account_list as $account)
-                            @if($account->is_default)
-                            <option selected value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
-                            @else
-                            <option value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
-                            @endif
-                        @endforeach
+                    <div class="col-md-6 mt-1">
+                        <label>{{trans('file.Paid By')}}</label>
+                        <select name="paid_by_id" class="form-control">
+                            <option value="1">Cash</option>
+                            <option value="3">Credit Card</option>
+                            <option value="4">Cheque</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>{{trans('file.Payment Note')}}</label>
-                        <textarea rows="3" class="form-control" name="payment_note"></textarea>
+                </div>
+                <div class="form-group mt-2">
+                    <div class="card-element" class="form-control">
                     </div>
+                    <div class="card-errors" role="alert"></div>
+                </div>
+                <div id="cheque">
+                    <div class="form-group">
+                        <label>{{trans('file.Cheque Number')}} *</label>
+                        <input type="text" name="cheque_no" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label> {{trans('file.Account')}}</label>
+                    <select class="form-control selectpicker" name="account_id">
+                        @foreach($lims_account_list as $account)
+                        @if($account->is_default)
+                        <option selected value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
+                        @else
+                        <option value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
+                        @endif
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>{{trans('file.Payment Note')}}</label>
+                    <textarea rows="3" class="form-control" name="payment_note"></textarea>
+                </div>
 
-                    <input type="hidden" name="purchase_id">
+                <input type="hidden" name="purchase_id">
 
-                    <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
+                <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
                 {{ Form::close() }}
             </div>
         </div>
     </div>
 </div>
 
-<div id="edit-payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="edit-payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Payment')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
-                {!! Form::open(['route' => 'purchases.update-payment', 'method' => 'post', 'class' => 'payment-form' ]) !!}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>{{trans('file.Recieved AmountPurchase')}} *</label>
-                            <input type="text" id="idedit_paying_amount" readonly  name="edit_paying_amount" class="form-control numkey"  step="any" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label>{{trans('file.Paying AmountPurchase')}} *</label>
-                            <input type="text" id="idedit_amount" name="edit_amount" class="form-control"  step="any" required>
-                        </div>
-                        <div class="col-md-6 mt-1">
-                            <label>{{trans('file.Change')}} : </label>
-                            <p class="change ml-2">0</p>
-                        </div>
-                        <div class="col-md-6 mt-1">
-                            <label>{{trans('file.Paid By')}}</label>
-                            <select name="edit_paid_by_id" class="form-control selectpicker">
-                                <option value="1">Cash</option>
-                                <option value="3">Credit Card</option>
-                                <option value="4">Cheque</option>
-                            </select>
-                        </div>
+                {!! Form::open(['route' => 'purchases.update-payment', 'method' => 'post', 'class' => 'payment-form' ])
+                !!}
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>{{trans('file.Recieved AmountPurchase')}} *</label>
+                        <input type="text" id="idedit_paying_amount" readonly name="edit_paying_amount"
+                            class="form-control numkey" step="any" required>
                     </div>
-                    <div class="form-group mt-2">
-                        <div class="card-element" class="form-control">
-                        </div>
-                        <div class="card-errors" role="alert"></div>
+                    <div class="col-md-6">
+                        <label>{{trans('file.Paying AmountPurchase')}} *</label>
+                        <input type="text" id="idedit_amount" name="edit_amount" class="form-control" step="any"
+                            required>
                     </div>
-                    <div id="edit-cheque">
-                        <div class="form-group">
-                            <label>{{trans('file.Cheque Number')}} *</label>
-                            <input type="text" name="edit_cheque_no" class="form-control">
-                        </div>
+                    <div class="col-md-6 mt-1">
+                        <label>{{trans('file.Change')}} : </label>
+                        <p class="change ml-2">0</p>
                     </div>
-                    <div class="form-group">
-                        <label> {{trans('file.Account')}}</label>
-                        <select class="form-control selectpicker" name="account_id">
-                        @foreach($lims_account_list as $account)
-                            <option value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
-                        @endforeach
+                    <div class="col-md-6 mt-1">
+                        <label>{{trans('file.Paid By')}}</label>
+                        <select name="edit_paid_by_id" class="form-control selectpicker">
+                            <option value="1">Cash</option>
+                            <option value="3">Credit Card</option>
+                            <option value="4">Cheque</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>{{trans('file.Payment Note')}}</label>
-                        <textarea rows="3" class="form-control" name="edit_payment_note"></textarea>
+                </div>
+                <div class="form-group mt-2">
+                    <div class="card-element" class="form-control">
                     </div>
+                    <div class="card-errors" role="alert"></div>
+                </div>
+                <div id="edit-cheque">
+                    <div class="form-group">
+                        <label>{{trans('file.Cheque Number')}} *</label>
+                        <input type="text" name="edit_cheque_no" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label> {{trans('file.Account')}}</label>
+                    <select class="form-control selectpicker" name="account_id">
+                        @foreach($lims_account_list as $account)
+                        <option value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>{{trans('file.Payment Note')}}</label>
+                    <textarea rows="3" class="form-control" name="edit_payment_note"></textarea>
+                </div>
 
-                    <input type="hidden" name="payment_id">
+                <input type="hidden" name="payment_id">
 
-                    <button type="submit" class="btn btn-primary">{{trans('file.update')}}</button>
+                <button type="submit" class="btn btn-primary">{{trans('file.update')}}</button>
                 {{ Form::close() }}
             </div>
         </div>
@@ -289,7 +310,6 @@
 </div>
 
 <script type="text/javascript">
-
     $(".daterangepicker-field").daterangepicker({
       callback: function(startDate, endDate, period){
         var starting_date = startDate.format('YYYY-MM-DD');
@@ -311,7 +331,6 @@
     var all_permission = <?php echo json_encode($all_permission) ?>;
     
     var purchase_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     
     $.ajaxSetup({
         headers: {

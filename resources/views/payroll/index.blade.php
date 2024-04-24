@@ -1,13 +1,16 @@
 @extends('layout.main') @section('content')
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 <section>
     <div class="container-fluid">
-        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i> {{trans('file.Add Payroll')}} </button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i>
+            {{trans('file.Add Payroll')}} </button>
     </div>
     <div class="table-responsive">
         <table id="payroll-table" class="table">
@@ -25,9 +28,9 @@
             </thead>
             <tbody>
                 @foreach($lims_payroll_all as $key=>$payroll)
-                @php 
-                    $employee = \App\Employee::find($payroll->employee_id);
-                    $account = \App\Account::find($payroll->account_id);
+                @php
+                $employee = \App\Employee::find($payroll->employee_id);
+                $account = \App\Account::find($payroll->account_id);
                 @endphp
                 <tr data-id="{{$payroll->id}}">
                     <td>{{$key}}</td>
@@ -37,26 +40,34 @@
                     <td>{{ $account->name}}</td>
                     <td>{{ number_format((float)$payroll->amount,0, ',' , '.') }}</td>
                     @if($payroll->paying_method == 0)
-                        <td>Cash</td>
+                    <td>Cash</td>
                     @elseif($payroll->paying_method == 1)
-                        <td>Cheque</td>
+                    <td>Cheque</td>
                     @else
-                        <td>Credit Card</td>
+                    <td>Credit Card</td>
                     @endif
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li>
-                                    <button type="button" data-id="{{$payroll->id}}" data-reference="{{$payroll->reference_no}}" data-employee="{{$payroll->employee_id}}" data-account="{{$payroll->account_id}}" data-amount="{{$payroll->amount}}" data-note="{{$payroll->note}}" data-paying_method="{{$payroll->paying_method}}" class="edit-btn btn btn-link" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</button> 
+                                    <button type="button" data-id="{{$payroll->id}}"
+                                        data-reference="{{$payroll->reference_no}}"
+                                        data-employee="{{$payroll->employee_id}}"
+                                        data-account="{{$payroll->account_id}}" data-amount="{{$payroll->amount}}"
+                                        data-note="{{$payroll->note}}" data-paying_method="{{$payroll->paying_method}}"
+                                        class="edit-btn btn btn-link" data-toggle="modal" data-target="#editModal"><i
+                                            class="dripicons-document-edit"></i> {{trans('file.edit')}}</button>
                                 </li>
                                 <li class="divider"></li>
                                 {{ Form::open(['route' => ['payroll.destroy', $payroll->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i
+                                            class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -81,20 +92,24 @@
     </div>
 </section>
 
-<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Payroll')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
-              <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
                 {!! Form::open(['route' => 'payroll.store', 'method' => 'post', 'files' => true]) !!}
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label>{{trans('file.Employee')}} *</label>
-                        <select class="form-control selectpicker" name="employee_id" required data-live-search="true" data-live-search-style="begins" title="Select Employee...">
+                        <select class="form-control selectpicker" name="employee_id" required data-live-search="true"
+                            data-live-search-style="begins" title="Select Employee...">
                             @foreach($lims_employee_list as $employee)
                             <option value="{{$employee->id}}">{{$employee->name}}</option>
                             @endforeach
@@ -103,13 +118,14 @@
                     <div class="col-md-6 form-group">
                         <label> {{trans('file.Account')}} *</label>
                         <select class="form-control selectpicker" name="account_id">
-                        @foreach($lims_account_list as $account)
+                            @foreach($lims_account_list as $account)
                             @if($account->is_default)
-                            <option selected value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
+                            <option selected value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]
+                            </option>
                             @else
                             <option value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
                             @endif
-                        @endforeach
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-6 form-group">
@@ -138,21 +154,25 @@
     </div>
 </div>
 
-<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Payroll')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
-              <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
                 {!! Form::open(['route' => ['payroll.update', 1], 'method' => 'put', 'files' => true]) !!}
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <input type="hidden" name="payroll_id">
                         <label>{{trans('file.Employee')}} *</label>
-                        <select class="form-control selectpicker" name="employee_id" required data-live-search="true" data-live-search-style="begins" title="Select Employee...">
+                        <select class="form-control selectpicker" name="employee_id" required data-live-search="true"
+                            data-live-search-style="begins" title="Select Employee...">
                             @foreach($lims_employee_list as $employee)
                             <option value="{{$employee->id}}">{{$employee->name}}</option>
                             @endforeach
@@ -161,13 +181,14 @@
                     <div class="col-md-6 form-group">
                         <label> {{trans('file.Account')}} *</label>
                         <select class="form-control selectpicker" name="account_id">
-                        @foreach($lims_account_list as $account)
+                            @foreach($lims_account_list as $account)
                             @if($account->is_default)
-                            <option selected value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
+                            <option selected value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]
+                            </option>
                             @else
                             <option value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
                             @endif
-                        @endforeach
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-6 form-group">
@@ -197,13 +218,11 @@
 </div>
 
 <script type="text/javascript">
-
     $("ul#hrm").siblings('a').attr('aria-expanded','true');
     $("ul#hrm").addClass("show");
     $("ul#hrm #payroll-menu").addClass("active");
 
     var payroll_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     
     $.ajaxSetup({
         headers: {

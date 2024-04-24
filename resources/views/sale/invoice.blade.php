@@ -191,9 +191,12 @@
                                 <img src="data:image/png;base64,{{ base64_encode(file_get_contents($logo)) }}"
                                     width="200px" alt="">
                             </td>
-                            <td>
+                            <td style="vertical-align: top;">
                                 <center>
-                                    <div>Jl. Diponegoro No. 105 (Jurusan Pasar) <br>
+                                    <div>
+                                        Nomor Invoice : {{$lims_sale_data->reference_no}}
+                                    </div>
+                                    <div style="margin-top: 1.5rem">Jl. Diponegoro No. 105 (Jurusan Pasar) <br>
                                         Ketanggungan Timur - Brebes</div>
                                 </center>
                             </td>

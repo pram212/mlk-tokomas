@@ -1,18 +1,22 @@
 @extends('layout.main') @section('content')
 
 @if($errors->has('name'))
-<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ $errors->first('name') }}</div>
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ $errors->first('name') }}</div>
 @endif
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
     <div class="container-fluid">
-        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i> {{trans('file.Add Department')}}</button>
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createModal"><i
+                class="dripicons-plus"></i> {{trans('file.Add Department')}}</button>
     </div>
     <div class="table-responsive">
         <table id="department-table" class="table">
@@ -30,18 +34,24 @@
                     <td>{{ $department->name }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
-                              <span class="caret"></span>
-                              <span class="sr-only">Toggle Dropdown</span>
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li>
-                                    <button type="button" data-id="{{$department->id}}" data-name="{{$department->name}}" class="edit-btn btn btn-link" data-toggle="modal" data-target="#editModal" ><i class="dripicons-document-edit"></i>  {{trans('file.edit')}}</button>
+                                    <button type="button" data-id="{{$department->id}}"
+                                        data-name="{{$department->name}}" class="edit-btn btn btn-link"
+                                        data-toggle="modal" data-target="#editModal"><i
+                                            class="dripicons-document-edit"></i> {{trans('file.edit')}}</button>
                                 </li>
                                 <li class="divider"></li>
-                                {{ Form::open(['route' => ['departments.destroy', $department->id], 'method' => 'DELETE'] ) }}
+                                {{ Form::open(['route' => ['departments.destroy', $department->id], 'method' =>
+                                'DELETE'] ) }}
                                 <li>
-                                  <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button> 
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i
+                                            class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -52,65 +62,71 @@
             </tbody>
         </table>
     </div>
-</seaction>
+    </seaction>
 
-<!-- Create Modal -->
-<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-    <div role="document" class="modal-dialog">
-      <div class="modal-content">
-        {!! Form::open(['route' => 'departments.store', 'method' => 'post']) !!}
-        <div class="modal-header">
-          <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Department')}}</h5>
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+    <!-- Create Modal -->
+    <div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        class="modal fade text-left">
+        <div role="document" class="modal-dialog">
+            <div class="modal-content">
+                {!! Form::open(['route' => 'departments.store', 'method' => 'post']) !!}
+                <div class="modal-header">
+                    <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Department')}}</h5>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
+                            aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                </div>
+                <div class="modal-body">
+                    <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                            fields')}}.</small></p>
+                    <form>
+                        <div class="form-group">
+                            <label>{{trans('file.name')}} *</label>
+                            {{Form::text('name',null,array('required' => 'required', 'class' => 'form-control',
+                            'placeholder' => 'Type department name...'))}}
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+                        </div>
+                    </form>
+                </div>
+                {{ Form::close() }}
+            </div>
         </div>
-        <div class="modal-body">
-          <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-          <form>
-            <div class="form-group">
-                <label>{{trans('file.name')}} *</label>
-                {{Form::text('name',null,array('required' => 'required', 'class' => 'form-control', 'placeholder' => 'Type department name...'))}}
-            </div>               
-            <div class="form-group">       
-              <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+    </div>
+    <!-- Edit Modal -->
+    <div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        class="modal fade text-left">
+        <div role="document" class="modal-dialog">
+            <div class="modal-content">
+                {{ Form::open(['route' => ['departments.update', 1], 'method' => 'PUT'] ) }}
+                <div class="modal-header">
+                    <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Department')}}</h5>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
+                            aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                </div>
+                <div class="modal-body">
+                    <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                            fields')}}.</small></p>
+                    <div class="form-group">
+                        <label>{{trans('file.name')}} *</label>
+                        {{Form::text('name',null, array('required' => 'required', 'class' => 'form-control'))}}
+                    </div>
+                    <input type="hidden" name="department_id">
+                    <div class="form-group">
+                        <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+                    </div>
+                </div>
+                {{ Form::close() }}
             </div>
-          </form>
         </div>
-        {{ Form::close() }}
-      </div>
     </div>
-</div>
-<!-- Edit Modal -->
-<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-  <div role="document" class="modal-dialog">
-    <div class="modal-content">
-        {{ Form::open(['route' => ['departments.update', 1], 'method' => 'PUT'] ) }}
-      <div class="modal-header">
-        <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Department')}}</h5>
-        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-      </div>
-      <div class="modal-body">
-        <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-            <div class="form-group">
-                <label>{{trans('file.name')}} *</label>
-                {{Form::text('name',null, array('required' => 'required', 'class' => 'form-control'))}}
-            </div>
-            <input type="hidden" name="department_id">
-            <div class="form-group">       
-                <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
-              </div>
-            </div>
-      {{ Form::close() }}
-    </div>
-  </div>
-</div>
 
-<script type="text/javascript">
-    $("ul#hrm").siblings('a').attr('aria-expanded','true');
+    <script type="text/javascript">
+        $("ul#hrm").siblings('a').attr('aria-expanded','true');
     $("ul#hrm").addClass("show");
     $("ul#hrm #dept-menu").addClass("active");
 
     var department_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     
     $.ajaxSetup({
         headers: {
@@ -231,5 +247,5 @@ $(document).ready(function() {
             },
         ],
     } );
-</script>
-@endsection
+    </script>
+    @endsection

@@ -1,15 +1,18 @@
 @extends('layout.main') @section('content')
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
     <div class="container-fluid">
         @if(in_array("quotes-add", $all_permission))
-            <a href="{{route('quotations.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Quotation')}}</a>
+        <a href="{{route('quotations.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add
+            Quotation')}}</a>
         @endif
     </div>
     <div class="table-responsive">
@@ -35,9 +38,11 @@
                     else
                         $status = trans('file.Sent');
                 ?>
-                <tr class="quotation-link" data-quotation='["{{date($general_setting->date_format, strtotime($quotation->created_at->toDateString()))}}", "{{$quotation->reference_no}}", "{{$status}}", "{{$quotation->biller->name}}", "{{$quotation->biller->company_name}}","{{$quotation->biller->email}}", "{{$quotation->biller->phone_number}}", "{{$quotation->biller->address}}", "{{$quotation->biller->city}}", "{{$quotation->customer->name}}", "{{$quotation->customer->phone_number}}", "{{$quotation->customer->address}}", "{{$quotation->customer->city}}", "{{$quotation->id}}", "{{$quotation->total_tax}}", "{{$quotation->total_discount}}", "{{$quotation->total_price}}", "{{$quotation->order_tax}}", "{{$quotation->order_tax_rate}}", "{{$quotation->order_discount}}", "{{$quotation->shipping_cost}}", "{{$quotation->grand_total}}", "{{$quotation->note}}", "{{$quotation->user->name}}", "{{$quotation->user->email}}"]'>
+                <tr class="quotation-link"
+                    data-quotation='["{{date($general_setting->date_format, strtotime($quotation->created_at->toDateString()))}}", "{{$quotation->reference_no}}", "{{$status}}", "{{$quotation->biller->name}}", "{{$quotation->biller->company_name}}","{{$quotation->biller->email}}", "{{$quotation->biller->phone_number}}", "{{$quotation->biller->address}}", "{{$quotation->biller->city}}", "{{$quotation->customer->name}}", "{{$quotation->customer->phone_number}}", "{{$quotation->customer->address}}", "{{$quotation->customer->city}}", "{{$quotation->id}}", "{{$quotation->total_tax}}", "{{$quotation->total_discount}}", "{{$quotation->total_price}}", "{{$quotation->order_tax}}", "{{$quotation->order_tax_rate}}", "{{$quotation->order_discount}}", "{{$quotation->shipping_cost}}", "{{$quotation->grand_total}}", "{{$quotation->note}}", "{{$quotation->user->name}}", "{{$quotation->user->email}}"]'>
                     <td>{{$key}}</td>
-                    <td>{{ date($general_setting->date_format, strtotime($quotation->created_at->toDateString())) . ' '. $quotation->created_at->toTimeString() }}</td>
+                    <td>{{ date($general_setting->date_format, strtotime($quotation->created_at->toDateString())) . ' '.
+                        $quotation->created_at->toTimeString() }}</td>
                     <td>{{ $quotation->reference_no }}</td>
                     <td>{{ $quotation->biller->name }}</td>
                     <td>{{ $quotation->customer->name }}</td>
@@ -47,37 +52,51 @@
                     <td>N/A</td>
                     @endif
                     @if($quotation->quotation_status == 1)
-                        <td><div class="badge badge-danger">{{$status}}</div></td>
+                    <td>
+                        <div class="badge badge-danger">{{$status}}</div>
+                    </td>
                     @else
-                        <td><div class="badge badge-success">{{$status}}</div></td>
+                    <td>
+                        <div class="badge badge-success">{{$status}}</div>
+                    </td>
                     @endif
                     <td>{{ $quotation->grand_total }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li>
-                                    <button type="button" class="btn btn-link view"><i class="fa fa-eye"></i>  {{trans('file.View')}}</button>
+                                    <button type="button" class="btn btn-link view"><i class="fa fa-eye"></i>
+                                        {{trans('file.View')}}</button>
                                 </li>
                                 @if(in_array("quotes-edit", $all_permission))
                                 <li>
-                                    <a class="btn btn-link" href="{{ route('quotations.edit', $quotation->id) }}"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</a></button> 
+                                    <a class="btn btn-link" href="{{ route('quotations.edit', $quotation->id) }}"><i
+                                            class="dripicons-document-edit"></i> {{trans('file.edit')}}</a></button>
                                 </li>
                                 @endif
                                 <li>
-                                    <a class="btn btn-link" href="{{ route('quotations.create_sale', ['id' => $quotation->id]) }}"><i class="fa fa-shopping-cart"></i> {{trans('file.Create Sale')}}</a></button> 
+                                    <a class="btn btn-link"
+                                        href="{{ route('quotations.create_sale', ['id' => $quotation->id]) }}"><i
+                                            class="fa fa-shopping-cart"></i> {{trans('file.Create Sale')}}</a></button>
                                 </li>
                                 <li>
-                                    <a class="btn btn-link" href="{{ route('quotation.create_purchase', ['id' => $quotation->id]) }}"><i class="fa fa-shopping-basket"></i> {{trans('file.Create Purchase')}}</a></button> 
+                                    <a class="btn btn-link"
+                                        href="{{ route('quotation.create_purchase', ['id' => $quotation->id]) }}"><i
+                                            class="fa fa-shopping-basket"></i> {{trans('file.Create
+                                        Purchase')}}</a></button>
                                 </li>
                                 <li class="divider"></li>
                                 @if(in_array("quotes-delete", $all_permission))
-                                {{ Form::open(['route' => ['quotations.destroy', $quotation->id], 'method' => 'DELETE'] ) }}
+                                {{ Form::open(['route' => ['quotations.destroy', $quotation->id], 'method' => 'DELETE']
+                                ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i
+                                            class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                                 @endif
@@ -102,29 +121,36 @@
     </div>
 </section>
 
-<div id="quotation-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="quotation-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
-      <div class="modal-content">
-        <div class="container mt-3 pb-2 border-bottom">
-            <div class="row">
-                <div class="col-md-3">
-                    <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="dripicons-print"></i> {{trans('file.Print')}}</button>
-                    {{ Form::open(['route' => 'quotations.sendmail', 'method' => 'post', 'class' => 'sendmail-form'] ) }}
+        <div class="modal-content">
+            <div class="container mt-3 pb-2 border-bottom">
+                <div class="row">
+                    <div class="col-md-3">
+                        <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i
+                                class="dripicons-print"></i> {{trans('file.Print')}}</button>
+                        {{ Form::open(['route' => 'quotations.sendmail', 'method' => 'post', 'class' => 'sendmail-form']
+                        ) }}
                         <input type="hidden" name="quotation_id">
-                        <button class="btn btn-default btn-sm d-print-none"><i class="dripicons-mail"></i> {{trans('file.Email')}}</button>
-                    {{ Form::close() }}
-                </div>
-                <div class="col-md-6">
-                    <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">{{$general_setting->site_title}}</h3>
-                </div>
-                <div class="col-md-3">
-                    <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close d-print-none"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-                </div>
-                <div class="col-md-12 text-center">
-                    <i style="font-size: 15px;">{{trans('file.Quotation Details')}}</i>
+                        <button class="btn btn-default btn-sm d-print-none"><i class="dripicons-mail"></i>
+                            {{trans('file.Email')}}</button>
+                        {{ Form::close() }}
+                    </div>
+                    <div class="col-md-6">
+                        <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">
+                            {{$general_setting->site_title}}</h3>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close"
+                            class="close d-print-none"><span aria-hidden="true"><i
+                                    class="dripicons-cross"></i></span></button>
+                    </div>
+                    <div class="col-md-12 text-center">
+                        <i style="font-size: 15px;">{{trans('file.Quotation Details')}}</i>
+                    </div>
                 </div>
             </div>
-        </div>
             <div id="quotation-content" class="modal-body">
             </div>
             <br>
@@ -142,18 +168,16 @@
                 </tbody>
             </table>
             <div id="quotation-footer" class="modal-body"></div>
-      </div>
+        </div>
     </div>
 </div>
 
 <script type="text/javascript">
-
     $("ul#quotation").siblings('a').attr('aria-expanded','true');
     $("ul#quotation").addClass("show");
     $("ul#quotation #quotation-list-menu").addClass("active");
     var all_permission = <?php echo json_encode($all_permission) ?>;
     var quotation_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     
     $.ajaxSetup({
         headers: {

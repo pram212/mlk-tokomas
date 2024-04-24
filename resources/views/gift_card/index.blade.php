@@ -1,18 +1,23 @@
 @extends('layout.main') @section('content')
 @if($errors->has('card_no'))
 <div class="alert alert-danger alert-dismissible text-center">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ $errors->first('card_no') }}</div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>{{ $errors->first('card_no') }}
+</div>
 @endif
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
     <div class="container-fluid">
-        <button class="btn btn-info" data-toggle="modal" data-target="#gift_card-modal"><i class="dripicons-plus"></i> {{trans('file.Add Gift Card')}}</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#gift_card-modal"><i class="dripicons-plus"></i>
+            {{trans('file.Add Gift Card')}}</button>
     </div>
     <div class="table-responsive">
         <table id="gift_card-table" class="table">
@@ -53,24 +58,41 @@
                     <td>{{ $gift_card->amount - $gift_card->expense }}</td>
                     <td>{{ $created_by->name }}</td>
                     @if($gift_card->expired_date >= date("Y-m-d"))
-                      <td><div class="badge badge-success">{{date('d-m-Y', strtotime($gift_card->expired_date))}}</div></td>
+                    <td>
+                        <div class="badge badge-success">{{date('d-m-Y', strtotime($gift_card->expired_date))}}</div>
+                    </td>
                     @else
-                      <td><div class="badge badge-danger">{{date('d-m-Y', strtotime($gift_card->expired_date))}}</div></td>
+                    <td>
+                        <div class="badge badge-danger">{{date('d-m-Y', strtotime($gift_card->expired_date))}}</div>
+                    </td>
                     @endif
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
-                                <li><button type="button" data-client="{{$client}}" data-card_no="{{$gift_card->card_no}}" data-amount="{{$gift_card->amount}}" data-expense="{{$gift_card->expense}}" data-expired_date="{{date('d-m-Y', strtotime($gift_card->expired_date))}}" class="view-btn btn btn-link" data-toggle="modal" data-target="#viewModal"><i class="fa fa-eye"></i> {{trans('file.View')}}</button></li>
-                                <li><button type="button" data-id="{{$gift_card->id}}" class="open-Edit_gift_card_Dialog btn btn-link" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</button></li>
-                                <li><button type="button" data-id="{{$gift_card->id}}" class="recharge btn btn-link" data-toggle="modal" data-target="#rechargeModal"><i class="fa fa-money"></i> {{trans('file.Recharge')}}</button></li>
+                                <li><button type="button" data-client="{{$client}}"
+                                        data-card_no="{{$gift_card->card_no}}" data-amount="{{$gift_card->amount}}"
+                                        data-expense="{{$gift_card->expense}}"
+                                        data-expired_date="{{date('d-m-Y', strtotime($gift_card->expired_date))}}"
+                                        class="view-btn btn btn-link" data-toggle="modal" data-target="#viewModal"><i
+                                            class="fa fa-eye"></i> {{trans('file.View')}}</button></li>
+                                <li><button type="button" data-id="{{$gift_card->id}}"
+                                        class="open-Edit_gift_card_Dialog btn btn-link" data-toggle="modal"
+                                        data-target="#editModal"><i class="dripicons-document-edit"></i>
+                                        {{trans('file.edit')}}</button></li>
+                                <li><button type="button" data-id="{{$gift_card->id}}" class="recharge btn btn-link"
+                                        data-toggle="modal" data-target="#rechargeModal"><i class="fa fa-money"></i>
+                                        {{trans('file.Recharge')}}</button></li>
                                 <li class="divider"></li>
-                                {{ Form::open(['route' => ['gift_cards.destroy', $gift_card->id], 'method' => 'DELETE'] ) }}
+                                {{ Form::open(['route' => ['gift_cards.destroy', $gift_card->id], 'method' => 'DELETE']
+                                ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i
+                                            class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -94,107 +116,123 @@
     </div>
 </section>
 
-<div id="viewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-  <div role="document" class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 id="exampleModalLabel" class="modal-title d-print-none"> {{trans('file.Card Details')}} &nbsp;&nbsp;</h5>
-              <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="dripicons-print"></i> {{trans('file.Print')}}</button>
-              <button type="button" data-dismiss="modal" aria-label="Close" class="close d-print-none" id="close-btn"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-          </div>
-          <div class="modal-body">
-              <div class="gift-card" style="margin: 0 auto; max-width: 350px; position: relative; color:#fff;"><img src="{{url('public/images/gift_card/front.jpg')}}" width="350" height="200">
-                <div style="position: absolute; padding: 15px; top:0; left: 0; width: 350px;">
-                    <h3 class="d-inline">Gift Card</h3><h3 class="d-inline float-right">{{$currency->code}} <span id="balance"></span></h3>
-                    <p class="card-number" style="font-size: 28px;letter-spacing: 3px; margin-top: 15px;"></p>
-                    <p class="client" style="text-transform: capitalize;margin-bottom: 10px;"></p>
-                    <span class="valid" style="font-size: 11px;">Valid Thru</span>
-                    <p class="valid-date" style="font-size: 11px;"></p>
+<div id="viewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title d-print-none"> {{trans('file.Card Details')}} &nbsp;&nbsp;
+                </h5>
+                <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i
+                        class="dripicons-print"></i> {{trans('file.Print')}}</button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close d-print-none"
+                    id="close-btn"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+            </div>
+            <div class="modal-body">
+                <div class="gift-card" style="margin: 0 auto; max-width: 350px; position: relative; color:#fff;"><img
+                        src="{{url('public/images/gift_card/front.jpg')}}" width="350" height="200">
+                    <div style="position: absolute; padding: 15px; top:0; left: 0; width: 350px;">
+                        <h3 class="d-inline">Gift Card</h3>
+                        <h3 class="d-inline float-right">{{$currency->code}} <span id="balance"></span></h3>
+                        <p class="card-number" style="font-size: 28px;letter-spacing: 3px; margin-top: 15px;"></p>
+                        <p class="client" style="text-transform: capitalize;margin-bottom: 10px;"></p>
+                        <span class="valid" style="font-size: 11px;">Valid Thru</span>
+                        <p class="valid-date" style="font-size: 11px;"></p>
+                    </div>
                 </div>
-              </div>
-              <br>
-              <div class="gift-card" style="margin: 0 auto; max-width: 350px; position: relative; color:#fff;">
-                <img src="{{url('public/images/gift_card/back.png')}}" width="350" height="200">
-                <div class="site-title" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">@if($general_setting->site_logo)
-                  <img src="{{url('public/logo', $general_setting->site_logo)}}" height="38px" width="38px">&nbsp;
-                  <span style="font-size: 25px;">@endif{{$general_setting->site_title}}</span>
+                <br>
+                <div class="gift-card" style="margin: 0 auto; max-width: 350px; position: relative; color:#fff;">
+                    <img src="{{url('public/images/gift_card/back.png')}}" width="350" height="200">
+                    <div class="site-title"
+                        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        @if($general_setting->site_logo)
+                        <img src="{{url('public/logo', $general_setting->site_logo)}}" height="38px" width="38px">&nbsp;
+                        <span style="font-size: 25px;">@endif{{$general_setting->site_title}}</span>
+                    </div>
                 </div>
-              </div>
-          </div>
-      </div>
-  </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="gift_card-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="gift_card-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Gift Card')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
-              <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
                 {!! Form::open(['route' => 'gift_cards.store', 'method' => 'post']) !!}
                 <?php 
                   $lims_warehouse_list = DB::table('warehouses')->where('is_active', true)->get();
                 ?>
-                  <div class="form-group">
-                      <label>{{trans('file.Card No')}} *</label>
-                      <div class="input-group">
-                          {{Form::text('card_no',null,array('required' => 'required', 'class' => 'form-control'))}}
-                          <div class="input-group-append">
-                              <button type="button" class="btn btn-default genbutton">{{trans('file.Generate')}}</button>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="form-group">
-                      <label>{{trans('file.Amount')}} *</label>
-                      <input type="text" id="amountid" name="amount" step="any" required class="form-control">
-                  </div>
-                  <div class="form-group">
-                      <label>{{trans('file.User List')}}</label>&nbsp;
-                      <input type="checkbox" id="user" name="user" value="1">
-                  </div>
-                  <div class="form-group user_list">
-                      <label>{{trans('file.User')}} *</label>
-                      <select name="user_id" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select User...">
-                          @foreach($lims_user_list as $user)
-                          <option value="{{$user->id}}">{{$user->name .' ('.$user->email.')'}}</option>
-                          @endforeach
-                      </select>
-                  </div>
-                  <div class="form-group customer_list">
-                      <label>{{trans('file.customer')}} *</label>
-                      <select name="customer_id" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select Customer...">
-                          @foreach($lims_customer_list as $customer)
-                          <option value="{{$customer->id}}">{{$customer->name .' ('.$customer->phone_number.')'}}</option>
-                          @endforeach
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label>{{trans('file.Expired Date')}}</label>
-                      <input type="text" id="expired_date" name="expired_date" class="form-control">
-                  </div>
-                  <div class="form-group">
-                      <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
-                  </div>
+                <div class="form-group">
+                    <label>{{trans('file.Card No')}} *</label>
+                    <div class="input-group">
+                        {{Form::text('card_no',null,array('required' => 'required', 'class' => 'form-control'))}}
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-default genbutton">{{trans('file.Generate')}}</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>{{trans('file.Amount')}} *</label>
+                    <input type="text" id="amountid" name="amount" step="any" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>{{trans('file.User List')}}</label>&nbsp;
+                    <input type="checkbox" id="user" name="user" value="1">
+                </div>
+                <div class="form-group user_list">
+                    <label>{{trans('file.User')}} *</label>
+                    <select name="user_id" class="selectpicker form-control" required data-live-search="true"
+                        data-live-search-style="begins" title="Select User...">
+                        @foreach($lims_user_list as $user)
+                        <option value="{{$user->id}}">{{$user->name .' ('.$user->email.')'}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group customer_list">
+                    <label>{{trans('file.customer')}} *</label>
+                    <select name="customer_id" class="selectpicker form-control" required data-live-search="true"
+                        data-live-search-style="begins" title="Select Customer...">
+                        @foreach($lims_customer_list as $customer)
+                        <option value="{{$customer->id}}">{{$customer->name .' ('.$customer->phone_number.')'}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>{{trans('file.Expired Date')}}</label>
+                    <input type="text" id="expired_date" name="expired_date" class="form-control">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
+                </div>
                 {{ Form::close() }}
             </div>
         </div>
     </div>
 </div>
 
-<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-  <div role="document" class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Gift Card')}}</h5>
-              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-          </div>
-          <div class="modal-body">
-            <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-              {!! Form::open(['route' => ['gift_cards.update', 1], 'method' => 'put']) !!}
-              <?php 
+<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Gift Card')}}</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
+            </div>
+            <div class="modal-body">
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
+                {!! Form::open(['route' => ['gift_cards.update', 1], 'method' => 'put']) !!}
+                <?php 
                 $lims_warehouse_list = DB::table('warehouses')->where('is_active', true)->get();
               ?>
                 <div class="form-group">
@@ -217,7 +255,8 @@
                 </div>
                 <div class="form-group user_list_edit">
                     <label>{{trans('file.User')}} *</label>
-                    <select name="user_id_edit" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select User...">
+                    <select name="user_id_edit" class="selectpicker form-control" required data-live-search="true"
+                        data-live-search-style="begins" title="Select User...">
                         @foreach($lims_user_list as $user)
                         <option value="{{$user->id}}">{{$user->name .' ('.$user->email.')'}}</option>
                         @endforeach
@@ -225,7 +264,8 @@
                 </div>
                 <div class="form-group customer_list_edit">
                     <label>{{trans('file.customer')}} *</label>
-                    <select name="customer_id_edit" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select Customer...">
+                    <select name="customer_id_edit" class="selectpicker form-control" required data-live-search="true"
+                        data-live-search-style="begins" title="Select Customer...">
                         @foreach($lims_customer_list as $customer)
                         <option value="{{$customer->id}}">{{$customer->name .' ('.$customer->phone_number.')'}}</option>
                         @endforeach
@@ -238,22 +278,26 @@
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
                 </div>
-              {{ Form::close() }}
-          </div>
-      </div>
-  </div>
+                {{ Form::close() }}
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="rechargeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-  <div role="document" class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Card No')}}: <span id="card-no"></span></h5>
-              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-          </div>
-          <div class="modal-body">
-            <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-              {!! Form::open(['route' => ['gift_cards.recharge', 1], 'method' => 'post']) !!}
+<div id="rechargeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Card No')}}: <span id="card-no"></span>
+                </h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
+            </div>
+            <div class="modal-body">
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
+                {!! Form::open(['route' => ['gift_cards.recharge', 1], 'method' => 'post']) !!}
                 <div class="form-group">
                     <input type="hidden" name="gift_card_id">
                     <label>{{trans('file.Amount')}} *</label>
@@ -262,20 +306,18 @@
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
                 </div>
-              {{ Form::close() }}
-          </div>
-      </div>
-  </div>
+                {{ Form::close() }}
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">
-
     $("ul#sale").siblings('a').attr('aria-expanded','true');
     $("ul#sale").addClass("show");
     $("ul#sale #gift-card-menu").addClass("active");
 
     var gift_card_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     
     $.ajaxSetup({
         headers: {

@@ -2,19 +2,25 @@
 @section('content')
 @if($errors->has('name'))
 <div class="alert alert-danger alert-dismissible text-center">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ $errors->first('name') }}</div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>{{ $errors->first('name') }}
+</div>
 @endif
 @if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div> 
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('message') }}</div>
 @endif
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 
 <section>
     <div class="container-fluid">
-        <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Customer Group')}}</a>
-        <a href="#" data-toggle="modal" data-target="#importcustomer_group" class="btn btn-primary"><i class="dripicons-copy"></i> {{trans('file.Import Customer Group')}}</a>
+        <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-info"><i class="dripicons-plus"></i>
+            {{trans('file.Add Customer Group')}}</a>
+        <a href="#" data-toggle="modal" data-target="#importcustomer_group" class="btn btn-primary"><i
+                class="dripicons-copy"></i> {{trans('file.Import Customer Group')}}</a>
     </div>
     <div class="table-responsive">
         <table id="customer-grp-table" class="table">
@@ -34,19 +40,25 @@
                     <td>{{ $customer_group->percentage}}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li>
-                                    <button type="button" data-id="{{$customer_group->id}}" class="open-EditCustomerGroupDialog btn btn-link" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}
+                                    <button type="button" data-id="{{$customer_group->id}}"
+                                        class="open-EditCustomerGroupDialog btn btn-link" data-toggle="modal"
+                                        data-target="#editModal"><i class="dripicons-document-edit"></i>
+                                        {{trans('file.edit')}}
                                     </button>
                                 </li>
                                 <li class="divider"></li>
-                                {{ Form::open(['route' => ['customer_group.destroy', $customer_group->id], 'method' => 'DELETE'] ) }}
+                                {{ Form::open(['route' => ['customer_group.destroy', $customer_group->id], 'method' =>
+                                'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i
+                                            class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -59,95 +71,107 @@
     </div>
 </section>
 
-<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-<div role="document" class="modal-dialog">
-  <div class="modal-content">
-    {!! Form::open(['route' => 'customer_group.store', 'method' => 'post']) !!}
-    <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Customer Group')}}</h5>
-      <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-    </div>
-    <div class="modal-body">
-      <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-      <form>
-        <div class="form-group">
-          <label>{{trans('file.name')}} *</label>
-          <input type="text" name="name" required="required" class="form-control">
-        </div>
-        <div class="form-group">       
-          <label>{{trans('file.Percentage')}}(%) *</label>
-          <input type="text" name="percentage" required="required" class="form-control">
-        </div>                
-        <div class="form-group">       
-          <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
-        </div>
-      </form>
-    </div>
+<div id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            {!! Form::open(['route' => 'customer_group.store', 'method' => 'post']) !!}
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Customer Group')}}</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
+            </div>
+            <div class="modal-body">
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
+                <form>
+                    <div class="form-group">
+                        <label>{{trans('file.name')}} *</label>
+                        <input type="text" name="name" required="required" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>{{trans('file.Percentage')}}(%) *</label>
+                        <input type="text" name="percentage" required="required" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
 
-    {{ Form::close() }}
-  </div>
-</div>
-</div>
-
-<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-<div role="document" class="modal-dialog">
-  <div class="modal-content">
-    {!! Form::open(['route' => ['customer_group.update',1], 'method' => 'put']) !!}
-    <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Customer Group')}}</h5>
-      <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-    </div>
-    <div class="modal-body">
-      <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-        <div class="form-group">
-            <input type="hidden" name="customer_group_id">
-          <label>{{trans('file.name')}} *</label>
-          <input type="text" name="name" required="required" class="form-control">
-        </div>
-        <div class="form-group">       
-          <label>{{trans('file.Percentage')}}(%) *</label>
-          <input type="text" name="percentage" required="required" class="form-control">
-        </div>                
-        <div class="form-group">       
-          <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+            {{ Form::close() }}
         </div>
     </div>
-    {{ Form::close() }}
-  </div>
-</div>
 </div>
 
-<div id="importcustomer_group" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-<div role="document" class="modal-dialog">
-  <div class="modal-content">
-    {!! Form::open(['route' => 'customer_group.import', 'method' => 'post', 'files' => true]) !!}
-    <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Import Customer Group')}}</h5>
-      <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-    </div>
-    <div class="modal-body">
-        <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
-       <p>{{trans('file.The correct column order is')}} (name*, percentage*) {{trans('file.and you must follow this')}}.</p>
-      <div class="row">
-            <div class="col-md-6">
+<div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            {!! Form::open(['route' => ['customer_group.update',1], 'method' => 'put']) !!}
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Customer Group')}}</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
+            </div>
+            <div class="modal-body">
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
                 <div class="form-group">
-                    <label>{{trans('file.Upload CSV File')}} *</label>
-                    {{Form::file('file', array('class' => 'form-control','required'))}}
+                    <input type="hidden" name="customer_group_id">
+                    <label>{{trans('file.name')}} *</label>
+                    <input type="text" name="name" required="required" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>{{trans('file.Percentage')}}(%) *</label>
+                    <input type="text" name="percentage" required="required" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label> {{trans('file.Sample File')}}</label>
-                    <a href="public/sample_file/sample_customer_group.csv" class="btn btn-info btn-block btn-md"><i class="dripicons-download"></i>  {{trans('file.Download')}}</a>
-                </div>
-            </div>
-      </div>
-
-        <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+            {{ Form::close() }}
+        </div>
     </div>
-    {{ Form::close() }}
-  </div>
 </div>
+
+<div id="importcustomer_group" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            {!! Form::open(['route' => 'customer_group.import', 'method' => 'post', 'files' => true]) !!}
+            <div class="modal-header">
+                <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Import Customer Group')}}</h5>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
+            </div>
+            <div class="modal-body">
+                <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                        fields')}}.</small></p>
+                <p>{{trans('file.The correct column order is')}} (name*, percentage*) {{trans('file.and you must follow
+                    this')}}.</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>{{trans('file.Upload CSV File')}} *</label>
+                            {{Form::file('file', array('class' => 'form-control','required'))}}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> {{trans('file.Sample File')}}</label>
+                            <a href="public/sample_file/sample_customer_group.csv"
+                                class="btn btn-info btn-block btn-md"><i class="dripicons-download"></i>
+                                {{trans('file.Download')}}</a>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
+            </div>
+            {{ Form::close() }}
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -156,7 +180,6 @@
     $("ul#setting #customer-group-menu").addClass("active");
 
     var customer_group_id = [];
-    var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
     
     $.ajaxSetup({
         headers: {

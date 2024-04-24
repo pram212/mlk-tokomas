@@ -404,7 +404,7 @@
     </div>
 </div>
 
-<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script src="{{ asset('public/js/qrcode.min.js') }}"></script>
 
 <script type="text/javascript">
     const mode = '{{ $mode }}';

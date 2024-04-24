@@ -192,7 +192,6 @@
 </div>
 
 
-<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
 <script>
     $("ul#product").siblings('a').attr('aria-expanded', 'true');
@@ -212,7 +211,6 @@
         var htmltext;
         var slidertext;
         var product_id = [];
-        var user_verified = <?php echo json_encode(env('USER_VERIFIED')); ?>;
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -578,7 +576,6 @@
                         text: '{{ trans('file.delete') }}',
                         className: 'buttons-delete',
                         action: function(e, dt, node, config) {
-                            var user_verified = '{!! env('USER_VERIFIED') !!}'
                             if (!user_verified) {
                                 return alert('This feature is disable for demo!')
                             }
