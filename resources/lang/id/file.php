@@ -639,7 +639,8 @@ return [
 	"Detail Split Set" => "Detail Split Set",
 	"Historical Split Set" => "Historical Split Set",
 	"Product Qty" => "Qty Produk",
-	"buy back" => "Beli Kembali",
+	"buy back" => "Buy Back",
+	"Filter" => "Filter",
 
 ];
 

@@ -443,6 +443,9 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	Route::group(['prefix' => 'buyback', 'as' => 'buyback.'], function() {
 		Route::get('/', 'BuyBackController@index')->name('index');
 		Route::get('buyback-datatable', 'BuyBackController@buybackDataTable')->name('buyback-datatable');
+		Route::get('getInvoiceNumber', 'BuyBackController@getInvoiceNumber')->name('getInvoiceNumber');
+		Route::get('getCode', 'BuyBackController@getCode')->name('getCode');
+		
 	});
 
 });

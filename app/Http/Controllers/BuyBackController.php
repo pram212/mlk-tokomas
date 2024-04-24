@@ -19,9 +19,12 @@ class BuyBackController extends Controller
         return view('buyback.index');
     }
 
-    public function buybackDataTable()
+    public function buybackDataTable(Request $request)
     {
         $this->authorize('viewAny', Product::class);
+
+        $invoiceNumber = $request->invoice_number;
+        $code = $request->code;
 
         $productQuery = Product::query()
         ->select([
@@ -43,7 +46,17 @@ class BuyBackController extends Controller
         ])
         ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
         ->where('is_active', true)
-        ->where('product_status', 0);
+        ->where('product_status', 0)
+        ->when($invoiceNumber || $code, function ($query) use ($invoiceNumber, $code) {
+            return $query->where(function ($query) use ($invoiceNumber, $code) {
+                if ($invoiceNumber) {
+                    $query->orWhere('invoice_number', $invoiceNumber);
+                }
+                if ($code) {
+                    $query->orWhere('code', $code);
+                }
+            });
+        });
 
         $productQuery = $productQuery
         ->orderByDesc('products.created_at')
@@ -99,6 +112,19 @@ class BuyBackController extends Controller
 
             return $datatable;
 
+    }
+
+    public function getInvoiceNumber(Request $request)
+    {
+        $result = Product::select('invoice_number')->where('product_status', 0)->where('is_active', true)->get();
+
+        return response()->json($result);
+    }
+
+    public function getCode(Request $request)
+    {
+        $result = Product::select('code')->where('product_status', 0)->where('is_active', true)->get();
+        return response()->json($result);
     }
 
 }

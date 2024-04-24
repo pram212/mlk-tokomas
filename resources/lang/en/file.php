@@ -641,7 +641,7 @@ return [
 	"Historical Split Set" => "Historical Split Set",
 	"Product Qty" => "Product Qty",
 	"buy back" => "Buy Back",
-
+	"Filter" => "Filter",
 
 ];
 ?>

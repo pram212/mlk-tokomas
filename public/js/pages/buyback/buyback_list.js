@@ -17,6 +17,10 @@ $(document).ready(function () {
             url: `${baseUrl}/buyback/buyback-datatable`,
             dataType: "json",
             type: "get",
+            data: function (d) {
+                d.invoice_number = invoice_number.val();
+                d.code = code.val();
+            },
         },
         columns: [
             {
@@ -94,6 +98,37 @@ $(document).ready(function () {
             },
         ],
     });
+
+    //  GET to buyback/getInvoiceNumber with axios
+    axios.get(`${baseUrl}/buyback/getInvoiceNumber`).then((response) => {
+        // insert data to selectpicker with loop
+        response.data.forEach((element) => {
+            $("#invoice_number").append(
+                `<option value="${element.invoice_number}">${element.invoice_number}</option>`
+            );
+        });
+
+        // refresh selectpicker
+        $("#invoice_number").selectpicker("refresh");
+    });
+
+    //  GET to buyback/getTagType with axios
+    axios.get(`${baseUrl}/buyback/getCode`).then((response) => {
+        // insert data to selectpicker with loop
+        response.data.forEach((element) => {
+            $("#code").append(
+                `<option value="${element.code}">${element.code}</option>`
+            );
+        });
+
+        // refresh selectpicker
+        $("#code").selectpicker("refresh");
+    });
+
+    // onclick filter button
+    $("#filter").click(function () {
+        table.ajax.reload();
+    });
 });
 
-// $('select').selectpicker();
+// $("select").selectpicker();

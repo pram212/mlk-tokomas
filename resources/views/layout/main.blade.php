@@ -45,6 +45,11 @@
     <link rel="stylesheet" type="text/css"
         href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('public/css/style.default.css') }}" id="theme-stylesheet" type="text/css">
+
+    {{-- select 2 css --}}
+    {{--
+    <link rel="stylesheet" href="{{ asset('public/vendor/select2/css/select2.min.css') }}" type="text/css"> --}}
+
     <link rel="stylesheet" href="{{ asset('public/css/dropzone.css') }}">
     <link rel="stylesheet" href="{{ asset('public/css/style.css') }}">
     <!-- Tweaks for older IEs-->
@@ -101,6 +106,9 @@
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="{{ asset('public/css/custom-default.css') }}" type="text/css" id="custom-style">
     <script src="{{ asset('public/js/jquery.maskMoney.js') }}"></script>
+
+    {{-- select 2 js --}}
+    {{-- <script src="{{ asset('public/vendor/select2/js/select2.min.js') }}"></script> --}}
 
     @yield('css')
 </head>
