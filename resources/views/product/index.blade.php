@@ -191,7 +191,8 @@
     </div>
 </div>
 
-
+{{-- qrcode --}}
+<script src="{{ asset('public/js/qrcode.min.js') }}"></script>
 
 <script>
     $("ul#product").siblings('a').attr('aria-expanded', 'true');
@@ -619,32 +620,48 @@
 
             // handle button lihat untuk menapilkan detail produk
             $('#product-data-table tbody').on('click', 'a.btn-view', function(e) {
-                var tr = $(this).closest('tr'); // ambil row table (tr) dari baris terpilih
-                var data = table.row(tr).data(); // ambil isi data (data sesuai dengan yang dikirim dari backend)
+                e.preventDefault(); // Menghentikan perilaku default dari tombol a
+                let id = $(this).data('id'); // Mengambil nilai dari atribut data-id
+
+                // lakukan proses ajax untuk mengambil data detail produk
+                $.get("{!! url('products/getDetailById') !!}" + "/" + id, function(data) {
+                    // isi inputan yang ada di modal box detail product
+                    $("#dtl-code").val(data.code);
+                    $("#dtl-price").val(data.price);
+                    $("#dtl-tag-code").val(data.tag_type?.code);
+                    $("#dtl-gramasi-code").val(data.gramasi?.code);
+                    $("#dtl-discount").val(data.discount);
+                    $("#dtl-product-property").val(data.product_property?.description);
+                    generateQRCode(data.code, "prev-qrcode")
+                    // tampilkan modal box detil produk
+                    $('#detailModal').modal("show")
+                });
+
                 // isi inputan yang ada di modal box detail product
-                $("#dtl-code").val(data.code);
-                $("#dtl-price").val(data.price);
-                $("#dtl-tag-code").val(data.tag_type?.code);
-                $("#dtl-gramasi-code").val(data.gramasi?.code);
-                $("#dtl-discount").val(data.discount);
-                $("#dtl-product-property").val(data.product_property?.description);
-                generateQRCode(data.code, "prev-qrcode")
-                // tampilkan modal box detil produk
-                $('#detailModal').modal("show")
+                // $("#dtl-code").val(data.code);
+                // $("#dtl-price").val(data.price);
+                // $("#dtl-tag-code").val(data.tag_type?.code);
+                // $("#dtl-gramasi-code").val(data.gramasi?.code);
+                // $("#dtl-discount").val(data.discount);
+                // $("#dtl-product-property").val(data.product_property?.description);
+                // generateQRCode(data.code, "prev-qrcode")
+                // // tampilkan modal box detil produk
+                // $('#detailModal').modal("show")
             });
 
             // handle button hapus untuk menghapus data
             $('#product-data-table tbody').on('click', 'a.btn-delete', function(e) {
-                var tr = $(this).closest('tr') // ambil row table (tr) dari baris terpilih
-                var data = table.row(tr)
-                .data() // ambil isi data (data sesuai dengan yang dikirim dari backend)
+                e.preventDefault(); // Menghentikan perilaku default dari tombol a
+                let id = $(this).data('id'); // Mengambil nilai dari atribut data-id
+                let splitId = $(this).data('splitid'); // Mengambil nilai dari atribut data-splitid
+                
                 var confirmation = confirm(
                 "Apakah Anda yakin ingin menghapus data?"); // konfirmasi aksi hapus data
                 if (confirmation) {
                     // lakukan proses hapus data dengan ajax
                     $.ajax({
                         type: "delete",
-                        url: "{!! url('products') !!}" + "/" + data.id,
+                        url: "{!! url('products') !!}" + "/" + id + "?split_id=" + splitId,
                         dataType: "JSON",
                         statusCode: {
                             200: function() { // jika code status = 200
@@ -663,37 +680,8 @@
                 }
             });
 
-            // handle button print untuk mencetak data
-            // $('#product-data-table tbody').on('click', 'a.btn-print', function(e) {
-            //     var tr = $(this).closest('tr') // ambil row table (tr) dari baris terpilih
-            //     var data = table.row(tr)
-            //     .data() // ambil isi data (data sesuai dengan yang dikirim dari backend)
-
-            //     console.log(data)
-                
-            //     // lakukan proses pencetakan data dengan axios
-            //     axios.get("{!! url('products/print') !!}" + "/" + data.id)
-            //     .then(function(response) {
-            //         // tampilkan data yang telah dicetak
-            //         var newWin = window.open("", "Print-Window")
-            //         newWin.document.open()
-            //         newWin.document.write(
-            //         '<link rel="stylesheet" href="<?php echo asset('public/vendor/bootstrap/css/bootstrap.min.css'); ?>" type="text/css"><style type="text/css">@media print {.modal-dialog { max-width: 1000px;} }</style><body onload="window.print()">' +
-            //         response.data + "</body>")
-            //         newWin.document.close()
-            //         setTimeout(function() {
-            //             newWin.close()
-            //         }, 10)
-            //     })
-            //     .catch(function(error) {
-            //         // tampilkan pesan error jika terjadi kesalahan
-            //         alert(error.response.data)
-            //     })
-
-            // });
-
         });
 
-        $('select').selectpicker();
+        // $('select').selectpicker();
 </script>
 @endsection

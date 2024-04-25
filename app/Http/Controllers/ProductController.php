@@ -209,6 +209,18 @@ class ProductController extends Controller
         ));
     }
 
+    public function getDetailById($id)
+    {
+        $product = Product::find($id)->load([
+            'productProperty:id,code,description',
+            'gramasi:id,code,gramasi',
+            'tagType:id,code,color',
+            'category'
+        ]);
+
+        return response()->json($product);
+    }
+
     public function edit($id, Request $request)
     {
         $product = Product::find($id)->load([
@@ -615,19 +627,31 @@ class ProductController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         $this->authorize('delete', Product::find($id));
 
         try {
             DB::beginTransaction();
-
-            Product::destroy($id);
-
-            DB::commit();
-
-            return response("Data Berhasil dihapus", 200);
             
+            // Get product by ID
+            $product = Product::find($id);
+        
+            // If parameter ?split_id is not empty
+            if ($request->filled('split_id')) {
+                // Get product split set detail by split_id
+                $productSplitSetDetail = $product->productSplitSetDetail()->findOrFail($request->split_id);
+                
+                // Delete product split set detail
+                $productSplitSetDetail->delete();
+            } else {
+                // Delete product
+                $product->delete();
+            }
+        
+            DB::commit();
+        
+            return response("Data Berhasil dihapus", 200);
         } catch (\Exception $ex) {
 
             DB::rollBack();
@@ -659,9 +683,7 @@ class ProductController extends Controller
             'invoice_number'
         ])
         ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
-        ->where('is_active', true);
-
-        $productQuery = $productQuery
+        ->where('is_active', true)
         ->orderByDesc('products.created_at')
         ->with([
             'tagType:id,code,color',
@@ -709,7 +731,7 @@ class ProductController extends Controller
                 
                 $btnPrint = '<a class="dropdown-item btn-print" target="_BLANK" data-id="'.$product->id.'" href="'.url("products/print/$product->id").'"><i class="fa fa-print"></i> Print</a>';
                 $btnDelete = $user->can('delete', $product)
-                    ? '<a class="dropdown-item btn-delete" href="#"><i class="fa fa-trash"></i> Delete</a>'
+                    ? '<a class="dropdown-item btn-delete" href="#" data-id="'.$product->id.'" data-splitid="'.$product->split_id.'"><i class="fa fa-trash"></i> Delete</a>'
                     : '';
 
                 $element =
@@ -718,7 +740,7 @@ class ProductController extends Controller
                         Action
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item btn-view" href="#"><i class="fa fa-eye"></i> View</a>'
+                        <a class="dropdown-item btn-view" href="#" data-id="'.$product->id.'"><i class="fa fa-eye"></i> View</a>'
                         . $btnEdit
                         . $btnPrint
                         . $btnDelete .
