@@ -1039,6 +1039,7 @@
                 data: data
             },
             success: function(data) {
+                console.log('productSearch');
                 var flag = 1;
                 // $(".product-code").each(function(i) {
                 //     if ($(this).val() == data[1]) {

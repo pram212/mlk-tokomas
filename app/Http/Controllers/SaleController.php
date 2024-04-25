@@ -86,6 +86,37 @@ class SaleController extends Controller
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
+    // search_products
+    public function search_products(Request $request)
+    {
+        $search = $request->term;
+
+        $products = Product::query()
+        ->select([
+            'products.id',
+            DB::raw('CONCAT(products.name, " (", IFNULL(split.split_set_code, products.code), ")") as label'),
+            DB::raw('IFNULL(split.split_set_code, products.code) as value')
+        ])
+        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+        ->where('is_active', true)
+        ->where('products.product_status', 1)
+        ->where(function($query) use ($search) {
+            $query->where('products.name', 'like', '%' . $search . '%')
+                ->orWhere('products.code', 'like', '%' . $search . '%');
+        })
+        ->limit(10)
+        ->get();
+
+
+        if ($products->isEmpty()) {
+            return response()->json([]);
+        }
+
+        return response()->json($products);
+    }
+
+
+
     public function saleData(Request $request)
     {
         $columns = array(
@@ -1032,8 +1063,9 @@ class SaleController extends Controller
     {
         // dd($request->all());
         $todayDate = date('Y-m-d');
-        $product_code = explode("(", $request['data']);
-        $product_code[0] = rtrim($product_code[0], " ");
+        // $product_code = explode("(", $request['data']);
+        // $product_code[0] = rtrim($product_code[0], " ");
+        $product_code[0] = $request['data'];
         $product_variant_id = null;
         $lims_product_data = Product::where([
             ['code', $product_code[0]],
