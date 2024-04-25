@@ -58,16 +58,13 @@ class BuyBackController extends Controller
                     $query->orWhere('code', $code);
                 }
             });
-        });
-
-        $productQuery = $productQuery
+        })
         ->orderByDesc('products.created_at')
         ->with([
             'tagType:id,code,color',
             'productProperty:id,code,description',
             'gramasi:id,code,gramasi'
-        ])
-        ->get();
+        ]);
 
 
         $datatable =  DataTables::of($productQuery)
