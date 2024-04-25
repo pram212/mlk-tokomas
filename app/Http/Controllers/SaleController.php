@@ -1067,10 +1067,23 @@ class SaleController extends Controller
         // $product_code[0] = rtrim($product_code[0], " ");
         $product_code[0] = $request['data'];
         $product_variant_id = null;
-        $lims_product_data = Product::where([
-            ['code', $product_code[0]],
-            ['is_active', true]
-        ])->first();
+
+        // jika product code mengandung -
+        if (strpos($product_code[0], '-') !== false) {
+            $lims_product_data = Product::
+            join('product_split_set_detail as pssd', 'products.id', 'pssd.product_id')
+            ->where([
+                ['pssd.split_set_code', $product_code[0]]
+            ])->first();
+        }else{
+            $lims_product_data = Product::where([
+                ['code', $product_code[0]],
+                ['is_active', true]
+            ])->first();
+        }
+
+        
+        
         if (!$lims_product_data) {
             $lims_product_data = Product::join('product_variants', 'products.id', 'product_variants.product_id')
                 ->select('products.*', 'product_variants.id as product_variant_id', 'product_variants.item_code', 'product_variants.additional_price')

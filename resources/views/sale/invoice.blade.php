@@ -225,10 +225,12 @@
                         <tr>
                             <td class="center">
                                 @php
-                                $gambar_produk = $lims_product_sale_data[0]['product']['image'];
+                                $gambar_produk = $lims_product_sale_data[0]['product']['image'] ?? '';
                                 @endphp
+                                @if($gambar_produk != '')
                                 <img src="data:image/png;base64,{{ base64_encode(file_get_contents($gambar_produk)) }}"
                                     width="200px" alt="">
+                                @endif
                                 {{-- <img src="{{ asset($lims_product_sale_data[0]['product']['image']) }}" alt=""
                                     width="200px">
                             </td> --}}
