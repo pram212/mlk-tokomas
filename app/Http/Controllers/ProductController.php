@@ -689,8 +689,7 @@ class ProductController extends Controller
             'tagType:id,code,color',
             'productProperty:id,code,description',
             'gramasi:id,code,gramasi'
-        ])
-        ->get();
+        ]);
 
 
         $datatable =  DataTables::of($productQuery)
