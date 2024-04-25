@@ -185,6 +185,7 @@ $(document).ready(function () {
     // onclick buyback button
     $("#buyback-data-table tbody").on("click", "a.btn-buyback", function (e) {
         const id = $(this).data("productid");
+        const code = $(this).data("productcode");
 
         // GET data product from buyback/getDataModalProductBuyBack{id} with axios
         axios
@@ -192,7 +193,7 @@ $(document).ready(function () {
             .then((response) => {
                 // insert data to modal
                 $("#modal_desc_value").text(
-                    response.data.code + " - " + response.data.name
+                    "(" + code + ")" + " - " + response.data.name
                 );
 
                 let modal_price =
@@ -203,7 +204,7 @@ $(document).ready(function () {
                 $("#modal_price_default").val(parseFloat(response.data.price));
                 $("#modal_discount").val(parseFloat(response.data.discount));
                 $("#product_id").val(response.data.id);
-                $("#product_code").val(response.data.code);
+                $("#product_code").val(code);
                 // show modal buybackModal
                 $("#buybackModal").modal("show");
             });

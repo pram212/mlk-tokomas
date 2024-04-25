@@ -1039,7 +1039,6 @@
                 data: data
             },
             success: function(data) {
-                console.log('productSearch');
                 var flag = 1;
                 // $(".product-code").each(function(i) {
                 //     if ($(this).val() == data[1]) {
@@ -1060,6 +1059,7 @@
                 // });
                 $("input[name='product_code_name']").val('');
                 if (flag) {
+                    console.log(data)
                     addNewProduct(data);
                 }
             }

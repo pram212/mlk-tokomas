@@ -679,8 +679,8 @@ class ProductController extends Controller
             'gramasi_id',
             'product_property_id',
             'mg',
-            'product_status',
-            'invoice_number'
+            DB::raw("COALESCE(split.product_status, products.product_status) as product_status"),
+            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number")
         ])
         ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
         ->where('is_active', true)

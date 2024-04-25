@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Product;
 use App\ProductProperty;
 use App\ProductBuyback;
+use App\ProductSplitSetDetail;
 
 
 class BuyBackController extends Controller
@@ -43,12 +44,13 @@ class BuyBackController extends Controller
             'products.gramasi_id',
             'product_property_id',
             'products.mg',
-            'product_status',
-            'products.invoice_number'
+            DB::raw("COALESCE(split.product_status, products.product_status) as product_status"),
+            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number")
         ])
         ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
         ->where('is_active', true)
-        ->where('product_status', 0)
+        // ->where('product_status', 0)
+        ->whereRaw('COALESCE(split.product_status, products.product_status) = 0')
         ->when($invoiceNumber || $code, function ($query) use ($invoiceNumber, $code) {
             return $query->where(function ($query) use ($invoiceNumber, $code) {
                 if ($invoiceNumber) {
@@ -92,7 +94,7 @@ class BuyBackController extends Controller
             ->addColumn('action', function ($product) {
                 $user = auth()->user();
                 
-                $btnBuyBack = '<a class="dropdown-item btn-buyback" href="#" data-productId="'.$product->id.'"><i class="fa fa-arrow-left"></i> Buy Back</a>';
+                $btnBuyBack = '<a class="dropdown-item btn-buyback" href="#" data-productId="'.$product->id.'" data-productCode="'.$product->code.'"><i class="fa fa-arrow-left"></i> Buy Back</a>';
 
                 $element =
                 '<div class="dropdown">
@@ -135,9 +137,18 @@ class BuyBackController extends Controller
     public function store(Request $request)
     {
         DB::beginTransaction();
-        $product = Product::where('id', $request->product_id)->first();
-        $product->product_status = 1; // ubah status product menjadi STORE
-        $product->save();
+        
+        // handle split set, jika $request->code mengandung '-' maka itu adalah split set
+        if (strpos($request->code, '-') !== false) {
+            // update di ProductSplitSetDetail product_status menjadi 1
+            $productSplitSetDetail = ProductSplitSetDetail::where('split_set_code', $request->code)->first();
+            $productSplitSetDetail->product_status = 1;
+            $productSplitSetDetail->save();
+        }else{
+            $product = Product::where('id', $request->product_id)->first();
+            $product->product_status = 1; // ubah status product menjadi STORE
+            $product->save();
+        }
 
         $productBuyback = new ProductBuyback();
         $productBuyback->product_id = $request->product_id;
