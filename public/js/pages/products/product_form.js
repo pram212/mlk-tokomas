@@ -4,6 +4,63 @@ $(document).ready(function () {
     if (!product_split_set_detail) {
         detail_split_add();
     }
+
+    table_historical.DataTable({
+        responsive: true,
+        fixedHeader: {
+            header: true,
+            footer: true,
+        },
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: `${baseUrl}/products/detail-historical/${product_id}/${split_set_code}`,
+            dataType: "json",
+            type: "get",
+        },
+        columns: [
+            {
+                data: "DT_RowIndex",
+                name: "DT_RowIndex",
+                orderable: false,
+                searchable: false,
+            },
+            {
+                data: "code",
+            },
+            {
+                data: "created_at",
+            },
+            {
+                data: "product_property_description",
+            },
+            {
+                data: "price",
+            },
+            {
+                data: "gramasi_gramasi",
+            },
+            {
+                data: "mg",
+            },
+        ],
+        order: [["2", "desc"]],
+        columnDefs: [
+            {
+                orderable: false,
+                targets: [0],
+            },
+        ],
+        select: {
+            style: "multi",
+            selector: "td:first-child",
+        },
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "All"],
+        ],
+        dom: '<"row"lf>rtip',
+    });
 });
 
 btn_historical_split_set.click(function () {
@@ -520,6 +577,9 @@ if (mode == "show") {
     $("#submit-btn").remove();
     detail_split_set_qty.prop("disabled", true);
     $("input[name='split_set_qty[]']").prop("disabled", true);
+    $("input[name='split_set_gramasi[]']").prop("disabled", true);
+    $("input[name='split_set_mg[]']").prop("disabled", true);
+    $("input[name='split_set_harga[]']").prop("disabled", true);
     $(".btn_detail_split_delete").remove();
     $(".detail_split_add").remove();
 }

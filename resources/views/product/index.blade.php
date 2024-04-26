@@ -433,11 +433,17 @@
                     },
                     {
                         "data": "code",
-                        render: function(data, type, row) {
-                            const product_id = row.id
-                            return '<a href="{{ url("products") }}/'+product_id+'" class="btn-detail-product" style="color:blue">' + data + '</a>';
+                        "render": function(data, type, row) {
+                            const product_id = row.id;
+                            const split_set_code = row.split_set_code ?? '';
+                            let param = product_id;
+                            if (split_set_code) {
+                                param = product_id + '/?split_set_code=' + split_set_code;
+                            }
+                            return '<a href="{{ url("products") }}/' + param + '" class="btn-detail-product" style="color: blue">' + data + '</a>';
                         }
                     },
+
                     {
                         "data": "name"
                     },

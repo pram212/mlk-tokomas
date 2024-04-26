@@ -164,7 +164,7 @@ class ProductController extends Controller
         }
     }
 
-    public function show($id)
+    public function show($id, Request $request)
     {
         $product = Product::find($id)->load([
             'productProperty:id,code,description',
@@ -174,6 +174,8 @@ class ProductController extends Controller
         ]);
 
         $this->authorize('update', $product);
+
+        $split_set_code = $request->split_set_code ?? null;
 
         $lims_category_list = Category::where('is_active', true)->get();
         $productProperty = ProductProperty::all();
@@ -212,7 +214,8 @@ class ProductController extends Controller
             'category',
             'product_type',
             'mode',
-            'split_set_type'
+            'split_set_type',
+            'split_set_code'
         ));
     }
 
@@ -787,6 +790,74 @@ class ProductController extends Controller
                 return $element;
             })
             ->rawColumns(['tag_type_color', 'action', 'image_preview'])
+            ->make();
+
+            return $datatable;
+
+    }
+
+    public function detailHistoricalProductDataTable($product_id,$split_set_code = "")
+    {
+        $this->authorize('viewAny', Product::class);
+        $productQuery = Product::query()
+        ->select([
+            'products.id',
+            DB::raw("COALESCE(split.split_set_code, products.code) as code"),
+            'split.id as split_id',
+            DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, products.price)) as price"),
+            'name',
+            'products.discount',
+            DB::raw("COALESCE(split.created_at, products.created_at) as created_at"),
+            'tag_type_id',
+            'gramasi_id',
+            DB::raw("COALESCE(buyback.product_property_id, products.product_property_id) as product_property_id"),
+            DB::raw("COALESCE(split.mg, products.mg) as mg"),
+            DB::raw("COALESCE(split.product_status, products.product_status) as product_status"),
+            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number")
+        ])
+        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+        ->leftJoin('product_buyback as buyback', function($join) {
+            $join->on('split.split_set_code', '=', 'buyback.code');
+            $join->on('products.id', '=', 'buyback.product_id');
+        })
+        ->where('is_active', true)
+        ->when($split_set_code || $product_id, function ($query) use ($split_set_code, $product_id) {
+            return $query->where(function ($query) use ($split_set_code, $product_id) {
+                if ($split_set_code!= "") {
+                    $query->where('split.split_set_code', $split_set_code);
+                } else {
+                    $query->where('products.id', $product_id);
+                }
+            });
+        })
+        ->orderByDesc('products.created_at')
+        ->with([
+            'tagType:id,code,color',
+            'productProperty:id,code,description',
+            'gramasi:id,code,gramasi'
+        ]);
+
+
+        $datatable =  DataTables::of($productQuery)
+            ->addIndexColumn()
+            ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
+            ->editColumn('price', fn ($product) => $product->price )
+            ->addColumn('product_property_description', fn ($product) => $product->productProperty->description ?? "-")
+            ->addColumn('product_property_code', fn ($product) => $product->productProperty->code ?? "-")
+            ->addColumn('gramasi_gramasi', fn ($product) => $product->gramasi->gramasi ?? "-")
+            ->addColumn('tag_type_code', fn ($product) => $product->tagType->code ?? "-")
+            ->addColumn('gramasi_code', fn ($product) => $product->gramasi->code ?? "-")
+            ->addColumn('product_status', function ($product) {
+                return $product->product_status == 1 ? 'STORE' : 'SOLD';
+            })
+            ->addColumn('invoice_number', function ($product) {
+                return $product->invoice_number ?? "-";
+            })
+            ->addColumn('tag_type_color', function ($product) {
+                $color = $product->tagType->color ?? "none";
+                return '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color . '</div>';
+            })
+            ->rawColumns(['tag_type_color'])
             ->make();
 
             return $datatable;
