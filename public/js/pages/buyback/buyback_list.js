@@ -119,31 +119,35 @@ $(document).ready(function () {
         ],
     });
 
-    //  GET to buyback/getInvoiceNumber with axios
-    axios.get(`${baseUrl}/buyback/getInvoiceNumber`).then((response) => {
-        // insert data to selectpicker with loop
-        response.data.forEach((element) => {
-            $("#invoice_number").append(
-                `<option value="${element.invoice_number}">${element.invoice_number}</option>`
-            );
+    filterCode();
+    filterInvoice();
+
+    // on key up searchBox
+    $("#invoice_number")
+        .closest(".btn-group")
+        .find('.bs-searchbox input[type="text"]')
+        .on("keyup", function () {
+            // Ambil nilai dari input teks
+            let searchText = $(this).val();
+
+            // Periksa panjang nilai
+            if (searchText.length % 3 === 0) {
+                filterInvoice(searchText);
+            }
         });
 
-        // refresh selectpicker
-        $("#invoice_number").selectpicker("refresh");
-    });
+    $("#code")
+        .closest(".btn-group")
+        .find('.bs-searchbox input[type="text"]')
+        .on("keyup", function () {
+            // Ambil nilai dari input teks
+            let searchText = $(this).val();
 
-    //  GET to buyback/getTagType with axios
-    axios.get(`${baseUrl}/buyback/getCode`).then((response) => {
-        // insert data to selectpicker with loop
-        response.data.forEach((element) => {
-            $("#code").append(
-                `<option value="${element.code}">${element.code}</option>`
-            );
+            // Periksa panjang nilai
+            if (searchText.length % 3 === 0) {
+                filterCode(searchText);
+            }
         });
-
-        // refresh selectpicker
-        $("#code").selectpicker("refresh");
-    });
 
     // onclick filter button
     btn_filter.click(function () {
@@ -219,3 +223,42 @@ $(document).ready(function () {
             });
     });
 });
+
+function filterInvoice(search = "") {
+    $("#invoice_number")
+        .empty()
+        .append(`<option value="">${lang_select}</option>`);
+
+    //  GET to buyback/getInvoiceNumber with axios
+    axios
+        .get(`${baseUrl}/buyback/getInvoiceNumber/?search=${search}`)
+        .then((response) => {
+            // insert data to selectpicker with loop
+            response.data.forEach((element) => {
+                $("#invoice_number").append(
+                    `<option value="${element.invoice_number}">${element.invoice_number}</option>`
+                );
+            });
+
+            // refresh selectpicker
+            $("#invoice_number").selectpicker("refresh");
+        });
+}
+
+function filterCode(search = "") {
+    $("#code").empty().append(`<option value="">${lang_select}</option>`);
+    //  GET to buyback/getCode with axios
+    axios
+        .get(`${baseUrl}/buyback/getCode/?search=${search}`)
+        .then((response) => {
+            // insert data to selectpicker with loop
+            response.data.forEach((element) => {
+                $("#code").append(
+                    `<option value="${element.code}">${element.code}</option>`
+                );
+            });
+
+            // refresh selectpicker
+            $("#code").selectpicker("refresh");
+        });
+}

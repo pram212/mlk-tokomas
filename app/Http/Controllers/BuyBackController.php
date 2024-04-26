@@ -118,7 +118,8 @@ class BuyBackController extends Controller
             ->addColumn('action', function ($product) {
                 $user = auth()->user();
                 
-                $btnBuyBack = '<a class="dropdown-item btn-buyback" href="#" data-productId="'.$product->id.'" data-productCode="'.$product->code.'"><i class="fa fa-arrow-left"></i> Buy Back</a>';
+                $btnBuyBack = $product->buyback_status == 0 ? '<a class="dropdown-item btn-buyback" href="#" data-productId="'.$product->id.'" data-productCode="'.$product->code.'"><i class="fa fa-arrow-left"></i> Buy Back</a>'
+                : '<a class="dropdown-item btn-disabled bg-default" disabled title="Produk ini telah dibeli sebelumnya!" href="#">-</a>';
 
                 $element =
                 '<div class="dropdown">
@@ -141,14 +142,46 @@ class BuyBackController extends Controller
 
     public function getInvoiceNumber(Request $request)
     {
-        $result = Product::select('invoice_number')->where('product_status', 0)->where('is_active', true)->get();
+        $search = $request->search;
+        $result = Product::select([
+            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number")
+        ])
+        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+        ->where(function($query) {
+            $query->where('products.product_status', 0)
+                  ->orWhere('split.product_status', 0);
+        })
+        ->where('products.is_active', true)
+        ->where(function($query) use ($search) {
+            $query->where('products.invoice_number', 'like', '%'.$search.'%')
+                  ->orWhere('split.invoice_number', 'like', '%'.$search.'%');
+        })
+        ->limit(3)
+        ->get();
 
         return response()->json($result);
     }
 
+
     public function getCode(Request $request)
     {
-        $result = Product::select('code')->where('product_status', 0)->where('is_active', true)->get();
+        $search = $request->search;
+        $result = Product::select([
+            DB::raw("COALESCE(split.split_set_code, products.code) as code")
+        ])
+        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+        ->where(function($query) {
+            $query->where('products.product_status', 0)
+                  ->orWhere('split.product_status', 0);
+        })
+        ->where('products.is_active', true)
+        ->where(function($query) use ($search) {
+            $query->where('products.code', 'like', '%'.$search.'%')
+                  ->orWhere('split.split_set_code', 'like', '%'.$search.'%');
+        })
+        ->limit(3)
+        ->get();
+
         return response()->json($result);
     }
 
