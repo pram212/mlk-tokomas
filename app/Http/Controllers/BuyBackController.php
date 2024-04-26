@@ -11,6 +11,7 @@ use App\Product;
 use App\ProductProperty;
 use App\ProductBuyback;
 use App\ProductSplitSetDetail;
+use App\Product_Sale;
 
 
 class BuyBackController extends Controller
@@ -29,57 +30,80 @@ class BuyBackController extends Controller
         $invoiceNumber = $request->invoice_number;
         $code = $request->code;
 
-        $productQuery = Product::query()
+        DB::statement("SET sql_mode = '' ");
+        $productQuery = Product_Sale::query()
         ->select([
-            'products.id',
-            DB::raw("COALESCE(split.split_set_code, products.code) as code"),
-            'split.split_set_code',
+            'product_sales.product_id as id',
+            DB::raw("COALESCE(product_sales.split_set_code, products.code) as code"),
+            'product_sales.split_set_code',
             'split.id as split_id',
-            'products.price',
+            DB::raw("COALESCE(buyback.final_price, products.price) as price"),
+            'buyback.final_price as final_price',
             'products.image',
             'products.name',
             'products.discount',
-            DB::raw("COALESCE(split.created_at, products.created_at) as created_at"),
+            'product_sales.created_at',
             'products.tag_type_id',
             'products.gramasi_id',
-            'product_property_id',
+            DB::raw("COALESCE(buyback.product_property_id, products.product_property_id) as product_property_id"),
             'products.mg',
-            DB::raw("COALESCE(split.product_status, products.product_status) as product_status"),
-            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number")
+            'product_properties.code as product_property_code',
+            'product_properties.description as product_property_description',
+            'tag_types.color as tag_type_color',
+            'tag_types.code as tag_type_code',
+            'gramasis.gramasi',
+            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number"),
+            // DB::raw("CASE WHEN buyback.id IS NOT NULL THEN 1 ELSE 0 END as buyback_status"),
+            DB::raw("CASE 
+                WHEN buyback.id IS NOT NULL THEN 
+                    CASE 
+                        WHEN product_sales.created_at > buyback.created_at THEN 0 
+                        ELSE 1 
+                    END 
+                ELSE 0 
+            END as buyback_status"),
+            DB::raw("COALESCE(split.product_status, products.product_status) as product_status")
         ])
+        ->leftJoin('product_buyback as buyback', function($join) {
+            $join->on('product_sales.product_id', '=', 'buyback.product_id');
+            $join->on('product_sales.split_set_code', '=', 'buyback.code');
+        })
+        ->leftJoin('products', 'product_sales.product_id', '=', 'products.id')
         ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
-        ->where('is_active', true)
-        // ->where('product_status', 0)
-        ->whereRaw('COALESCE(split.product_status, products.product_status) = 0')
+        ->leftJoin('tag_types', 'products.tag_type_id', '=', 'tag_types.id')
+        ->leftJoin('product_properties', 'products.product_property_id', '=', 'product_properties.id')
+        ->leftJoin('gramasis', 'products.gramasi_id', '=', 'gramasis.id')
+        // ->where('is_active', true)
         ->when($invoiceNumber || $code, function ($query) use ($invoiceNumber, $code) {
             return $query->where(function ($query) use ($invoiceNumber, $code) {
                 if ($invoiceNumber) {
-                    $query->orWhere('invoice_number', $invoiceNumber);
+                    $query->orWhere('products.invoice_number', $invoiceNumber);
+                    $query->orWhere('split.invoice_number', $invoiceNumber);
                 }
                 if ($code) {
-                    $query->orWhere('code', $code);
+                    $query->orWhere('products.code', $code);
+                    $query->orWhere('split.split_set_code', $code);
                 }
             });
         })
-        ->orderByDesc('products.created_at')
-        ->with([
-            'tagType:id,code,color',
-            'productProperty:id,code,description',
-            'gramasi:id,code,gramasi'
-        ]);
+        ->orderByDesc('product_sales.created_at')
+        ->groupBy('product_sales.product_id', 'product_sales.split_set_code');
 
 
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
             ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
             ->editColumn('price', fn ($product) => $product->price )
-            ->addColumn('product_property_description', fn ($product) => $product->productProperty->description ?? "-")
-            ->addColumn('product_property_code', fn ($product) => $product->productProperty->code ?? "-")
-            ->addColumn('gramasi_gramasi', fn ($product) => $product->gramasi->gramasi ?? "-")
-            ->addColumn('tag_type_code', fn ($product) => $product->tagType->code ?? "-")
-            ->addColumn('gramasi_code', fn ($product) => $product->gramasi->code ?? "-")
+            ->addColumn('product_property_description', fn ($product) => $product->product_property_description ?? "-")
+            ->addColumn('product_property_code', fn ($product) => $product->product_property_code ?? "-")
+            ->addColumn('gramasi_gramasi', fn ($product) => $product->gramasi ?? "-")
+            ->addColumn('tag_type_code', fn ($product) => $product->tag_type_code ?? "-")
+            ->addColumn('gramasi_code', fn ($product) => $product->gramasi_code ?? "-")
             ->addColumn('product_status', function ($product) {
                 return $product->product_status == 1 ? 'STORE' : 'SOLD';
+            })
+            ->editColumn('buyback_status', function ($product) {
+                return $product->buyback_status == 1 ? 'OK' : '-';
             })
             ->addColumn('invoice_number', function ($product) {
                 return $product->invoice_number ?? "-";
@@ -88,7 +112,7 @@ class BuyBackController extends Controller
                 return '<img src="'.asset($q->image).'" class="img-thumbnail" width="100" height="100">';
             })
             ->addColumn('tag_type_color', function ($product) {
-                $color = $product->tagType->color ?? "none";
+                $color = $product->tag_type_color ?? "none";
                 return '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color . '</div>';
             })
             ->addColumn('action', function ($product) {

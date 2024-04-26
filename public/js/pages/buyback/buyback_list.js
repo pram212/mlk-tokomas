@@ -39,7 +39,9 @@ $(document).ready(function () {
                 render: function (data, type, row) {
                     const product_id = row.id;
                     return (
-                        '<a href="{{ url("products") }}/' +
+                        '<a href="' +
+                        baseUrl +
+                        "/products/" +
                         product_id +
                         '" class="btn-detail-product" style="color:blue">' +
                         data +
@@ -81,6 +83,9 @@ $(document).ready(function () {
                 data: "invoice_number",
             },
             {
+                data: "buyback_status",
+            },
+            {
                 data: "action",
                 orderable: false,
             },
@@ -90,6 +95,10 @@ $(document).ready(function () {
             {
                 orderable: false,
                 targets: [0, 2, 6],
+            },
+            {
+                visible: false,
+                targets: [5, 6, 7, 8],
             },
         ],
         select: {

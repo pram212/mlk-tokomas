@@ -292,6 +292,9 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
+                                        </div>
+
+                                        <div class="col-md-12">
                                             <div id="detail_split_set" class="bg-dark text-light p-2 d-none">
                                                 <div class="row">
                                                     <div class="col-6">{{ __('file.Detail Split Set') }}</div>
@@ -361,7 +364,7 @@
                             </div>
 
                             <div class="form-group">
-                                <a href="{{url('products')}}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
+                                <a href="{{url()->previous()}}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
                                     {{trans('file.Back')}}</a>
                                 <input type="submit" value="{{ trans('file.submit') }}" id="submit-btn"
                                     class="btn btn-primary">
@@ -376,33 +379,7 @@
 </section>
 
 {{-- modal --}}
-<div class="modal fade" id="historical_split_set_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{ __('file.Historical Split Set') }}</h5>
-                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered table-striped" id="modal_table_detail_split_set">
-                    <thead>
-                        <tr>
-                            <th>Kode Split Set</th>
-                            <th>{{ __('file.Product Qty') }}</th>
-                            <th>Waktu</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+@include('product.modal_split_set')
 
 <script src="{{ asset('public/js/qrcode.min.js') }}"></script>
 

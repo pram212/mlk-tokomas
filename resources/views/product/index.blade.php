@@ -671,8 +671,8 @@
                             404: function() { // jika code status = 404
                                 alert("Not Found")
                             },
-                            500: function() { // jika code status = 500
-                                alert("Server Error")
+                            500: function(response) { // jika code status = 500
+                                alert(response.responseText)
                             },
                         }
                     });

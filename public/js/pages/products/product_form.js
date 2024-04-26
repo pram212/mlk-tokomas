@@ -154,6 +154,9 @@ function detail_split_add(data = []) {
     const code_split = data.code_split ?? `${code.val()} - SP${row_number}`;
     const split_id = data.id ?? "";
     const qty = data.qty_product ?? "";
+    const mg = data.mg ?? "";
+    const gramasi = data.gramasi ?? "";
+    const harga = data.price ?? "";
     const is_show =
         split_set_id && data.id != null
             ? split_set_id == split_id
@@ -161,6 +164,10 @@ function detail_split_add(data = []) {
                 : false
             : true;
     const is_readonly = is_show ? "" : "readonly";
+
+    if (is_show) generateQRCode(code_split, "prev-qrcode");
+    if (is_show) $("#prev-gramasi").text(gramasi);
+    if (is_show) $("#prev-mg").text(mg);
 
     const btn_delete = is_show
         ? `<button type="button" class="btn btn-danger ml-1 btn_detail_split_delete"><i class="fa fa-times" onclick="detail_split_delete()"></i></button>`
@@ -178,6 +185,30 @@ function detail_split_add(data = []) {
                   <label for="">Qty Product Split Set ${row_number}</label>
                   <div class="input-group">
                       <input type="number" name="split_set_qty[]" class="form-control" value="${qty}" ${is_readonly}>
+                  </div>
+              </div>
+          </td>
+          <td>
+              <div class="form-group">
+                  <label for="">Gramasi Split Set ${row_number}</label>
+                  <div class="input-group">
+                      <input type="number" name="split_set_gramasi[]" class="form-control" value="${gramasi}" ${is_readonly}>
+                  </div>
+              </div>
+          </td>
+          <td>
+              <div class="form-group">
+                  <label for="">Miligram Split Set ${row_number}</label>
+                  <div class="input-group">
+                      <input type="number" name="split_set_mg[]" class="form-control" value="${mg}" ${is_readonly}>
+                  </div>
+              </div>
+          </td>
+          <td>
+              <div class="form-group">
+                  <label for="">Harga Split Set ${row_number}</label>
+                  <div class="input-group">
+                      <input type="number" name="split_set_harga[]" class="form-control" value="${harga}" ${is_readonly}>
                       ${btn_delete}
                       <button type="button" class="btn btn-success ml-2 detail_split_add" onclick="detail_split_add()"><i class="fa fa-plus"></i></button>
                   </div>

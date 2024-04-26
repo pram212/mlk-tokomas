@@ -147,6 +147,7 @@
                                             <th>{{ __('file.Product Property') }}</th>
                                             <th>{{ __('file.Product Status') }}</th>
                                             <th>{{ __('file.Invoice') }}</th>
+                                            <th>Buy Back Status</th>
                                             <th class="not-exported">{{ trans('file.action') }}</th>
                                         </tr>
                                     </thead>

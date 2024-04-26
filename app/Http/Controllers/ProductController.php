@@ -19,6 +19,7 @@ use App\Gramasi;
 use App\TagType;
 use App\Brand;
 use App\Unit;
+use App\Product_Sale;
 use DNS1D;
 use Keygen;
 use Dompdf\Dompdf;
@@ -113,16 +114,22 @@ class ProductController extends Controller
                 // update qty product (name=detail_split_set_qty) to products.qty
                 $product = Product::find($product_id);
                 $product->qty = $request->detail_split_set_qty;
-
                 // save product detail split set to product_split_set_detail split_set_code[] and split_set_qty[]
                 $split_set_code = $request->split_set_code;
                 $split_set_qty = $request->split_set_qty;
+                $split_set_harga = $request->split_set_harga;
+                $split_set_gramasi = $request->split_set_gramasi;
+                $split_set_mg = $request->split_set_mg;
                 $split_set_detail = [];
+                
                 for ($i=0; $i < count($split_set_code); $i++) { 
                     $split_set_detail[] = [
                         'product_id' => $product_id,
                         'split_set_code' => $split_set_code[$i],
-                        'qty_product' => $split_set_qty[$i]
+                        'qty_product' => $split_set_qty[$i],
+                        'price' => $split_set_harga[$i],
+                        'gramasi' => $split_set_gramasi[$i],
+                        'mg' => $split_set_mg[$i]
                     ];
                 }
 
@@ -607,6 +614,15 @@ class ProductController extends Controller
             $product_ids = $request->ids;
             DB::beginTransaction();
             foreach ($product_ids as $id) {
+
+                // check if product is exist in Product_Sale
+                $productSale = Product_Sale::where('product_id', $id)->first();
+
+                if ($productSale) {
+                    DB::rollBack();
+                    return response("Product tidak bisa dihapus karena sudah pernah terjual", 500);
+                }
+
                 $product = Product::find($id);
                 $product->delete();
             }
@@ -641,10 +657,25 @@ class ProductController extends Controller
             if ($request->filled('split_id')) {
                 // Get product split set detail by split_id
                 $productSplitSetDetail = $product->productSplitSetDetail()->findOrFail($request->split_id);
+
+                // check if split_set_code if exist in Product_Sale
+                $productSale = Product_Sale::where('split_set_code', $productSplitSetDetail->split_set_code)->first();
+
+                if ($productSale) {
+                    DB::rollBack();
+                    return response("Product tidak bisa dihapus karena sudah pernah terjual", 500);
+                }
                 
                 // Delete product split set detail
                 $productSplitSetDetail->delete();
             } else {
+                // check if product is exist in Product_Sale
+                $productSale = Product_Sale::where('product_id', $product->id)->first();
+
+                if ($productSale) {
+                    DB::rollBack();
+                    return response("Product tidak bisa dihapus karena sudah pernah terjual", 500);
+                }
                 // Delete product
                 $product->delete();
             }
@@ -663,26 +694,29 @@ class ProductController extends Controller
     public function productDataTable()
     {
         $this->authorize('viewAny', Product::class);
-
         $productQuery = Product::query()
         ->select([
             'products.id',
-            DB::raw("COALESCE(split.split_set_code, code) as code"),
+            DB::raw("COALESCE(split.split_set_code, products.code) as code"),
             'split.split_set_code',
             'split.id as split_id',
-            'price',
+            DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, products.price)) as price"),
             'image',
             'name',
-            'discount',
+            'products.discount',
             DB::raw("COALESCE(split.created_at, products.created_at) as created_at"),
             'tag_type_id',
             'gramasi_id',
-            'product_property_id',
-            'mg',
+            DB::raw("COALESCE(buyback.product_property_id, products.product_property_id) as product_property_id"),
+            DB::raw("COALESCE(split.mg, products.mg) as mg"),
             DB::raw("COALESCE(split.product_status, products.product_status) as product_status"),
             DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number")
         ])
         ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+        ->leftJoin('product_buyback as buyback', function($join) {
+            $join->on('split.split_set_code', '=', 'buyback.code');
+            $join->on('products.id', '=', 'buyback.product_id');
+        })
         ->where('is_active', true)
         ->orderByDesc('products.created_at')
         ->with([
@@ -722,16 +756,20 @@ class ProductController extends Controller
                 if($product->split_set_code) {
                     $urlEdit = url("products/$product->id/edit?split_set_id=$product->split_id");
                 }
+                $btnEdit = '';
+                $btnDelete = '';
+                $btnPrint = '';
 
+                if($product->product_status == 1) {
                 $btnEdit = $user->can('update', $product)
                     ? '<a class="dropdown-item btn-edit" href="'.$urlEdit.'"><i class="fa fa-edit"></i> Edit</a>'
                     : '';
 
-                
-                $btnPrint = '<a class="dropdown-item btn-print" target="_BLANK" data-id="'.$product->id.'" href="'.url("products/print/$product->id").'"><i class="fa fa-print"></i> Print</a>';
                 $btnDelete = $user->can('delete', $product)
                     ? '<a class="dropdown-item btn-delete" href="#" data-id="'.$product->id.'" data-splitid="'.$product->split_id.'"><i class="fa fa-trash"></i> Delete</a>'
                     : '';
+                }
+                $btnPrint = '<a class="dropdown-item btn-print" target="_BLANK" data-id="'.$product->id.'" href="'.url("products/print/$product->id").'"><i class="fa fa-print"></i> Print</a>';
 
                 $element =
                 '<div class="dropdown">
