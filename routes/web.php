@@ -90,6 +90,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	Route::get('print_barcode', 'ProductController@printBarcode')->name('printBarcode');
 	Route::get('products-gencode', 'ProductController@generateCode');
 	Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
+		Route::get('getDetailById/{id}', 'ProductController@getDetailById');
 		Route::GET('print/{id}', 'ProductController@print')->name('products.print');
 		Route::POST('update/{id}', 'ProductController@update')->name('update');
 		Route::get('lims_product_search', 'ProductController@limsProductSearch')->name('search');
@@ -141,6 +142,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	Route::group(['prefix' => 'sales', 'as' => 'sales.'], function () {
 		Route::get('pos', 'SaleController@posSale')->name('pos');
+		Route::post('searchProducts', 'SaleController@search_products')->name('searchProducts');
 		Route::get('print-last-reciept', 'SaleController@printLastReciept')->name('printLastReciept');
 		Route::post('updatepayment', 'SaleController@updatePayment')->name('update-payment');
 		Route::post('deletepayment', 'SaleController@deletePayment')->name('delete-payment');

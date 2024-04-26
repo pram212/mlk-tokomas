@@ -468,6 +468,7 @@
 
 @section('scripts')
 
-@include('sale.pos_js')
+{{-- @include('sale.pos_js') --}}
+@include('sale.pos_js_new')
 
 @endsection

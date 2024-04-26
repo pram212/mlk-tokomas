@@ -35,7 +35,8 @@ use App\{
     Expense,
     ProductPurchase,
     Purchase,
-    GeneralSetting
+    GeneralSetting,
+    ProductSplitSetDetail
 };
 use DB;
 use Stripe\Stripe;
@@ -85,6 +86,37 @@ class SaleController extends Controller
         } else
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
+
+    // search_products
+    public function search_products(Request $request)
+    {
+        $search = $request->term;
+
+        $products = Product::query()
+        ->select([
+            'products.id',
+            DB::raw('CONCAT(products.name, " (", IFNULL(split.split_set_code, products.code), ")") as label'),
+            DB::raw('IFNULL(split.split_set_code, products.code) as value')
+        ])
+        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+        ->where('is_active', true)
+        ->where('products.product_status', 1)
+        ->where(function($query) use ($search) {
+            $query->where('products.name', 'like', '%' . $search . '%')
+                ->orWhere('products.code', 'like', '%' . $search . '%');
+        })
+        ->limit(10)
+        ->get();
+
+
+        if ($products->isEmpty()) {
+            return response()->json([]);
+        }
+
+        return response()->json($products);
+    }
+
+
 
     public function saleData(Request $request)
     {
@@ -338,7 +370,7 @@ class SaleController extends Controller
                 ],
             ]);
         }
-        //return dd($data);
+        
         $data['user_id'] = Auth::id();
         $cash_register_data = CashRegister::where([
             ['user_id', $data['user_id']],
@@ -407,9 +439,6 @@ class SaleController extends Controller
         $data['shipping_cost'] = (str_replace('.', '', $data['shipping_cost']) == '' ? 0 : str_replace('.', '', $data['shipping_cost']));
         $data['paid_amount'] = (str_replace('.', '', $data['paid_amount']) == '' ? 0 : str_replace('.', '', $data['paid_amount']));
 
-
-
-
         $lims_sale_data = Sale::create($data);
         $lims_customer_data = Customer::find($data['customer_id']);
         //collecting male data
@@ -427,6 +456,7 @@ class SaleController extends Controller
         $mail_data['paid_amount'] = $lims_sale_data->paid_amount;
 
         $product_id = $data['product_id'];
+        
         $product_code = $data['product_code'];
         $qty = $data['qty'];
         $sale_unit = $data['sale_unit'];
@@ -441,8 +471,16 @@ class SaleController extends Controller
         DB::beginTransaction();
 
         foreach ($product_id as $i => $id) {
-            $lims_product_data = Product::where('id', $id)->first();
+            if (strpos($product_code[$i], '-') !== false) {
+                $lims_product_data = Product::
+                leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+                // ->where('products.id', $id)
+                ->where('split.split_set_code', $product_code[$i])->first();
+            }else{
+                $lims_product_data = Product::where('id', $id)->first();
+            }
             $product_sale['variant_id'] = null;
+            
             if ($lims_product_data->type == 'combo' && $data['sale_status'] == 1) {
                 $product_list = explode(",", $lims_product_data->product_list);
                 $qty_list = explode(",", $lims_product_data->qty_list);
@@ -510,6 +548,11 @@ class SaleController extends Controller
 
             $product_sale['sale_id'] = $lims_sale_data->id;
             $product_sale['product_id'] = $id;
+            if (strpos($product_code[$i], '-') !== false) {
+                $product_sale['split_set_code'] = $product_code[$i];
+            }else{
+                $product_sale['split_set_code'] = null;
+            }
             $product_sale['qty'] = $mail_data['qty'][$i] = $qty[$i];
             $product_sale['sale_unit_id'] = $sale_unit_id;
             $product_sale['net_unit_price'] = (str_replace('.', '', $net_unit_price[$i]) == '' ? 0 : str_replace('.', '', $net_unit_price[$i]));
@@ -520,9 +563,22 @@ class SaleController extends Controller
 
             Product_Sale::create($product_sale);
             // update product_status to sold (0)
-            $lims_product_data->product_status = 0;
-            $lims_product_data->invoice_number = $lims_sale_data->reference_no;
-            $lims_product_data->save();
+            // handle split set condition
+            // jika product code mengandung - maka itu adalah split set
+            if (strpos($product_code[$i], '-') !== false) {
+                // update ProductSplitSetDetail status
+                $lims_product_split_set_detail = ProductSplitSetDetail::where('split_set_code', $product_code[$i])->first();
+                $lims_product_split_set_detail->product_status = 0;
+                $lims_product_split_set_detail->invoice_number = $lims_sale_data->reference_no;
+                $lims_product_split_set_detail->save();
+            } else {
+                $lims_product_data->product_status = 0;
+                $lims_product_data->invoice_number = $lims_sale_data->reference_no;
+                $lims_product_data->save();
+            }
+            // $lims_product_data->product_status = 0;
+            // $lims_product_data->invoice_number = $lims_sale_data->reference_no;
+            // $lims_product_data->save();
         }
 
         // db commit transaction
@@ -1030,15 +1086,32 @@ class SaleController extends Controller
 
     public function limsProductSearch(Request $request)
     {
-        // dd($request->all());
         $todayDate = date('Y-m-d');
-        $product_code = explode("(", $request['data']);
-        $product_code[0] = rtrim($product_code[0], " ");
+        // $product_code = explode("(", $request['data']);
+        // $product_code[0] = rtrim($product_code[0], " ");
+        $product_code[0] = $request['data'];
         $product_variant_id = null;
-        $lims_product_data = Product::where([
-            ['code', $product_code[0]],
-            ['is_active', true]
-        ])->first();
+
+        $is_split = false;
+
+        // jika product code mengandung -
+        if (strpos($product_code[0], '-') !== false) {
+            $is_split = true;
+            $lims_product_data = Product::
+            select('products.*', 'pssd.split_set_code')
+            ->join('product_split_set_detail as pssd', 'products.id', 'pssd.product_id')
+            ->where([
+                ['pssd.split_set_code', $product_code[0]]
+            ])->first();
+        }else{
+            $lims_product_data = Product::where([
+                ['code', $product_code[0]],
+                ['is_active', true]
+            ])->first();
+        }
+
+        
+        
         if (!$lims_product_data) {
             $lims_product_data = Product::join('product_variants', 'products.id', 'product_variants.product_id')
                 ->select('products.*', 'product_variants.id as product_variant_id', 'product_variants.item_code', 'product_variants.additional_price')
@@ -1056,7 +1129,7 @@ class SaleController extends Controller
             $product[] = $lims_product_data->item_code;
             $lims_product_data->price += $lims_product_data->additional_price;
         } else
-            $product[] = $lims_product_data->code;
+            $product[] = ($is_split) ? $lims_product_data->split_set_code : $lims_product_data->code; 
 
         if ($lims_product_data->promotion && $todayDate <= $lims_product_data->last_date) {
             $product[] = $lims_product_data->promotion_price;
@@ -1098,7 +1171,7 @@ class SaleController extends Controller
             $product[] = 'n/a' . ',';
             $product[] = 'n/a' . ',';
         }
-        $product[] = $lims_product_data->id;
+        $product[] = $lims_product_data->id; // product id
         $product[] = $product_variant_id;
         $product[] = $lims_product_data->promotion;
         return $product;
@@ -1348,7 +1421,7 @@ class SaleController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->except('document');
-        //return dd($data);
+        
         $document = $request->document;
         if ($document) {
             $v = Validator::make(

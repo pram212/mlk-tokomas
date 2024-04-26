@@ -1059,6 +1059,7 @@
                 // });
                 $("input[name='product_code_name']").val('');
                 if (flag) {
+                    console.log(data)
                     addNewProduct(data);
                 }
             }
