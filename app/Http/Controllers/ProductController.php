@@ -11,6 +11,7 @@ use App\Product_Warehouse;
 use App\ProductProperty;
 use App\ProductVariant;
 use App\ProductType;
+use App\ProductBuyback;
 use App\Warehouse;
 use App\Category;
 use App\Product;
@@ -799,23 +800,22 @@ class ProductController extends Controller
     public function detailHistoricalProductDataTable($product_id,$split_set_code = "")
     {
         $this->authorize('viewAny', Product::class);
-        $productQuery = Product::query()
+        // seharusnya JOIN dengan product sales // MARK
+        // fix query agar bisa keluar data semua
+        $productSalesQuery = Product_Sale::query()
         ->select([
-            'products.id',
-            DB::raw("COALESCE(split.split_set_code, products.code) as code"),
-            'split.id as split_id',
-            DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, products.price)) as price"),
+            DB::raw("COALESCE(product_sales.split_set_code, products.code) as code"),
+            'total as price',
             'name',
-            'products.discount',
-            DB::raw("COALESCE(split.created_at, products.created_at) as created_at"),
-            'tag_type_id',
+            'product_sales.created_at',
             'gramasi_id',
             DB::raw("COALESCE(buyback.product_property_id, products.product_property_id) as product_property_id"),
             DB::raw("COALESCE(split.mg, products.mg) as mg"),
-            DB::raw("COALESCE(split.product_status, products.product_status) as product_status"),
-            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number")
+            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number"),
+            DB::raw("1 as history_status"), // 0 = Product Created, 1 = Product Sold, 2 = Product Buyback
         ])
-        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+        ->leftJoin('products', 'products.id', '=', 'product_sales.product_id')
+        ->leftJoin('product_split_set_detail as split', 'product_sales.split_set_code', '=', 'split.split_set_code')
         ->leftJoin('product_buyback as buyback', function($join) {
             $join->on('split.split_set_code', '=', 'buyback.code');
             $join->on('products.id', '=', 'buyback.product_id');
@@ -830,14 +830,68 @@ class ProductController extends Controller
                 }
             });
         })
-        ->orderByDesc('products.created_at')
-        ->with([
-            'tagType:id,code,color',
-            'productProperty:id,code,description',
-            'gramasi:id,code,gramasi'
-        ]);
+        ->groupBy(['product_sales.id'])
+        ->orderByDesc('product_sales.created_at');
+
+        $productQuery = Product::query()
+        ->select([
+            DB::raw("COALESCE(split.split_set_code, products.code) as code"),
+            DB::raw("COALESCE(split.price, products.price) as price"),
+            'name',
+            DB::raw("COALESCE(split.created_at, products.created_at) as created_at"),
+            'gramasi_id',
+            DB::raw("products.product_property_id as product_property_id"),
+            DB::raw("COALESCE(split.mg, products.mg) as mg"),
+            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number"),
+            DB::raw("0 as history_status"), // 0 = Product Created, 1 = Product Sold, 2 = Product Buyback
+        ])
+        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+        ->where('is_active', true)
+        ->when($split_set_code || $product_id, function ($query) use ($split_set_code, $product_id) {
+            return $query->where(function ($query) use ($split_set_code, $product_id) {
+                if ($split_set_code!= "") {
+                    $query->where('split.split_set_code', $split_set_code);
+                } else {
+                    $query->where('products.id', $product_id);
+                }
+            });
+        })
+        ->groupBy(['products.id', 'split.id'])
+        ->orderByDesc('products.created_at',' split.created_at');
+
+        $productBuybackQuery = ProductBuyback::query()
+        ->select([
+            'product_buyback.code',
+            'product_buyback.price',
+            'products.name',
+            'product_buyback.created_at',
+            'gramasi_id',
+            DB::raw("COALESCE(product_buyback.product_property_id, products.product_property_id) as product_property_id"),
+            DB::raw("COALESCE(split.mg, products.mg) as mg"),
+            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number"),
+            DB::raw("2 as history_status"), // 0 = Product Created, 1 = Product Sold, 2 = Product Buyback
+        ])
+        ->leftJoin('products', 'products.id', '=', 'product_buyback.product_id')
+        ->leftJoin('product_split_set_detail as split', 'product_buyback.code', '=', 'split.split_set_code')
+        ->where('is_active', true)
+        ->when($split_set_code || $product_id, function ($query) use ($split_set_code, $product_id) {
+            return $query->where(function ($query) use ($split_set_code, $product_id) {
+                if ($split_set_code!= "") {
+                    $query->where('split.split_set_code', $split_set_code);
+                } else {
+                    $query->where('products.id', $product_id);
+                }
+            });
+        })
+        ->groupBy(['product_buyback.id'])
+        ->orderByDesc('product_buyback.created_at');
+
+        // join 3 query
+        $productQuery->union($productSalesQuery);
+        $productQuery->union($productBuybackQuery);
 
 
+        DB::statement("SET sql_mode = '' ");
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
             ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
@@ -850,14 +904,33 @@ class ProductController extends Controller
             ->addColumn('product_status', function ($product) {
                 return $product->product_status == 1 ? 'STORE' : 'SOLD';
             })
+            ->addColumn('history_status', function ($product) {
+                // 0 = Product Created, 1 = Product Sold, 2 = Product Buyback
+                $status = "";
+                switch ($product->history_status) {
+                    case 0:
+                        $status = "Created";
+                        break;
+                    case 1:
+                        $status = "Sold";
+                        break;
+                    case 2:
+                        $status = "Buyback";
+                        break;
+                    default:
+                        $status = "Created";
+                        break;
+                }
+                return $status;
+            })
             ->addColumn('invoice_number', function ($product) {
                 return $product->invoice_number ?? "-";
             })
-            ->addColumn('tag_type_color', function ($product) {
-                $color = $product->tagType->color ?? "none";
-                return '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color . '</div>';
-            })
-            ->rawColumns(['tag_type_color'])
+            // ->addColumn('tag_type_color', function ($product) {
+            //     $color = $product->tagType->color ?? "none";
+            //     return '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color . '</div>';
+            // })
+            // ->rawColumns(['tag_type_color'])
             ->make();
 
             return $datatable;

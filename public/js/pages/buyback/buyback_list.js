@@ -36,14 +36,22 @@ $(document).ready(function () {
         columns: [
             {
                 data: "code",
+                name: "products.code",
+                searchable: true,
                 render: function (data, type, row) {
                     const product_id = row.id;
+                    const split_set_code = row.split_set_code ?? "";
+                    let param = product_id;
+                    if (split_set_code) {
+                        param =
+                            product_id + "/?split_set_code=" + split_set_code;
+                    }
                     return (
                         '<a href="' +
                         baseUrl +
                         "/products/" +
-                        product_id +
-                        '" class="btn-detail-product" style="color:blue">' +
+                        param +
+                        '" class="btn-detail-product" style="color: blue">' +
                         data +
                         "</a>"
                     );
@@ -51,43 +59,73 @@ $(document).ready(function () {
             },
             {
                 data: "name",
+                name: "products.name",
+                searchable: true,
             },
             {
                 data: "image_preview",
+                searchable: false,
+                orderable: false,
             },
             {
                 data: "created_at",
+                searchable: false,
             },
             {
                 data: "price",
+                searchable: false,
             },
             {
                 data: "tag_type_code",
+                searchable: false,
+                orderable: false,
             },
             {
                 data: "tag_type_color",
+                searchable: false,
+                orderable: false,
             },
             {
                 data: "mg",
+                searchable: false,
             },
             {
                 data: "gramasi_gramasi",
+                searchable: false,
             },
             {
                 data: "product_property_description",
+                searchable: false,
             },
             {
                 data: "product_status",
+                searchable: false,
             },
             {
                 data: "invoice_number",
+                name: "products.invoice_number",
+                searchable: true,
             },
             {
                 data: "buyback_status",
+                searchable: false,
             },
             {
                 data: "action",
                 orderable: false,
+                searchable: false,
+            },
+            {
+                data: "invoice_number",
+                name: "split.invoice_number",
+                searchable: true,
+                visible: false,
+            },
+            {
+                data: "code",
+                name: "split.split_set_code",
+                searchable: true,
+                visible: false,
             },
         ],
         order: [["3", "desc"]],
@@ -114,7 +152,8 @@ $(document).ready(function () {
             {
                 extend: "colvis",
                 text: lang_visibility,
-                columns: ":gt(0)",
+                // columns: ":gt(0)",
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
             },
         ],
     });

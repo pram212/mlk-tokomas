@@ -29,7 +29,13 @@ $(document).ready(function () {
                 data: "code",
             },
             {
+                data: "history_status",
+            },
+            {
                 data: "created_at",
+            },
+            {
+                data: "invoice_number",
             },
             {
                 data: "product_property_description",
@@ -44,7 +50,7 @@ $(document).ready(function () {
                 data: "mg",
             },
         ],
-        order: [["2", "desc"]],
+        order: [["3", "desc"]],
         columnDefs: [
             {
                 orderable: false,

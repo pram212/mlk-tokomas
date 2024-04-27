@@ -375,7 +375,9 @@
                                                     <tr>
                                                         <th>No</th>
                                                         <th>{{ __('file.Product Code') }}</th>
+                                                        <th>Status</th>
                                                         <th>Tanggal</th>
+                                                        <th>Invoice</th>
                                                         <th>{{ __('file.Product Property') }}</th>
                                                         <th>{{ __('file.Price') }}</th>
                                                         <th>{{ __('file.Gramasi') }}</th>
