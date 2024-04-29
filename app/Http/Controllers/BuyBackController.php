@@ -23,14 +23,9 @@ class BuyBackController extends Controller
         return view('buyback.index', compact('productProperties'));
     }
 
-    public function buybackDataTable(Request $request)
-    {
-        $this->authorize('viewAny', Product::class);
-
-        $invoiceNumber = $request->invoice_number;
-        $code = $request->code;
-
+    private function buyback_query($filter = []){
         DB::statement("SET sql_mode = '' ");
+        
         $productQuery = Product_Sale::query()
         ->select([
             'product_sales.product_id as id',
@@ -76,22 +71,34 @@ class BuyBackController extends Controller
         ->leftJoin('tag_types', 'products.tag_type_id', '=', 'tag_types.id')
         ->leftJoin('product_properties', 'products.product_property_id', '=', 'product_properties.id')
         ->leftJoin('gramasis', 'products.gramasi_id', '=', 'gramasis.id')
-        // ->where('is_active', true)
-        ->when($invoiceNumber || $code, function ($query) use ($invoiceNumber, $code) {
-            return $query->where(function ($query) use ($invoiceNumber, $code) {
-                if ($invoiceNumber) {
-                    $query->orWhere('products.invoice_number', $invoiceNumber);
-                    $query->orWhere('split.invoice_number', $invoiceNumber);
+        ->when($filter['invoiceNumber'] || $filter['code'], function ($query) use ($filter) {
+            return $query->where(function ($query) use ($filter) {
+                if ($filter['invoiceNumber']) {
+                    $query->orWhereRaw('products.invoice_number LIKE ?', ['%' . $filter['invoiceNumber'] . '%']);
+                    $query->orWhereRaw('split.invoice_number LIKE ?', ['%' . $filter['invoiceNumber'] . '%']);
                 }
-                if ($code) {
-                    $query->orWhere('products.code', $code);
-                    $query->orWhere('split.split_set_code', $code);
+                if ($filter['code']) {
+                    $query->orWhereRaw('products.code LIKE ?', ['%' . $filter['code'] . '%']);
+                    $query->orWhereRaw('split.split_set_code LIKE ?', ['%' . $filter['code'] . '%']);
                 }
             });
-        })
+        })        
         ->orderByDesc('product_sales.created_at')
         ->groupBy('product_sales.product_id', 'product_sales.split_set_code');
 
+        return $productQuery;
+    }
+
+    public function buybackDataTable(Request $request)
+    {
+        $this->authorize('viewAny', Product::class);
+
+        $invoiceNumber = $request->invoice_number;
+        $code = $request->code;
+
+        $filter = compact('invoiceNumber', 'code');
+        
+        $productQuery = $this->buyback_query($filter);
 
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
@@ -146,21 +153,13 @@ class BuyBackController extends Controller
     public function getInvoiceNumber(Request $request)
     {
         $search = $request->search;
-        $result = Product::select([
-            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number")
-        ])
-        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
-        ->where(function($query) {
-            $query->where('products.product_status', 0)
-                  ->orWhere('split.product_status', 0);
-        })
-        ->where('products.is_active', true)
-        ->where(function($query) use ($search) {
-            $query->where('products.invoice_number', 'like', '%'.$search.'%')
-                  ->orWhere('split.invoice_number', 'like', '%'.$search.'%');
-        })
+
+        $result = $this->buyback_query(['invoiceNumber' => $search, 'code' => null])
         ->limit(3)
-        ->get();
+        ->pluck('invoice_number')
+        ->map(function ($item) {
+            return ['invoice_number' => $item];
+        });
 
         return response()->json($result);
     }
@@ -169,21 +168,13 @@ class BuyBackController extends Controller
     public function getCode(Request $request)
     {
         $search = $request->search;
-        $result = Product::select([
-            DB::raw("COALESCE(split.split_set_code, products.code) as code")
-        ])
-        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
-        ->where(function($query) {
-            $query->where('products.product_status', 0)
-                  ->orWhere('split.product_status', 0);
-        })
-        ->where('products.is_active', true)
-        ->where(function($query) use ($search) {
-            $query->where('products.code', 'like', '%'.$search.'%')
-                  ->orWhere('split.split_set_code', 'like', '%'.$search.'%');
-        })
+        
+        $result = $this->buyback_query(['invoiceNumber' => null, 'code' => $search])
         ->limit(3)
-        ->get();
+        ->pluck('code')
+        ->map(function ($item) {
+            return ['code' => $item];
+        });
 
         return response()->json($result);
     }
