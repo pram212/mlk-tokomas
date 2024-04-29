@@ -237,29 +237,30 @@ $(document).ready(function () {
     // onclick buyback button
     $("#buyback-data-table tbody").on("click", "a.btn-buyback", function (e) {
         const id = $(this).data("productid");
-        const code = $(this).data("productcode");
+        const code = $(this).data("productcode").toString();
+        let url = `${baseUrl}/buyback/getDataModalProductBuyBack/${id}${
+            code.includes("-") ? `/${code}` : ""
+        }`;
 
         // GET data product from buyback/getDataModalProductBuyBack{id} with axios
-        axios
-            .get(`${baseUrl}/buyback/getDataModalProductBuyBack/${id}`)
-            .then((response) => {
-                // insert data to modal
-                $("#modal_desc_value").text(
-                    "(" + code + ")" + " - " + response.data.name
-                );
+        axios.get(url).then((response) => {
+            // insert data to modal
+            $("#modal_desc_value").text(
+                "(" + code + ")" + " - " + response.data.name
+            );
 
-                let modal_price =
-                    parseFloat(response.data.price) -
-                    parseFloat(response.data.discount);
+            let modal_price =
+                parseFloat(response.data.price) -
+                parseFloat(response.data.discount);
 
-                $("#modal_price_value").text(modal_price);
-                $("#modal_price_default").val(parseFloat(response.data.price));
-                $("#modal_discount").val(parseFloat(response.data.discount));
-                $("#product_id").val(response.data.id);
-                $("#product_code").val(code);
-                // show modal buybackModal
-                $("#buybackModal").modal("show");
-            });
+            $("#modal_price_value").text(modal_price);
+            $("#modal_price_default").val(parseFloat(response.data.price));
+            $("#modal_discount").val(parseFloat(response.data.discount));
+            $("#product_id").val(response.data.id);
+            $("#product_code").val(code);
+            // show modal buybackModal
+            $("#buybackModal").modal("show");
+        });
     });
 });
 
