@@ -160,6 +160,7 @@
             font-weight: bold;
             font-style: italic;
             text-align: center;
+            padding: 10px;
 
             /* color: #1858D4; */
         }
@@ -285,8 +286,9 @@
 
                                 <div class="kadar">
                                     <h1>{{$lims_product_sale_data[0]['product']['gramasi']['gramasi']
-                                        }}<sup>{{$lims_product_sale_data[0]['product']['mg'] }}</sup></h1>
-                                    <span>gram</span>
+                                        }}<sup>{{$lims_product_sale_data[0]['product']['mg'] }}</sup><span>gram</span>
+                                    </h1>
+
                                 </div>
 
                             </td>
@@ -312,16 +314,33 @@
                                 </div>
                             </td>
                             <td class="total_harga">Barcode product <br>
-                                {{-- qrcode --}}
-                                <img src="data:image/png;base64,{{DNS1D::getBarcodePNG($lims_product_sale_data[0]['product']['barcode'], 'C39')}}"
-                                    alt="barcode" />
+                                {{-- <img
+                                    src="data:image/png;base64,{{DNS1D::getBarcodePNG($lims_product_sale_data[0]['product']['code'], 'C39')}}"
+                                    alt="barcode" /> --}}
+                                @if($mode != 'print')
+                                <div class="hidden-print">
+                                    {!! QrCode::size(70)->generate($lims_product_sale_data[0]['product']['code']) !!}
+                                </div>
+                                @else
+                                <img
+                                    src="data:image/png;base64, {!! base64_encode(QrCode::size(70)->generate('https://google.com')) !!} ">
+                                @endif
 
                             </td>
                             <td class="total_harga">Barcode Invoice
                                 <br>
-                                {{-- qrcode --}}
-                                <img src="data:image/png;base64,{{DNS1D::getBarcodePNG($lims_sale_data->reference_no, 'C39')}}"
-                                    alt="barcode" />
+                                {{-- <img
+                                    src="data:image/png;base64,{{DNS1D::getBarcodePNG($lims_sale_data->reference_no, 'C39')}}"
+                                    alt="barcode" /> --}}
+                                @if($mode != 'print')
+                                <div class="hidden-print">
+                                    {!! QrCode::size(70)->generate($lims_sale_data->reference_no) !!}
+                                </div>
+                                @else
+                                <img
+                                    src="data:image/png;base64, {!! base64_encode(QrCode::size(70)->generate('https://google.com')) !!} ">
+                                @endif
+
                             </td>
                         </tr>
                         <tr style="height: 50px;">
@@ -346,8 +365,6 @@
                             <td class="note_thanks" colspan="2" style="border: 0px">
                                 Terimakasih</td>
                         </tr>
-
-
                     </tbody>
                 </table>
             </div>
@@ -356,10 +373,6 @@
 
     <script type="text/javascript">
         localStorage.clear();
-    // function auto_print() {     
-    //     window.print()
-    // }
-    // setTimeout(auto_print, 1000);
     </script>
 
 </body>
