@@ -190,7 +190,32 @@ class BuyBackController extends Controller
 
     public function getDataModalProductBuyBack(Request $request)
     {
-        $product = Product::where('id', $request->id)->first();
+        $product_id = $request->id;
+        $split_set_code = $request->split_set_code; // split set code
+
+        $product = Product::
+        select([
+            'products.id',
+            DB::raw("COALESCE(split.split_set_code, products.code) as code"),
+            'products.name',
+            DB::raw("COALESCE(buyback.final_price, products.price) as price"),
+            'products.discount',
+            'products.description'
+        ])
+        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+        ->leftJoin('product_buyback as buyback', function($join) {
+            $join->on('products.id', '=', 'buyback.product_id');
+            $join->where(function($query) {
+                $query->on('split.split_set_code', '=', 'buyback.code')
+                    ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
+            });
+        })
+        ->when($split_set_code, function ($query) use ($split_set_code) {
+            return $query->where('split.split_set_code', $split_set_code);
+        })
+        ->where('products.id', $product_id)
+        ->first();
+
         return response()->json($product);
     }
 
