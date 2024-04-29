@@ -42,7 +42,7 @@ class BuyBackController extends Controller
             'products.image',
             'products.name',
             'products.discount',
-            'product_sales.created_at',
+            DB::raw("max(product_sales.created_at) as created_at"),
             'products.tag_type_id',
             'products.gramasi_id',
             DB::raw("COALESCE(buyback.product_property_id, products.product_property_id) as product_property_id"),
@@ -57,7 +57,7 @@ class BuyBackController extends Controller
             DB::raw("CASE 
                 WHEN buyback.id IS NOT NULL THEN 
                     CASE 
-                        WHEN COALESCE(product_sales.created_at, COALESCE(split.created_at, products.created_at)) > buyback.created_at THEN 0 
+                        WHEN COALESCE(max(product_sales.created_at), COALESCE(max(split.created_at), max(products.created_at))) > buyback.created_at THEN 0 
                         ELSE 1 
                     END 
                 ELSE 0 
