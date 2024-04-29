@@ -57,7 +57,7 @@ class BuyBackController extends Controller
             DB::raw("CASE 
                 WHEN buyback.id IS NOT NULL THEN 
                     CASE 
-                        WHEN COALESCE(split.created_at, products.created_at) > buyback.created_at THEN 0 
+                        WHEN COALESCE(product_sales.created_at, COALESCE(split.created_at, products.created_at)) > buyback.created_at THEN 0 
                         ELSE 1 
                     END 
                 ELSE 0 
@@ -65,8 +65,11 @@ class BuyBackController extends Controller
             DB::raw("COALESCE(split.product_status, products.product_status) as product_status")
         ])
         ->leftJoin('product_buyback as buyback', function($join) {
-            $join->on('product_sales.split_set_code', '=', 'buyback.code');
             $join->on('product_sales.product_id', '=', 'buyback.product_id');
+            $join->where(function($query) {
+                $query->on('product_sales.split_set_code', '=', 'buyback.code')
+                    ->orWhereNull('product_sales.split_set_code'); // Handle case when split_set_code is NULL
+            });
         })
         ->leftJoin('products', 'product_sales.product_id', '=', 'products.id')
         ->leftJoin('product_split_set_detail as split', 'product_sales.split_set_code', '=', 'split.split_set_code')

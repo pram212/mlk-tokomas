@@ -718,8 +718,11 @@ class ProductController extends Controller
         ])
         ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
         ->leftJoin('product_buyback as buyback', function($join) {
-            $join->on('split.split_set_code', '=', 'buyback.code');
             $join->on('products.id', '=', 'buyback.product_id');
+            $join->where(function($query) {
+                $query->on('split.split_set_code', '=', 'buyback.code')
+                    ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
+            });
         })
         ->where('is_active', true)
         ->orderByDesc('products.created_at')
@@ -817,8 +820,11 @@ class ProductController extends Controller
         ->leftJoin('products', 'products.id', '=', 'product_sales.product_id')
         ->leftJoin('product_split_set_detail as split', 'product_sales.split_set_code', '=', 'split.split_set_code')
         ->leftJoin('product_buyback as buyback', function($join) {
-            $join->on('split.split_set_code', '=', 'buyback.code');
             $join->on('products.id', '=', 'buyback.product_id');
+            $join->where(function($query) {
+                $query->on('split.split_set_code', '=', 'buyback.code')
+                    ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
+            });
         })
         ->where('is_active', true)
         ->when($split_set_code || $product_id, function ($query) use ($split_set_code, $product_id) {
