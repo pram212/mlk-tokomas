@@ -51,6 +51,7 @@ use Srmklive\PayPal\Services\AdaptivePayments;
 use GeniusTS\HijriDate\Date;
 use Illuminate\Support\Facades\Validator;
 use Dompdf\Dompdf;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class SaleController extends Controller
 {
@@ -1087,93 +1088,57 @@ class SaleController extends Controller
     public function limsProductSearch(Request $request)
     {
         $todayDate = date('Y-m-d');
-        // $product_code = explode("(", $request['data']);
-        // $product_code[0] = rtrim($product_code[0], " ");
-        $product_code[0] = $request['data'];
+        $product_code = $request['data'];
         $product_variant_id = null;
-
         $is_split = false;
-
         // jika product code mengandung -
-        if (strpos($product_code[0], '-') !== false) {
+        if (strpos($product_code, '-') !== false) {
             $is_split = true;
-            $lims_product_data = Product::
-            select('products.*', 'pssd.split_set_code')
-            ->join('product_split_set_detail as pssd', 'products.id', 'pssd.product_id')
-            ->where([
-                ['pssd.split_set_code', $product_code[0]]
-            ])->first();
-        }else{
-            $lims_product_data = Product::where([
-                ['code', $product_code[0]],
-                ['is_active', true]
-            ])->first();
         }
 
-        
-        
-        if (!$lims_product_data) {
-            $lims_product_data = Product::join('product_variants', 'products.id', 'product_variants.product_id')
-                ->select('products.*', 'product_variants.id as product_variant_id', 'product_variants.item_code', 'product_variants.additional_price')
-                ->where([
-                    ['product_variants.item_code', $product_code[0]],
-                    ['products.is_active', true]
-                ])->first();
-            $product_variant_id = $lims_product_data->product_variant_id ?? null;
-        }
+        $lims_product_data = Product::query()
+            ->select([
+                'products.*', 
+                DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, products.price)) as price"),
+                'split.split_set_code']
+            )
+            // ->leftJoin('product_split_set_detail as split', 'split.product_id =', "$product_code")
+            ->leftJoin('product_split_set_detail as split', function($join) use ($product_code) {
+                $join->on('products.id', '=', 'split.product_id');
+                $join->where(function($query) use ($product_code) {
+                    $query->on('split.split_set_code', '=', DB::raw("'".$product_code."'"))
+                        ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
+                });
+            })
+            ->leftJoin('product_buyback as buyback', function($join) {
+                $join->on('products.id', '=', 'buyback.product_id');
+                $join->where(function($query) {
+                    $query->on('split.split_set_code', '=', 'buyback.code')
+                        ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
+                });
+            })
+            ->when($is_split, function($query) use ($product_code) {
+                $query->where('split.split_set_code', $product_code);
+            })
+            ->when(!$is_split, function($query) use ($product_code) {
+                $query->where('products.code', $product_code);
+            })
+            ->first();
 
-        $product[] = $lims_product_data->name ?? $lims_product_data->code ?? '-';
 
-        
-        if ($lims_product_data->is_variant) {
-            $product[] = $lims_product_data->item_code;
-            $lims_product_data->price += $lims_product_data->additional_price;
-        } else
-            $product[] = ($is_split) ? $lims_product_data->split_set_code : $lims_product_data->code; 
 
-        if ($lims_product_data->promotion && $todayDate <= $lims_product_data->last_date) {
-            $product[] = $lims_product_data->promotion_price;
-        } else
-            $product[] = $lims_product_data->price;
-
-        if ($lims_product_data->tax_id) {
-            $lims_tax_data = Tax::find($lims_product_data->tax_id);
-            $product[] = $lims_tax_data->rate;
-            $product[] = $lims_tax_data->name;
-        } else {
-            $product[] = 0;
-            $product[] = 'No Tax';
-        }
-        $product[] = $lims_product_data->tax_method;
-        if ($lims_product_data->type == 'standard') {
-            $units = Unit::where("base_unit", $lims_product_data->unit_id)
-                ->orWhere('id', $lims_product_data->unit_id)
-                ->get();
-            $unit_name = array();
-            $unit_operator = array();
-            $unit_operation_value = array();
-            foreach ($units as $unit) {
-                if ($lims_product_data->sale_unit_id == $unit->id) {
-                    array_unshift($unit_name, $unit->unit_name);
-                    array_unshift($unit_operator, $unit->operator);
-                    array_unshift($unit_operation_value, $unit->operation_value);
-                } else {
-                    $unit_name[]  = $unit->unit_name;
-                    $unit_operator[] = $unit->operator;
-                    $unit_operation_value[] = $unit->operation_value;
-                }
-            }
-            $product[] = implode(",", $unit_name) . ',';
-            $product[] = implode(",", $unit_operator) . ',';
-            $product[] = implode(",", $unit_operation_value) . ',';
-        } else {
-            $product[] = 'n/a' . ',';
-            $product[] = 'n/a' . ',';
-            $product[] = 'n/a' . ',';
-        }
+        $product[] = $lims_product_data->name ?? $lims_product_data->code ?? '-'; // product name
+        $product[] = ($is_split) ? $lims_product_data->split_set_code : $lims_product_data->code; // product code 
+        $product[] = $lims_product_data->price; // product price
+        $product[] = 0; // product discount
+        $product[] = 'No Tax'; // product tax
+        $product[] = $lims_product_data->tax_method; // product tax rate
+        $product[] = 'n/a' . ','; // product unit
+        $product[] = 'n/a' . ',';
+        $product[] = 'n/a' . ',';
         $product[] = $lims_product_data->id; // product id
-        $product[] = $product_variant_id;
-        $product[] = $lims_product_data->promotion;
+        $product[] = $product_variant_id; // product variant id
+        $product[] = $lims_product_data->promotion; // product promotion
         return $product;
     }
 

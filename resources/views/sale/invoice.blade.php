@@ -63,6 +63,37 @@
             font-size: 11px;
         }
 
+        .kadar {
+            display: flex;
+            justify-content: center;
+            font-size: 12px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .kadar h1 {
+            font-size: 40px;
+            margin: 0;
+
+        }
+
+        .kadar sup {
+            font-size: 15px;
+            vertical-align: top;
+            margin-left: 3px;
+            display: inline-block;
+            position: relative;
+            top: -10px;
+        }
+
+        .kadar span {
+            font-size: 20px;
+            vertical-align: bottom;
+            margin-left: 3px;
+            text-transform: lowercase;
+        }
+
+
         @media print {
             * {
                 font-size: 12px;
@@ -103,7 +134,7 @@
 
         #table_body td {
             /* Atur lebar maksimum untuk sel item */
-            max-width: 200px;
+            max-width: 300px;
             /* Sembunyikan teks yang melebihi lebar maksimum */
             overflow: hidden;
             /* Tambahkan elipsis untuk menandakan bahwa teks dipotong */
@@ -129,8 +160,9 @@
             font-weight: bold;
             font-style: italic;
             text-align: center;
+            padding: 10px;
 
-            color: #1858D4;
+            /* color: #1858D4; */
         }
 
         .note {
@@ -151,6 +183,19 @@
 
         .title {
             font-style: italic;
+        }
+
+        .total_price {
+            font-weight: bold;
+            color: #1858D4;
+            font-size: 25px;
+            margin-top: 10px;
+        }
+
+        .in_words {
+            font-weight: bold;
+            font-style: italic;
+            font-size: 17px;
         }
     </style>
 </head>
@@ -184,7 +229,7 @@
                 <table style="width: 100%" id="table_head">
                     <tbody>
                         <tr>
-                            <td style="width:300px;min-width: 300px">
+                            <td style="width:300px;min-width: 300px;">
                                 @php
                                 $logo = public_path('logo/bima_text_1.png');
                                 @endphp
@@ -216,14 +261,12 @@
                         <tr>
                             <th class="title">Gambar</th>
                             <th class="title">Catatan</th>
-                            <th class="title">Keterangan</th>
-                            <th class="title">Berat (Gram)</th>
-                            <th class="title">Harga (Rp)</th>
+                            <th class="title" colspan="2">Keterangan</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="center">
+                            <td class="center" style="height:200px;">
                                 @php
                                 $gambar_produk = $lims_product_sale_data[0]['product']['image'] ?? '';
                                 @endphp
@@ -231,15 +274,24 @@
                                 <img src="data:image/png;base64,{{ base64_encode(file_get_contents($gambar_produk)) }}"
                                     width="200px" alt="">
                                 @endif
-                                {{-- <img src="{{ asset($lims_product_sale_data[0]['product']['image']) }}" alt=""
-                                    width="200px">
-                            </td> --}}
-                            <td class=" title" style="vertical-align: top;font-weight:bold">{{
-                                $lims_sale_data['sale_note'] }} pcs</td>
-                            <td class="title" style="vertical-align: top;font-weight:bold">{{
-                                $lims_product_sale_data[0]['product']['name'] }}</td>
-                            <td class="center title" style="vertical-align: top;font-weight:bold">{{
-                                $lims_product_sale_data[0]['product']->gramasi['gramasi'] }} gram</td>
+                            <td class=" title" style="vertical-align: top;font-weight:bold">Kalau rusak dekok, pesok,
+                                mleot Potongan
+                                {{$lims_sale_data['discount'] ?? 0 }}/gram </td>
+                            <td class="title" style="vertical-align: top;font-weight:bold;" colspan="2">
+                                <ul>
+                                    <li> Kadar :</li>
+                                    <li>Deskripsi Barang : {{$lims_product_sale_data[0]['product']['name'] }}</li>
+                                </ul><br>
+
+
+                                <div class="kadar">
+                                    <h1>{{$lims_product_sale_data[0]['product']['gramasi']['gramasi']
+                                        }}<sup>{{$lims_product_sale_data[0]['product']['mg'] }}</sup><span>gram</span>
+                                    </h1>
+
+                                </div>
+
+                            </td>
                             @php
                             $totalPrice = number_format(
                             floatval(str_replace(',', '.', $lims_product_sale_data[0]['product']['price'])),
@@ -248,18 +300,48 @@
                             '.'
                             );
                             @endphp
-                            <td class="center title" style="vertical-align: top; font-weight: bold;">
-                                {{$totalPrice }}
-                            </td>
 
                         </tr>
                         <tr>
-                            <td style="font-weight: bold; font-style: italic;border:0" colspan="3">
-                                {{trans('file.In Words')}}:
-                                <span>{{str_replace("-"," ",$numberInWords)}}</span>
+                            <td style="border:0" colspan="2">
+                                <div class="total_price">
+                                    {{trans('file.price')}} : Rp. {{$totalPrice}}
+                                </div>
+                                <br>
+                                <div class="in_words">
+                                    {{trans('file.In Words')}} :
+                                    {{str_replace("-"," ",$numberInWords)}}
+                                </div>
                             </td>
-                            <td class="total_harga">Total Harga</td>
-                            <td class="total_harga">{{$totalPrice }}</td>
+                            <td class="total_harga">Barcode product <br>
+                                {{-- <img
+                                    src="data:image/png;base64,{{DNS1D::getBarcodePNG($lims_product_sale_data[0]['product']['code'], 'C39')}}"
+                                    alt="barcode" /> --}}
+                                @if($mode != 'print')
+                                <div class="hidden-print">
+                                    {!! QrCode::size(70)->generate($lims_product_sale_data[0]['product']['code']) !!}
+                                </div>
+                                @else
+                                <img
+                                    src="data:image/png;base64, {!! base64_encode(QrCode::size(70)->generate('https://google.com')) !!} ">
+                                @endif
+
+                            </td>
+                            <td class="total_harga">Barcode Invoice
+                                <br>
+                                {{-- <img
+                                    src="data:image/png;base64,{{DNS1D::getBarcodePNG($lims_sale_data->reference_no, 'C39')}}"
+                                    alt="barcode" /> --}}
+                                @if($mode != 'print')
+                                <div class="hidden-print">
+                                    {!! QrCode::size(70)->generate($lims_sale_data->reference_no) !!}
+                                </div>
+                                @else
+                                <img
+                                    src="data:image/png;base64, {!! base64_encode(QrCode::size(70)->generate('https://google.com')) !!} ">
+                                @endif
+
+                            </td>
                         </tr>
                         <tr style="height: 50px;">
                             <td colspan="5" style="border:0px">
@@ -272,7 +354,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="3" style="border: 0; padding: 5px;">
+                            <td colspan="2" style="border: 0; padding: 5px;">
                                 <p class="note">Perhatian : </p>
                                 <p class="note">
                                     - Jika barang dijual ongkos bikin hilang. <br>
@@ -283,24 +365,14 @@
                             <td class="note_thanks" colspan="2" style="border: 0px">
                                 Terimakasih</td>
                         </tr>
-
-
                     </tbody>
                 </table>
-
-
             </div>
-
-
         </div>
     </div>
 
     <script type="text/javascript">
         localStorage.clear();
-    // function auto_print() {     
-    //     window.print()
-    // }
-    // setTimeout(auto_print, 1000);
     </script>
 
 </body>

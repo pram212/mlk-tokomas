@@ -36,12 +36,22 @@ $(document).ready(function () {
         columns: [
             {
                 data: "code",
+                name: "products.code",
+                searchable: true,
                 render: function (data, type, row) {
                     const product_id = row.id;
+                    const split_set_code = row.split_set_code ?? "";
+                    let param = product_id;
+                    if (split_set_code) {
+                        param =
+                            product_id + "/?split_set_code=" + split_set_code;
+                    }
                     return (
-                        '<a href="{{ url("products") }}/' +
-                        product_id +
-                        '" class="btn-detail-product" style="color:blue">' +
+                        '<a href="' +
+                        baseUrl +
+                        "/products/" +
+                        param +
+                        '" class="btn-detail-product" style="color: blue">' +
                         data +
                         "</a>"
                     );
@@ -49,40 +59,73 @@ $(document).ready(function () {
             },
             {
                 data: "name",
+                name: "products.name",
+                searchable: true,
             },
             {
                 data: "image_preview",
+                searchable: false,
+                orderable: false,
             },
             {
                 data: "created_at",
+                searchable: false,
             },
             {
                 data: "price",
+                searchable: false,
             },
             {
                 data: "tag_type_code",
+                searchable: false,
+                orderable: false,
             },
             {
                 data: "tag_type_color",
+                searchable: false,
+                orderable: false,
             },
             {
                 data: "mg",
+                searchable: false,
             },
             {
                 data: "gramasi_gramasi",
+                searchable: false,
             },
             {
                 data: "product_property_description",
+                searchable: false,
             },
             {
                 data: "product_status",
+                searchable: false,
             },
             {
                 data: "invoice_number",
+                name: "products.invoice_number",
+                searchable: true,
+            },
+            {
+                data: "buyback_status",
+                searchable: false,
             },
             {
                 data: "action",
                 orderable: false,
+                searchable: false,
+            },
+            {
+                data: "invoice_number",
+                name: "split.invoice_number",
+                searchable: true,
+                visible: false,
+            },
+            {
+                data: "code",
+                name: "split.split_set_code",
+                searchable: true,
+                visible: false,
             },
         ],
         order: [["3", "desc"]],
@@ -90,6 +133,10 @@ $(document).ready(function () {
             {
                 orderable: false,
                 targets: [0, 2, 6],
+            },
+            {
+                visible: false,
+                targets: [5, 6, 7, 8],
             },
         ],
         select: {
@@ -105,36 +152,41 @@ $(document).ready(function () {
             {
                 extend: "colvis",
                 text: lang_visibility,
-                columns: ":gt(0)",
+                // columns: ":gt(0)",
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
             },
         ],
     });
 
-    //  GET to buyback/getInvoiceNumber with axios
-    axios.get(`${baseUrl}/buyback/getInvoiceNumber`).then((response) => {
-        // insert data to selectpicker with loop
-        response.data.forEach((element) => {
-            $("#invoice_number").append(
-                `<option value="${element.invoice_number}">${element.invoice_number}</option>`
-            );
+    filterCode();
+    filterInvoice();
+
+    // on key up searchBox
+    $("#invoice_number")
+        .closest(".btn-group")
+        .find('.bs-searchbox input[type="text"]')
+        .on("keyup", function () {
+            // Ambil nilai dari input teks
+            let searchText = $(this).val();
+
+            // Periksa panjang nilai
+            if (searchText.length % 3 === 0) {
+                filterInvoice(searchText);
+            }
         });
 
-        // refresh selectpicker
-        $("#invoice_number").selectpicker("refresh");
-    });
+    $("#code")
+        .closest(".btn-group")
+        .find('.bs-searchbox input[type="text"]')
+        .on("keyup", function () {
+            // Ambil nilai dari input teks
+            let searchText = $(this).val();
 
-    //  GET to buyback/getTagType with axios
-    axios.get(`${baseUrl}/buyback/getCode`).then((response) => {
-        // insert data to selectpicker with loop
-        response.data.forEach((element) => {
-            $("#code").append(
-                `<option value="${element.code}">${element.code}</option>`
-            );
+            // Periksa panjang nilai
+            if (searchText.length % 3 === 0) {
+                filterCode(searchText);
+            }
         });
-
-        // refresh selectpicker
-        $("#code").selectpicker("refresh");
-    });
 
     // onclick filter button
     btn_filter.click(function () {
@@ -185,28 +237,68 @@ $(document).ready(function () {
     // onclick buyback button
     $("#buyback-data-table tbody").on("click", "a.btn-buyback", function (e) {
         const id = $(this).data("productid");
-        const code = $(this).data("productcode");
+        const code = $(this).data("productcode").toString();
+        let url = `${baseUrl}/buyback/getDataModalProductBuyBack/${id}${
+            code.includes("-") ? `/${code}` : ""
+        }`;
 
         // GET data product from buyback/getDataModalProductBuyBack{id} with axios
-        axios
-            .get(`${baseUrl}/buyback/getDataModalProductBuyBack/${id}`)
-            .then((response) => {
-                // insert data to modal
-                $("#modal_desc_value").text(
-                    "(" + code + ")" + " - " + response.data.name
-                );
+        axios.get(url).then((response) => {
+            // insert data to modal
+            $("#modal_desc_value").text(
+                "(" + code + ")" + " - " + response.data.name
+            );
 
-                let modal_price =
-                    parseFloat(response.data.price) -
-                    parseFloat(response.data.discount);
+            let modal_price =
+                parseFloat(response.data.price) -
+                parseFloat(response.data.discount);
 
-                $("#modal_price_value").text(modal_price);
-                $("#modal_price_default").val(parseFloat(response.data.price));
-                $("#modal_discount").val(parseFloat(response.data.discount));
-                $("#product_id").val(response.data.id);
-                $("#product_code").val(code);
-                // show modal buybackModal
-                $("#buybackModal").modal("show");
-            });
+            $("#modal_price_value").text(modal_price);
+            $("#modal_price_default").val(parseFloat(response.data.price));
+            $("#modal_discount").val(parseFloat(response.data.discount));
+            $("#product_id").val(response.data.id);
+            $("#product_code").val(code);
+            // show modal buybackModal
+            $("#buybackModal").modal("show");
+        });
     });
 });
+
+function filterInvoice(search = "") {
+    $("#invoice_number")
+        .empty()
+        .append(`<option value="">${lang_select}</option>`);
+
+    //  GET to buyback/getInvoiceNumber with axios
+    axios
+        .get(`${baseUrl}/buyback/getInvoiceNumber/?search=${search}`)
+        .then((response) => {
+            // insert data to selectpicker with loop
+            response.data.forEach((element) => {
+                $("#invoice_number").append(
+                    `<option value="${element.invoice_number}">${element.invoice_number}</option>`
+                );
+            });
+
+            // refresh selectpicker
+            $("#invoice_number").selectpicker("refresh");
+        });
+}
+
+function filterCode(search = "") {
+    $("#code").empty().append(`<option value="">${lang_select}</option>`);
+    //  GET to buyback/getCode with axios
+    axios
+        .get(`${baseUrl}/buyback/getCode/?search=${search}`)
+        .then((response) => {
+            // insert data to selectpicker with loop
+            response.data.forEach((element) => {
+                $("#code").append(
+                    `<option value="${element.code}">${element.code}</option>`
+                );
+            });
+
+            // refresh selectpicker
+            $("#code").selectpicker("refresh");
+        });
+}

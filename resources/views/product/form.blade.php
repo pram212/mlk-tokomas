@@ -292,6 +292,9 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
+                                        </div>
+
+                                        <div class="col-md-12">
                                             <div id="detail_split_set" class="bg-dark text-light p-2 d-none">
                                                 <div class="row">
                                                     <div class="col-6">{{ __('file.Detail Split Set') }}</div>
@@ -360,8 +363,37 @@
                                 </div>
                             </div>
 
+                            @if($mode == 'show')
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row mt-3">
+                                        <div class="col-md-12">
+                                            <h4>Historical Products</h4>
+                                            <table id="detail_historical_products" class="table table-bordered"
+                                                width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>{{ __('file.Product Code') }}</th>
+                                                        <th>Status</th>
+                                                        <th>Tanggal</th>
+                                                        <th>Invoice</th>
+                                                        <th>{{ __('file.Product Property') }}</th>
+                                                        <th>{{ __('file.Price') }}</th>
+                                                        <th>{{ __('file.Gramasi') }}</th>
+                                                        <th>Miligram</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+
                             <div class="form-group">
-                                <a href="{{url('products')}}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
+                                <a href="{{url()->previous()}}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
                                     {{trans('file.Back')}}</a>
                                 <input type="submit" value="{{ trans('file.submit') }}" id="submit-btn"
                                     class="btn btn-primary">
@@ -376,33 +408,7 @@
 </section>
 
 {{-- modal --}}
-<div class="modal fade" id="historical_split_set_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{ __('file.Historical Split Set') }}</h5>
-                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered table-striped" id="modal_table_detail_split_set">
-                    <thead>
-                        <tr>
-                            <th>Kode Split Set</th>
-                            <th>{{ __('file.Product Qty') }}</th>
-                            <th>Waktu</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+@include('product.modal_split_set')
 
 <script src="{{ asset('public/js/qrcode.min.js') }}"></script>
 
@@ -439,6 +445,12 @@
     const historical_split_set_modal = $('#historical_split_set_modal');
 
     const modal_table_detail_split_set = $('#modal_table_detail_split_set tbody');
+
+    let table_historical = $('#detail_historical_products');
+
+    @if($mode == 'show')
+    const split_set_code = '{{ @$split_set_code }}';
+    @endif
 </script>
 <script src="{{ asset('public/js/pages/products/product_form.js') }}"></script>
 @endsection

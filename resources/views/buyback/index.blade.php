@@ -147,6 +147,7 @@
                                             <th>{{ __('file.Product Property') }}</th>
                                             <th>{{ __('file.Product Status') }}</th>
                                             <th>{{ __('file.Invoice') }}</th>
+                                            <th>Buy Back Status</th>
                                             <th class="not-exported">{{ trans('file.action') }}</th>
                                         </tr>
                                     </thead>
@@ -274,6 +275,7 @@
     const btn_submit = $('#btn_submit');
     const table_body =$('#buyback-data-table tbody');
     const buybackModal = $('#buybackModal');
+    const lang_select = '{{ __('file.Select') }}';
 </script>
 <script src="{{ asset('public/js/pages/buyback/buyback_list.js') }}"></script>
 @endsection
