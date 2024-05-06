@@ -52,7 +52,7 @@ class PriceController extends Controller
                 return $q->gramasi->gramasi ?? "-";
             })
             ->addColumn('product_type', function($q) { 
-                return $q->product_type->code ." - ". $q->product_type->description ?? "-";
+                return ($q->product_type->code ?? '') ." - ". ($q->product_type->description ?? '');
             })
             ->addColumn('tag_type', function($q) { 
                 return $q->tagType->code ?? "-";
