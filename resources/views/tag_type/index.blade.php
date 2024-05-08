@@ -44,162 +44,18 @@
 </section>
 
 <script src="{{ asset('public/js/axios.min.js') }}"></script>
+
+
 <script>
-    tagTypeTable = $('#tagtype-datatable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ url('product-categories/tagtype-datatable') }}",
-            columns: [{
-                    data: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'code'
-                },
-                {
-                    data: 'description'
-                },
-                {
-                    data: 'color'
-                },
-                {
-                    data: 'action'
-                },
-            ],
-            order: [
-                ['2', 'asc']
-            ],
-            columnDefs: [{
-                    "orderable": false,
-                    'targets': [0, 4]
-                },
-                {
-                    'render': function(data, type, row, meta) {
-                        if (type === 'display') {
-                            data =
-                                '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
-                        }
-
-                        return data;
-                    },
-                    'checkboxes': {
-                        'selectRow': true,
-                        'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
-                    },
-                    'targets': [0]
-                }
-            ],
-            select: {
-                style: 'multi',
-                selector: 'td:first-child'
-            },
-            dom: '<"row"lfB>rtip',
-            language: {
-                'lengthMenu': '_MENU_ {{ trans('file.records per page') }}',
-                "info": '<small>{{ trans('file.Showing') }} _START_ - _END_ (_TOTAL_)</small>',
-                "search": '{{ trans('file.Search') }}',
-                'paginate': {
-                    'previous': '<i class="dripicons-chevron-left"></i>',
-                    'next': '<i class="dripicons-chevron-right"></i>'
-                }
-            },
-            buttons: [{
-                    text: '{{ trans('file.delete') }}',
-                    className: 'buttons-delete',
-                    action: function(e, dt, node, config) {
-
-
-                        if (!user_verified) {
-                            return alert('This feature is disable for demo!')
-                        }
-                        ids = []
-                        $.each($('.dt-checkboxes:checked'), function(indexInArray, valueOfElement) {
-                            const tr = $(this).closest('tr'); // get the row target
-                            const data = tagTypeTable.row(tr).data(); // get detail data
-                            if (data !== undefined) ids.push(data.id)
-                        });
-
-                        if (ids.length < 1) {
-                            return alert('No data selected!')
-                        }
-                        const confirmDeleteMultiple = confirm(
-                            "If you delete under this tags will also be deleted. Are you sure want to delete?"
-                            )
-                        if (confirmDeleteMultiple) {
-                            const url = "{!! url('product-categories/tagtype-multi-delete') !!}"
-                            axios.post(url, {
-                                    ids: ids
-                                })
-                                .then(function(response) {
-                                    alert(response.data)
-                                    tagTypeTable.ajax.reload();
-                                })
-                                .catch(function(error) {
-                                    const errorMessage = error.response.data
-                                    alert(errorMessage)
-                                })
-
-                            return
-                        }
-                    }
-                },
-                {
-                    extend: 'pdf',
-                    text: '{{ trans('file.PDF') }}',
-                    exportOptions: {
-                        columns: ':visible:Not(.not-exported)',
-                        rows: ':visible'
-                    },
-                    footer: true
-                },
-                {
-                    extend: 'csv',
-                    text: '{{ trans('file.CSV') }}',
-                    exportOptions: {
-                        columns: ':visible:Not(.not-exported)',
-                        rows: ':visible'
-                    },
-                    footer: true
-                },
-                {
-                    extend: 'print',
-                    text: '{{ trans('file.Print') }}',
-                    exportOptions: {
-                        columns: ':visible:Not(.not-exported)',
-                        rows: ':visible'
-                    },
-                    footer: true
-                },
-                {
-                    extend: 'colvis',
-                    text: '{{ trans('file.Column visibility') }}',
-                    columns: ':gt(0)'
-                },
-            ]
-        });
-
-        // Handle delete data with serverside
-        $('#tagtype-datatable tbody').on('click', 'button.btn-delete', function() {
-            var tr = $(this).closest('tr'); // get the row target
-            var data = tagTypeTable.row(tr).data(); // get detail data
-            // show confirmation alert
-            const confirmation = confirm("Apakah Anda yakin ingin menghapusnya?");
-            // if user choose true
-            if (confirmation) {
-                // run delete function via ajax
-                const url = "{!! url('product-categories/tagtype') !!}" + "/" + data.id
-                axios.delete(url)
-                    .then(function (response) {
-                        alert(response.data)
-                        tagTypeTable.ajax.reload();
-                    })
-                    .catch(function (error) {
-                        const errorMessage = error.response.data
-                        alert(errorMessage)
-                    });
-
-            }
-        })
+    const lang_records_per_page = '{{ trans('file.records per page') }}';
+    const lang_Showing = '{{ trans('file.Showing') }}' ;
+    const lang_search = '{{ trans('file.Search') }}' ;
+    const lang_PDF = '{{ trans('file.PDF') }}';
+    const lang_CSV = '{{ trans('file.CSV') }}';
+    const lang_print = '{{ trans('file.Print') }}';
+    const lang_delete = '{{ trans('file.delete') }}';
+    const lang_visibility = '{{ trans('file.Column visibility') }}';
 </script>
+
+<script src="{{ asset('public/js/pages/tagtype/tagtype_index.js') }}"></script>
 @endsection
