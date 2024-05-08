@@ -6,6 +6,8 @@ use App\TagType;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreTagTypeRequest;
+use App\Http\Requests\UpdateTagTypeRequest;
 
 class TagTypeController extends Controller
 {
@@ -58,15 +60,8 @@ class TagTypeController extends Controller
         return view('tag_type.form', compact('tagType'));
     }
 
-    public function store(Request $request)
+    public function store(StoreTagTypeRequest $request)
     {
-        $request->validate([
-            'code' => ['required'],
-            'color' => ['required'],
-            'description' => ['required'],
-
-        ]);
-
         try {
             DB::beginTransaction();
     
@@ -78,10 +73,9 @@ class TagTypeController extends Controller
 
             DB::commit();
     
-            return redirect('tagtype')->with('create_message', __('file.Data saved successfully'));
+            return redirect('product-categories/tagtype')->with('create_message', __('file.Data saved successfully'));
 
         } catch (\Exception $exception) {
-
             DB::rollBack();
 
             return back()->with('message', $exception->getMessage());
@@ -89,13 +83,8 @@ class TagTypeController extends Controller
         
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateTagTypeRequest $request, $id)
     {
-        $request->validate([
-            'code' => ['required'],
-            'color' => ['required'],
-            'description' => ['required'],
-        ]);
 
         try {
             DB::beginTransaction();
@@ -116,7 +105,7 @@ class TagTypeController extends Controller
 
             DB::rollBack();
 
-            return redirect('tagtype')->with('message', $exception->getMessage());
+            return redirect('product-categories/tagtype')->with('message', $exception->getMessage());
         }
         
     }
