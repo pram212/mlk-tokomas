@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Category;
 use App\Product;
+use App\Gramasi;
 
 class CategoryController extends Controller
 {
@@ -20,110 +21,14 @@ class CategoryController extends Controller
 
     }
 
-    // public function categoryData(Request $request)
-    // {
-    //     $this->authorize('viewAny', Category::class);
-
-    //     $columns = array( 
-    //         0 =>'id',
-    //         1 =>'name',
-    //         2=> 'is_active',
-    //     );
-        
-    //     $totalData = Category::where('is_active', true)->count();
-    //     $totalFiltered = $totalData; 
-
-    //     if($request->input('length') != -1)
-    //         $limit = $request->input('length');
-    //     else
-    //         $limit = $totalData;
-    //         $start = $request->input('start');
-    //         $order = $columns[$request->input('order.0.column')];
-    //         $dir = $request->input('order.0.dir');
-    //     if(empty($request->input('search.value')))
-    //         $categories = Category::offset($start)
-    //                     ->where('is_active', true)
-    //                     ->limit($limit)
-    //                     ->orderBy($order,$dir)
-    //                     ->get();
-    //     else
-    //     {
-    //         $search = $request->input('search.value'); 
-    //         $categories =  Category::where([
-    //                         ['name', 'LIKE', "%{$search}%"],
-    //                         ['is_active', true]
-    //                     ])->offset($start)
-    //                     ->limit($limit)
-    //                     ->orderBy($order,$dir)->get();
-
-    //         $totalFiltered = Category::where([
-    //                         ['name','LIKE',"%{$search}%"],
-    //                         ['is_active', true]
-    //                     ])->count();
-    //     }
-    //     $data = array();
-    //     if(!empty($categories))
-    //     {
-    //         foreach ($categories as $key=>$category)
-    //         {
-    //             $nestedData['id'] = $category->id;
-    //             $nestedData['key'] = $key;
-
-    //             if($category->image)
-    //                 $nestedData['image'] = '<img src="'.url('public/images/category', $category->image).'" height="70" width="70">';
-    //             else
-    //                 $nestedData['image'] = '<img src="'.url('public/images/product/zummXD2dvAtI.png').'" height="80" width="80">';
-
-    //             $nestedData['name'] = $category->name;
-
-    //             if($category->parent_id)
-    //                 $nestedData['parent_id'] = Category::find($category->parent_id)->name;
-    //             else
-    //                 $nestedData['parent_id'] = "N/A";
-
-    //             $nestedData['number_of_product'] = $category->product()->where('is_active', true)->count();
-    //             $nestedData['stock_qty'] = $category->product()->where('is_active', true)->sum('qty');
-    //             $total_price = $category->product()->where('is_active', true)->sum(DB::raw('price * qty'));
-    //             $total_cost = $category->product()->where('is_active', true)->sum(DB::raw('cost * qty'));
-                
-    //             if(config('currency_position') == 'prefix')
-    //                 $nestedData['stock_worth'] = config('currency').' '.number_format($total_price,0, ',' , '.').' / '.config('currency').' '.number_format($total_cost,0, ',' , '.');
-    //             else
-    //                 $nestedData['stock_worth'] = number_format($total_price,0, ',' , '.').' '.config('currency').' / '.number_format($total_cost,0, ',' , '.').' '.config('currency');
-
-    //             $nestedData['options'] = '<div class="btn-group">
-    //                         <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.trans("file.action").'
-    //                           <span class="caret"></span>
-    //                           <span class="sr-only">Toggle Dropdown</span>
-    //                         </button>
-    //                         <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
-    //                             <li>
-    //                                 <button type="button" data-id="'.$category->id.'" class="open-EditCategoryDialog btn btn-link" data-toggle="modal" data-target="#editModal" ><i class="dripicons-document-edit"></i> '.trans("file.edit").'</button>
-    //                             </li>
-    //                             <li class="divider"></li>'.
-    //                             \Form::open(["route" => ["category.destroy", $category->id], "method" => "DELETE"] ).'
-    //                             <li>
-    //                               <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> '.trans("file.delete").'</button> 
-    //                             </li>'.\Form::close().'
-    //                         </ul>
-    //                     </div>';
-    //             $data[] = $nestedData;
-    //         }
-    //     }
-    //     $json_data = array(
-    //                 "draw"            => intval($request->input('draw')),  
-    //                 "recordsTotal"    => intval($totalData),  
-    //                 "recordsFiltered" => intval($totalFiltered), 
-    //                 "data"            => $data   
-    //                 );
-            
-    //     echo json_encode($json_data);
-    // }
-
     public function categoryDatatable(Request $request)
     {
+        // $modeData = $request->modeData ? $request->modeData : 'index';
+        // $isActive = $modeData == 'index' ? true : false;
+        $isActive = true;
+        
         $categories = Category::query()
-            ->where('is_active', true);
+            ->where('is_active', $isActive);
 
         return DataTables::of($categories)
                 ->addColumn('options', function($category) {
@@ -136,11 +41,10 @@ class CategoryController extends Controller
                         <li>
                             <button type="button" data-id="'.$category->id.'" class="open-EditCategoryDialog btn btn-link" data-toggle="modal" data-target="#editModal" ><i class="dripicons-document-edit"></i> '.trans("file.edit").'</button>
                         </li>
-                        <li class="divider"></li>'.
-                        \Form::open(["route" => ["category.destroy", $category->id], "method" => "DELETE"] ).'
+                        <li class="divider"></li>
                         <li>
-                          <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> '.trans("file.delete").'</button> 
-                        </li>'.\Form::close().'
+                          <button class="btn btn-link" onclick="confirmDeletes('.$category->id.')"><i class="dripicons-trash"></i> '.trans("file.delete").'</button> 
+                        </li>
                     </ul>
                 </div>';
                 })
@@ -240,33 +144,78 @@ class CategoryController extends Controller
     public function deleteBySelection(Request $request)
     {
         $category_id = $request['categoryIdArray'];
-        foreach ($category_id as $id) {
-            $lims_product_data = Product::where('category_id', $id)->get();
-            foreach ($lims_product_data as $product_data) {
-                $product_data->is_active = false;
-                $product_data->save();
-            }
-            $lims_category_data = Category::findOrFail($id);
-            if($lims_category_data->image)
-                unlink('public/images/category/'.$lims_category_data->image);
-            $lims_category_data->is_active = false;
-            $lims_category_data->save();
+
+        // check if category has products
+        $productCount = Product::whereIn('category_id', $category_id)->count();
+        if ($productCount > 0) {
+            return response()->json(['status' => 'error', 'code'=>500,'message' => 'Category has products. Please delete products first']);
         }
-        return 'Category deleted successfully!';
+
+        // check if category has gramasis
+        $category = Gramasi::whereIn('categories_id', $category_id)->first();
+        if ($category) {
+            return response()->json(['status' => 'error', 'code'=>500,'message' => 'Category has gramasis. Please delete gramasis first']);
+        }
+
+        Category::whereIn('id', $category_id)->delete();
+        
+        return response()->json(['status' => 'success', 'code'=>200,'message' => 'Category deleted successfully']);
     }
 
     public function destroy($id)
     {
-        $lims_category_data = Category::findOrFail($id);
-        $lims_category_data->is_active = false;
-        $lims_product_data = Product::where('category_id', $id)->get();
-        foreach ($lims_product_data as $product_data) {
-            $product_data->is_active = false;
-            $product_data->save();
+        DB::beginTransaction();
+        try {
+            // Periksa apakah kategori memiliki produk
+            $productCount = Product::where('category_id', $id)->count();
+
+            if ($productCount > 0) {
+                throw new \Exception('Category has products. Please delete products first');
+            }
+
+            // check if category has gramasis
+            $category = Gramasi::where('categories_id', $id)->first();
+            if ($category) {
+                throw new \Exception('Category has gramasis. Please delete gramasis first');
+            }
+            
+            // Hapus kategori secara permanen
+            Category::findOrFail($id)->delete();
+
+            DB::commit();
+            
+            // return json response
+            return response()->json([
+                'status' => 'success',
+                'code' => '200',
+                'message' => 'Category deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            // return json response
+            return response()->json([
+                'status' => 'error',
+                'code' => '500',
+                'message' => $e->getMessage()
+            ]);
         }
-        if($lims_category_data->image)
-            unlink('public/images/category/'.$lims_category_data->image);
-        $lims_category_data->save();
-        return redirect('category')->with('not_permitted', 'Category deleted successfully');
     }
+
+    public function show ($id)
+    {
+        $category = Category::findOrFail($id);
+        return response()->json($category);
+    }
+
+
+    // hard delete
+    // public function delete($id)
+    // {
+    //     $lims_category_data = Category::findOrFail($id);
+    //     if($lims_category_data->image)
+    //         unlink('public/images/category/'.$lims_category_data->image);
+    //     $lims_category_data->delete();
+    //     return redirect('category')->with('message', 'Category has been deleted');
+    // }
 }

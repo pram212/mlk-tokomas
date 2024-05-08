@@ -52,13 +52,13 @@ class ProductTypeController extends Controller
 
     public function create()
     {
-        $productCategories = Category::all();
+        $productCategories = Category::where('is_active', true)->get();
         return view('product_type.form', compact('productCategories'));
     }
 
     public function edit($id)
     {
-        $productCategories = Category::all();
+        $productCategories = Category::where('is_active', true)->get();
         $productType = ProductType::findOrFail($id);
 
         return view('product_type.form', compact('productType', 'productCategories'));

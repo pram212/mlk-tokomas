@@ -55,7 +55,7 @@ class GramasiController extends Controller
 
     public function create()
     {
-        $category = Category::all();
+        $category = Category::where('is_active', true)->get();
 
         return view('gramasi.form', compact('category'));
     }
@@ -111,7 +111,7 @@ class GramasiController extends Controller
 
             DB::commit();
     
-            return redirect('gramasi')->with('create_message', __('file.Data updated successfully'));
+            return redirect('product-categories/gramasi')->with('create_message', __('file.Data updated successfully'));
 
         } catch (\Exception $exception) {
 

@@ -642,6 +642,7 @@ return [
 	"Product Qty" => "Product Qty",
 	"buy back" => "Buy Back",
 	"Filter" => "Filter",
+	"Trash" => "Trash",
 
 ];
 ?>

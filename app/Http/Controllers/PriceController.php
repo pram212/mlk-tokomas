@@ -80,7 +80,7 @@ class PriceController extends Controller
     public function create()
     {
         $productProperty = ProductProperty::all();
-        $category = Category::all();
+        $category = Category::where('is_active', true)->get();
         $tagType = TagType::all();
 
         return view('price.form', compact('productProperty', 'category', 'tagType'));
@@ -91,7 +91,7 @@ class PriceController extends Controller
         $gramasi = Gramasi::all();
         $productProperty = ProductProperty::all();
         $product_property_price = PriceProductPropertyDetail::where('price_id', $id)->get();
-        $category = Category::all();
+        $category = Category::where('is_active', true)->get();
         $tagType = TagType::all();
         $price = Price::findOrFail($id);
         $product_type = ProductType::where('categories_id', $price->categories_id)->get();

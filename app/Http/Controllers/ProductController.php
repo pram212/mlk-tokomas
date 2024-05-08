@@ -40,12 +40,11 @@ class ProductController extends Controller
     {
         $this->authorize('create', Product::class);
 
-        $lims_category_list = Category::where('is_active', true)->get();
+        $category = Category::where('is_active', true)->get();
         $productProperty = ProductProperty::all();
         $product_type = ProductType::all();
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
-        $category = Category::all();
         $mode = 'create';
         $split_set_type = [
             [
@@ -58,7 +57,6 @@ class ProductController extends Controller
         ];
 
         return view('product.form', compact(
-            'lims_category_list',
             'productProperty',
             'product_type',
             'tagType',
@@ -178,12 +176,11 @@ class ProductController extends Controller
 
         $split_set_code = $request->split_set_code ?? null;
 
-        $lims_category_list = Category::where('is_active', true)->get();
+        $category = Category::where('is_active', true)->get();
         $productProperty = ProductProperty::all();
         $productType = ProductType::all();
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
-        $category = Category::all();
         $product_type = ProductType::where('categories_id', $product->category_id)->get();
         $split_set_type = [
             [
@@ -206,7 +203,6 @@ class ProductController extends Controller
         $mode = 'show';
 
         return view('product.form', compact(
-            'lims_category_list',
             'productProperty',
             'productType',
             'tagType',
@@ -243,12 +239,11 @@ class ProductController extends Controller
 
         $this->authorize('update', $product);
 
-        $lims_category_list = Category::where('is_active', true)->get();
+        $category = Category::where('is_active', true)->get();
         $productProperty = ProductProperty::all();
         $productType = ProductType::all();
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
-        $category = Category::all();
         $product_type = ProductType::where('categories_id', $product->category_id)->get();
         $split_set_type = [
             [
@@ -272,7 +267,6 @@ class ProductController extends Controller
         $split_set_id = $request->split_set_id ?? null;
 
         return view('product.form', compact(
-            'lims_category_list',
             'productProperty',
             'productType',
             'tagType',

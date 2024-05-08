@@ -6,6 +6,10 @@ use App\TagType;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreTagTypeRequest;
+use App\Http\Requests\UpdateTagTypeRequest;
+use App\Product;
+use App\Price;
 
 class TagTypeController extends Controller
 {
@@ -58,15 +62,8 @@ class TagTypeController extends Controller
         return view('tag_type.form', compact('tagType'));
     }
 
-    public function store(Request $request)
+    public function store(StoreTagTypeRequest $request)
     {
-        $request->validate([
-            'code' => ['required'],
-            'color' => ['required'],
-            'description' => ['required'],
-
-        ]);
-
         try {
             DB::beginTransaction();
     
@@ -78,10 +75,9 @@ class TagTypeController extends Controller
 
             DB::commit();
     
-            return redirect('tagtype')->with('create_message', __('file.Data saved successfully'));
+            return redirect('product-categories/tagtype')->with('create_message', __('file.Data saved successfully'));
 
         } catch (\Exception $exception) {
-
             DB::rollBack();
 
             return back()->with('message', $exception->getMessage());
@@ -89,13 +85,8 @@ class TagTypeController extends Controller
         
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateTagTypeRequest $request, $id)
     {
-        $request->validate([
-            'code' => ['required'],
-            'color' => ['required'],
-            'description' => ['required'],
-        ]);
 
         try {
             DB::beginTransaction();
@@ -116,7 +107,7 @@ class TagTypeController extends Controller
 
             DB::rollBack();
 
-            return redirect('tagtype')->with('message', $exception->getMessage());
+            return redirect('product-categories/tagtype')->with('message', $exception->getMessage());
         }
         
     }
@@ -127,16 +118,28 @@ class TagTypeController extends Controller
         try {
             DB::beginTransaction();
             
+            // check if tag type has products
+            $productCount = Product::where('tag_type_id', $id)->count();
+            if ($productCount > 0) {
+                return response()->json(['status' => 'error', 'code'=>500,'message' => 'Tag type has products. Please delete products first']);
+            }
+
+            // check if tag type has prices
+            $tagType = Price::where('tag_type_id', $id)->first();
+            if ($tagType) {
+                return response()->json(['status' => 'error', 'code'=>500,'message' => 'Tag type has prices. Please delete prices first']);
+            }
+
             TagType::destroy($id);
 
             DB::commit();
 
-            return response()->json(__('file.The data was successfully deleted'), 200);
+            return response()->json(['status' => 'success', 'code'=>200,'message' => 'Tag type deleted successfully']);
 
         } catch (\Exception $exception) {
             Db::rollBack();
 
-            return response()->json($exception->getMessage(), 500);
+            return response()->json(['status' => 'error', 'code'=>500,'message' => $exception->getMessage()]);
 
         }
         
@@ -146,18 +149,30 @@ class TagTypeController extends Controller
     {
         try {
             DB::beginTransaction();
+
+            // check if tag type has products
+            $productCount = Product::whereIn('tag_type_id', $request->ids)->count();
+            if ($productCount > 0) {
+                return response()->json(['status' => 'error', 'code'=>500,'message' => 'Tag type has products. Please delete products first']);
+            }
+
+            // check if tag type has prices
+            $tagType = Price::whereIn('tag_type_id', $request->ids)->first();
+            if ($tagType) {
+                return response()->json(['status' => 'error', 'code'=>500,'message' => 'Tag type has prices. Please delete prices first']);
+            }
             
             TagType::destroy($request->ids);
 
             DB::commit();
 
-            return response(__('file.Data deleted successfully'), 200);
+            return response()->json(['status' => 'success', 'code'=>200,'message' => 'Tag type deleted successfully']);
 
         } catch (\Exception $exception) {
 
             Db::rollBack();
             
-            return response($exception->getMessage(), 500);
+            return response()->json(['status' => 'error', 'code'=>500,'message' => $exception->getMessage()]);
         }
 
     }
