@@ -121,8 +121,9 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>{{ __('file.category') }} *</strong></label>
-                                                        <select name="category_id" @if($mode=='show' ) readonly @endif
-                                                            class="form-control" id="input-kd-category">
+                                                        <select data-live-search="true" name="category_id"
+                                                            @if($mode=='show' ) readonly @endif class="form-control"
+                                                            id="input-kd-category">
                                                             <option value="">{{ __('file.Select') }}
                                                             </option>
                                                             @foreach ($category as $item)
