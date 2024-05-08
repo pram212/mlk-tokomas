@@ -641,7 +641,7 @@ return [
 	"Product Qty" => "Qty Produk",
 	"buy back" => "Buy Back",
 	"Filter" => "Filter",
-
+	"Trash" => "Tempat Sampah",
 ];
 
 ?>
