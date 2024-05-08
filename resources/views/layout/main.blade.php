@@ -52,6 +52,9 @@
 
     <link rel="stylesheet" href="{{ asset('public/css/dropzone.css') }}">
     <link rel="stylesheet" href="{{ asset('public/css/style.css') }}">
+
+    {{-- sweetalert2 --}}
+    <script src="{{ asset('public/vendor/sweetalert2/css/sweetalert2.min.css') }}"></script>
     <!-- Tweaks for older IEs-->
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -109,6 +112,11 @@
 
     {{-- select 2 js --}}
     {{-- <script src="{{ asset('public/vendor/select2/js/select2.min.js') }}"></script> --}}
+
+    {{-- sweetalert2 --}}
+    <script src="{{ asset('public/vendor/sweetalert2/js/sweetalert2.all.min.js') }}"></script>
+
+
 
     @yield('css')
 </head>
