@@ -73,7 +73,7 @@ class ProductPropertyController extends Controller
 
             DB::commit();
     
-            return redirect('productproperty')->with('create_message', __('file.Data saved successfully'));
+            return redirect('product-categories/productproperty')->with('create_message', __('file.Data saved successfully'));
 
         } catch (\Exception $exception) {
 
@@ -104,7 +104,7 @@ class ProductPropertyController extends Controller
 
             DB::commit();
     
-            return redirect('productproperty')->with('create_message', __('file.Data updated successfully'));
+            return redirect('product-categories/productproperty')->with('create_message', __('file.Data updated successfully'));
 
         } catch (\Exception $exception) {
 
