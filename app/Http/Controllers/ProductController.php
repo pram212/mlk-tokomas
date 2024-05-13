@@ -26,6 +26,7 @@ use Keygen;
 use Dompdf\Dompdf;
 use View;
 use QrCode;
+use App\Helpers\ResponseHelpers;
 
 class ProductController extends Controller
 {
@@ -609,35 +610,54 @@ class ProductController extends Controller
     public function deleteBySelection(Request $request)
     {
         try {
-            $product_ids = $request->ids;
+            $product_ids = $request->ids; // required
+            $product_split_set_ids = $request->split_ids ?? []; // optional
+
             DB::beginTransaction();
-            foreach ($product_ids as $id) {
-
-                // check if product is exist in Product_Sale
-                $productSale = Product_Sale::where('product_id', $id)->first();
-
-                if ($productSale) {
-                    DB::rollBack();
-                    return response("Product tidak bisa dihapus karena sudah pernah terjual", 500);
-                }
-
+            foreach ($product_ids as $index => $id) {
                 $product = Product::find($id);
-                $product->delete();
+            
+                if (!$product) {
+                    continue;
+                }
+            
+                if (count($product_split_set_ids) > 0 && isset($product_split_set_ids[$index])) {
+                    $splitSetId = $product_split_set_ids[$index];
+                    $productSplitSetDetail = $product->productSplitSetDetail()->find($splitSetId);
+            
+                    if (!$productSplitSetDetail) {
+                        continue;
+                    }
+            
+                    $productSale = Product_Sale::where('split_set_code', $productSplitSetDetail->split_set_code)->first();
+            
+                    if ($productSale) {
+                        DB::rollBack();
+                        return ResponseHelpers::formatResponse(__('file.Product cannot be deleted because it has been sold'), [], 500, false);
+                    }
+            
+                    $productSplitSetDetail->delete();
+                } else {
+                    $productSale = Product_Sale::where('product_id', $id)->first();
+            
+                    if ($productSale) {
+                        DB::rollBack();
+                        return ResponseHelpers::formatResponse(__('file.Product cannot be deleted because it has been sold'), [], 500, false);
+                    }
+            
+                    $product->delete();
+                }
             }
+            
+            
+            
             DB::commit();
 
-            $res = [
-                'status' => 'success',
-                'message' => 'Product deleted successfully'
-            ];
-            return response()->json($res);
+            return ResponseHelpers::formatResponse(__('file.Data deleted successfully'), []);
         } catch (\Exception $e) {
             DB::rollBack();
-            $res = [
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ];
-            return response()->json($res);
+            
+            return ResponseHelpers::formatResponse($e->getMessage(), [], 500,false);
         }
     }
 
@@ -661,7 +681,8 @@ class ProductController extends Controller
 
                 if ($productSale) {
                     DB::rollBack();
-                    return response("Product tidak bisa dihapus karena sudah pernah terjual", 500);
+                    // return response("Product tidak bisa dihapus karena sudah pernah terjual", 500);
+                    return ResponseHelpers::formatResponse(__('file.Product cannot be deleted because it has been sold'), [], 500,false);
                 }
                 
                 // Delete product split set detail
@@ -672,7 +693,8 @@ class ProductController extends Controller
 
                 if ($productSale) {
                     DB::rollBack();
-                    return response("Product tidak bisa dihapus karena sudah pernah terjual", 500);
+                    // return response("Product tidak bisa dihapus karena sudah pernah terjual", 500);
+                    return ResponseHelpers::formatResponse(__('file.Product cannot be deleted because it has been sold'), [], 500,false);
                 }
                 // Delete product
                 $product->delete();
@@ -680,12 +702,13 @@ class ProductController extends Controller
         
             DB::commit();
         
-            return response("Data Berhasil dihapus", 200);
+            // return response("Data Berhasil dihapus", 200);
+            return ResponseHelpers::formatResponse(__('file.Data deleted successfully'), []);
         } catch (\Exception $ex) {
 
             DB::rollBack();
-
-            return response("gagal: " . $ex->getMessage(), 500);
+            
+            return ResponseHelpers::formatResponse($ex->getMessage(), [], 500,false);
         }
     }
 
