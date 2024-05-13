@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Category;
 use App\Http\Requests\StoreGramasiRequest;
 use App\Http\Requests\UpdateGramasiRequest;
+use App\Helpers\ResponseHelpers;
 
 class GramasiController extends Controller
 {
@@ -132,12 +133,12 @@ class GramasiController extends Controller
 
             DB::commit();
 
-            return response()->json(__('file.Data deleted successfully'), 200);
+            return ResponseHelpers::formatResponse(__('file.Data deleted successfully'), []);
 
         } catch (\Exception $exception) {
             Db::rollBack();
 
-            return response()->json($exception->getMessage(), 500);
+            return ResponseHelpers::formatResponse($exception->getMessage(), [], 500,false);
 
         }
         
@@ -152,13 +153,13 @@ class GramasiController extends Controller
 
             DB::commit();
 
-            return response(__('file.Data deleted successfully'), 200);
+            return ResponseHelpers::formatResponse(__('file.Data deleted successfully'), []);
 
         } catch (\Exception $exception) {
 
             Db::rollBack();
             
-            return response($exception->getMessage(), 500);
+            return ResponseHelpers::formatResponse($exception->getMessage(), [], 500,false);
         }
 
     }
