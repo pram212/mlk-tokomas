@@ -16,6 +16,7 @@ use App\Category;
 use App\TagType;
 use App\PriceProductPropertyDetail;
 use App\ProductType;
+use App\Helpers\ResponseHelpers;
 
 class PriceController extends Controller
 {
@@ -202,17 +203,15 @@ class PriceController extends Controller
             $price = Price::find($id);
             
             $price->delete();
-
-
             DB::commit();
 
-            return response(__('file.Data deleted successfully'), 200);
+            return ResponseHelpers::formatResponse(__('file.Data deleted successfully'), []);
 
         } catch (\Exception $exception) {
 
             Db::rollBack();
 
-            return response($exception->getMessage(), 500);
+            return ResponseHelpers::formatResponse($exception->getMessage(), [], 500,false);
 
         }
         
@@ -229,13 +228,13 @@ class PriceController extends Controller
 
             DB::commit();
 
-            return response(__('file.The data was successfully deleted and those related to GRAMASI were not deleted'), 200);
+            return ResponseHelpers::formatResponse(__('file.Data deleted successfully'), []);
 
         } catch (\Exception $exception) {
 
             Db::rollBack();
             
-            return response($exception->getMessage(), 500);
+            return ResponseHelpers::formatResponse($exception->getMessage(), [], 500,false);
         }
 
     }
