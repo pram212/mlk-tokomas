@@ -4,10 +4,11 @@ $.ajaxSetup({
     },
 });
 
-productPropertyTable = $("#productproperty-datatable").DataTable({
+productTypeTable = $("#producttype-datatable").DataTable({
     processing: true,
     serverSide: true,
-    ajax: baseUrl + "/product-categories/productproperty-datatable",
+    // ajax: "{{ url('product-categories/producttype-datatable') }}",
+    ajax: baseUrl + "/product-categories/producttype-datatable",
     columns: [
         {
             data: "DT_RowIndex",
@@ -19,18 +20,23 @@ productPropertyTable = $("#productproperty-datatable").DataTable({
             data: "code",
         },
         {
+            data: "categories",
+        },
+        {
             data: "description",
         },
         {
             data: "action",
+            orderable: false,
+            searchable: false,
+        },
+        {
+            data: "created_at",
+            visible: false,
         },
     ],
-    order: [["2", "asc"]],
+    order: [["5", "desc"]],
     columnDefs: [
-        {
-            orderable: false,
-            targets: [0, 3],
-        },
         {
             render: function (data, type, row, meta) {
                 if (type === "display") {
@@ -68,26 +74,29 @@ productPropertyTable = $("#productproperty-datatable").DataTable({
             className: "buttons-delete",
             action: function (e, dt, node, config) {
                 if (!user_verified) {
-                    return Swal.fire(
+                    // return alert("This feature is disable for demo!");
+                    Swal.fire(
                         "Error",
                         "This feature is disabled for demo!",
                         "error"
                     );
+                    return;
                 }
                 ids = [];
                 $.each(
                     $(".dt-checkboxes:checked"),
                     function (indexInArray, valueOfElement) {
                         const tr = $(this).closest("tr"); // get the row target
-                        const data = productPropertyTable.row(tr).data(); // get detail data
+                        const data = productTypeTable.row(tr).data(); // get detail data
                         if (data !== undefined) ids.push(data.id);
                     }
                 );
 
                 if (ids.length < 1) {
-                    return Swal.fire("Error", "No data selected!", "error");
+                    // return alert("No data selected!");
+                    Swal.fire("Error", "No data selected!", "error");
+                    return;
                 }
-
                 Swal.fire({
                     title: "Are you sure?",
                     text: "If you delete under this tags will also be deleted.",
@@ -98,22 +107,24 @@ productPropertyTable = $("#productproperty-datatable").DataTable({
                     confirmButtonText: "Yes, delete it!",
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        const url = `${baseUrl}/product-categories/productproperty-multi-delete`;
+                        const url = `${baseUrl}/product-categories/producttype-multi-delete`;
                         axios
                             .post(url, { ids: ids })
                             .then(function (response) {
-                                Swal.fire("Success", response.data, "success");
-                                productPropertyTable.ajax.reload();
+                                const status = response.data.status;
+                                const msg = response.data.message;
+                                if (!status) throw new Error(msg);
+
+                                Swal.fire("Success", msg, "success");
+                                productTypeTable.ajax.reload();
                             })
                             .catch(function (error) {
-                                const errorMessage = error.response.data;
-                                Swal.fire("Error", errorMessage, "error");
+                                Swal.fire("Error", error.message, "error");
                             });
                     }
                 });
             },
         },
-
         {
             extend: "pdf",
             text: lang_PDF,
@@ -150,12 +161,12 @@ productPropertyTable = $("#productproperty-datatable").DataTable({
 });
 
 // function delete detail
-$("#productproperty-datatable tbody").on(
+$("#producttype-datatable tbody").on(
     "click",
     "button.btn-delete",
     async function () {
         var tr = $(this).closest("tr");
-        var data = productPropertyTable.row(tr).data();
+        var data = productTypeTable.row(tr).data();
         const confirmation = await Swal.fire({
             title: "Apakah Anda yakin ingin menghapusnya?",
             icon: "warning",
@@ -166,19 +177,18 @@ $("#productproperty-datatable tbody").on(
         });
 
         if (confirmation.value) {
-            const url = `${baseUrl}/product-categories/productproperty/${data.id}`;
+            const url = `${baseUrl}/product-categories/producttype/${data.id}`;
             try {
                 const response = await axios.delete(url);
+                const status = response.data.status;
+                const msg = response.data.message;
 
-                if (response.status !== 200) {
-                    throw new Error(response.data.message);
-                }
+                if (!status) throw new Error(msg);
 
-                Swal.fire("Terhapus!", response.data.message, "success");
-                productPropertyTable.ajax.reload();
+                Swal.fire("Terhapus!", msg, "success");
+                productTypeTable.ajax.reload();
             } catch (error) {
-                const errorMessage = error.response.data;
-                Swal.fire("Gagal!", errorMessage, "error");
+                Swal.fire("Error", error.message, "error");
             }
         }
     }
