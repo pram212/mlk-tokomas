@@ -1614,69 +1614,72 @@ class SaleController extends Controller
 
     public function genInvoice($id)
     {
-        $lims_sale_data = Sale::find($id);
-        $lims_product_sale_data = Product_Sale::with('product')->where('sale_id', $id)->get();
-        $lims_biller_data = Biller::find($lims_sale_data->biller_id);
-        $lims_warehouse_data = Warehouse::find($lims_sale_data->warehouse_id);
-        $lims_customer_data = Customer::find($lims_sale_data->customer_id);
-        $lims_payment_data = Payment::where('sale_id', $id)->get();
-        $mode = 'view';
-
-        $numberToWords = new NumberToWords();
-        if (\App::getLocale() == 'ar' || \App::getLocale() == 'hi' || \App::getLocale() == 'vi' || \App::getLocale() == 'en-gb')
-            $numberTransformer = $numberToWords->getNumberTransformer('en');
-        else
-            $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
-        $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
-
-        return view('sale.invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords','mode'));
+        $data = $this->getInvoiceData($id);
+        $data['mode'] = 'view';
+        return view('sale.invoice', $data);
     }
 
-    public function viewInvoice($invoiceNumber){
+    public function viewInvoice($invoiceNumber)
+    {
         // get id by invoice number (reference_no) from Sale
         $sale = Sale::where('reference_no', $invoiceNumber)->first();
-        $id = $sale->id;
-
-        // jalankan fungsi printInvoice
-        $this->printInvoice($id);
+        if ($sale) {
+            $this->printInvoice($sale->id);
+        } else {
+            // handle case when sale not found
+            abort(404, 'Sale not found');
+        }
     }
 
-    public function printInvoice($id){
-        $lims_sale_data = Sale::find($id);
-        $lims_product_sale_data = Product_Sale::with('product')->where('sale_id', $id)->get();
-        $lims_biller_data = Biller::find($lims_sale_data->biller_id);
-        $lims_warehouse_data = Warehouse::find($lims_sale_data->warehouse_id);
-        $lims_customer_data = Customer::find($lims_sale_data->customer_id);
-        $lims_payment_data = Payment::where('sale_id', $id)->get();
-
-        $numberToWords = new NumberToWords();
-        if (\App::getLocale() == 'ar' || \App::getLocale() == 'hi' || \App::getLocale() == 'vi' || \App::getLocale() == 'en-gb')
-            $numberTransformer = $numberToWords->getNumberTransformer('en');
-        else
-            $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
-        $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
+    public function printInvoice($id)
+    {
+        $data = $this->getInvoiceData($id);
+        $data['mode'] = 'print';
 
         $dompdf = new Dompdf();
         $options = $dompdf->getOptions();
         $options->setDefaultFont('Courier');
         $dompdf->setOptions($options);
         $dompdf->setPaper('A4', 'landscape');
-
-        $mode = 'print';
         
-        $html = view('sale.invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords','mode'))->render();
-
+        $html = view('sale.invoice', $data)->render();
         $dompdf->loadHtml($html);
-
         $dompdf->render();
 
-        $filename = 'invoice-' . $lims_sale_data->reference_no . '.pdf';
-
+        $filename = 'invoice-' . $data['lims_sale_data']->reference_no . '.pdf';
+        
         // Open pdf in browser
         $dompdf->stream($filename, array("Attachment" => false));
-
-
     }
+
+    private function getInvoiceData($id)
+    {
+        $lims_sale_data = Sale::find($id);
+        $lims_product_sale_data = Product_Sale::with(['product','productSplitSetDetail'])->where('sale_id', $id)->get();
+        $lims_biller_data = Biller::find($lims_sale_data->biller_id);
+        $lims_warehouse_data = Warehouse::find($lims_sale_data->warehouse_id);
+        $lims_customer_data = Customer::find($lims_sale_data->customer_id);
+        $lims_payment_data = Payment::where('sale_id', $id)->get();
+
+        $numberToWords = new NumberToWords();
+        if (in_array(\App::getLocale(), ['ar', 'hi', 'vi', 'en-gb'])) {
+            $numberTransformer = $numberToWords->getNumberTransformer('en');
+        } else {
+            $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
+        }
+        $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
+
+        return compact(
+            'lims_sale_data', 
+            'lims_product_sale_data', 
+            'lims_biller_data', 
+            'lims_warehouse_data', 
+            'lims_customer_data', 
+            'lims_payment_data', 
+            'numberInWords'
+        );
+    }
+
 
     public function addPayment(Request $request)
     {
