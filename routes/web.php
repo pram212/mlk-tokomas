@@ -137,6 +137,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	// sales routes
 	Route::resource('/sales', 'SaleController')->except('show');
 	Route::get('sales-print/{id}', 'SaleController@printInvoice')->name('print');
+
 	Route::get('sales-getproduct/{id}', 'SaleController@getProduct')->name('getproduct');
 	Route::get('sales-getproduct/{category_id}/{brand_id}', 'SaleController@getProductByFilter');
 	Route::get('sales-getcustomergroup/{id}', 'SaleController@getCustomerGroup')->name('getcustomergroup');
@@ -455,3 +456,8 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	});
 
 });
+
+Route::get('view-invoice/{invoice_number}', 'SaleController@viewInvoice')->name('viewInvoice');
+Route::get('view-product/{product_code}', 'ProductController@viewProduct')->name('viewProduct');
+Route::get('view-product/{product_code}/{split_set_code}', 'ProductController@viewProduct')->name('viewProductWithSplitSetCode');
+

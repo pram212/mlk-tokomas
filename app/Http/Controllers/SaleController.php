@@ -1632,6 +1632,15 @@ class SaleController extends Controller
         return view('sale.invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords','mode'));
     }
 
+    public function viewInvoice($invoiceNumber){
+        // get id by invoice number (reference_no) from Sale
+        $sale = Sale::where('reference_no', $invoiceNumber)->first();
+        $id = $sale->id;
+
+        // jalankan fungsi printInvoice
+        $this->printInvoice($id);
+    }
+
     public function printInvoice($id){
         $lims_sale_data = Sale::find($id);
         $lims_product_sale_data = Product_Sale::with('product')->where('sale_id', $id)->get();
@@ -1646,8 +1655,6 @@ class SaleController extends Controller
         else
             $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
         $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
-
-        // return view('sale.invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords'));
 
         $dompdf = new Dompdf();
         $options = $dompdf->getOptions();

@@ -1008,4 +1008,14 @@ class ProductController extends Controller
         return response()->json($productDetailSplitHistory);
     }
 
+    public function viewProduct($product_code, $split_set_code = null){
+        $product = Product::where('code', $product_code)->first();
+        $split_set_code = null;
+
+        if($product->split_set_type == 2){
+            $split_set_code = $split_set_code;
+        }
+        return $product;
+    }
+
 }
