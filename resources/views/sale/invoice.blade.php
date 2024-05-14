@@ -285,7 +285,7 @@
 
 
                                 <div class="kadar">
-                                    <h1>{{$lims_product_sale_data[0]['product']['gramasi']['gramasi']
+                                    <h1>{{$lims_product_sale_data[0]['product']['gramasi']['gramasi'] ?? 0
                                         }}<sup>{{$lims_product_sale_data[0]['product']['mg'] }}</sup><span>gram</span>
                                     </h1>
 
@@ -294,7 +294,7 @@
                             </td>
                             @php
                             $totalPrice = number_format(
-                            floatval(str_replace(',', '.', $lims_product_sale_data[0]['product']['price'])),
+                            floatval(str_replace(',', '.', $lims_product_sale_data[0]['product']['price'] ?? 0)),
                             2,
                             ',',
                             '.'
