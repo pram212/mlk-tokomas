@@ -413,12 +413,16 @@
 </div>
 
 <script type="text/javascript">
-    $("ul#sale").siblings('a').attr('aria-expanded','true');
-    $("ul#sale").addClass("show");
-    $("ul#sale #sale-list-menu").addClass("active");
     var public_key = <?php echo json_encode($lims_pos_setting_data->stripe_public_key) ?>;
     var all_permission = <?php echo json_encode($all_permission) ?>;
     var sale_id = [];
+</script>
+
+<script type="text/javascript">
+    $("ul#sale").siblings('a').attr('aria-expanded','true');
+    $("ul#sale").addClass("show");
+    $("ul#sale #sale-list-menu").addClass("active");
+    
     
     $.ajaxSetup({
         headers: {
@@ -768,7 +772,9 @@
             {"data": "payment_status"},
             {"data": "grand_total"},
             {"data": "paid_amount"},
-            {"data": "due"},
+            {"data": "due",
+            visible: false,
+            },
             {"data": "options"},
         ],
         'language': {
