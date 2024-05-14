@@ -1009,13 +1009,42 @@ class ProductController extends Controller
     }
 
     public function viewProduct($product_code, $split_set_code = null){
-        $product = Product::where('code', $product_code)->first();
-        $split_set_code = null;
 
-        if($product->split_set_type == 2){
-            $split_set_code = $split_set_code;
+        // get product by code
+        $product = Product::where('code', $product_code)->first();
+        
+        // handle if product not found, redirect to 404
+        if(!$product){
+            abort(404);
         }
-        return $product;
+        
+        // if split set code is not null
+        if($split_set_code){
+            // get product_split_set_detail by split_set_code
+            $productSplitSetDetail = $product->productSplitSetDetail()->where('split_set_code', $split_set_code)->first();
+
+            // handle if product_split_set_detail not found, redirect to 404
+            if(!$productSplitSetDetail){
+                abort(404);
+            }
+        }
+
+        $dompdf = new Dompdf();
+        $options = $dompdf->getOptions();
+        $options->setDefaultFont('Courier');
+        $dompdf->setOptions($options);
+        $dompdf->setPaper('A4', 'potrait');
+
+        $html = view('product.view_product',compact('product'))->render();
+
+        $dompdf->loadHtml($html);
+
+        $dompdf->render();
+
+        $filename = 'xxx.pdf';
+
+        // Open pdf in browser
+        $dompdf->stream($filename, array("Attachment" => false));
     }
 
 }
