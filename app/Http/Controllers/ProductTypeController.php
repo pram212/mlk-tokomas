@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Category;
 use App\Http\Requests\StoreProductTypeRequest;
 use App\Http\Requests\UpdateProductTypeRequest;
+use App\Helpers\ResponseHelpers;
 
 
 class ProductTypeController extends Controller
@@ -66,7 +67,6 @@ class ProductTypeController extends Controller
 
     public function store(StoreProductTypeRequest $request)
     {
-
         try {
             DB::beginTransaction();
             
@@ -128,14 +128,14 @@ class ProductTypeController extends Controller
             $productType = ProductType::find($id);
 
             if ($productType->gramasi->count() > 0) {
-                return response(__('file.Failed to be deleted because it was used by grammar'), 403);
+                return ResponseHelpers::formatResponse(__('file.Failed to be deleted because it was used by grammar'), [], 403,false);
             }
             
             $productType->delete();
 
             DB::commit();
 
-            return response(__('file.Data deleted successfully'), 200);
+            return ResponseHelpers::formatResponse(__('file.Data deleted successfully'), []);
 
         } catch (\Exception $exception) {
 
@@ -155,14 +155,14 @@ class ProductTypeController extends Controller
             ProductType::whereIn('id', $request->ids)->doesntHave('gramasi')->delete();
 
             DB::commit();
-
-            return response(__('file.The data was successfully deleted and those related to GRAMASI were not deleted'), 200);
+            
+            return ResponseHelpers::formatResponse(__('file.The data was successfully deleted and those related to GRAMASI were not deleted'), []);
 
         } catch (\Exception $exception) {
 
             Db::rollBack();
             
-            return response($exception->getMessage(), 500);
+            return ResponseHelpers::formatResponse($exception->getMessage(), [], 500,false);
         }
 
     }

@@ -194,6 +194,11 @@ $(document).ready(function () {
     });
 
     btn_submit.click(function () {
+        // validation
+        if (!validation_buyback()) {
+            return;
+        }
+
         // POST to buyback/store with axios
         axios
             .post(`${baseUrl}/buyback/store`, {
@@ -208,13 +213,11 @@ $(document).ready(function () {
             })
             .then((response) => {
                 // // show alert success
-                // Swal.fire({
-                //     icon: "success",
-                //     title: "Success",
-                //     text: response.data.message,
-                // });
-
-                alert(response.data.message);
+                Swal.fire({
+                    icon: "success",
+                    title: "Success",
+                    text: response.data.message,
+                });
 
                 // hide modal buybackModal
                 $("#buybackModal").modal("hide");
@@ -224,13 +227,11 @@ $(document).ready(function () {
             })
             .catch((error) => {
                 // show alert error
-                // Swal.fire({
-                //     icon: "error",
-                //     title: "Error",
-                //     text: error.response.data.message,
-                // });
-
-                alert(error.response.data.message);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: error.response.data.message,
+                });
             });
     });
 
@@ -301,4 +302,26 @@ function filterCode(search = "") {
             // refresh selectpicker
             $("#code").selectpicker("refresh");
         });
+}
+
+function validation_buyback() {
+    const modal_additional_cost = parseFloat($("#modal_additional_cost").val());
+    const modal_product_properties = $("#modal_product_properties").val();
+
+    // if modal_additional_cost null then fill with 0
+    if (!modal_additional_cost) {
+        $("#modal_additional_cost").val(0);
+    }
+
+    // if modal_product_properties null then show alert
+    if (!modal_product_properties) {
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Product Properties is required",
+        });
+        return false;
+    }
+
+    return true;
 }

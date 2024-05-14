@@ -190,7 +190,7 @@ class BuyBackController extends Controller
             DB::raw("COALESCE(split.split_set_code, products.code) as code"),
             'products.name',
             DB::raw("COALESCE(buyback.final_price, products.price) as price"),
-            'products.discount',
+            DB::raw('products.discount * 1000 as discount'),
             'products.description'
         ])
         ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')

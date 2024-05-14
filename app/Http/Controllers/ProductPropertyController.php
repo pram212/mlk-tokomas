@@ -6,6 +6,8 @@ use App\ProductProperty;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
+use App\Product;
+use App\Helpers\ResponseHelpers;
 
 class ProductPropertyController extends Controller
 {
@@ -121,17 +123,23 @@ class ProductPropertyController extends Controller
         try {
             DB::beginTransaction();
 
+            // Check if the product property is used in any product
+            $product = Product::where('product_property_id', $id)->first();
+            if ($product) {
+                return ResponseHelpers::formatResponse(__('file.Product property is used in a product'), [], 500,false);
+            }
+
             ProductProperty::destroy($id);
 
             DB::commit();
-
-            return response(__('file.The data was successfully deleted'), 200);
+            
+            return ResponseHelpers::formatResponse(__('file.Data deleted successfully'), []);
 
         } catch (\Exception $exception) {
 
             Db::rollBack();
-
-            return response($exception->getMessage(), 500);
+            
+            return ResponseHelpers::formatResponse($exception->getMessage(), [], false, 500);
 
         }
         
@@ -145,14 +153,14 @@ class ProductPropertyController extends Controller
             ProductProperty::destroy($request->ids);
 
             DB::commit();
-
-            return response(__('file.Data deleted successfully'), 200);
+            
+            return ResponseHelpers::formatResponse(__('file.Data deleted successfully'), []);
 
         } catch (\Exception $exception) {
 
             Db::rollBack();
             
-            return response($exception->getMessage(), 500);
+            return ResponseHelpers::formatResponse($exception->getMessage(), [], false, 500);
         }
 
     }

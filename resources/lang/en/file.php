@@ -643,6 +643,7 @@ return [
 	"buy back" => "Buy Back",
 	"Filter" => "Filter",
 	"Trash" => "Trash",
+	"Product cannot be deleted because it has been sold" => "Product cannot be deleted because it has been sold",
 
 ];
 ?>

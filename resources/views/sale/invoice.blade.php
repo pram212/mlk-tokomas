@@ -285,7 +285,7 @@
 
 
                                 <div class="kadar">
-                                    <h1>{{$lims_product_sale_data[0]['product']['gramasi']['gramasi']
+                                    <h1>{{$lims_product_sale_data[0]['product']['gramasi']['gramasi'] ?? 0
                                         }}<sup>{{$lims_product_sale_data[0]['product']['mg'] }}</sup><span>gram</span>
                                     </h1>
 
@@ -294,7 +294,7 @@
                             </td>
                             @php
                             $totalPrice = number_format(
-                            floatval(str_replace(',', '.', $lims_product_sale_data[0]['product']['price'])),
+                            floatval(str_replace(',', '.', $lims_product_sale_data[0]['product']['price'] ?? 0)),
                             2,
                             ',',
                             '.'
@@ -313,35 +313,37 @@
                                     {{str_replace("-"," ",$numberInWords)}}
                                 </div>
                             </td>
-                            <td class="total_harga">Barcode product <br>
-                                {{-- <img
-                                    src="data:image/png;base64,{{DNS1D::getBarcodePNG($lims_product_sale_data[0]['product']['code'], 'C39')}}"
-                                    alt="barcode" /> --}}
+                            <td class="total_harga">
+                                Barcode product <br>
+                                @php
+                                $productCode = $lims_product_sale_data[0]['product']['code'];
+                                $urlProduct = url('view-product/' . $productCode);
+                                @endphp
                                 @if($mode != 'print')
                                 <div class="hidden-print">
-                                    {!! QrCode::size(70)->generate($lims_product_sale_data[0]['product']['code']) !!}
+                                    {!! QrCode::size(70)->generate($urlProduct) !!}
                                 </div>
                                 @else
                                 <img
-                                    src="data:image/png;base64, {!! base64_encode(QrCode::size(70)->generate('https://google.com')) !!} ">
+                                    src="data:image/png;base64, {!! base64_encode(QrCode::size(70)->generate($urlProduct)) !!} ">
                                 @endif
-
                             </td>
-                            <td class="total_harga">Barcode Invoice
-                                <br>
-                                {{-- <img
-                                    src="data:image/png;base64,{{DNS1D::getBarcodePNG($lims_sale_data->reference_no, 'C39')}}"
-                                    alt="barcode" /> --}}
+                            <td class="total_harga">
+                                Barcode Invoice <br>
+                                @php
+                                $invoiceReference = $lims_sale_data->reference_no;
+                                $urlInvoice = url('view-invoice/' . $invoiceReference);
+                                @endphp
                                 @if($mode != 'print')
                                 <div class="hidden-print">
-                                    {!! QrCode::size(70)->generate($lims_sale_data->reference_no) !!}
+                                    {!! QrCode::size(70)->generate($urlInvoice) !!}
                                 </div>
                                 @else
                                 <img
-                                    src="data:image/png;base64, {!! base64_encode(QrCode::size(70)->generate('https://google.com')) !!} ">
+                                    src="data:image/png;base64, {!! base64_encode(QrCode::size(70)->generate($urlInvoice)) !!} ">
                                 @endif
-
                             </td>
+
                         </tr>
                         <tr style="height: 50px;">
                             <td colspan="5" style="border:0px">
