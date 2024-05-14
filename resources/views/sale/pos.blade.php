@@ -82,10 +82,10 @@
                                             @endif
                                             <select required id="biller_id" name="biller_id"
                                                 class="selectpicker form-control" data-live-search="true"
-                                                data-live-search-style="begins" title="Select Biller...">
-                                                @foreach($lims_biller_list as $biller)
-                                                <option value="{{$biller->id}}">{{$biller->name . ' (' .
-                                                    $biller->company_name . ')'}}</option>
+                                                data-live-search-style="begins" title="Select Cashier...">
+                                                @foreach($lims_cashier_list as $cashier)
+                                                <option value="{{$cashier->id}}">{{$cashier->name . ' (' .
+                                                    $cashier->company_name . ')'}}</option>
                                                 @endforeach
                                             </select>
                                         </div>

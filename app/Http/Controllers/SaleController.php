@@ -950,7 +950,7 @@ class SaleController extends Controller
         $lims_customer_list = Customer::where('is_active', true)->get();
         $lims_customer_group_all = CustomerGroup::where('is_active', true)->get();
         $lims_warehouse_list = Warehouse::where('is_active', true)->get();
-        $lims_biller_list = Biller::where('is_active', true)->get();
+        $lims_cashier_list = User::where('role_id', 6)->get(); // get user where role is cashier
         $lims_tax_list = Tax::where('is_active', true)->get();
         $lims_product_list = Product::select('id', 'name', 'code', 'image')->ActiveFeatured()->whereNull('is_variant')->get();
         foreach ($lims_product_list as $key => $product) {
@@ -987,7 +987,7 @@ class SaleController extends Controller
         $lims_coupon_list = Coupon::where('is_active', true)->get();
         $flag = 0;
 
-        return view('sale.pos', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag'));
+        return view('sale.pos', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_cashier_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag'));
     }
 
     public function getProductByFilter($category_id, $brand_id)
