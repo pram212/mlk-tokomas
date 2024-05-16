@@ -88,7 +88,7 @@
     </div>
 </section>
 
-{{-- @include('sale.modal_sale_index') --}}
+@include('partials.sale.modal_sale_detail')
 <script src="{{ asset('public/js/axios.min.js') }}"></script>
 <script>
     const lang_records_per_page = '{{ trans('file.records per page') }}';
@@ -99,7 +99,9 @@
     const lang_print = '{{ trans('file.Print') }}';
     const lang_delete = '{{ trans('file.delete') }}';
     const lang_visibility = '{{ trans('file.Column visibility') }}';
+    const asset_url = '{{ asset('public/vendor/bootstrap/css/bootstrap.min.css') }}';
 </script>
+<script src="{{ asset('public/js/axios.min.js') }}"></script>
 <script src="{{ asset('public/js/pages/sale/sale_index.js') }}"></script>
 
 @endsection

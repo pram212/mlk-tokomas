@@ -137,9 +137,15 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	// sales routes
 	Route::resource('/sales', 'SaleController')->except('show');
 	Route::group(['prefix' => 'sales', 'as' => 'sales.'], function () {
+
+		// Sales Pos Page
 		Route::get('pos', 'SaleController@posSale')->name('pos');
+
+		// Sales index Page
 		Route::get('index_2', 'SaleController@index_2');
-		Route::get('datatables', 'SaleController@saleDataNew')->name('saleDataNew');
+		Route::get('datatables', 'SaleController@saleDataNew')->name('saleDataNew'); // datatable
+		Route::get('details/{id}', 'SaleController@details'); // detail modal
+		
 		Route::post('searchProducts', 'SaleController@search_products')->name('searchProducts');
 		Route::get('print-last-reciept', 'SaleController@printLastReciept')->name('printLastReciept');
 		Route::post('updatepayment', 'SaleController@updatePayment')->name('update-payment');
@@ -161,6 +167,8 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('sale_by_csv', 'SaleController@saleByCsv');
 		Route::get('today-sale', 'SaleController@todaySale');
 		Route::post('sale-data', 'SaleController@saleData');
+
+		
 	});
 	Route::get('sales-print/{id}', 'SaleController@printInvoice')->name('print');
 	Route::get('sales-getproduct/{id}', 'SaleController@getProduct')->name('getproduct');

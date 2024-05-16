@@ -54,6 +54,7 @@ use Dompdf\Dompdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Helpers\PermissionHelpers;
 use Yajra\DataTables\Facades\DataTables;
+use App\Helpers\ResponseHelpers;
 
 class SaleController extends Controller
 {
@@ -90,6 +91,7 @@ class SaleController extends Controller
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
+    // new index
     public function index_2(Request $request)
     {
         $role = Role::find(Auth::user()->role_id);
@@ -345,6 +347,7 @@ class SaleController extends Controller
         echo json_encode($json_data);
     }
 
+    // Get sale data for datatable
     public function saleDataNew(Request $request)
     {
         $model = Sale::query()
@@ -397,6 +400,7 @@ class SaleController extends Controller
                         'button' => true,
                         'icon' => 'fa-eye',
                         'label' => trans('file.View'),
+                        'data' => ['id' => $sale->id],
                         'class' => 'view',
                         'permission' => true
                     ],
@@ -430,14 +434,6 @@ class SaleController extends Controller
                         'data' => ['id' => $sale->id],
                         'permission' => true
                     ]
-                    // ,[
-                    //     'form' => true,
-                    //     'route' => route('sales.destroy', $sale->id),
-                    //     'icon' => 'dripicons-trash',
-                    //     'label' => trans('file.delete'),
-                    //     'class' => 'delete',
-                    //     'permission' => in_array("sales-delete", $permissions)
-                    // ]
                 ];
     
                 return $this->generateActionOptions($actions);
@@ -448,6 +444,7 @@ class SaleController extends Controller
         return $datatable;
     }
     
+    // generate action options for saleDataNew
     private function generateActionOptions($actions)
     {
         $options = '<div class="btn-group">
@@ -482,6 +479,24 @@ class SaleController extends Controller
     
         $options .= '</ul></div>';
         return $options;
+    }
+
+    // get product sale data for modal details by sale id
+    // [GET] /sales/product-sale/{id}
+    public function details(Request $request, $id)
+    {
+        $sale = Sale::
+        select(['id','reference_no as invoice_number','biller_id','customer_id','warehouse_id','user_id','order_discount','order_tax','order_tax_rate','shipping_cost','grand_total','paid_amount','sale_note','staff_note','sale_status'])
+        ->selectRaw('DATE_FORMAT(sales.created_at,"%d/%m/%Y %H:%i:%s") as date')
+        ->selectRaw('CASE WHEN sales.sale_status = 1 THEN "Selesai" WHEN sales.sale_status = 2 THEN "Pending" ELSE "Draft" END as sale_status')
+        ->with('biller', 'customer', 'warehouse', 'user','productSale')
+        ->find($id);
+
+        if (!$sale) {
+            return ResponseHelpers::formatResponse('error : Sale not found', [], 404,false);
+        }
+
+        return ResponseHelpers::formatResponse('success', $sale, 200);
     }
     
 
@@ -1764,6 +1779,7 @@ class SaleController extends Controller
         return redirect()->route('sales.invoice', $sale->id);
     }
 
+    // Generate invoice
     public function genInvoice($id)
     {
         $data = $this->getInvoiceData($id);
@@ -1771,6 +1787,7 @@ class SaleController extends Controller
         return view('sale.invoice', $data);
     }
 
+    // View invoice
     public function viewInvoice($invoiceNumber)
     {
         // get id by invoice number (reference_no) from Sale
@@ -1783,6 +1800,7 @@ class SaleController extends Controller
         }
     }
 
+    // Print invoice as PDF
     public function printInvoice($id)
     {
         $data = $this->getInvoiceData($id);
@@ -1804,6 +1822,7 @@ class SaleController extends Controller
         $dompdf->stream($filename, array("Attachment" => false));
     }
 
+    // Get invoice data
     private function getInvoiceData($id)
     {
         $lims_sale_data = Sale::find($id);

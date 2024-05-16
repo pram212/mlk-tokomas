@@ -1,3 +1,41 @@
+const sale_date = $("#sale-date");
+const sale_reference = $("#sale-reference");
+const sale_warehouse = $("#sale-warehouse");
+const sale_status = $("#sale-status");
+const biller_name = $("#biller-name");
+const biller_company = $("#biller-company");
+const biller_email = $("#biller-email");
+const customer_name = $("#customer-name");
+const customer_phone_number = $("#customer-phone-number");
+const customer_address = $("#customer-address");
+const table = $(".product-sale-list");
+const table_body = $(".product-sale-list tbody");
+const sale_footer = $("#sale-footer");
+const sale_details = $("#sale-details");
+
+$(document).on("click", ".view", function () {
+    // Get the record's ID via attribute
+    var sale_id = $(this).attr("data-id");
+    saleDetails(sale_id);
+});
+
+$("#print-btn").on("click", function () {
+    var divToPrint = document.getElementById("sale-details");
+    var newWin = window.open("", "Print-Window");
+    newWin.document.open();
+    newWin.document.write(
+        '<link rel="stylesheet" href="' +
+            asset_url +
+            '" type="text/css"><style type="text/css">@media print {.modal-dialog { max-width: 1000px;} }</style><body onload="window.print()">' +
+            divToPrint.innerHTML +
+            "</body>"
+    );
+    newWin.document.close();
+    setTimeout(function () {
+        newWin.close();
+    }, 10);
+});
+
 saleTable = $("#sale-table").DataTable({
     processing: true,
     serverSide: true,
@@ -111,4 +149,120 @@ function sumDatatableColumn(api, column) {
     sum = sum.toFixed(2);
 
     $(api.column(column).footer()).html(formatRupiahs(sum, "Rp "));
+}
+
+function saleDetails(sale_id) {
+    $("#sale-details input[name='sale_id']").val(sale_id);
+
+    // axios get request [GET] sales/details/{id}
+    axios
+        .get(baseUrl + "/sales/details/" + sale_id)
+        .then((response) => {
+            const status = response.data.status;
+            const data = response.data.data;
+            const message = response.data.message;
+
+            if (!status) {
+                Swal.fire({ icon: "error", title: "Error", text: message });
+                return;
+            }
+
+            // Set the data
+            sale_date.html(data.date);
+            sale_reference.html(data.invoice_number);
+            sale_warehouse.html(data.warehouse.name);
+            sale_status.html(data.sale_status);
+            biller_name.html(data.biller.name);
+            biller_company.html(data.biller.company_name);
+            biller_email.html(data.biller.email);
+            customer_name.html(data.customer.name);
+            customer_phone_number.html(data.customer.phone_number);
+            customer_address.html(data.customer.address);
+
+            // Clear the table
+            table_body.html("");
+
+            // Set the products
+            let htmltext = "";
+            let htmlfooter = "";
+            let total = 0;
+            let total_qty = 0;
+            let total_discount = 0;
+            let total_tax = 0;
+            let total_shipping = 0;
+            const product_sale = data.product_sale;
+            const user = data.user;
+
+            product_sale.forEach((product_sale, index) => {
+                let qty = product_sale.qty;
+                const product = product_sale.product;
+                const subtotal = parseFloat(product.price) * parseFloat(qty);
+
+                htmltext += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${product.name} (${product.code})</td>
+                        <td>${qty}</td>
+                        <td>${product.price}</td>
+                        <td>${product_sale.tax}(${product_sale.tax_rate}%)</td>
+                        <td>${product_sale.discount}</td>
+                        <td>${subtotal}</td>
+                    </tr>
+                `;
+            });
+
+            const product_sale_first = product_sale[0];
+            const product_first = product_sale_first.product;
+            const tax = parseFloat(product_sale_first.tax);
+            const qty = product_sale_first.qty;
+            const subtotal = parseFloat(product_first.price) * parseFloat(qty);
+            const discount = parseFloat(product_sale_first.discount);
+            const shipping_cost = parseFloat(data.shipping_cost);
+            const grand_total = parseFloat(data.grand_total);
+            const paid_amount = parseFloat(data.paid_amount);
+
+            htmltext += `<tr><td colspan="4" class="text-left"><strong>Jumlah:</strong></td><td>${tax}</td><td>${discount}</td><td>${subtotal}</td></tr>`;
+            htmltext += `<tr><td colspan="6" class="text-left"><strong>Pajak Pesanan:</strong></td><td>${tax}</td></tr>`;
+            htmltext += `<tr><td colspan="6" class="text-left"><strong>Diskon Pesanan:</strong></td><td>${discount}</td></tr>`;
+            htmltext += `<tr><td colspan="6" class="text-left"><strong>Biaya Pengiriman:</strong></td><td>${shipping_cost}</td></tr>`;
+            htmltext += `<tr><td colspan="6" class="text-left"><strong>Grand Total:</strong></td><td>${grand_total}</td></tr>`;
+            htmltext += `<tr><td colspan="6" class="text-left"><strong>Jumlah Dibayarkan:</strong></td><td>${paid_amount}</td></tr>`;
+
+            htmlfooter += `
+                <tr>
+                    <td colspan="2" class="text-right"><strong>Total</strong></td>
+                    <td><strong>${total_qty}</strong></td>
+                    <td></td>
+                    <td><strong>${formatRupiahs(
+                        total_discount,
+                        "Rp "
+                    )}</strong></td>
+                    <td><strong>${formatRupiahs(total_tax, "Rp ")}</strong></td>
+                    <td></td>
+                    <td><strong>${formatRupiahs(
+                        grand_total,
+                        "Rp "
+                    )}</strong></td>
+                </tr>
+            `;
+
+            table_body.html(htmltext);
+
+            // set footer
+            const sale_note = $("#sale-note");
+            const sale_staff_note = $("#sale-staff-note");
+            const sale_user_name = $("#sale-user-name");
+            const sale_user_email = $("#sale-user-email");
+
+            sale_note.text(product_sale_first.sale_note);
+            sale_staff_note.text(product_sale_first.staff_note);
+            sale_user_name.text(user.name);
+            sale_user_email.text(user.email);
+
+            // sale_footer.html(htmlfooter);
+            sale_details.modal("show");
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 }

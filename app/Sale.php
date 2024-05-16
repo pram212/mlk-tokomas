@@ -29,4 +29,10 @@ class Sale extends Model
     {
     	return $this->belongsTo('App\User');
     }
+
+    // sale has many product_sale
+    public function productSale()
+    {
+    	return $this->hasMany('App\Product_Sale')->with('product');
+    }
 }
