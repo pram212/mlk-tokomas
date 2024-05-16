@@ -280,13 +280,26 @@
                             <td class="title" style="vertical-align: top;font-weight:bold;" colspan="2">
                                 <ul>
                                     <li> Kadar :</li>
-                                    <li>Deskripsi Barang : {{$lims_product_sale_data[0]['product']['name'] }}</li>
+                                    <li>Deskripsi Barang : {{$lims_product_sale_data[0]['product']['name'].'
+                                        ('.($lims_product_sale_data[0]['productSplitSetDetail'] ?
+                                        $lims_product_sale_data[0]['productSplitSetDetail']['split_set_code']:$lims_product_sale_data[0]['product']['code']).')'
+                                        }}</li>
                                 </ul><br>
 
 
                                 <div class="kadar">
-                                    <h1>{{$lims_product_sale_data[0]['product']['gramasi']['gramasi'] ?? 0
-                                        }}<sup>{{$lims_product_sale_data[0]['product']['mg'] }}</sup><span>gram</span>
+                                    <h1>
+                                        {{
+                                        ($lims_product_sale_data[0]['productSplitSetDetail']
+                                        ? $lims_product_sale_data[0]['productSplitSetDetail']['gramasi']
+                                        : $lims_product_sale_data[0]['product']['gramasi']['gramasi'])}}
+                                        <sup>
+                                            {{
+                                            ($lims_product_sale_data[0]['productSplitSetDetail']
+                                            ? $lims_product_sale_data[0]['productSplitSetDetail']['mg']
+                                            : $lims_product_sale_data[0]['product']['mg'])
+                                            }}
+                                        </sup><span>gram</span>
                                     </h1>
 
                                 </div>
@@ -294,7 +307,9 @@
                             </td>
                             @php
                             $totalPrice = number_format(
-                            floatval(str_replace(',', '.', $lims_product_sale_data[0]['product']['price'] ?? 0)),
+                            floatval(str_replace(',', '.',
+                            ($lims_product_sale_data[0]['productSplitSetDetail'])?$lims_product_sale_data[0]['productSplitSetDetail']['price']:$lims_product_sale_data[0]['product']['price']
+                            ?? 0)),
                             2,
                             ',',
                             '.'
