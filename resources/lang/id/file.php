@@ -643,6 +643,9 @@ return [
 	"Filter" => "Filter",
 	"Trash" => "Tempat Sampah",
 	"Product cannot be deleted because it has been sold" => "Produk tidak dapat dihapus karena sudah terjual",
+	"AddSale" => "Tambah Penjualan",
+	"No" => "No",
+	"Cashier" => "Kasir",
 ];
 
 ?>

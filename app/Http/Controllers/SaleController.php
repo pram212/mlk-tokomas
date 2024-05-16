@@ -52,6 +52,8 @@ use GeniusTS\HijriDate\Date;
 use Illuminate\Support\Facades\Validator;
 use Dompdf\Dompdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Helpers\PermissionHelpers;
+use Yajra\DataTables\Facades\DataTables;
 
 class SaleController extends Controller
 {
@@ -88,6 +90,17 @@ class SaleController extends Controller
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
+    public function index_2(Request $request)
+    {
+        $role = Role::find(Auth::user()->role_id);
+
+        if (!$role->hasPermissionTo('sales-index')) {
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
+        }
+
+        return view('sale.index2');
+    }
+
     // search_products
     public function search_products(Request $request)
     {
@@ -116,8 +129,6 @@ class SaleController extends Controller
 
         return response()->json($products);
     }
-
-
 
     public function saleData(Request $request)
     {
@@ -333,6 +344,147 @@ class SaleController extends Controller
 
         echo json_encode($json_data);
     }
+
+    public function saleDataNew(Request $request)
+    {
+        $model = Sale::query()
+            ->select('sales.*')
+            ->with('biller', 'customer', 'warehouse', 'user');
+    
+        $permissions = PermissionHelpers::checkMenuPermission(['sales-edit', 'sales-delete']);
+    
+        $datatable = DataTables::of($model)
+            ->addIndexColumn()
+            ->editColumn('created_at', function ($sale) {
+                return date(config('date_format'), strtotime($sale->created_at->toDateString()));
+            })
+            ->editColumn('grand_total', function ($sale) {
+                return number_format($sale->grand_total, 2);
+            })
+            ->editColumn('paid_amount', function ($sale) {
+                return number_format($sale->paid_amount, 2);
+            })
+            ->addColumn('sale_status', function ($sale) {
+                $statuses = [
+                    1 => ['class' => 'success', 'label' => trans('file.Completed')],
+                    2 => ['class' => 'danger', 'label' => trans('file.Pending')],
+                    3 => ['class' => 'warning', 'label' => trans('file.Draft')],
+                ];
+    
+                $status = $statuses[$sale->sale_status] ?? $statuses[3];
+                return '<div class="badge badge-' . $status['class'] . '">' . $status['label'] . '</div>';
+            })
+            ->addColumn('payment_status', function ($sale) {
+                $statuses = [
+                    1 => ['class' => 'danger', 'label' => trans('file.Pending')],
+                    2 => ['class' => 'danger', 'label' => trans('file.Due')],
+                    3 => ['class' => 'warning', 'label' => trans('file.Partial')],
+                    4 => ['class' => 'success', 'label' => trans('file.Paid')],
+                ];
+    
+                $status = $statuses[$sale->payment_status] ?? ['class' => 'secondary', 'label' => trans('file.Unknown')];
+                return '<div class="badge badge-' . $status['class'] . '">' . $status['label'] . '</div>';
+            })
+            ->addColumn('options', function ($sale) use ($permissions) {
+                $actions = [
+                    [
+                        'route' => route('sales.invoice', $sale->id),
+                        'icon' => 'fa-copy',
+                        'label' => trans('file.Generate Invoice'),
+                        'permission' => true
+                    ],
+                    [
+                        'button' => true,
+                        'icon' => 'fa-eye',
+                        'label' => trans('file.View'),
+                        'class' => 'view',
+                        'permission' => true
+                    ],
+                    [
+                        'route' => $sale->sale_status != 3 ? route('sales.edit', $sale->id) : url('sales/' . $sale->id . '/create'),
+                        'icon' => 'dripicons-document-edit',
+                        'label' => trans('file.edit'),
+                        'permission' => in_array("sales-edit", $permissions)
+                    ],
+                    [
+                        'button' => true,
+                        'icon' => 'fa-plus',
+                        'label' => trans('file.Add Payment'),
+                        'class' => 'add-payment',
+                        'data' => ['id' => $sale->id],
+                        'permission' => true
+                    ],
+                    [
+                        'button' => true,
+                        'icon' => 'fa-money',
+                        'label' => trans('file.View Payment'),
+                        'class' => 'get-payment',
+                        'data' => ['id' => $sale->id],
+                        'permission' => true
+                    ],
+                    [
+                        'button' => true,
+                        'icon' => 'fa-truck',
+                        'label' => trans('file.Add Delivery'),
+                        'class' => 'add-delivery',
+                        'data' => ['id' => $sale->id],
+                        'permission' => true
+                    ]
+                    // ,[
+                    //     'form' => true,
+                    //     'route' => route('sales.destroy', $sale->id),
+                    //     'icon' => 'dripicons-trash',
+                    //     'label' => trans('file.delete'),
+                    //     'class' => 'delete',
+                    //     'permission' => in_array("sales-delete", $permissions)
+                    // ]
+                ];
+    
+                return $this->generateActionOptions($actions);
+            })
+            ->rawColumns(['sale_status', 'payment_status', 'options'])
+            ->make();
+    
+        return $datatable;
+    }
+    
+    private function generateActionOptions($actions)
+    {
+        $options = '<div class="btn-group">
+                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . trans("file.action") . '
+                          <span class="caret"></span>
+                          <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">';
+    
+        foreach ($actions as $action) {
+            if ($action['permission']) {
+                if (isset($action['route'])) {
+                    $options .= '<li><a href="' . $action['route'] . '" class="btn btn-link"><i class="fa ' . $action['icon'] . '"></i> ' . $action['label'] . '</a></li>';
+                } elseif (isset($action['button'])) {
+                    $dataAttributes = '';
+                    if (isset($action['data'])) {
+                        foreach ($action['data'] as $key => $value) {
+                            $dataAttributes .= ' data-' . $key . '="' . $value . '"';
+                        }
+                    }
+                    $options .= '<li>
+                                    <button type="button" class="btn btn-link ' . $action['class'] . '"' . $dataAttributes . '><i class="fa ' . $action['icon'] . '"></i> ' . $action['label'] . '</button>
+                                </li>';
+                } elseif (isset($action['form'])) {
+                    $options .= \Form::open(["route" => $action['route'], "method" => "DELETE"]) . '
+                                <li>
+                                  <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa ' . $action['icon'] . '"></i> ' . $action['label'] . '</button> 
+                                </li>' . \Form::close();
+                }
+            }
+        }
+    
+        $options .= '</ul></div>';
+        return $options;
+    }
+    
+
 
     public function create()
     {
