@@ -203,17 +203,12 @@
 <body>
 
     <div style="max-width:400px;margin:0 auto">
-        @if(preg_match('~[0-9]~', url()->previous()))
-        @php $url = '../../pos'; @endphp
-        @else
-        @php $url = url()->previous(); @endphp
-        @endif
 
         @if($mode != 'print')
         <div class="hidden-print">
             <table>
                 <tr>
-                    <td><a href="{{$url}}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
+                    <td><a href="{{ url()->previous() }}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
                             {{trans('file.Back')}}</a> </td>
                     <td><a target="_BLANK" href="{{ url('sales-print/'.$lims_sale_data->id) }}"
                             class="btn btn-primary"><i class="dripicons-print"></i>{{trans('file.Print')}}</a></td>
