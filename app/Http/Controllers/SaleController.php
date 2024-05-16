@@ -354,8 +354,10 @@ class SaleController extends Controller
             ->select('sales.*')
             ->with('biller', 'customer', 'warehouse', 'user');
     
+        // get permissions
         $permissions = PermissionHelpers::checkMenuPermission(['sales-edit', 'sales-delete']);
     
+        // setup datatable data
         $datatable = DataTables::of($model)
             ->addIndexColumn()
             ->editColumn('created_at', function ($sale) {
@@ -404,12 +406,12 @@ class SaleController extends Controller
                         'class' => 'view',
                         'permission' => true
                     ],
-                    [
-                        'route' => $sale->sale_status != 3 ? route('sales.edit', $sale->id) : url('sales/' . $sale->id . '/create'),
-                        'icon' => 'dripicons-document-edit',
-                        'label' => trans('file.edit'),
-                        'permission' => in_array("sales-edit", $permissions)
-                    ],
+                    // [
+                    //     'route' => $sale->sale_status != 3 ? route('sales.edit', $sale->id) : url('sales/' . $sale->id . '/create'),
+                    //     'icon' => 'dripicons-document-edit',
+                    //     'label' => trans('file.edit'),
+                    //     'permission' => in_array("sales-edit", $permissions)
+                    // ],
                     [
                         'button' => true,
                         'icon' => 'fa-plus',
@@ -497,6 +499,21 @@ class SaleController extends Controller
         }
 
         return ResponseHelpers::formatResponse('success', $sale, 200);
+    }
+
+    // get payment detail by id sale
+    // [GET] /sales/payment/{id}
+    public function payment(Request $request, $id)
+    {
+        $payments = Payment::where('sale_id', $id)
+        ->with('account', 'user')
+        ->get();
+
+        if (!$payments) {
+            return ResponseHelpers::formatResponse('error : Sale not found', [], 404,false);
+        }
+
+        return ResponseHelpers::formatResponse('success', $payments, 200);
     }
     
 

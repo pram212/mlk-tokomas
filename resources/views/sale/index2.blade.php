@@ -47,13 +47,13 @@
             </div>
             {!! Form::close() !!}
         </div>
-        @php $permit_sales_add = \App\Helpers\PermissionHelpers::checkMenuPermission(["sales-add"]);@endphp
+        {{-- @php $permit_sales_add = \App\Helpers\PermissionHelpers::checkMenuPermission(["sales-add"]);@endphp
         @if(count($permit_sales_add)>0)
         <a href="{{route('sales.create')}}" class="btn btn-info"><i class="dripicons-plus"></i>
             {{trans('file.AddSale')}}</a>&nbsp;
         <a href="{{url('sales/sale_by_csv')}}" class="btn btn-primary"><i class="dripicons-copy"></i>
             {{trans('file.Import Sale')}}</a>
-        @endif
+        @endif --}}
     </div>
     <div class="table-responsive">
         <table id="sale-table" class="table sale-list" style="width: 100%">
@@ -89,6 +89,11 @@
 </section>
 
 @include('partials.sale.modal_sale_detail')
+@include('partials.sale.modal_sale_view_payment')
+{{-- @include('partials.sale.modal_sale_add_payment')
+@include('partials.sale.modal_sale_edit_payment')
+@include('partials.sale.modal_sale_add_delivery') --}}
+
 <script src="{{ asset('public/js/axios.min.js') }}"></script>
 <script>
     const lang_records_per_page = '{{ trans('file.records per page') }}';

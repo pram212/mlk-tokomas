@@ -145,6 +145,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('index_2', 'SaleController@index_2');
 		Route::get('datatables', 'SaleController@saleDataNew')->name('saleDataNew'); // datatable
 		Route::get('details/{id}', 'SaleController@details'); // detail modal
+		Route::get('payment/{id}', 'SaleController@payment'); // payment modal
 		
 		Route::post('searchProducts', 'SaleController@search_products')->name('searchProducts');
 		Route::get('print-last-reciept', 'SaleController@printLastReciept')->name('printLastReciept');

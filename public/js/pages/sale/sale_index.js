@@ -12,29 +12,7 @@ const table = $(".product-sale-list");
 const table_body = $(".product-sale-list tbody");
 const sale_footer = $("#sale-footer");
 const sale_details = $("#sale-details");
-
-$(document).on("click", ".view", function () {
-    // Get the record's ID via attribute
-    var sale_id = $(this).attr("data-id");
-    saleDetails(sale_id);
-});
-
-$("#print-btn").on("click", function () {
-    var divToPrint = document.getElementById("sale-details");
-    var newWin = window.open("", "Print-Window");
-    newWin.document.open();
-    newWin.document.write(
-        '<link rel="stylesheet" href="' +
-            asset_url +
-            '" type="text/css"><style type="text/css">@media print {.modal-dialog { max-width: 1000px;} }</style><body onload="window.print()">' +
-            divToPrint.innerHTML +
-            "</body>"
-    );
-    newWin.document.close();
-    setTimeout(function () {
-        newWin.close();
-    }, 10);
-});
+const print_btn = $("#print-btn");
 
 saleTable = $("#sale-table").DataTable({
     processing: true,
@@ -114,6 +92,63 @@ saleTable = $("#sale-table").DataTable({
         sumDatatableColumn(api, 7);
         sumDatatableColumn(api, 8);
     },
+});
+
+$(document).on("click", ".view", function () {
+    // Get the record's ID via attribute
+    var sale_id = $(this).attr("data-id");
+    saleDetails(sale_id);
+});
+
+print_btn.on("click", function () {
+    var divToPrint = document.getElementById("sale-details");
+    var newWin = window.open("", "Print-Window");
+    newWin.document.open();
+    newWin.document.write(
+        '<link rel="stylesheet" href="' +
+            asset_url +
+            '" type="text/css"><style type="text/css">@media print {.modal-dialog { max-width: 1000px;} }</style><body onload="window.print()">' +
+            divToPrint.innerHTML +
+            "</body>"
+    );
+    newWin.document.close();
+    setTimeout(function () {
+        newWin.close();
+    }, 10);
+});
+
+$(document).on("click", "table.sale-list tbody .get-payment", function (event) {
+    const id = $(this).data("id");
+
+    axios.get(baseUrl + "/sales/payment/" + id).then((response) => {
+        const status = response.data.status;
+        const data = response.data.data;
+        const message = response.data.message;
+        const paymentListTableBody = $(".payment-list tbody");
+
+        paymentListTableBody.html("");
+
+        if (!status) {
+            Swal.fire({ icon: "error", title: "Error", text: message });
+            return;
+        }
+
+        data.forEach((payment, index) => {
+            paymentListTableBody.append(`
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${payment.created_at}</td>
+                    <td>${payment.payment_reference}</td>
+                    <td>${payment.account.name}</td>
+                    <td>${payment.amount}</td>
+                    <td>${payment.user.name}</td>
+                </tr>
+            `);
+            console.log(paymentListTableBody);
+        });
+
+        $("#view-payment").modal("show");
+    });
 });
 
 function formatRupiahs(angka, prefix) {
