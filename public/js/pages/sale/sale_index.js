@@ -14,6 +14,7 @@ const sale_footer = $("#sale-footer");
 const sale_details = $("#sale-details");
 const print_btn = $("#print-btn");
 
+// datatable
 saleTable = $("#sale-table").DataTable({
     processing: true,
     serverSide: true,
@@ -94,12 +95,14 @@ saleTable = $("#sale-table").DataTable({
     },
 });
 
+// View sale button action
 $(document).on("click", ".view", function () {
     // Get the record's ID via attribute
     var sale_id = $(this).attr("data-id");
     saleDetails(sale_id);
 });
 
+// Print button action
 print_btn.on("click", function () {
     var divToPrint = document.getElementById("sale-details");
     var newWin = window.open("", "Print-Window");
@@ -117,6 +120,7 @@ print_btn.on("click", function () {
     }, 10);
 });
 
+// View payment button action
 $(document).on("click", "table.sale-list tbody .get-payment", function (event) {
     const id = $(this).data("id");
 
@@ -151,6 +155,7 @@ $(document).on("click", "table.sale-list tbody .get-payment", function (event) {
     });
 });
 
+// formating number to rupiah and add prefix
 function formatRupiahs(angka, prefix) {
     var number_string = angka.toString(),
         split = number_string.split("."),
@@ -167,6 +172,7 @@ function formatRupiahs(angka, prefix) {
     return prefix === undefined ? rupiah : prefix + rupiah;
 }
 
+// Sum the datatable column
 function sumDatatableColumn(api, column) {
     var sum = api
         .column(column, { search: "applied" })
@@ -186,6 +192,7 @@ function sumDatatableColumn(api, column) {
     $(api.column(column).footer()).html(formatRupiahs(sum, "Rp "));
 }
 
+// Get the sale details
 function saleDetails(sale_id) {
     $("#sale-details input[name='sale_id']").val(sale_id);
 
@@ -197,6 +204,7 @@ function saleDetails(sale_id) {
             const data = response.data.data;
             const message = response.data.message;
 
+            // Check if the response is successful
             if (!status) {
                 Swal.fire({ icon: "error", title: "Error", text: message });
                 return;
@@ -220,11 +228,9 @@ function saleDetails(sale_id) {
             // Set the products
             let htmltext = "";
             let htmlfooter = "";
-            let total = 0;
             let total_qty = 0;
             let total_discount = 0;
             let total_tax = 0;
-            let total_shipping = 0;
             const product_sale = data.product_sale;
             const user = data.user;
 
