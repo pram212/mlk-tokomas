@@ -747,7 +747,7 @@
         "processing": true,
         "serverSide": true,
         "ajax":{
-            url:"sales/sale-data",
+            url: `${baseUrl}/sales/sale-data`,
             data:{
                 all_permission: all_permission,
                 starting_date: starting_date,
@@ -903,13 +903,13 @@
     if (dt_selector.rows('.selected').any() && is_calling_first) {
         var rows = dt_selector.rows('.selected').indexes();
 
-        $(dt_selector.column(7).footer()).html(formatRupiah(dt_selector.cells(rows, 7, { page: 'current' }).data().sum(), 'output'));
-        $(dt_selector.column(8).footer()).html(formatRupiah(dt_selector.cells(rows, 8, { page: 'current' }).data().sum(), 'output'));
-        $(dt_selector.column(9).footer()).html(formatRupiah(dt_selector.cells(rows, 9, { page: 'current' }).data().sum(), 'output'));
+        $(dt_selector.column(7).footer()).html(formatRupiahs(dt_selector.cells(rows, 7, { page: 'current' }).data().sum(), 'Rp. '));
+        $(dt_selector.column(8).footer()).html(formatRupiahs(dt_selector.cells(rows, 8, { page: 'current' }).data().sum(), 'Rp. '));
+        $(dt_selector.column(9).footer()).html(formatRupiahs(dt_selector.cells(rows, 9, { page: 'current' }).data().sum(), 'Rp. '));
     } else {
-        $(dt_selector.column(7).footer()).html(formatRupiah(dt_selector.cells(rows, 7, { page: 'current' }).data().sum(), 'output'));
-        $(dt_selector.column(8).footer()).html(formatRupiah(dt_selector.cells(rows, 8, { page: 'current' }).data().sum(), 'output'));
-        $(dt_selector.column(9).footer()).html(formatRupiah(dt_selector.cells(rows, 9, { page: 'current' }).data().sum(), 'output'));
+        $(dt_selector.column(7).footer()).html(formatRupiahs(dt_selector.cells(rows, 7, { page: 'current' }).data().sum(), 'Rp. '));
+        $(dt_selector.column(8).footer()).html(formatRupiahs(dt_selector.cells(rows, 8, { page: 'current' }).data().sum(), 'Rp. '));
+        $(dt_selector.column(9).footer()).html(formatRupiahs(dt_selector.cells(rows, 9, { page: 'current' }).data().sum(), 'Rp. '));
     }
 }
 
@@ -1075,7 +1075,21 @@
         amount.value = formatRupiah(this.value, 'input');
     }); 
 
-     
+    function formatRupiahs(angka, prefix) {
+    var number_string = angka.toString(),
+        split = number_string.split("."),
+        sisa = split[0].length % 3,
+        rupiah = split[0].substr(0, sisa),
+        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    if (ribuan) {
+        var separator = sisa ? "," : "";
+        rupiah += separator + ribuan.join(",");
+    }
+
+    rupiah = split[1] !== undefined ? rupiah + "." + split[1] : rupiah + ".00";
+    return prefix === undefined ? rupiah : prefix + rupiah;
+}
 
     function formatRupiah(angka, type) {
     var number_string = '';
