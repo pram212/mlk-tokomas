@@ -104,6 +104,7 @@ $(document).on("click", ".view", function () {
     saleDetails(sale_id);
 });
 
+// Add payment button action
 $(document).on("click", "table.sale-list tbody .add-payment", function () {
     const id = $(this).data("id");
 
@@ -161,6 +162,7 @@ $(document).on("click", "table.sale-list tbody .add-payment", function () {
     modal_add_payment.modal("show");
 });
 
+// on change paid by
 $('select[name="paid_by_id"]').on("change", function () {
     var id = $(this).val();
     $('input[name="cheque_no"]').attr("required", false);
@@ -209,6 +211,7 @@ $('select[name="paid_by_id"]').on("change", function () {
     }
 });
 
+// on change gift card
 $('#add-payment select[name="gift_card_id"]').on("change", function () {
     var id = $(this).val();
     if (expired_date[id] < current_date) alert("This card is expired!");
