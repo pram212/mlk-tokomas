@@ -644,6 +644,8 @@ return [
 	"Filter" => "Filter",
 	"Trash" => "Trash",
 	"Product cannot be deleted because it has been sold" => "Product cannot be deleted because it has been sold",
-
+	"AddSale" => "Add Sale",
+	"No" => "No",
+	"Cashier" => "Cashier",
 ];
 ?>

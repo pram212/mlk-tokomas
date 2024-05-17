@@ -52,10 +52,13 @@ use GeniusTS\HijriDate\Date;
 use Illuminate\Support\Facades\Validator;
 use Dompdf\Dompdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Helpers\PermissionHelpers;
+use Yajra\DataTables\Facades\DataTables;
+use App\Helpers\ResponseHelpers;
 
 class SaleController extends Controller
 {
-    public function index(Request $request)
+    public function index_old(Request $request)
     {
         $role = Role::find(Auth::user()->role_id);
         if ($role->hasPermissionTo('sales-index')) {
@@ -88,6 +91,26 @@ class SaleController extends Controller
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
+    // new index
+    public function index(Request $request)
+    {
+        $role = Role::find(Auth::user()->role_id);
+
+        if (!$role->hasPermissionTo('sales-index')) {
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
+        }
+
+        if ($request->input('starting_date')) {
+            $starting_date = $request->input('starting_date');
+            $ending_date = $request->input('ending_date');
+        } else {
+            $starting_date = date("Y-m-d", strtotime(date('Y-m-d', strtotime('-1 year', strtotime(date('Y-m-d'))))));
+            $ending_date = date("Y-m-d");
+        }
+
+        return view('sale.indexNew', compact('starting_date', 'ending_date'));
+    }
+
     // search_products
     public function search_products(Request $request)
     {
@@ -116,8 +139,6 @@ class SaleController extends Controller
 
         return response()->json($products);
     }
-
-
 
     public function saleData(Request $request)
     {
@@ -333,6 +354,230 @@ class SaleController extends Controller
 
         echo json_encode($json_data);
     }
+
+    // Get sale data for datatable
+    public function saleDataNew(Request $request)
+    {
+        $model = Sale::query()
+        ->select('sales.*')
+        ->when($request->filled('warehouse_id'), function ($query) use ($request) {
+            return $query->where('warehouse_id', $request->input('warehouse_id'));
+        })
+        ->when($request->filled('starting_date'), function ($query) use ($request) {
+            return $query->whereDate('sales.created_at', '>=', $request->input('starting_date'));
+        })
+        ->when($request->filled('ending_date'), function ($query) use ($request) {
+            return $query->whereDate('sales.created_at', '<=', $request->input('ending_date'));
+        })
+        ->with('biller', 'customer', 'warehouse', 'user');
+
+    
+        // get permissions
+        $permissions = PermissionHelpers::checkMenuPermission(['sales-edit', 'sales-delete']);
+    
+        // setup datatable data
+        $datatable = DataTables::of($model)
+            ->addIndexColumn()
+            ->editColumn('created_at', function ($sale) {
+                return date(config('date_format'), strtotime($sale->created_at->toDateString()));
+            })
+            ->editColumn('grand_total', function ($sale) {
+                return number_format($sale->grand_total, 2);
+            })
+            ->editColumn('paid_amount', function ($sale) {
+                return number_format($sale->paid_amount, 2);
+            })
+            ->addColumn('sale_status', function ($sale) {
+                $statuses = [
+                    1 => ['class' => 'success', 'label' => trans('file.Completed')],
+                    2 => ['class' => 'danger', 'label' => trans('file.Pending')],
+                    3 => ['class' => 'warning', 'label' => trans('file.Draft')],
+                ];
+    
+                $status = $statuses[$sale->sale_status] ?? $statuses[3];
+                return '<div class="badge badge-' . $status['class'] . '">' . $status['label'] . '</div>';
+            })
+            ->addColumn('payment_status', function ($sale) {
+                $statuses = [
+                    1 => ['class' => 'danger', 'label' => trans('file.Pending')],
+                    2 => ['class' => 'danger', 'label' => trans('file.Due')],
+                    3 => ['class' => 'warning', 'label' => trans('file.Partial')],
+                    4 => ['class' => 'success', 'label' => trans('file.Paid')],
+                ];
+    
+                $status = $statuses[$sale->payment_status] ?? ['class' => 'secondary', 'label' => trans('file.Unknown')];
+                return '<div class="badge badge-' . $status['class'] . '">' . $status['label'] . '</div>';
+            })
+            ->addColumn('options', function ($sale) use ($permissions) {
+                $actions = [
+                    [
+                        'route' => route('sales.invoice', $sale->id),
+                        'icon' => 'fa-copy',
+                        'label' => trans('file.Generate Invoice'),
+                        'permission' => true
+                    ],
+                    [
+                        'button' => true,
+                        'icon' => 'fa-eye',
+                        'label' => trans('file.View'),
+                        'data' => ['id' => $sale->id],
+                        'class' => 'view',
+                        'permission' => true
+                    ],
+                    // [
+                    //     'route' => $sale->sale_status != 3 ? route('sales.edit', $sale->id) : url('sales/' . $sale->id . '/create'),
+                    //     'icon' => 'dripicons-document-edit',
+                    //     'label' => trans('file.edit'),
+                    //     'permission' => in_array("sales-edit", $permissions)
+                    // ],
+                    [
+                        'button' => true,
+                        'icon' => 'fa-plus',
+                        'label' => trans('file.Add Payment'),
+                        'class' => 'add-payment',
+                        'data' => ['id' => $sale->id],
+                        'permission' => true
+                    ],
+                    [
+                        'button' => true,
+                        'icon' => 'fa-money',
+                        'label' => trans('file.View Payment'),
+                        'class' => 'get-payment',
+                        'data' => ['id' => $sale->id],
+                        'permission' => true
+                    ],
+                    [
+                        'button' => true,
+                        'icon' => 'fa-truck',
+                        'label' => trans('file.Add Delivery'),
+                        'class' => 'add-delivery',
+                        'data' => ['id' => $sale->id],
+                        'permission' => true
+                    ]
+                ];
+    
+                return $this->generateActionOptions($actions);
+            })
+            ->rawColumns(['sale_status', 'payment_status', 'options'])
+            ->make();
+    
+        return $datatable;
+    }
+    
+    // generate action options for saleDataNew
+    private function generateActionOptions($actions)
+    {
+        $options = '<div class="btn-group">
+                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . trans("file.action") . '
+                          <span class="caret"></span>
+                          <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">';
+    
+        foreach ($actions as $action) {
+            if ($action['permission']) {
+                if (isset($action['route'])) {
+                    $options .= '<li><a href="' . $action['route'] . '" class="btn btn-link"><i class="fa ' . $action['icon'] . '"></i> ' . $action['label'] . '</a></li>';
+                } elseif (isset($action['button'])) {
+                    $dataAttributes = '';
+                    if (isset($action['data'])) {
+                        foreach ($action['data'] as $key => $value) {
+                            $dataAttributes .= ' data-' . $key . '="' . $value . '"';
+                        }
+                    }
+                    $options .= '<li>
+                                    <button type="button" class="btn btn-link ' . $action['class'] . '"' . $dataAttributes . '><i class="fa ' . $action['icon'] . '"></i> ' . $action['label'] . '</button>
+                                </li>';
+                } elseif (isset($action['form'])) {
+                    $options .= \Form::open(["route" => $action['route'], "method" => "DELETE"]) . '
+                                <li>
+                                  <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa ' . $action['icon'] . '"></i> ' . $action['label'] . '</button> 
+                                </li>' . \Form::close();
+                }
+            }
+        }
+    
+        $options .= '</ul></div>';
+        return $options;
+    }
+
+    // get product sale data for modal details by sale id
+    // [GET] /sales/product-sale/{id}
+    public function details(Request $request, $id)
+    {
+        $sale = Sale::
+        select(['id','reference_no as invoice_number','biller_id','customer_id','warehouse_id','user_id','order_discount','order_tax','order_tax_rate','shipping_cost','grand_total','paid_amount','sale_note','staff_note','sale_status'])
+        ->selectRaw('DATE_FORMAT(sales.created_at,"%d/%m/%Y %H:%i:%s") as date')
+        ->selectRaw('CASE WHEN sales.sale_status = 1 THEN "Selesai" WHEN sales.sale_status = 2 THEN "Pending" ELSE "Draft" END as sale_status')
+        ->with('biller', 'customer', 'warehouse', 'user','productSale')
+        ->find($id);
+
+        if (!$sale) {
+            return ResponseHelpers::formatResponse('error : Sale not found', [], 404,false);
+        }
+
+        return ResponseHelpers::formatResponse('success', $sale, 200);
+    }
+
+    // get payment detail by id sale
+    // [GET] /sales/payment/{id}
+    public function payment(Request $request, $id)
+    {
+        $payments = Payment::where('sale_id', $id)
+        ->with('account', 'user')
+        ->get();
+
+        if (!$payments) {
+            return ResponseHelpers::formatResponse('error : Sale not found', [], 404,false);
+        }
+
+        return ResponseHelpers::formatResponse('success', $payments, 200);
+    }
+    
+    // get gift card list
+    // [GET] /sales/gift-card
+    public function giftCard(){
+        try {
+            $lims_gift_card_list = GiftCard::where("is_active", true)->get();
+            return ResponseHelpers::formatResponse('success', $lims_gift_card_list, 200);
+        } catch (\Exception $e) {
+            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500,false);
+        }
+    }
+
+    // get pos setting
+    // [GET] /sales/pos-setting
+    public function posSetting(){
+        try {
+            $lims_pos_setting_data = PosSetting::latest()->first();
+            return ResponseHelpers::formatResponse('success', $lims_pos_setting_data, 200);
+        } catch (\Exception $e) {
+            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500,false);
+        }
+    }
+
+    // get warehouse list
+    // [GET] /sales/warehouse
+    public function warehouseList(){
+        try {
+            $lims_warehouse_list = Warehouse::where('is_active', true)->get();
+            return ResponseHelpers::formatResponse('success', $lims_warehouse_list, 200);
+        } catch (\Exception $e) {
+            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500,false);
+        }
+    }
+
+    // get account list
+    // [GET] /sales/account
+    public function accountList(){
+        try {
+            $lims_account_list = Account::where('is_active', true)->get();
+            return ResponseHelpers::formatResponse('success', $lims_account_list, 200);
+        } catch (\Exception $e) {
+            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500,false);
+        }
+    }
+
 
     public function create()
     {
@@ -1612,71 +1857,78 @@ class SaleController extends Controller
         return redirect()->route('sales.invoice', $sale->id);
     }
 
+    // Generate invoice
     public function genInvoice($id)
     {
-        $lims_sale_data = Sale::find($id);
-        $lims_product_sale_data = Product_Sale::with('product')->where('sale_id', $id)->get();
-        $lims_biller_data = Biller::find($lims_sale_data->biller_id);
-        $lims_warehouse_data = Warehouse::find($lims_sale_data->warehouse_id);
-        $lims_customer_data = Customer::find($lims_sale_data->customer_id);
-        $lims_payment_data = Payment::where('sale_id', $id)->get();
-        $mode = 'view';
-
-        $numberToWords = new NumberToWords();
-        if (\App::getLocale() == 'ar' || \App::getLocale() == 'hi' || \App::getLocale() == 'vi' || \App::getLocale() == 'en-gb')
-            $numberTransformer = $numberToWords->getNumberTransformer('en');
-        else
-            $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
-        $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
-
-        return view('sale.invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords','mode'));
+        $data = $this->getInvoiceData($id);
+        $data['mode'] = 'view';
+        return view('sale.invoice', $data);
     }
 
-    public function viewInvoice($invoiceNumber){
+    // View invoice
+    public function viewInvoice($invoiceNumber)
+    {
         // get id by invoice number (reference_no) from Sale
         $sale = Sale::where('reference_no', $invoiceNumber)->first();
-        $id = $sale->id;
-
-        // jalankan fungsi printInvoice
-        $this->printInvoice($id);
+        if ($sale) {
+            $this->printInvoice($sale->id);
+        } else {
+            // handle case when sale not found
+            abort(404, 'Sale not found');
+        }
     }
 
-    public function printInvoice($id){
-        $lims_sale_data = Sale::find($id);
-        $lims_product_sale_data = Product_Sale::with('product')->where('sale_id', $id)->get();
-        $lims_biller_data = Biller::find($lims_sale_data->biller_id);
-        $lims_warehouse_data = Warehouse::find($lims_sale_data->warehouse_id);
-        $lims_customer_data = Customer::find($lims_sale_data->customer_id);
-        $lims_payment_data = Payment::where('sale_id', $id)->get();
-
-        $numberToWords = new NumberToWords();
-        if (\App::getLocale() == 'ar' || \App::getLocale() == 'hi' || \App::getLocale() == 'vi' || \App::getLocale() == 'en-gb')
-            $numberTransformer = $numberToWords->getNumberTransformer('en');
-        else
-            $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
-        $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
+    // Print invoice as PDF
+    public function printInvoice($id)
+    {
+        $data = $this->getInvoiceData($id);
+        $data['mode'] = 'print';
 
         $dompdf = new Dompdf();
         $options = $dompdf->getOptions();
         $options->setDefaultFont('Courier');
         $dompdf->setOptions($options);
         $dompdf->setPaper('A4', 'landscape');
-
-        $mode = 'print';
         
-        $html = view('sale.invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords','mode'))->render();
-
+        $html = view('sale.invoice', $data)->render();
         $dompdf->loadHtml($html);
-
         $dompdf->render();
 
-        $filename = 'invoice-' . $lims_sale_data->reference_no . '.pdf';
-
+        $filename = 'invoice-' . $data['lims_sale_data']->reference_no . '.pdf';
+        
         // Open pdf in browser
         $dompdf->stream($filename, array("Attachment" => false));
-
-
     }
+
+    // Get invoice data
+    private function getInvoiceData($id)
+    {
+        $lims_sale_data = Sale::find($id);
+        $lims_product_sale_data = Product_Sale::with(['product','productSplitSetDetail'])->where('sale_id', $id)->get();
+        $lims_biller_data = Biller::find($lims_sale_data->biller_id);
+        $lims_warehouse_data = Warehouse::find($lims_sale_data->warehouse_id);
+        $lims_customer_data = Customer::find($lims_sale_data->customer_id);
+        $lims_payment_data = Payment::where('sale_id', $id)->get();
+
+        $numberToWords = new NumberToWords();
+        if (in_array(\App::getLocale(), ['ar', 'hi', 'vi', 'en-gb'])) {
+            $numberTransformer = $numberToWords->getNumberTransformer('en');
+        } else {
+            $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
+        }
+        $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
+
+        return compact(
+            'lims_sale_data', 
+            'lims_product_sale_data', 
+            'lims_biller_data', 
+            'lims_warehouse_data', 
+            'lims_customer_data', 
+            'lims_payment_data', 
+            'numberInWords'
+        );
+    }
+
 
     public function addPayment(Request $request)
     {

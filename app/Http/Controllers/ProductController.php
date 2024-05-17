@@ -1008,10 +1008,11 @@ class ProductController extends Controller
         return response()->json($productDetailSplitHistory);
     }
 
-    public function viewProduct($product_code, $split_set_code = null){
-
+    public function viewProduct($product_code, $split_set_code = null)
+    {
         // get product by code
         $product = Product::where('code', $product_code)->first();
+        $productSplitSetDetail = null;
         
         // handle if product not found, redirect to 404
         if(!$product){
@@ -1035,7 +1036,7 @@ class ProductController extends Controller
         $dompdf->setOptions($options);
         $dompdf->setPaper('A4', 'potrait');
 
-        $html = view('product.view_product',compact('product'))->render();
+        $html = view('product.view_product',compact('product','productSplitSetDetail'))->render();
 
         $dompdf->loadHtml($html);
 

@@ -747,7 +747,7 @@
         "processing": true,
         "serverSide": true,
         "ajax":{
-            url:"sales/sale-data",
+            url: `${baseUrl}/sales/sale-data`,
             data:{
                 all_permission: all_permission,
                 starting_date: starting_date,
@@ -900,19 +900,19 @@
     } );
 
     function datatable_sum(dt_selector, is_calling_first) {
-        if (dt_selector.rows( '.selected' ).any() && is_calling_first) {
-            var rows = dt_selector.rows( '.selected' ).indexes();
+    if (dt_selector.rows('.selected').any() && is_calling_first) {
+        var rows = dt_selector.rows('.selected').indexes();
 
-            $( dt_selector.column( 7 ).footer() ).html(formatRupiah(dt_selector.cells( rows, 7, { page: 'current' } ).data().sum()));
-            $( dt_selector.column( 8 ).footer() ).html(formatRupiah(dt_selector.cells( rows, 8, { page: 'current' } ).data().sum()));
-            $( dt_selector.column( 9 ).footer() ).html(formatRupiah(dt_selector.cells( rows, 9, { page: 'current' } ).data().sum()));
-        }
-        else {
-            $( dt_selector.column( 7 ).footer() ).html(formatRupiah(dt_selector.cells( rows, 7, { page: 'current' } ).data().sum()));
-            $( dt_selector.column( 8 ).footer() ).html(formatRupiah(dt_selector.cells( rows, 8, { page: 'current' } ).data().sum()));
-            $( dt_selector.column( 9 ).footer() ).html(formatRupiah(dt_selector.cells( rows, 9, { page: 'current' } ).data().sum()));
-        }
+        $(dt_selector.column(7).footer()).html(formatRupiahs(dt_selector.cells(rows, 7, { page: 'current' }).data().sum(), 'Rp. '));
+        $(dt_selector.column(8).footer()).html(formatRupiahs(dt_selector.cells(rows, 8, { page: 'current' }).data().sum(), 'Rp. '));
+        $(dt_selector.column(9).footer()).html(formatRupiahs(dt_selector.cells(rows, 9, { page: 'current' }).data().sum(), 'Rp. '));
+    } else {
+        $(dt_selector.column(7).footer()).html(formatRupiahs(dt_selector.cells(rows, 7, { page: 'current' }).data().sum(), 'Rp. '));
+        $(dt_selector.column(8).footer()).html(formatRupiahs(dt_selector.cells(rows, 8, { page: 'current' }).data().sum(), 'Rp. '));
+        $(dt_selector.column(9).footer()).html(formatRupiahs(dt_selector.cells(rows, 9, { page: 'current' }).data().sum(), 'Rp. '));
     }
+}
+
 
     function saleDetails(sale){
         $("#sale-details input[name='sale_id']").val(sale[13]);
@@ -1075,45 +1075,64 @@
         amount.value = formatRupiah(this.value, 'input');
     }); 
 
-     
+    function formatRupiahs(angka, prefix) {
+    var number_string = angka.toString(),
+        split = number_string.split("."),
+        sisa = split[0].length % 3,
+        rupiah = split[0].substr(0, sisa),
+        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-    function formatRupiah(angka, type){
-        var number_string= '';
-        var split= '';
-        var sisa= '';
-        var rupiah= '';
-        var ribuan= '';
-        if(angka.toString().includes("-")){
-            var reverse = angka.toString().split('').reverse().join(''),
+    if (ribuan) {
+        var separator = sisa ? "," : "";
+        rupiah += separator + ribuan.join(",");
+    }
+
+    rupiah = split[1] !== undefined ? rupiah + "." + split[1] : rupiah + ".00";
+    return prefix === undefined ? rupiah : prefix + rupiah;
+}
+
+    function formatRupiah(angka, type) {
+    var number_string = '';
+    var split = '';
+    var sisa = '';
+    var rupiah = '';
+    var ribuan = '';
+
+    if (angka.toString().includes("-")) {
+        var reverse = angka.toString().split('').reverse().join(''),
             ribuan = reverse.match(/\d{1,3}/g);
-            ribuan = ribuan.join('.').split('').reverse().join('');
-            return "-"+ribuan;
-        }
-        if(type == 'input'){
-            number_string = angka.replace(/[^,\d]/g, '').toString(),
-			split   		= number_string.split(',');
-			sisa     		= split[0].length % 3;
-			rupiah     		= split[0].substr(0, sisa);
-			ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
-        }else{
-             number_string = angka.toString();
-			split   		= number_string.split(',');
-			sisa     		= split[0].length % 3;
-			rupiah     		= split[0].substr(0, sisa);
-			ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
-        }
-		    
- 
-			// tambahkan titik jika yang di input sudah menjadi angka ribuan
-			if(ribuan){
-				separator = sisa ? '.' : '';
-				rupiah += separator + ribuan.join('.');
-			}
- 
-			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-			// return prefix == undefined || ? rupiah : (rupiah ? '' + rupiah : '');
-            return (rupiah);
-	}
+        ribuan = ribuan.join('.').split('').reverse().join('');
+        return "-" + ribuan;
+    }
+
+    // Convert to string with 2 decimal places
+    angka = parseFloat(angka).toFixed(2);
+    console.log(angka)
+    
+    if (type == 'input') {
+        number_string = angka.replace(/[^,\d]/g, '').toString();
+    } else {
+        number_string = angka.toString();
+    }
+
+    split = number_string.split('.');
+    sisa = split[0].length % 3;
+    rupiah = split[0].substr(0, sisa);
+    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    // Tambahkan titik jika yang di input sudah menjadi angka ribuan
+    if (ribuan) {
+        separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+    }
+
+    // Tambahkan koma dan dua angka di belakang koma
+    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah + ',00';
+
+    return rupiah;
+}
+
+
 
 </script>
 @endsection

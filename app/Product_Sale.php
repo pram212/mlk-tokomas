@@ -15,4 +15,10 @@ class Product_Sale extends Model
     {
         return $this->belongsTo('App\Product');
     }
+
+    // relation with ProductSplitSetDetail by split_set_code
+    public function productSplitSetDetail()
+    {
+        return $this->belongsTo('App\ProductSplitSetDetail', 'split_set_code', 'split_set_code');
+    }
 }

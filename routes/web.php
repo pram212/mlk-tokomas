@@ -136,15 +136,23 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// sales routes
 	Route::resource('/sales', 'SaleController')->except('show');
-	Route::get('sales-print/{id}', 'SaleController@printInvoice')->name('print');
-
-	Route::get('sales-getproduct/{id}', 'SaleController@getProduct')->name('getproduct');
-	Route::get('sales-getproduct/{category_id}/{brand_id}', 'SaleController@getProductByFilter');
-	Route::get('sales-getcustomergroup/{id}', 'SaleController@getCustomerGroup')->name('getcustomergroup');
-	Route::get('sales-lims_product_search', 'SaleController@limsProductSearch')->name('product_sale.search');
-
 	Route::group(['prefix' => 'sales', 'as' => 'sales.'], function () {
+
+		// Sales Pos Page
 		Route::get('pos', 'SaleController@posSale')->name('pos');
+
+		// Sales index Page
+		Route::get('index_old', 'SaleController@index_old');
+		Route::get('datatables', 'SaleController@saleDataNew')->name('saleDataNew'); // datatable
+		Route::get('details/{id}', 'SaleController@details'); // detail modal
+		Route::get('payment/{id}', 'SaleController@payment'); // payment modal
+		Route::get('gift-card', 'SaleController@giftCard'); // gift card modal
+		Route::get('pos-setting', 'SaleController@posSetting'); // pos setting modal
+		Route::get('warehouse', 'SaleController@warehouseList'); // warehouse modal
+		Route::get('account', 'SaleController@accountList'); // account modal
+
+
+		
 		Route::post('searchProducts', 'SaleController@search_products')->name('searchProducts');
 		Route::get('print-last-reciept', 'SaleController@printLastReciept')->name('printLastReciept');
 		Route::post('updatepayment', 'SaleController@updatePayment')->name('update-payment');
@@ -166,7 +174,14 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('sale_by_csv', 'SaleController@saleByCsv');
 		Route::get('today-sale', 'SaleController@todaySale');
 		Route::post('sale-data', 'SaleController@saleData');
+
+		
 	});
+	Route::get('sales-print/{id}', 'SaleController@printInvoice')->name('print');
+	Route::get('sales-getproduct/{id}', 'SaleController@getProduct')->name('getproduct');
+	Route::get('sales-getproduct/{category_id}/{brand_id}', 'SaleController@getProductByFilter');
+	Route::get('sales-getcustomergroup/{id}', 'SaleController@getCustomerGroup')->name('getcustomergroup');
+	Route::get('sales-lims_product_search', 'SaleController@limsProductSearch')->name('product_sale.search');
 
 	// delivery routes
 	Route::group(['prefix' => 'delivery', 'as' => 'delivery.'], function() {

@@ -52,7 +52,13 @@
     <img class="img_product" src="data:image/png;base64,{{ base64_encode(file_get_contents($gambar_produk)) }}" alt="">
   </div>
 
-  <h2><b>{{ $product->name . ' (' . $product->code .')'}}</b></h2>
+  <h2>
+    <b>
+      {{ $product->name . ' (' . ($productSplitSetDetail ? $productSplitSetDetail->split_set_code : $product->code) .
+      ')' }}
+    </b>
+  </h2>
+
 
 
   {{-- table product information --}}
@@ -65,12 +71,17 @@
     <tr>
       <td>Code</td>
       <td>:</td>
-      <td>{{ $product->code }}</td>
+      <td>{{ $productSplitSetDetail ? $productSplitSetDetail->split_set_code:$product->code }}</td>
+    </tr>
+    <tr>
+      <td>Split Set Type</td>
+      <td>:</td>
+      <td>{{ ($product->split_set_type === '1')?'Full Set':'Split Set' }}</td>
     </tr>
     <tr>
       <td>Price</td>
       <td>:</td>
-      <td>{{ $product->price }}</td>
+      <td>{{ $productSplitSetDetail ? $productSplitSetDetail->price:$product->price }}</td>
     </tr>
     <tr>
       <td>Category</td>
@@ -90,23 +101,28 @@
     <tr>
       <td>Invoice Number</td>
       <td>:</td>
-      <td>{{ $product->invoice_number }}</td>
+      <td>{{ $productSplitSetDetail ? $productSplitSetDetail->invoice_number:$product->invoice_number }}</td>
     </tr>
     <tr>
       <td>Gramasi</td>
       <td>:</td>
-      <td>{{ $product->gramasi->gramasi }}</td>
+      <td>{{ $productSplitSetDetail ? $productSplitSetDetail->gramasi:$product->gramasi->gramasi }}</td>
+
     </tr>
     <tr>
       <td>Miligram</td>
       <td>:</td>
-      <td>{{ $product->mg }}</td>
+      <td>{{ $productSplitSetDetail ? $productSplitSetDetail->mg:$product->mg }}</td>
     </tr>
     <tr>
       <td>Product Status</td>
       <td>:</td>
-      <td>{{ ($product->product_status) ? 'STORE':'SOLD' }}</td>
+      <td>
+        {{ ($productSplitSetDetail ? $productSplitSetDetail->product_status : $product->product_status) ? 'STORE' :
+        'SOLD' }}
+      </td>
     </tr>
+
 </body>
 
 </html>
