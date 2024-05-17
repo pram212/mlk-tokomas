@@ -15,12 +15,54 @@ const sale_details = $("#sale-details");
 const print_btn = $("#print-btn");
 
 const modal_add_payment = $("#add-payment");
+const filter_btn = $("#filter-btn");
+
+// on ready
+$(document).ready(function () {
+    // set data selectpicker warehouse_id
+    getWarehouse().then((response) => {
+        const status = response.status;
+        const data = response.data;
+        const message = response.message;
+
+        if (!status) {
+            return;
+        }
+
+        let warehouse_id = $("select[name='warehouse_id']");
+
+        warehouse_id.html("");
+
+        data.forEach((warehouse) => {
+            warehouse_id.append(
+                `<option value="${warehouse.id}">${warehouse.name}</option>`
+            );
+        });
+
+        // refresh selectpicker
+        warehouse_id.selectpicker("refresh");
+    });
+});
+
+// on click filter_btn
+filter_btn.on("click", function () {
+    saleTable.ajax.reload();
+});
 
 // datatable
 saleTable = $("#sale-table").DataTable({
     processing: true,
     serverSide: true,
-    ajax: baseUrl + "/sales/datatables",
+    ajax: {
+        url: baseUrl + "/sales/datatables",
+        type: "GET",
+        dataType: "json",
+        data: function (d) {
+            d.warehouse_id = $("#warehouse_id").val();
+            d.start_date = $("input[name='starting_date']").val();
+            d.end_date = $("input[name='ending_date']").val();
+        },
+    },
     columns: [
         {
             data: "DT_RowIndex",
@@ -161,6 +203,31 @@ $(document).on("click", "table.sale-list tbody .add-payment", function () {
     // show modal add payment
     modal_add_payment.modal("show");
 });
+
+// add delivery button action
+$(document).on(
+    "click",
+    "table.sale-list tbody .add-delivery",
+    function (event) {
+        var id = $(this).data("id").toString();
+        $.get(baseUrl + "/delivery/create/" + id, function (data) {
+            $("#dr").text(data[0]);
+            $("#sr").text(data[1]);
+            if (data[2]) {
+                $('select[name="status"]').val(data[2]);
+                $(".selectpicker").selectpicker("refresh");
+            }
+            $('input[name="delivered_by"]').val(data[3]);
+            $('input[name="recieved_by"]').val(data[4]);
+            $("#customer").text(data[5]);
+            $('textarea[name="address"]').val(data[6]);
+            $('textarea[name="note"]').val(data[7]);
+            $('input[name="reference_no"]').val(data[0]);
+            $('input[name="sale_id"]').val(id);
+            $("#add-delivery").modal("show");
+        });
+    }
+);
 
 // on change paid by
 $('select[name="paid_by_id"]').on("change", function () {
@@ -442,7 +509,7 @@ function getPosSetting() {
 
 // axios get request [GET] warehouse and return the response
 function getWarehouse() {
-    return axios.get(baseUrl + "/warehouse").then((response) => {
+    return axios.get(baseUrl + "/sales/warehouse").then((response) => {
         return response.data;
     });
 }

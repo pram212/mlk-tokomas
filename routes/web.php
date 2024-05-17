@@ -142,13 +142,13 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('pos', 'SaleController@posSale')->name('pos');
 
 		// Sales index Page
-		Route::get('index_2', 'SaleController@index_2');
+		Route::get('index_old', 'SaleController@index_old');
 		Route::get('datatables', 'SaleController@saleDataNew')->name('saleDataNew'); // datatable
 		Route::get('details/{id}', 'SaleController@details'); // detail modal
 		Route::get('payment/{id}', 'SaleController@payment'); // payment modal
 		Route::get('gift-card', 'SaleController@giftCard'); // gift card modal
 		Route::get('pos-setting', 'SaleController@posSetting'); // pos setting modal
-		Route::get('warehouse', 'SaleController@warehouse'); // warehouse modal
+		Route::get('warehouse', 'SaleController@warehouseList'); // warehouse modal
 		Route::get('account', 'SaleController@accountList'); // account modal
 
 

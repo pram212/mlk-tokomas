@@ -58,7 +58,7 @@ use App\Helpers\ResponseHelpers;
 
 class SaleController extends Controller
 {
-    public function index(Request $request)
+    public function index_old(Request $request)
     {
         $role = Role::find(Auth::user()->role_id);
         if ($role->hasPermissionTo('sales-index')) {
@@ -92,7 +92,7 @@ class SaleController extends Controller
     }
 
     // new index
-    public function index_2(Request $request)
+    public function index(Request $request)
     {
         $role = Role::find(Auth::user()->role_id);
 
@@ -100,7 +100,15 @@ class SaleController extends Controller
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
         }
 
-        return view('sale.index2');
+        if ($request->input('starting_date')) {
+            $starting_date = $request->input('starting_date');
+            $ending_date = $request->input('ending_date');
+        } else {
+            $starting_date = date("Y-m-d", strtotime(date('Y-m-d', strtotime('-1 year', strtotime(date('Y-m-d'))))));
+            $ending_date = date("Y-m-d");
+        }
+
+        return view('sale.indexNew', compact('starting_date', 'ending_date'));
     }
 
     // search_products
@@ -351,8 +359,18 @@ class SaleController extends Controller
     public function saleDataNew(Request $request)
     {
         $model = Sale::query()
-            ->select('sales.*')
-            ->with('biller', 'customer', 'warehouse', 'user');
+        ->select('sales.*')
+        ->when($request->filled('warehouse_id'), function ($query) use ($request) {
+            return $query->where('warehouse_id', $request->input('warehouse_id'));
+        })
+        ->when($request->filled('starting_date'), function ($query) use ($request) {
+            return $query->whereDate('sales.created_at', '>=', $request->input('starting_date'));
+        })
+        ->when($request->filled('ending_date'), function ($query) use ($request) {
+            return $query->whereDate('sales.created_at', '<=', $request->input('ending_date'));
+        })
+        ->with('biller', 'customer', 'warehouse', 'user');
+
     
         // get permissions
         $permissions = PermissionHelpers::checkMenuPermission(['sales-edit', 'sales-delete']);

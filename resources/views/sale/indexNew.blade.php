@@ -21,9 +21,10 @@
                         <label class="d-tc mt-2"><strong>{{trans('file.Choose Your Date')}}</strong> &nbsp;</label>
                         <div class="d-tc">
                             <div class="input-group">
-                                <input type="text" class="daterangepicker-field form-control" value=" To " required />
-                                <input type="hidden" name="starting_date" value="" />
-                                <input type="hidden" name="ending_date" value="" />
+                                <input type="text" class="daterangepicker-field form-control"
+                                    value="{{$starting_date}} To {{$ending_date}}" required />
+                                <input type="hidden" name="starting_date" value="{{$starting_date}}" />
+                                <input type="hidden" name="ending_date" value="{{$ending_date}}" />
                             </div>
                         </div>
                     </div>
@@ -34,26 +35,19 @@
                         <div class="d-tc">
                             <select id="warehouse_id" name="warehouse_id" class="selectpicker form-control"
                                 data-live-search="true" data-live-search-style="begins">
-                                <option value="0">{{trans('file.All Warehouse')}}</option>
+                                <option value="">{{trans('file.All Warehouse')}}</option>
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-2 mt-3">
                     <div class="form-group">
-                        <button class="btn btn-primary" id="filter-btn" type="submit">{{trans('file.submit')}}</button>
+                        <button class="btn btn-primary" id="filter-btn" type="button">{{trans('file.submit')}}</button>
                     </div>
                 </div>
             </div>
             {!! Form::close() !!}
         </div>
-        {{-- @php $permit_sales_add = \App\Helpers\PermissionHelpers::checkMenuPermission(["sales-add"]);@endphp
-        @if(count($permit_sales_add)>0)
-        <a href="{{route('sales.create')}}" class="btn btn-info"><i class="dripicons-plus"></i>
-            {{trans('file.AddSale')}}</a>&nbsp;
-        <a href="{{url('sales/sale_by_csv')}}" class="btn btn-primary"><i class="dripicons-copy"></i>
-            {{trans('file.Import Sale')}}</a>
-        @endif --}}
     </div>
     <div class="table-responsive">
         <table id="sale-table" class="table sale-list" style="width: 100%">
@@ -91,6 +85,7 @@
 @include('partials.sale.modal_sale_detail')
 @include('partials.sale.modal_sale_view_payment')
 @include('partials.sale.modal_sale_add_payment')
+@include('partials.sale.modal_sale_add_delivery')
 {{--
 @include('partials.sale.modal_sale_add_delivery') --}}
 
