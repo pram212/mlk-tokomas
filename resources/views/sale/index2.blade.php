@@ -90,8 +90,8 @@
 
 @include('partials.sale.modal_sale_detail')
 @include('partials.sale.modal_sale_view_payment')
-{{-- @include('partials.sale.modal_sale_add_payment')
-@include('partials.sale.modal_sale_edit_payment')
+@include('partials.sale.modal_sale_add_payment')
+{{--
 @include('partials.sale.modal_sale_add_delivery') --}}
 
 <script src="{{ asset('public/js/axios.min.js') }}"></script>

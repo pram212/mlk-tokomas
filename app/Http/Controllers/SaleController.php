@@ -516,6 +516,49 @@ class SaleController extends Controller
         return ResponseHelpers::formatResponse('success', $payments, 200);
     }
     
+    // get gift card list
+    // [GET] /sales/gift-card
+    public function giftCard(){
+        try {
+            $lims_gift_card_list = GiftCard::where("is_active", true)->get();
+            return ResponseHelpers::formatResponse('success', $lims_gift_card_list, 200);
+        } catch (\Exception $e) {
+            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500,false);
+        }
+    }
+
+    // get pos setting
+    // [GET] /sales/pos-setting
+    public function posSetting(){
+        try {
+            $lims_pos_setting_data = PosSetting::latest()->first();
+            return ResponseHelpers::formatResponse('success', $lims_pos_setting_data, 200);
+        } catch (\Exception $e) {
+            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500,false);
+        }
+    }
+
+    // get warehouse list
+    // [GET] /sales/warehouse
+    public function warehouseList(){
+        try {
+            $lims_warehouse_list = Warehouse::where('is_active', true)->get();
+            return ResponseHelpers::formatResponse('success', $lims_warehouse_list, 200);
+        } catch (\Exception $e) {
+            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500,false);
+        }
+    }
+
+    // get account list
+    // [GET] /sales/account
+    public function accountList(){
+        try {
+            $lims_account_list = Account::where('is_active', true)->get();
+            return ResponseHelpers::formatResponse('success', $lims_account_list, 200);
+        } catch (\Exception $e) {
+            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500,false);
+        }
+    }
 
 
     public function create()

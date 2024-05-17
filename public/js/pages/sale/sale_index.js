@@ -14,6 +14,8 @@ const sale_footer = $("#sale-footer");
 const sale_details = $("#sale-details");
 const print_btn = $("#print-btn");
 
+const modal_add_payment = $("#add-payment");
+
 // datatable
 saleTable = $("#sale-table").DataTable({
     processing: true,
@@ -100,6 +102,119 @@ $(document).on("click", ".view", function () {
     // Get the record's ID via attribute
     var sale_id = $(this).attr("data-id");
     saleDetails(sale_id);
+});
+
+$(document).on("click", "table.sale-list tbody .add-payment", function () {
+    const id = $(this).data("id");
+
+    // set sale id to form
+    $("#add-payment input[name='sale_id']").val(id);
+
+    // get gift card list
+    getGiftList().then((response) => {
+        const status = response.status;
+        const data = response.data;
+        const message = response.message;
+
+        if (!status) {
+            return;
+        }
+        let gift_card_id = $("#add-payment select[name='gift_card_id']");
+
+        gift_card_id.html("");
+
+        data.forEach((gift_card) => {
+            gift_card_id.append(
+                `<option value="${gift_card.id}">${gift_card.card_no}</option>`
+            );
+        });
+
+        // refresh selectpicker
+        gift_card_id.selectpicker("refresh");
+    });
+
+    // get account list
+    getAccount().then((response) => {
+        const status = response.status;
+        const data = response.data;
+        const message = response.message;
+
+        if (!status) {
+            return;
+        }
+
+        let account_id = $("#add-payment select[name='account_id']");
+
+        account_id.html("");
+
+        data.forEach((account) => {
+            account_id.append(
+                `<option value="${account.id}">${account.name} [${account.account_no}]</option>`
+            );
+        });
+
+        // refresh selectpicker
+        account_id.selectpicker("refresh");
+    });
+
+    // show modal add payment
+    modal_add_payment.modal("show");
+});
+
+$('select[name="paid_by_id"]').on("change", function () {
+    var id = $(this).val();
+    $('input[name="cheque_no"]').attr("required", false);
+    $('#add-payment select[name="gift_card_id"]').attr("required", false);
+    $(".payment-form").off("submit");
+    if (id == 2) {
+        $(".gift-card").show();
+        $(".card-element").hide();
+        $("#cheque").hide();
+        $('#add-payment select[name="gift_card_id"]').attr("required", true);
+    } else if (id == 3) {
+        $.getScript("public/vendor/stripe/checkout.js");
+        $(".card-element").show();
+        $(".gift-card").hide();
+        $("#cheque").hide();
+    } else if (id == 4) {
+        $("#cheque").show();
+        $(".gift-card").hide();
+        $(".card-element").hide();
+        $('input[name="cheque_no"]').attr("required", true);
+    } else if (id == 5) {
+        $(".card-element").hide();
+        $(".gift-card").hide();
+        $("#cheque").hide();
+    } else {
+        $(".card-element").hide();
+        $(".gift-card").hide();
+        $("#cheque").hide();
+        if (id == 6) {
+            if (
+                parseInt(
+                    $('#add-payment input[name="amount"]')
+                        .val()
+                        .replaceAll(".", "") == ""
+                        ? 0
+                        : $('#add-payment input[name="amount"]')
+                              .val()
+                              .replaceAll(".", "")
+                ) > parseInt(deposit)
+            )
+                alert(
+                    "Amount exceeds customer deposit! Customer deposit : " +
+                        deposit
+                );
+        }
+    }
+});
+
+$('#add-payment select[name="gift_card_id"]').on("change", function () {
+    var id = $(this).val();
+    if (expired_date[id] < current_date) alert("This card is expired!");
+    else if ($('#add-payment input[name="amount"]').val() > balance[id]) {
+        alert("Amount exceeds card balance! Gift Card balance: " + balance[id]);
+    }
 });
 
 // Print button action
@@ -306,4 +421,32 @@ function saleDetails(sale_id) {
         .catch((error) => {
             console.error(error);
         });
+}
+
+// axios get request [GET] sales/gift-card and return the response
+function getGiftList() {
+    return axios.get(baseUrl + "/sales/gift-card").then((response) => {
+        return response.data;
+    });
+}
+
+// axios get request [GET] pos-setting and return the response
+function getPosSetting() {
+    return axios.get(baseUrl + "/pos-setting").then((response) => {
+        return response.data;
+    });
+}
+
+// axios get request [GET] warehouse and return the response
+function getWarehouse() {
+    return axios.get(baseUrl + "/warehouse").then((response) => {
+        return response.data;
+    });
+}
+
+// axios get request [GET] account and return the response
+function getAccount() {
+    return axios.get(baseUrl + "/sales/account").then((response) => {
+        return response.data;
+    });
 }

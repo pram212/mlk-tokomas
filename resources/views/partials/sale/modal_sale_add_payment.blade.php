@@ -41,17 +41,7 @@
           <label> {{trans('file.Gift Card')}} *</label>
           <select id="gift_card_id" name="gift_card_id" class="selectpicker form-control" data-live-search="true"
             data-live-search-style="begins" title="Select Gift Card...">
-            @php
-            $balance = [];
-            $expired_date = [];
-            @endphp
-            @foreach($lims_gift_card_list as $gift_card)
-            <?php 
-                                $balance[$gift_card->id] = $gift_card->amount - $gift_card->expense;
-                                $expired_date[$gift_card->id] = $gift_card->expired_date;
-                            ?>
-            <option value="{{$gift_card->id}}">{{$gift_card->card_no}}</option>
-            @endforeach
+            <option value=""></option>
           </select>
         </div>
         <div class="form-group mt-2">
@@ -68,13 +58,7 @@
         <div class="form-group">
           <label> {{trans('file.Account')}}</label>
           <select class="form-control selectpicker" name="account_id">
-            @foreach($lims_account_list as $account)
-            @if($account->is_default)
-            <option selected value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
-            @else
-            <option value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
-            @endif
-            @endforeach
+            <option value=""></option>
           </select>
         </div>
         <div class="form-group">
