@@ -171,6 +171,8 @@ var category_table = $("#category-table").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_category, // Ubah judul di sini
+            filename: lang_category, // Ubah nama file di sini
             footer: true,
         },
         {
@@ -180,6 +182,8 @@ var category_table = $("#category-table").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_category, // Ubah judul di sini
+            filename: lang_category, // Ubah nama file di sini
             footer: true,
         },
         {
@@ -189,6 +193,8 @@ var category_table = $("#category-table").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_category, // Ubah judul di sini
+
             footer: true,
         },
         {

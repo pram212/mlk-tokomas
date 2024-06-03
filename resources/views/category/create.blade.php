@@ -154,6 +154,7 @@
     const lang_print = '{{ trans('file.Print') }}';
     const lang_delete = '{{ trans('file.delete') }}';
     const lang_visibility = '{{ trans('file.Column visibility') }}';
+    const lang_category = '{{ trans('file.Product Category') }}';
     // const lang_trash = '{{ trans('file.Trash') }}';
 
     // const btn_trash = $("#btn_trash");
