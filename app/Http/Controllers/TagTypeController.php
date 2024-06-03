@@ -101,7 +101,7 @@ class TagTypeController extends Controller
 
             DB::commit();
     
-            return back()->with('create_message', __('file.Data updated successfully'));
+            return redirect('product-categories/tagtype')->with('create_message', __('file.Data updated successfully'));
 
         } catch (\Exception $exception) {
 
