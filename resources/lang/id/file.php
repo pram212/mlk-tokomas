@@ -647,6 +647,7 @@ return [
 	"AddSale" => "Tambah Penjualan",
 	"No" => "No",
 	"Cashier" => "Kasir",
+	"Product property is used in a product" => "Sifat Barang telah digunakan oleh suatu produk",
 ];
 
 ?>

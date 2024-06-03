@@ -174,11 +174,17 @@ $("#productproperty-datatable tbody").on(
                     throw new Error(response.data.message);
                 }
 
-                Swal.fire("Terhapus!", response.data.message, "success");
-                productPropertyTable.ajax.reload();
+                if (response.data.status_code !== 200) {
+                    Swal.fire("Gagal!", response.data.message, "error");
+                    return;
+                }
+
+                if (response.data.status_code == 200) {
+                    Swal.fire("Terhapus!", response.data.message, "success");
+                    productPropertyTable.ajax.reload();
+                }
             } catch (error) {
-                const errorMessage = error.response.data;
-                Swal.fire("Gagal!", errorMessage, "error");
+                Swal.fire("Gagal!", error, "error");
             }
         }
     }
