@@ -54,10 +54,7 @@ $(document).on("click", ".open-EditCategoryDialog", function () {
         $("#edit-category").val(data.category).trigger("change");
         $("#edit-sub_category").val(data.sub_category);
         $(".selectpicker").selectpicker("refresh");
-        $("#form-edit").attr(
-            "action",
-            "{!! url('category') !!}" + "/" + data.id
-        );
+        $("#form-edit").attr("action", baseUrl + "/category" + "/" + data.id);
     });
 });
 
