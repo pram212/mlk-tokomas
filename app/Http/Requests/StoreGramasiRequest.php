@@ -44,6 +44,8 @@ class StoreGramasiRequest extends FormRequest
             $isGramasiExist = Gramasi::
                     where('categories_id', $this->categories_id)
                     ->where('product_type_id', $this->product_type_id)
+                    ->where('gramasi', $this->gramasi)
+                    ->where('code', $this->code)
                     ->first();
 
             if ($isGramasiExist) {

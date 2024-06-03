@@ -1,4 +1,5 @@
 @extends('layout.main')
+@section('title', trans('file.Price'))
 @section('content')
 <section>
     <div class="container-fluid">

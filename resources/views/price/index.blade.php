@@ -1,4 +1,6 @@
-@extends('layout.main') @section('content')
+@extends('layout.main')
+@section('title', trans('file.Price'))
+@section('content')
 <section>
     <div class="container-fluid">
         <h3>{{ trans('file.Gold Price') }} - {{ date('d M Y') }}</h3>
@@ -40,6 +42,7 @@
     const lang_print = '{{ trans('file.Print') }}';
     const lang_delete = '{{ trans('file.delete') }}';
     const lang_visibility = '{{ trans('file.Column visibility') }}';
+    const lang_price = '{{ trans('file.price') }}';
 </script>
 <script src="{{ asset('public/js/pages/price/price_index.js') }}"></script>
 @endsection
