@@ -111,6 +111,7 @@
 <script>
     let product_type_id = $('#product_type_id');
     let button_product_type_id = $('button[data-id="product_type_id"]');
+    let old_product_type_id = '{{ old('product_type_id', @$gramasi->product_type_id) }}';
         
     $('#categories_id').change(function() {
         let categories_id = $(this).val();
@@ -170,7 +171,17 @@
 
     // if add mode, set the value of product_type_id
     @if (!@$gramasi)
-    
+    let categories_id = '{{ old('categories_id') }}';
+
+    // trigger change to set the value
+    $('#categories_id').trigger('change');
+
+    // set #product_type_id selected value
+    // wait for #product_type_id to be enabled
+    setTimeout(() => {
+        $('#product_type_id').val(old_product_type_id);
+    $('#product_type_id').trigger('change');
+    }, 1000);
     @endif
     });
     
