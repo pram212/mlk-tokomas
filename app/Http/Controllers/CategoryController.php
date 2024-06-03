@@ -18,7 +18,6 @@ class CategoryController extends Controller
         $lims_categories = Category::where('is_active', true)->pluck('name', 'id');
         $lims_category_all = Category::where('is_active', true)->get();
         return view('category.create',compact('lims_categories', 'lims_category_all'));
-
     }
 
     public function categoryDatatable(Request $request)

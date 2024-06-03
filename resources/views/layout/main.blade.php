@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $general_setting->site_title }}</title>
+    <title>@yield('title'){{ trim($__env->yieldContent('title')) ? ' - ' : '' }}{{ $general_setting->site_title }}
+    </title>
 
     <link rel="icon" href="{{ asset($general_setting->site_logo) }}" />
     <link rel="manifest" href="{{ url('manifest.json') }}">

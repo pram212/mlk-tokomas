@@ -153,6 +153,8 @@ tagTypeTable = $("#tagtype-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_tagtype,
+            filename: lang_tagtype,
             footer: true,
         },
         {
@@ -162,6 +164,8 @@ tagTypeTable = $("#tagtype-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_tagtype,
+            filename: lang_tagtype,
             footer: true,
         },
         {
@@ -171,6 +175,8 @@ tagTypeTable = $("#tagtype-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_tagtype,
+            filename: lang_tagtype,
             footer: true,
         },
         {
