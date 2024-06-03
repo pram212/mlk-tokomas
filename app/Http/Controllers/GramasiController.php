@@ -57,17 +57,18 @@ class GramasiController extends Controller
     public function create()
     {
         $category = Category::where('is_active', true)->get();
-
-        return view('gramasi.form', compact('category'));
+        $subTitle = __('file.Add Gramasi');
+        return view('gramasi.form', compact('category','subTitle'));
     }
 
     public function edit($id)
     {
         $gramasi = Gramasi::findOrFail($id)->load('productType');
-
+        $category = Category::where('is_active', true)->get();
+        $subTitle = __('file.Edit Gramasi');
         $productType = ProductType::select('id', 'code', 'description')->get();
 
-        return view('gramasi.form', compact('gramasi', 'productType'));
+        return view('gramasi.form', compact('gramasi', 'productType','category','subTitle'));
     }
 
     public function store(StoreGramasiRequest $request)

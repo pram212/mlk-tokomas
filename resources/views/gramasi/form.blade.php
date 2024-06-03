@@ -23,7 +23,7 @@
     <div class="container">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h4>{{ __('file.Add Gramasi') }}</h4>
+                <h4>{{$subTitle }}</h4>
             </div>
 
             <div class="card-body">
@@ -109,10 +109,16 @@
 </section>
 
 <script>
+    let product_type_id = $('#product_type_id');
+    let button_product_type_id = $('button[data-id="product_type_id"]');
+        
     $('#categories_id').change(function() {
         let categories_id = $(this).val();
-        let product_type_id = $('#product_type_id');
-        let button_product_type_id = $('button[data-id="product_type_id"]');
+       
+        getProductType(categories_id);
+    });
+
+    function getProductType(categories_id) {
         $.ajax({
             type: "GET",
             url: "{{ url('product-categories/producttype-getByCategory/') }}/" + categories_id,
@@ -133,15 +139,43 @@
                 $('.selectpicker').selectpicker('refresh');
             }
         });
-    });
-
-        
+    }
 
     $('#product_type_id').change(function() {
             var selectedText = $(this).find('option:selected').text();
             var code = selectedText.split('-')[0];
             $("#product_code").val(code);
         });
+    
+
+    // on load
+    $(document).ready(function() {
+        // if edit mode
+    @if (@$gramasi)
+    let categories_id = '{{ @$gramasi->categories_id }}';
+    let product_type_id = '{{ @$gramasi->product_type_id }}';
+
+    // // trigger change to set the value
+    $('#categories_id').trigger('change');
+
+    // set #product_type_id selected value
+    // wait for #product_type_id to be enabled
+    setTimeout(() => {
+        $('#product_type_id').val(product_type_id);
+    $('#product_type_id').trigger('change');
+    }, 1000);
+
+    // trigger change to set the value
+    @endif
+
+    // if add mode, set the value of product_type_id
+    @if (!@$gramasi)
+    
+    @endif
+    });
+    
+    
+    
 </script>
 
 @endsection

@@ -605,6 +605,7 @@ return [
 	"Product Type Code" => "Product Type Code",
 	"Product Property Code" => "Product Property Code",
 	"Add Gramasi" => "Add Gramasi",
+	"Edit Gramasi" => "Edit Gramasi",
 	"Freetext" => "Freetext",
 	"Product Gramasi Type Code" => "Product Gramasi Type Code",
 
