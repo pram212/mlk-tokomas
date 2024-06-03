@@ -21,7 +21,8 @@
         <!-- Trigger the modal with a button -->
         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createModal"><i
                 class="dripicons-plus"></i> {{ trans('file.Add Category') }}</button>
-        <button class="btn btn-primary" data-toggle="modal" data-target="#importCategory"><i class="dripicons-copy"></i>
+        <button class="btn btn-primary d-none" data-toggle="modal" data-target="#importCategory"><i
+                class="dripicons-copy"></i>
             {{ trans('file.Import Category') }}</button>
         {{-- trash button --}}
         {{-- <button id="btn_trash" class="btn btn-danger"><i class='dripicons-trash'></i> <span></span></button>
