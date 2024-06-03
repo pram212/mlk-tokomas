@@ -181,14 +181,13 @@ class PriceController extends Controller
 
 
             DB::commit();
-    
-            return redirect('master/price')->with('create_message', __('file.Data updated successfully'));
+            return redirect('master/price')->with(['type' => 'alert-success', 'message' => __('file.Data saved successfully')]);
 
         } catch (\Exception $exception) {
 
             DB::rollBack();
 
-            return back()->with('message', $exception->getMessage());
+            return back()->with(['type' => 'alert-danger', 'message', $exception->getMessage()]);
         }
         
     }
