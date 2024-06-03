@@ -135,6 +135,8 @@ priceTable = $("#price-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_price,
+            filename: lang_price,
             footer: true,
         },
         {
@@ -144,6 +146,8 @@ priceTable = $("#price-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_price,
+            filename: lang_price,
             footer: true,
         },
         {
@@ -153,6 +157,8 @@ priceTable = $("#price-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_price,
+            filename: lang_price,
             footer: true,
         },
         {
