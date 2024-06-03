@@ -605,6 +605,7 @@ return [
 	"Product Type Code" => "Kode Jenis Produk",
 	"Product Property Code" => "Kode Sifat Barang",
 	"Add Gramasi" => "Tambah Gramasi",
+	"Edit Gramasi" => "Ubah Gramasi",
 	"Freetext" => "Freetext",
 	"Product Gramasi Type Code" => "Kode Jenis Gramasi Produk",
 	"The data was successfully deleted and those related to GRAMASI were not deleted" => "Data berhasil dihapus dan yang berhubungan dengan gramasi tidak terhapus",
@@ -646,6 +647,7 @@ return [
 	"AddSale" => "Tambah Penjualan",
 	"No" => "No",
 	"Cashier" => "Kasir",
+	"Product property is used in a product" => "Sifat Barang telah digunakan oleh suatu produk",
 ];
 
 ?>

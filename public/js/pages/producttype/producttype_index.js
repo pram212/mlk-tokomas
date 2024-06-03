@@ -132,6 +132,8 @@ productTypeTable = $("#producttype-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_product_type,
+            filename: lang_product_type,
             footer: true,
         },
         {
@@ -141,6 +143,8 @@ productTypeTable = $("#producttype-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_product_type,
+            filename: lang_product_type,
             footer: true,
         },
         {
@@ -150,6 +154,8 @@ productTypeTable = $("#producttype-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_product_type,
+            filename: lang_product_type,
             footer: true,
         },
         {

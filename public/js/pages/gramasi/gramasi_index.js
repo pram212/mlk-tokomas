@@ -125,6 +125,8 @@ gramasiTable = $("#gramasi-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_gramasi,
+            filename: lang_gramasi,
             footer: true,
         },
         {
@@ -134,6 +136,8 @@ gramasiTable = $("#gramasi-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_gramasi,
+            filename: lang_gramasi,
             footer: true,
         },
         {
@@ -143,6 +147,8 @@ gramasiTable = $("#gramasi-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_gramasi,
+            filename: lang_gramasi,
             footer: true,
         },
         {

@@ -54,10 +54,7 @@ $(document).on("click", ".open-EditCategoryDialog", function () {
         $("#edit-category").val(data.category).trigger("change");
         $("#edit-sub_category").val(data.sub_category);
         $(".selectpicker").selectpicker("refresh");
-        $("#form-edit").attr(
-            "action",
-            "{!! url('category') !!}" + "/" + data.id
-        );
+        $("#form-edit").attr("action", baseUrl + "/category" + "/" + data.id);
     });
 });
 
@@ -171,6 +168,8 @@ var category_table = $("#category-table").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_category, // Ubah judul di sini
+            filename: lang_category, // Ubah nama file di sini
             footer: true,
         },
         {
@@ -180,6 +179,8 @@ var category_table = $("#category-table").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_category, // Ubah judul di sini
+            filename: lang_category, // Ubah nama file di sini
             footer: true,
         },
         {
@@ -189,6 +190,8 @@ var category_table = $("#category-table").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_category, // Ubah judul di sini
+
             footer: true,
         },
         {

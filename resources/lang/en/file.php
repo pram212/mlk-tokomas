@@ -605,6 +605,7 @@ return [
 	"Product Type Code" => "Product Type Code",
 	"Product Property Code" => "Product Property Code",
 	"Add Gramasi" => "Add Gramasi",
+	"Edit Gramasi" => "Edit Gramasi",
 	"Freetext" => "Freetext",
 	"Product Gramasi Type Code" => "Product Gramasi Type Code",
 
@@ -647,5 +648,6 @@ return [
 	"AddSale" => "Add Sale",
 	"No" => "No",
 	"Cashier" => "Cashier",
+	"Product property is used in a product" => "Product property is used in a product",
 ];
 ?>

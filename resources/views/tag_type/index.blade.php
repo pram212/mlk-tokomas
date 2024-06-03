@@ -1,4 +1,5 @@
-@extends('layout.main') @section('content')
+@extends('layout.main') @section('title', trans('file.Tagging Type'))
+@section('content')
 @if (session()->has('create_message'))
 <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
         aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('create_message') }}</div>
@@ -55,6 +56,7 @@
     const lang_print = '{{ trans('file.Print') }}';
     const lang_delete = '{{ trans('file.delete') }}';
     const lang_visibility = '{{ trans('file.Column visibility') }}';
+    const lang_tagtype = '{{ trans('file.Tagging Type') }}';
 </script>
 
 <script src="{{ asset('public/js/pages/tagtype/tagtype_index.js') }}"></script>

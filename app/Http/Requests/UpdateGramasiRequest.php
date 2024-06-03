@@ -41,7 +41,7 @@ class UpdateGramasiRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $id = $this->route("Gramasi");
+            $id = $this->route('gramasi'); // get the id from the route
             $isGramasiExist = Gramasi::where('categories_id', $this->categories_id)
                     ->where('product_type_id', $this->product_type_id)
                     ->where('id', '!=', $id)

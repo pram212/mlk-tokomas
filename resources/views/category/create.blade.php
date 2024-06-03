@@ -1,4 +1,6 @@
-@extends('layout.main') @section('content')
+@extends('layout.main')
+@section('title', trans('file.Product Category'))
+@section('content')
 @if ($errors->has('name'))
 <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
         aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ $errors->first('name') }}</div>
@@ -21,7 +23,8 @@
         <!-- Trigger the modal with a button -->
         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createModal"><i
                 class="dripicons-plus"></i> {{ trans('file.Add Category') }}</button>
-        <button class="btn btn-primary" data-toggle="modal" data-target="#importCategory"><i class="dripicons-copy"></i>
+        <button class="btn btn-primary d-none" data-toggle="modal" data-target="#importCategory"><i
+                class="dripicons-copy"></i>
             {{ trans('file.Import Category') }}</button>
         {{-- trash button --}}
         {{-- <button id="btn_trash" class="btn btn-danger"><i class='dripicons-trash'></i> <span></span></button>
@@ -153,6 +156,7 @@
     const lang_print = '{{ trans('file.Print') }}';
     const lang_delete = '{{ trans('file.delete') }}';
     const lang_visibility = '{{ trans('file.Column visibility') }}';
+    const lang_category = '{{ trans('file.Product Category') }}';
     // const lang_trash = '{{ trans('file.Trash') }}';
 
     // const btn_trash = $("#btn_trash");

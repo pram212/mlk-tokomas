@@ -1,4 +1,6 @@
-@extends('layout.main') @section('content')
+@extends('layout.main')
+@section('title', trans('file.Product Type'))
+@section('content')
 @if (session()->has('create_message'))
 <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
         aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('create_message') }}</div>
@@ -55,6 +57,7 @@
     const lang_print = '{{ trans('file.Print') }}';
     const lang_delete = '{{ trans('file.delete') }}';
     const lang_visibility = '{{ trans('file.Column visibility') }}';
+    const lang_product_type = '{{ trans('file.Product Type') }}';
 </script>
 <script src="{{ asset('public/js/pages/producttype/producttype_index.js') }}"></script>
 @endsection
