@@ -121,6 +121,8 @@ productPropertyTable = $("#productproperty-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_product_property,
+            filename: lang_product_property,
             footer: true,
         },
         {
@@ -130,6 +132,8 @@ productPropertyTable = $("#productproperty-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_product_property,
+            filename: lang_product_property,
             footer: true,
         },
         {
@@ -139,6 +143,8 @@ productPropertyTable = $("#productproperty-datatable").DataTable({
                 columns: ":visible:Not(.not-exported)",
                 rows: ":visible",
             },
+            title: lang_product_property,
+            filename: lang_product_property,
             footer: true,
         },
         {
