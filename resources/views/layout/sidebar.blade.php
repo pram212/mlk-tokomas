@@ -244,9 +244,11 @@
                     @php
                     $requestIsOnTransferMenu = request()->is('transfers*') ? 'true' : 'false';
                     @endphp
+                    @can('viewAny', App\Transfer::class)
                     <a href="#transfer" aria-expanded="{{ $requestIsOnTransferMenu }}" data-toggle="collapse">
                         <i class="dripicons-export"></i><span>{{ trans('file.Transfer') }}</span>
                     </a>
+                    @endcan
                     <ul id="transfer"
                         class="collapse list-unstyled @if ($requestIsOnTransferMenu === 'true') show @endif">
 
@@ -273,9 +275,11 @@
                     @php
                     $requestIsOnReturnMenu = request()->is('return*') ? 'true' : 'false';
                     @endphp
+                    @can('return', App\Sale::class)
                     <a href="#return" aria-expanded="{{ $requestIsOnReturnMenu }}" data-toggle="collapse">
                         <i class="dripicons-return"></i><span>{{ trans('file.return') }}</span>
                     </a>
+                    @endcan
                     <ul id="return" class="collapse list-unstyled @if ($requestIsOnReturnMenu === 'true') show @endif">
 
                         @can('return', App\Sale::class)
@@ -299,9 +303,11 @@
                     ? 'true'
                     : 'false';
                     @endphp
+                    @can('viewAny', App\Account::class)
                     <a href="#account" aria-expanded="{{ $requestIsOnAccountingMenu }}" data-toggle="collapse">
                         <i class="dripicons-briefcase"></i><span>{{ trans('file.Accounting') }}</span>
                     </a>
+                    @endcan
                     <ul id="account"
                         class="collapse list-unstyled @if ($requestIsOnAccountingMenu === 'true') show @endif">
 
@@ -347,9 +353,11 @@
                     ? 'true'
                     : 'false';
                     @endphp
+                    @can('viewany', App\Department::class)
                     <a href="#hrm" aria-expanded="{{ $requestIsOnHRMMenu }}" data-toggle="collapse">
                         <i class="dripicons-user-group"></i><span>HRM</span>
                     </a>
+                    @endcan
                     <ul id="hrm" class="collapse list-unstyled @if ($requestIsOnHRMMenu === 'true') show @endif">
                         @can('viewany', App\Department::class)
                         <li id="dept-menu" class="@if (request()->is('departments*')) active @endif">
