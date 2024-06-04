@@ -47,7 +47,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 d-none">
                                         <div class="form-group">
                                             <input type="text" id="reference-no" name="reference_no"
                                                 class="form-control" placeholder="Type reference number"
@@ -255,10 +255,10 @@
                                 data-toggle="modal" data-target="#add-payment" id="paypal-btn"><i
                                     class="fa fa-paypal"></i> Paypal</button>
                         </div> --}}
-                        <div class="column-5">
+                        {{-- <div class="column-5">
                             <button style="background-color: #e28d02" type="button" class="btn btn-custom"
                                 id="draft-btn"><i class="dripicons-flag"></i> Draft</button>
-                        </div>
+                        </div> --}}
                         {{-- <div class="column-5">
                             <button style="background-color: #fd7272" type="button" class="btn btn-custom payment-btn"
                                 data-toggle="modal" data-target="#add-payment" id="cheque-btn"><i
@@ -269,11 +269,11 @@
                                 data-toggle="modal" data-target="#add-payment" id="gift-card-btn"><i
                                     class="fa fa-credit-card-alt"></i> GiftCard</button>
                         </div> --}}
-                        <div class="column-5">
+                        {{-- <div class="column-5">
                             <button style="background-color: #b33771" type="button" class="btn btn-custom payment-btn"
                                 data-toggle="modal" data-target="#add-payment" id="deposit-btn"><i
                                     class="fa fa-university"></i> Deposit</button>
-                        </div>
+                        </div> --}}
                         <div class="column-5">
                             <button style="background-color: #d63031;" type="button" class="btn btn-custom"
                                 id="cancel-btn" onclick="return confirmCancel()"><i class="fa fa-close"></i>
