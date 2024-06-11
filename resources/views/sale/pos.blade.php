@@ -1,17 +1,14 @@
 @extends('layout.top-head') @section('content')
 @if($errors->has('phone_number'))
 <div class="alert alert-danger alert-dismissible text-center">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-            aria-hidden="true">&times;</span></button>{{ $errors->first('phone_number') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ $errors->first('phone_number') }}
 </div>
 @endif
 @if(session()->has('message'))
-<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
-        aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div>
+<div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div>
 @endif
 @if(session()->has('not_permitted'))
-<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
-        aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
+<div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 <!-- Side Navbar -->
 @include('layout.sidebar')
@@ -49,9 +46,7 @@
                                 <div class="row">
                                     <div class="col-md-4 d-none">
                                         <div class="form-group">
-                                            <input type="text" id="reference-no" name="reference_no"
-                                                class="form-control" placeholder="Type reference number"
-                                                onkeyup='saveValue(this);' />
+                                            <input type="text" id="reference-no" name="reference_no" class="form-control" placeholder="Type reference number" onkeyup='saveValue(this);' />
                                         </div>
                                         @if($errors->has('reference_no'))
                                         <span>
@@ -62,12 +57,9 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             @if($lims_pos_setting_data)
-                                            <input type="hidden" name="warehouse_id_hidden"
-                                                value="{{$lims_pos_setting_data->warehouse_id}}">
+                                            <input type="hidden" name="warehouse_id_hidden" value="{{$lims_pos_setting_data->warehouse_id}}">
                                             @endif
-                                            <select required id="warehouse_id" name="warehouse_id"
-                                                class="selectpicker form-control" data-live-search="true"
-                                                data-live-search-style="begins" title="Select warehouse...">
+                                            <select required id="warehouse_id" name="warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select warehouse...">
                                                 @foreach($lims_warehouse_list as $warehouse)
                                                 <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
                                                 @endforeach
@@ -77,12 +69,9 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             @if($lims_pos_setting_data)
-                                            <input type="hidden" name="biller_id_hidden"
-                                                value="{{$lims_pos_setting_data->biller_id}}">
+                                            <input type="hidden" name="biller_id_hidden" value="{{$lims_pos_setting_data->biller_id}}">
                                             @endif
-                                            <select required id="biller_id" name="biller_id"
-                                                class="selectpicker form-control" data-live-search="true"
-                                                data-live-search-style="begins" title="Select Cashier...">
+                                            <select required id="biller_id" name="biller_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Cashier...">
                                                 @foreach($lims_cashier_list as $cashier)
                                                 <option value="{{$cashier->id}}">{{$cashier->name . ' (' .
                                                     $cashier->company_name . ')'}}</option>
@@ -93,15 +82,11 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             @if($lims_pos_setting_data)
-                                            <input type="hidden" name="customer_id_hidden"
-                                                value="{{$lims_pos_setting_data->customer_id}}">
+                                            <input type="hidden" name="customer_id_hidden" value="{{$lims_pos_setting_data->customer_id}}">
                                             @endif
                                             <div class="input-group pos">
                                                 @if($customer_active)
-                                                <select required name="customer_id" id="customer_id"
-                                                    class="selectpicker form-control" data-live-search="true"
-                                                    data-live-search-style="begins" title="Select customer..."
-                                                    style="width: 100px">
+                                                <select required name="customer_id" id="customer_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select customer..." style="width: 100px">
                                                     <?php $deposit = [] ?>
                                                     @foreach($lims_customer_list as $customer)
                                                     @php $deposit[$customer->id] = $customer->deposit -
@@ -110,13 +95,10 @@
                                                         $customer->phone_number . ')'}}</option>
                                                     @endforeach
                                                 </select>
-                                                <button type="button" class="btn btn-default btn-sm" data-toggle="modal"
-                                                    data-target="#addCustomer"><i class="dripicons-plus"></i></button>
+                                                <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#addCustomer"><i class="dripicons-plus"></i></button>
                                                 @else
                                                 <?php $deposit = [] ?>
-                                                <select required name="customer_id" id="customer_id"
-                                                    class="selectpicker form-control" data-live-search="true"
-                                                    data-live-search-style="begins" title="Select customer...">
+                                                <select required name="customer_id" id="customer_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select customer...">
                                                     @foreach($lims_customer_list as $customer)
                                                     @php $deposit[$customer->id] = $customer->deposit -
                                                     $customer->expense; @endphp
@@ -130,15 +112,13 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="search-box form-group">
-                                            <input type="text" name="product_code_name" id="lims_productcodeSearch"
-                                                placeholder="Search product by name/code" class="form-control" />
+                                            <input type="text" name="product_code_name" id="lims_productcodeSearch" placeholder="Search product by name/code" class="form-control" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="table-responsive transaction-list">
-                                        <table id="myTable"
-                                            class="table table-hover table-striped order-list table-fixed">
+                                        <table id="myTable" class="table table-hover table-striped order-list table-fixed">
                                             <thead>
                                                 <tr>
                                                     <th class="col-sm-4">{{trans('file.product')}}</th>
@@ -196,40 +176,22 @@
                                 <div class="col-12 totals" style="border-top: 2px solid #e4e6fc; padding-top: 10px;">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <span class="totals-title">{{trans('file.Items')}}</span><span
-                                                id="item">0</span>
+                                            <span class="totals-title">{{trans('file.Items')}}</span><span id="item">0</span>
                                         </div>
                                         <div class="col-sm-4">
-                                            <span class="totals-title">{{trans('file.Total')}}</span><span
-                                                id="subtotal">0</span>
+                                            <span class="totals-title">{{trans('file.Total')}}</span><span id="subtotal">0</span>
                                         </div>
                                         <div class="col-sm-4">
-                                            <span class="totals-title">{{trans('file.Discount')}} <button type="button"
-                                                    class="btn btn-link btn-sm" data-toggle="modal"
-                                                    data-target="#order-discount-modal"> <i
-                                                        class="dripicons-document-edit"></i></button></span><span
-                                                id="discount">0</span>
+                                            <span class="totals-title">{{trans('file.Discount')}} <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#order-discount-modal"> <i class="dripicons-document-edit"></i></button></span><span id="discount">0</span>
                                         </div>
                                         <div class="col-sm-4">
-                                            <span class="totals-title">{{trans('file.Coupon')}} <button type="button"
-                                                    class="btn btn-link btn-sm" data-toggle="modal"
-                                                    data-target="#coupon-modal"><i
-                                                        class="dripicons-document-edit"></i></button></span><span
-                                                id="coupon-text">0</span>
+                                            <span class="totals-title">{{trans('file.Coupon')}} <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#coupon-modal"><i class="dripicons-document-edit"></i></button></span><span id="coupon-text">0</span>
                                         </div>
                                         <div class="col-sm-4">
-                                            <span class="totals-title">{{trans('file.Tax')}} <button type="button"
-                                                    class="btn btn-link btn-sm" data-toggle="modal"
-                                                    data-target="#order-tax"><i
-                                                        class="dripicons-document-edit"></i></button></span><span
-                                                id="tax">0</span>
+                                            <span class="totals-title">{{trans('file.Tax')}} <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#order-tax"><i class="dripicons-document-edit"></i></button></span><span id="tax">0</span>
                                         </div>
                                         <div class="col-sm-4">
-                                            <span class="totals-title">{{trans('file.Shipping')}} <button type="button"
-                                                    class="btn btn-link btn-sm" data-toggle="modal"
-                                                    data-target="#shipping-cost-modal"><i
-                                                        class="dripicons-document-edit"></i></button></span><span
-                                                id="shipping-cost">0</span>
+                                            <span class="totals-title">{{trans('file.Shipping')}} <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#shipping-cost-modal"><i class="dripicons-document-edit"></i></button></span><span id="shipping-cost">0</span>
                                         </div>
                                     </div>
                                 </div>
@@ -246,8 +208,7 @@
                                     class="fa fa-credit-card"></i> Card</button>
                         </div> --}}
                         <div class="column-5">
-                            <button style="background: #00cec9" type="button" class="btn btn-custom payment-btn"
-                                data-toggle="modal" data-target="#add-payment" id="cash-btn"><i class="fa fa-money"></i>
+                            <button style="background: #00cec9" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="cash-btn"><i class="fa fa-money"></i>
                                 Cash</button>
                         </div>
                         {{-- <div class="column-5">
@@ -275,13 +236,11 @@
                                     class="fa fa-university"></i> Deposit</button>
                         </div> --}}
                         <div class="column-5">
-                            <button style="background-color: #d63031;" type="button" class="btn btn-custom"
-                                id="cancel-btn" onclick="return confirmCancel()"><i class="fa fa-close"></i>
+                            <button style="background-color: #d63031;" type="button" class="btn btn-custom" id="cancel-btn" onclick="return confirmCancel()"><i class="fa fa-close"></i>
                                 Cancel</button>
                         </div>
                         <div class="column-5">
-                            <button style="background-color: #ffc107;" type="button" class="btn btn-custom"
-                                data-toggle="modal" data-target="#recentTransaction"><i class="dripicons-clock"></i>
+                            <button style="background-color: #ffc107;" type="button" class="btn btn-custom" data-toggle="modal" data-target="#recentTransaction"><i class="dripicons-clock"></i>
                                 Recent transaction</button>
                         </div>
                     </div>
@@ -350,15 +309,13 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <button class="btn btn-block btn-primary"
-                            id="category-filter">{{trans('file.category')}}</button>
+                        <button class="btn btn-block btn-primary" id="category-filter">{{trans('file.category')}}</button>
                     </div>
                     <div class="col-md-4">
                         <button class="btn btn-block btn-info d-none" id="brand-filter">{{trans('file.Brand')}}</button>
                     </div>
                     <div class="col-md-4">
-                        <button class="btn btn-block btn-danger d-none"
-                            id="featured-filter">{{trans('file.Featured')}}</button>
+                        <button class="btn btn-block btn-danger d-none" id="featured-filter">{{trans('file.Featured')}}</button>
                     </div>
                     <div class="col-md-12 mt-1 table-container">
                         <table id="product-table" class="table no-shadow product-list">
@@ -373,18 +330,14 @@
                             </thead>
                             <tbody>
                                 @for ($i=0; $i < ceil($product_number/5); $i++) <tr>
-                                    <td class="product-img sound-btn" title="{{$lims_product_list[0+$i*5]->name}}"
-                                        data-product="{{$lims_product_list[0+$i*5]->code . ' (' . $lims_product_list[0+$i*5]->name . ')'}}">
-                                        <img src="{{url('public/images/product',$lims_product_list[0+$i*5]->base_image)}}"
-                                            width="100%" />
+                                    <td class="product-img sound-btn" title="{{$lims_product_list[0+$i*5]->name}}" data-product="{{$lims_product_list[0+$i*5]->code . ' (' . $lims_product_list[0+$i*5]->name . ')'}}">
+                                        <img src="{{url('public/images/product',$lims_product_list[0+$i*5]->base_image)}}" width="100%" />
                                         <p>{{$lims_product_list[0+$i*5]->name}}</p>
                                         <span>{{$lims_product_list[0+$i*5]->code}}</span>
                                     </td>
                                     @if(!empty($lims_product_list[1+$i*5]))
-                                    <td class="product-img sound-btn" title="{{$lims_product_list[1+$i*5]->name}}"
-                                        data-product="{{$lims_product_list[1+$i*5]->code . ' (' . $lims_product_list[1+$i*5]->name . ')'}}">
-                                        <img src="{{url('public/images/product',$lims_product_list[1+$i*5]->base_image)}}"
-                                            width="100%" />
+                                    <td class="product-img sound-btn" title="{{$lims_product_list[1+$i*5]->name}}" data-product="{{$lims_product_list[1+$i*5]->code . ' (' . $lims_product_list[1+$i*5]->name . ')'}}">
+                                        <img src="{{url('public/images/product',$lims_product_list[1+$i*5]->base_image)}}" width="100%" />
                                         <p>{{$lims_product_list[1+$i*5]->name}}</p>
                                         <span>{{$lims_product_list[1+$i*5]->code}}</span>
                                     </td>
@@ -392,10 +345,8 @@
                                     <td style="border:none;"></td>
                                     @endif
                                     @if(!empty($lims_product_list[2+$i*5]))
-                                    <td class="product-img sound-btn" title="{{$lims_product_list[2+$i*5]->name}}"
-                                        data-product="{{$lims_product_list[2+$i*5]->code . ' (' . $lims_product_list[2+$i*5]->name . ')'}}">
-                                        <img src="{{url('public/images/product',$lims_product_list[2+$i*5]->base_image)}}"
-                                            width="100%" />
+                                    <td class="product-img sound-btn" title="{{$lims_product_list[2+$i*5]->name}}" data-product="{{$lims_product_list[2+$i*5]->code . ' (' . $lims_product_list[2+$i*5]->name . ')'}}">
+                                        <img src="{{url('public/images/product',$lims_product_list[2+$i*5]->base_image)}}" width="100%" />
                                         <p>{{$lims_product_list[2+$i*5]->name}}</p>
                                         <span>{{$lims_product_list[2+$i*5]->code}}</span>
                                     </td>
@@ -403,10 +354,8 @@
                                     <td style="border:none;"></td>
                                     @endif
                                     @if(!empty($lims_product_list[3+$i*5]))
-                                    <td class="product-img sound-btn" title="{{$lims_product_list[3+$i*5]->name}}"
-                                        data-product="{{$lims_product_list[3+$i*5]->code . ' (' . $lims_product_list[3+$i*5]->name . ')'}}">
-                                        <img src="{{url('public/images/product',$lims_product_list[3+$i*5]->base_image)}}"
-                                            width="100%" />
+                                    <td class="product-img sound-btn" title="{{$lims_product_list[3+$i*5]->name}}" data-product="{{$lims_product_list[3+$i*5]->code . ' (' . $lims_product_list[3+$i*5]->name . ')'}}">
+                                        <img src="{{url('public/images/product',$lims_product_list[3+$i*5]->base_image)}}" width="100%" />
                                         <p>{{$lims_product_list[3+$i*5]->name}}</p>
                                         <span>{{$lims_product_list[3+$i*5]->code}}</span>
                                     </td>
@@ -414,10 +363,8 @@
                                     <td style="border:none;"></td>
                                     @endif
                                     @if(!empty($lims_product_list[4+$i*5]))
-                                    <td class="product-img sound-btn" title="{{$lims_product_list[4+$i*5]->name}}"
-                                        data-product="{{$lims_product_list[4+$i*5]->code . ' (' . $lims_product_list[4+$i*5]->name . ')'}}">
-                                        <img src="{{url('public/images/product',$lims_product_list[4+$i*5]->base_image)}}"
-                                            width="100%" />
+                                    <td class="product-img sound-btn" title="{{$lims_product_list[4+$i*5]->name}}" data-product="{{$lims_product_list[4+$i*5]->code . ' (' . $lims_product_list[4+$i*5]->name . ')'}}">
+                                        <img src="{{url('public/images/product',$lims_product_list[4+$i*5]->base_image)}}" width="100%" />
                                         <p>{{$lims_product_list[4+$i*5]->name}}</p>
                                         <span>{{$lims_product_list[4+$i*5]->code}}</span>
                                     </td>
