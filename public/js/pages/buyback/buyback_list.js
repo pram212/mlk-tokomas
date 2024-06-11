@@ -209,7 +209,6 @@ $(document).ready(function () {
                 additional_cost: $("#modal_additional_cost").val(),
                 final_price: $("#final_price").text(),
                 description: $("#modal_description").val(),
-                product_property_id: $("#modal_product_properties").val(),
             })
             .then((response) => {
                 // // show alert success
@@ -306,22 +305,10 @@ function filterCode(search = "") {
 
 function validation_buyback() {
     const modal_additional_cost = parseFloat($("#modal_additional_cost").val());
-    const modal_product_properties = $("#modal_product_properties").val();
 
     // if modal_additional_cost null then fill with 0
     if (!modal_additional_cost) {
         $("#modal_additional_cost").val(0);
     }
-
-    // if modal_product_properties null then show alert
-    if (!modal_product_properties) {
-        Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Product Properties is required",
-        });
-        return false;
-    }
-
     return true;
 }
