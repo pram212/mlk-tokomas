@@ -254,6 +254,8 @@ $(document).ready(function () {
             $("#modal_discount").val(parseFloat(response.data.discount));
             $("#product_id").val(response.data.id);
             $("#product_code").val(code);
+            $("#modal_additional_cost").val(0);
+            $("#modal_description").val("");
             // show modal buybackModal
             $("#buybackModal").modal("show");
         });

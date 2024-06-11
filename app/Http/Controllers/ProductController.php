@@ -79,30 +79,31 @@ class ProductController extends Controller
 
             if ($request->file('image')) {
                 $file = $request->file('image');
-                $imagePath = "storage/app/" . $file->storeAs('product_images', time().date('YmdHms').".".$file->extension());
-                
+                $imagePath = "storage/app/" . $file->storeAs('product_images', time() . date('YmdHms') . "." . $file->extension());
+
                 $request->merge(['image' => $imagePath]);
             } else {
                 // Jika tidak ada file gambar yang diunggah, pertahankan jalur gambar yang ada
                 $imagePath = $request->image;
             }
 
-            Product::create([
-                'tag_type_id' => $request->tag_type_id,
-                'code' => $request->code,
-                'gold_content' => $request->gold_content,
-                'additional_code' => $request->additional_code,
-                'category_id' => $request->category_id,
-                'product_type_id' => $request->product_type_id,
-                'price' => $request->price,
-                'discount' => $request->discount,
-                'gramasi_id' => $request->gramasi_id,
-                'mg' => $request->mg,
-                'product_property_id' => $request->product_property_id,
-                'image' => $imagePath,
-                'is_active' => true,
-                'name' => $request->name,
-                'split_set_type' => $request->split_set_type,
+            Product::create(
+                [
+                    'tag_type_id' => $request->tag_type_id,
+                    'code' => $request->code,
+                    'gold_content' => $request->gold_content,
+                    'additional_code' => $request->additional_code,
+                    'category_id' => $request->category_id,
+                    'product_type_id' => $request->product_type_id,
+                    'price' => $request->price,
+                    'discount' => $request->discount,
+                    'gramasi_id' => $request->gramasi_id,
+                    'mg' => $request->mg,
+                    'product_property_id' => $request->product_property_id,
+                    'image' => $imagePath,
+                    'is_active' => true,
+                    'name' => $request->name,
+                    'split_set_type' => $request->split_set_type,
                 ]
             );
 
@@ -121,8 +122,8 @@ class ProductController extends Controller
                 $split_set_gramasi = $request->split_set_gramasi;
                 $split_set_mg = $request->split_set_mg;
                 $split_set_detail = [];
-                
-                for ($i=0; $i < count($split_set_code); $i++) { 
+
+                for ($i = 0; $i < count($split_set_code); $i++) {
                     $split_set_detail[] = [
                         'product_id' => $product_id,
                         'split_set_code' => $split_set_code[$i],
@@ -141,7 +142,7 @@ class ProductController extends Controller
             }
 
             DB::commit();
-            
+
             $alertSession = [
                 'type' => 'alert-success',
                 'message' => 'Product created successfully'
@@ -150,7 +151,6 @@ class ProductController extends Controller
             // return back()->with($alertSession);
 
             return redirect(url('products'))->with($alertSession);
-
         } catch (\Exception $ex) {
 
             DB::rollBack();
@@ -293,16 +293,16 @@ class ProductController extends Controller
 
             $imagePath = 'zummXD2dvAtI.png';
 
-            
+
             if ($request->file('image')) {
                 $file = $request->file('image');
-                $imagePath = "storage/app/" . $file->storeAs('product_images', time().date('YmdHms').".".$file->extension());
-                
+                $imagePath = "storage/app/" . $file->storeAs('product_images', time() . date('YmdHms') . "." . $file->extension());
+
                 // Jika ada file gambar yang diunggah, hapus file gambar lama
                 if ($product->image) {
                     unlink($product->image);
                 }
-                
+
                 $request->merge(['image' => $imagePath]);
 
                 $product->image = $imagePath;
@@ -310,7 +310,7 @@ class ProductController extends Controller
                     'image' => $imagePath
                 ]);
             }
-            
+
             $product->update([
                 'tag_type_id' => $request->tag_type_id,
                 'code' => $request->code,
@@ -348,24 +348,24 @@ class ProductController extends Controller
                         'split_set_code' => $code,
                         'qty_product' => $split_set_qty[$index]
                     ];
-                
+
                     // Cek apakah terdapat detail produk lama dengan kode yang sama
                     $oldDetail = $product_split_set_detail_old->where('split_set_code', $code)->first();
-                
+
                     // Simpan detail produk baru
                     $product->productSplitSetDetail()->create($detail);
-                
+
                     // Jika detail produk lama ditemukan dan kuantitasnya berbeda, simpan ke history
                     if ($oldDetail && $oldDetail->qty_product != $split_set_qty[$index]) {
                         $product->productDetailSplitHistory()->create($detail);
                     }
-                
+
                     // Jika detail produk lama tidak ditemukan, simpan ke history
                     if (!$oldDetail) {
                         $product->productDetailSplitHistory()->create($detail);
                     }
                 }
-                
+
 
                 // save to product_split_set_detail
                 $product->productSplitSetDetail()->createMany($split_set_detail);
@@ -379,7 +379,6 @@ class ProductController extends Controller
                 'type' => 'alert-success',
                 'message' => 'Product updated successfully'
             ]);
-
         } catch (\Exception $ex) {
 
             DB::rollBack();
@@ -616,48 +615,48 @@ class ProductController extends Controller
             DB::beginTransaction();
             foreach ($product_ids as $index => $id) {
                 $product = Product::find($id);
-            
+
                 if (!$product) {
                     continue;
                 }
-            
+
                 if (count($product_split_set_ids) > 0 && isset($product_split_set_ids[$index])) {
                     $splitSetId = $product_split_set_ids[$index];
                     $productSplitSetDetail = $product->productSplitSetDetail()->find($splitSetId);
-            
+
                     if (!$productSplitSetDetail) {
                         continue;
                     }
-            
+
                     $productSale = Product_Sale::where('split_set_code', $productSplitSetDetail->split_set_code)->first();
-            
+
                     if ($productSale) {
                         DB::rollBack();
                         return ResponseHelpers::formatResponse(__('file.Product cannot be deleted because it has been sold'), [], 500, false);
                     }
-            
+
                     $productSplitSetDetail->delete();
                 } else {
                     $productSale = Product_Sale::where('product_id', $id)->first();
-            
+
                     if ($productSale) {
                         DB::rollBack();
                         return ResponseHelpers::formatResponse(__('file.Product cannot be deleted because it has been sold'), [], 500, false);
                     }
-            
+
                     $product->delete();
                 }
             }
-            
-            
-            
+
+
+
             DB::commit();
 
             return ResponseHelpers::formatResponse(__('file.Data deleted successfully'), []);
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            return ResponseHelpers::formatResponse($e->getMessage(), [], 500,false);
+
+            return ResponseHelpers::formatResponse($e->getMessage(), [], 500, false);
         }
     }
 
@@ -667,10 +666,10 @@ class ProductController extends Controller
 
         try {
             DB::beginTransaction();
-            
+
             // Get product by ID
             $product = Product::find($id);
-        
+
             // If parameter ?split_id is not empty
             if ($request->filled('split_id')) {
                 // Get product split set detail by split_id
@@ -682,9 +681,9 @@ class ProductController extends Controller
                 if ($productSale) {
                     DB::rollBack();
                     // return response("Product tidak bisa dihapus karena sudah pernah terjual", 500);
-                    return ResponseHelpers::formatResponse(__('file.Product cannot be deleted because it has been sold'), [], 500,false);
+                    return ResponseHelpers::formatResponse(__('file.Product cannot be deleted because it has been sold'), [], 500, false);
                 }
-                
+
                 // Delete product split set detail
                 $productSplitSetDetail->delete();
             } else {
@@ -694,21 +693,21 @@ class ProductController extends Controller
                 if ($productSale) {
                     DB::rollBack();
                     // return response("Product tidak bisa dihapus karena sudah pernah terjual", 500);
-                    return ResponseHelpers::formatResponse(__('file.Product cannot be deleted because it has been sold'), [], 500,false);
+                    return ResponseHelpers::formatResponse(__('file.Product cannot be deleted because it has been sold'), [], 500, false);
                 }
                 // Delete product
                 $product->delete();
             }
-        
+
             DB::commit();
-        
+
             // return response("Data Berhasil dihapus", 200);
             return ResponseHelpers::formatResponse(__('file.Data deleted successfully'), []);
         } catch (\Exception $ex) {
 
             DB::rollBack();
-            
-            return ResponseHelpers::formatResponse($ex->getMessage(), [], 500,false);
+
+            return ResponseHelpers::formatResponse($ex->getMessage(), [], 500, false);
         }
     }
 
@@ -716,44 +715,44 @@ class ProductController extends Controller
     {
         $this->authorize('viewAny', Product::class);
         $productQuery = Product::query()
-        ->select([
-            'products.id',
-            DB::raw("COALESCE(split.split_set_code, products.code) as code"),
-            'split.split_set_code',
-            'split.id as split_id',
-            DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, products.price)) as price"),
-            'image',
-            'name',
-            'products.discount',
-            DB::raw("COALESCE(split.created_at, products.created_at) as created_at"),
-            'tag_type_id',
-            'gramasi_id',
-            DB::raw("COALESCE(buyback.product_property_id, products.product_property_id) as product_property_id"),
-            DB::raw("COALESCE(split.mg, products.mg) as mg"),
-            DB::raw("COALESCE(split.product_status, products.product_status) as product_status"),
-            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number")
-        ])
-        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
-        ->leftJoin('product_buyback as buyback', function($join) {
-            $join->on('products.id', '=', 'buyback.product_id');
-            $join->where(function($query) {
-                $query->on('split.split_set_code', '=', 'buyback.code')
-                    ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
-            });
-        })
-        ->where('is_active', true)
-        ->orderByDesc('products.created_at')
-        ->with([
-            'tagType:id,code,color',
-            'productProperty:id,code,description',
-            'gramasi:id,code,gramasi'
-        ]);
+            ->select([
+                'products.id',
+                DB::raw("COALESCE(split.split_set_code, products.code) as code"),
+                'split.split_set_code',
+                'split.id as split_id',
+                DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, products.price)) as price"),
+                'image',
+                'name',
+                'products.discount',
+                DB::raw("COALESCE(split.created_at, products.created_at) as created_at"),
+                'tag_type_id',
+                'gramasi_id',
+                DB::raw("products.product_property_id as product_property_id"),
+                DB::raw("COALESCE(split.mg, products.mg) as mg"),
+                DB::raw("COALESCE(split.product_status, products.product_status) as product_status"),
+                DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number")
+            ])
+            ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+            ->leftJoin('product_buyback as buyback', function ($join) {
+                $join->on('products.id', '=', 'buyback.product_id');
+                $join->where(function ($query) {
+                    $query->on('split.split_set_code', '=', 'buyback.code')
+                        ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
+                });
+            })
+            ->where('is_active', true)
+            ->orderByDesc('products.created_at')
+            ->with([
+                'tagType:id,code,color',
+                'productProperty:id,code,description',
+                'gramasi:id,code,gramasi'
+            ]);
 
 
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
             ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
-            ->editColumn('price', fn ($product) => $product->price )
+            ->editColumn('price', fn ($product) => $product->price)
             ->addColumn('product_property_description', fn ($product) => $product->productProperty->description ?? "-")
             ->addColumn('product_property_code', fn ($product) => $product->productProperty->code ?? "-")
             ->addColumn('gramasi_gramasi', fn ($product) => $product->gramasi->gramasi ?? "-")
@@ -765,8 +764,8 @@ class ProductController extends Controller
             ->addColumn('invoice_number', function ($product) {
                 return $product->invoice_number ?? "-";
             })
-            ->addColumn('image_preview', function($q) {
-                return '<img src="'.asset($q->image).'" class="img-thumbnail" width="100" height="100">';
+            ->addColumn('image_preview', function ($q) {
+                return '<img src="' . asset($q->image) . '" class="img-thumbnail" width="100" height="100">';
             })
             ->addColumn('tag_type_color', function ($product) {
                 $color = $product->tagType->color ?? "none";
@@ -774,37 +773,37 @@ class ProductController extends Controller
             })
             ->addColumn('action', function ($product) {
                 $user = auth()->user();
-                
+
                 // handle if split set type is split set (2)
                 $urlEdit = url("products/$product->id/edit");
-                if($product->split_set_code) {
+                if ($product->split_set_code) {
                     $urlEdit = url("products/$product->id/edit?split_set_id=$product->split_id");
                 }
                 $btnEdit = '';
                 $btnDelete = '';
                 $btnPrint = '';
 
-                if($product->product_status == 1) {
-                $btnEdit = $user->can('update', $product)
-                    ? '<a class="dropdown-item btn-edit" href="'.$urlEdit.'"><i class="fa fa-edit"></i> Edit</a>'
-                    : '';
+                if ($product->product_status == 1) {
+                    $btnEdit = $user->can('update', $product)
+                        ? '<a class="dropdown-item btn-edit" href="' . $urlEdit . '"><i class="fa fa-edit"></i> Edit</a>'
+                        : '';
 
-                $btnDelete = $user->can('delete', $product)
-                    ? '<a class="dropdown-item btn-delete" href="#" data-id="'.$product->id.'" data-splitid="'.$product->split_id.'"><i class="fa fa-trash"></i> Delete</a>'
-                    : '';
+                    $btnDelete = $user->can('delete', $product)
+                        ? '<a class="dropdown-item btn-delete" href="#" data-id="' . $product->id . '" data-splitid="' . $product->split_id . '"><i class="fa fa-trash"></i> Delete</a>'
+                        : '';
                 }
-                $btnPrint = '<a class="dropdown-item btn-print" target="_BLANK" data-id="'.$product->id.'" href="'.url("products/print/$product->id").'"><i class="fa fa-print"></i> Print</a>';
+                $btnPrint = '<a class="dropdown-item btn-print" target="_BLANK" data-id="' . $product->id . '" href="' . url("products/print/$product->id") . '"><i class="fa fa-print"></i> Print</a>';
 
                 $element =
-                '<div class="dropdown">
+                    '<div class="dropdown">
                     <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Action
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item btn-view" href="#" data-id="'.$product->id.'"><i class="fa fa-eye"></i> View</a>'
-                        . $btnEdit
-                        . $btnPrint
-                        . $btnDelete .
+                        <a class="dropdown-item btn-view" href="#" data-id="' . $product->id . '"><i class="fa fa-eye"></i> View</a>'
+                    . $btnEdit
+                    . $btnPrint
+                    . $btnDelete .
                     '</div>
                 </div>';
 
@@ -813,101 +812,100 @@ class ProductController extends Controller
             ->rawColumns(['tag_type_color', 'action', 'image_preview'])
             ->make();
 
-            return $datatable;
-
+        return $datatable;
     }
 
-    public function detailHistoricalProductDataTable($product_id,$split_set_code = "")
+    public function detailHistoricalProductDataTable($product_id, $split_set_code = "")
     {
         $this->authorize('viewAny', Product::class);
         // seharusnya JOIN dengan product sales // MARK
         // fix query agar bisa keluar data semua
         $productSalesQuery = Product_Sale::query()
-        ->select([
-            DB::raw("COALESCE(product_sales.split_set_code, products.code) as code"),
-            'total as price',
-            'name',
-            'product_sales.created_at',
-            'gramasi_id',
-            DB::raw("COALESCE(buyback.product_property_id, products.product_property_id) as product_property_id"),
-            DB::raw("COALESCE(split.mg, products.mg) as mg"),
-            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number"),
-            DB::raw("1 as history_status"), // 0 = Product Created, 1 = Product Sold, 2 = Product Buyback
-        ])
-        ->leftJoin('products', 'products.id', '=', 'product_sales.product_id')
-        ->leftJoin('product_split_set_detail as split', 'product_sales.split_set_code', '=', 'split.split_set_code')
-        ->leftJoin('product_buyback as buyback', function($join) {
-            $join->on('products.id', '=', 'buyback.product_id');
-            $join->where(function($query) {
-                $query->on('split.split_set_code', '=', 'buyback.code')
-                    ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
-            });
-        })
-        ->where('is_active', true)
-        ->when($split_set_code || $product_id, function ($query) use ($split_set_code, $product_id) {
-            return $query->where(function ($query) use ($split_set_code, $product_id) {
-                if ($split_set_code!= "") {
-                    $query->where('split.split_set_code', $split_set_code);
-                } else {
-                    $query->where('products.id', $product_id);
-                }
-            });
-        })
-        ->groupBy(['product_sales.id'])
-        ->orderByDesc('product_sales.created_at');
+            ->select([
+                DB::raw("COALESCE(product_sales.split_set_code, products.code) as code"),
+                'total as price',
+                'name',
+                'product_sales.created_at',
+                'gramasi_id',
+                DB::raw("products.product_property_id as product_property_id"),
+                DB::raw("COALESCE(split.mg, products.mg) as mg"),
+                DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number"),
+                DB::raw("1 as history_status"), // 0 = Product Created, 1 = Product Sold, 2 = Product Buyback
+            ])
+            ->leftJoin('products', 'products.id', '=', 'product_sales.product_id')
+            ->leftJoin('product_split_set_detail as split', 'product_sales.split_set_code', '=', 'split.split_set_code')
+            ->leftJoin('product_buyback as buyback', function ($join) {
+                $join->on('products.id', '=', 'buyback.product_id');
+                $join->where(function ($query) {
+                    $query->on('split.split_set_code', '=', 'buyback.code')
+                        ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
+                });
+            })
+            ->where('is_active', true)
+            ->when($split_set_code || $product_id, function ($query) use ($split_set_code, $product_id) {
+                return $query->where(function ($query) use ($split_set_code, $product_id) {
+                    if ($split_set_code != "") {
+                        $query->where('split.split_set_code', $split_set_code);
+                    } else {
+                        $query->where('products.id', $product_id);
+                    }
+                });
+            })
+            ->groupBy(['product_sales.id'])
+            ->orderByDesc('product_sales.created_at');
 
         $productQuery = Product::query()
-        ->select([
-            DB::raw("COALESCE(split.split_set_code, products.code) as code"),
-            DB::raw("COALESCE(split.price, products.price) as price"),
-            'name',
-            DB::raw("COALESCE(split.created_at, products.created_at) as created_at"),
-            'gramasi_id',
-            DB::raw("products.product_property_id as product_property_id"),
-            DB::raw("COALESCE(split.mg, products.mg) as mg"),
-            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number"),
-            DB::raw("0 as history_status"), // 0 = Product Created, 1 = Product Sold, 2 = Product Buyback
-        ])
-        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
-        ->where('is_active', true)
-        ->when($split_set_code || $product_id, function ($query) use ($split_set_code, $product_id) {
-            return $query->where(function ($query) use ($split_set_code, $product_id) {
-                if ($split_set_code!= "") {
-                    $query->where('split.split_set_code', $split_set_code);
-                } else {
-                    $query->where('products.id', $product_id);
-                }
-            });
-        })
-        ->groupBy(['products.id', 'split.id'])
-        ->orderByDesc('products.created_at',' split.created_at');
+            ->select([
+                DB::raw("COALESCE(split.split_set_code, products.code) as code"),
+                DB::raw("COALESCE(split.price, products.price) as price"),
+                'name',
+                DB::raw("COALESCE(split.created_at, products.created_at) as created_at"),
+                'gramasi_id',
+                DB::raw("products.product_property_id as product_property_id"),
+                DB::raw("COALESCE(split.mg, products.mg) as mg"),
+                DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number"),
+                DB::raw("0 as history_status"), // 0 = Product Created, 1 = Product Sold, 2 = Product Buyback
+            ])
+            ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+            ->where('is_active', true)
+            ->when($split_set_code || $product_id, function ($query) use ($split_set_code, $product_id) {
+                return $query->where(function ($query) use ($split_set_code, $product_id) {
+                    if ($split_set_code != "") {
+                        $query->where('split.split_set_code', $split_set_code);
+                    } else {
+                        $query->where('products.id', $product_id);
+                    }
+                });
+            })
+            ->groupBy(['products.id', 'split.id'])
+            ->orderByDesc('products.created_at', ' split.created_at');
 
         $productBuybackQuery = ProductBuyback::query()
-        ->select([
-            'product_buyback.code',
-            'product_buyback.price',
-            'products.name',
-            'product_buyback.created_at',
-            'gramasi_id',
-            DB::raw("COALESCE(product_buyback.product_property_id, products.product_property_id) as product_property_id"),
-            DB::raw("COALESCE(split.mg, products.mg) as mg"),
-            DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number"),
-            DB::raw("2 as history_status"), // 0 = Product Created, 1 = Product Sold, 2 = Product Buyback
-        ])
-        ->leftJoin('products', 'products.id', '=', 'product_buyback.product_id')
-        ->leftJoin('product_split_set_detail as split', 'product_buyback.code', '=', 'split.split_set_code')
-        ->where('is_active', true)
-        ->when($split_set_code || $product_id, function ($query) use ($split_set_code, $product_id) {
-            return $query->where(function ($query) use ($split_set_code, $product_id) {
-                if ($split_set_code!= "") {
-                    $query->where('split.split_set_code', $split_set_code);
-                } else {
-                    $query->where('products.id', $product_id);
-                }
-            });
-        })
-        ->groupBy(['product_buyback.id'])
-        ->orderByDesc('product_buyback.created_at');
+            ->select([
+                'product_buyback.code',
+                'product_buyback.price',
+                'products.name',
+                'product_buyback.created_at',
+                'gramasi_id',
+                DB::raw("products.product_property_id as product_property_id"),
+                DB::raw("COALESCE(split.mg, products.mg) as mg"),
+                DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number"),
+                DB::raw("2 as history_status"), // 0 = Product Created, 1 = Product Sold, 2 = Product Buyback
+            ])
+            ->leftJoin('products', 'products.id', '=', 'product_buyback.product_id')
+            ->leftJoin('product_split_set_detail as split', 'product_buyback.code', '=', 'split.split_set_code')
+            ->where('is_active', true)
+            ->when($split_set_code || $product_id, function ($query) use ($split_set_code, $product_id) {
+                return $query->where(function ($query) use ($split_set_code, $product_id) {
+                    if ($split_set_code != "") {
+                        $query->where('split.split_set_code', $split_set_code);
+                    } else {
+                        $query->where('products.id', $product_id);
+                    }
+                });
+            })
+            ->groupBy(['product_buyback.id'])
+            ->orderByDesc('product_buyback.created_at');
 
         // join 3 query
         $productQuery->union($productSalesQuery);
@@ -918,7 +916,7 @@ class ProductController extends Controller
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
             ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
-            ->editColumn('price', fn ($product) => $product->price )
+            ->editColumn('price', fn ($product) => $product->price)
             ->addColumn('product_property_description', fn ($product) => $product->productProperty->description ?? "-")
             ->addColumn('product_property_code', fn ($product) => $product->productProperty->code ?? "-")
             ->addColumn('gramasi_gramasi', fn ($product) => $product->gramasi->gramasi ?? "-")
@@ -956,11 +954,10 @@ class ProductController extends Controller
             // ->rawColumns(['tag_type_color'])
             ->make();
 
-            return $datatable;
-
+        return $datatable;
     }
 
-    public function print(Request $request,$id)
+    public function print(Request $request, $id)
     {
         $product = Product::find($id)->load([
             'productProperty:id,code,description',
@@ -980,11 +977,11 @@ class ProductController extends Controller
 
         $filename = "product_$product->code.pdf";
 
-        $path = public_path('temp_'.$product->code.'_'.date('YmdHis').'.png');
+        $path = public_path('temp_' . $product->code . '_' . date('YmdHis') . '.png');
         QrCode::size(150)->generate($product->code, $path);
 
         // Load view
-        $html = View::make('product.print', ['data' => $product, 'path'=>$path,'filename' => $filename]);
+        $html = View::make('product.print', ['data' => $product, 'path' => $path, 'filename' => $filename]);
         $html = $html->render();
 
         // Load HTML
@@ -1013,19 +1010,19 @@ class ProductController extends Controller
         // get product by code
         $product = Product::where('code', $product_code)->first();
         $productSplitSetDetail = null;
-        
+
         // handle if product not found, redirect to 404
-        if(!$product){
+        if (!$product) {
             abort(404);
         }
-        
+
         // if split set code is not null
-        if($split_set_code){
+        if ($split_set_code) {
             // get product_split_set_detail by split_set_code
             $productSplitSetDetail = $product->productSplitSetDetail()->where('split_set_code', $split_set_code)->first();
 
             // handle if product_split_set_detail not found, redirect to 404
-            if(!$productSplitSetDetail){
+            if (!$productSplitSetDetail) {
                 abort(404);
             }
         }
@@ -1036,7 +1033,7 @@ class ProductController extends Controller
         $dompdf->setOptions($options);
         $dompdf->setPaper('A4', 'potrait');
 
-        $html = view('product.view_product',compact('product','productSplitSetDetail'))->render();
+        $html = view('product.view_product', compact('product', 'productSplitSetDetail'))->render();
 
         $dompdf->loadHtml($html);
 
@@ -1047,5 +1044,4 @@ class ProductController extends Controller
         // Open pdf in browser
         $dompdf->stream($filename, array("Attachment" => false));
     }
-
 }

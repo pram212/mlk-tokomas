@@ -208,18 +208,6 @@ class BuyBackController extends Controller
     {
         DB::beginTransaction();
 
-        // handle split set, jika $request->code mengandung '-' maka itu adalah split set
-        if (strpos($request->code, '-') !== false) {
-            // update di ProductSplitSetDetail product_status menjadi 1
-            $productSplitSetDetail = ProductSplitSetDetail::where('split_set_code', $request->code)->first();
-            $productSplitSetDetail->product_status = 1;
-            $productSplitSetDetail->save();
-        } else {
-            $product = Product::where('id', $request->product_id)->first();
-            $product->product_status = 1; // ubah status product menjadi STORE
-            $product->save();
-        }
-
         $productBuyback = new ProductBuyback();
         $productBuyback->product_id = $request->product_id;
         $productBuyback->code = $request->code;
