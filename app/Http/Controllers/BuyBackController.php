@@ -41,8 +41,6 @@ class BuyBackController extends Controller
                 'products.tag_type_id',
                 'products.gramasi_id',
                 'products.mg',
-                'product_properties.code as product_property_code',
-                'product_properties.description as product_property_description',
                 'tag_types.color as tag_type_color',
                 'tag_types.code as tag_type_code',
                 'gramasis.gramasi',
