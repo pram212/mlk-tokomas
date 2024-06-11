@@ -30,11 +30,11 @@
                                 <label>{{ trans('file.Paid By') }}</label>
                                 <select name="paid_by_id_select" class="form-control selectpicker">
                                     <option value="1">Cash</option>
-                                    <option value="2">Gift Card</option>
-                                    <option value="3">Credit Card</option>
-                                    <option value="4">Cheque</option>
-                                    <option value="5">Paypal</option>
-                                    <option value="6">Deposit</option>
+                                    <option value="2" class="d-none">Gift Card</option>
+                                    <option value="3" class="d-none">Credit Card</option>
+                                    <option value="4" class="d-none">Cheque</option>
+                                    <option value="5" class="d-none">Paypal</option>
+                                    <option value="6" class="d-none">Deposit</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-12 mt-3">
