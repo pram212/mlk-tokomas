@@ -19,7 +19,7 @@ class BuyBackController extends Controller
     public function index()
     {
         $this->authorize('viewAny', Product::class);
-        return view('buyback.index', compact('productProperties'));
+        return view('buyback.index');
     }
 
     private function buyback_query($filter = [])

@@ -94,10 +94,6 @@ $(document).ready(function () {
                 searchable: false,
             },
             {
-                data: "product_property_description",
-                searchable: false,
-            },
-            {
                 data: "product_status",
                 searchable: false,
             },

@@ -66,7 +66,6 @@
                                             <th>{{ __('file.Color') }}</th>
                                             <th>Miligram</th>
                                             <th>Gramasi</th>
-                                            <th>{{ __('file.Product Property') }}</th>
                                             <th>{{ __('file.Product Status') }}</th>
                                             <th>{{ __('file.Invoice') }}</th>
                                             <th>Buy Back Status</th>
