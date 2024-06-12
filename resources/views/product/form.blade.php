@@ -8,19 +8,17 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex align-items-center">
-                        <h4>
-                            @switch($mode)
-                            @case('create')
-                            {{ trans('file.Create') }} {{ trans('file.product') }}
-                            @break
-                            @case('edit')
-                            {{ trans('file.Edit') }} {{ trans('file.product') }}
-                            @break
-                            @case('show')
-                            {{ trans('file.Detail') }} {{ trans('file.product') }}
-                            @break
-                            @endswitch
-                        </h4>
+                        @php
+                        $modeTexts = [
+                        'create' => trans('file.Create') . ' ' . trans('file.product'),
+                        'edit' => trans('file.Edit') . ' ' . trans('file.product'),
+                        'show' => trans('file.Detail') . ' ' . trans('file.product'),
+                        ];
+                        @endphp
+
+                        <div class="card-header d-flex align-items-center">
+                            <h4>{{ $modeTexts[$mode] ?? '' }}</h4>
+                        </div>
                     </div>
                     <div class="card-body">
                         <p class="italic">
@@ -416,13 +414,13 @@
 <script type="text/javascript">
     const mode = '{{ $mode }}';
     const product_id = '{{ @$product->id }}';
-    const input_categories_id = $('#input-kd-category');
-    const input_product_type_id = $('#product_type_id');
-    const input_gramasi_id = $('#input-kd-gramasi');
-    const text_gramasi_id = $('#text-kd-gramasi');
+    const $input_categories_id = $('#input-kd-category');
+    const $input_product_type_id = $('#product_type_id');
+    const $input_gramasi_id = $('#input-kd-gramasi');
+    const $text_gramasi_id = $('#text-kd-gramasi');
     let old_image = '{{ $product->image ?? '' }}';
-    const image_preview = $('#image-preview');
-    const product_property_id = $('#input-kd-sifat');
+    const $image_preview = $('#image-preview');
+    const $product_property_id = $('#input-kd-sifat');
     const price_col = $('#price');
     const input_split_type = $('#input-split-type');
     const detail_split_set = $('#detail_split_set');
@@ -447,7 +445,7 @@
 
     const modal_table_detail_split_set = $('#modal_table_detail_split_set tbody');
 
-    let table_historical = $('#detail_historical_products');
+    const $table_historical = $('#detail_historical_products');
 
     @if($mode == 'show')
     const split_set_code = '{{ @$split_set_code }}';
