@@ -1,4 +1,4 @@
-<?php 
+<?php
 return [
 	'dashboard' => 'Dashboard',
 	'language' => 'Language',
@@ -587,11 +587,11 @@ return [
 	"This product has different price for different warehouse" => "This product has different price for different warehouse",
 	"Backup Database" => "Backup Database",
 	"Invoice Format" => "Invoice Format",
-	
+
 	"Transaction Reference" => "Transaction Reference",
 	"Recieved AmountPurchase" => "Received Amount",
 	"Paying AmountPurchase" => "Paying Amount",
-	
+
 	"Product Category" => "Product Category",
 	"Gramasi List" => "Gramasi List",
 	"Tagging Type" => "Tagging Type",
@@ -611,10 +611,11 @@ return [
 
 	"Data saved successfully" => "Data saved successfully",
 	"Data updated successfully" => "Data updated successfully",
-	"The data was successfully deleted" => "The data was successfully deleted" ,
+	"The data was successfully deleted" => "The data was successfully deleted",
 	"Data deleted successfully" => "Data deleted successfully",
 	"The data was successfully deleted and those related to GRAMASI were not deleted" => "The data was successfully deleted and those related to GRAMASI were not deleted",
 	"Failed to be deleted because it was used by grammar" => "Gagal dihapus karena digunakan di oleh gramasi",
+	"Failed to be deleted because it was used by product Properties" => "Gagal dihapus karena digunakan oleh properti produk",
 	"Select" => "Select",
 	"Gramasi" => "Gramasi",
 	"Gramasi Code" => "Gramasi Code",
@@ -650,4 +651,3 @@ return [
 	"Cashier" => "Cashier",
 	"Product property is used in a product" => "Product property is used in a product",
 ];
-?>

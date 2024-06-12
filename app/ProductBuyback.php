@@ -9,7 +9,7 @@ class ProductBuyback extends Model
     protected $table = 'product_buyback';
 
     protected $fillable = [
-        'product_id', 'code', 'price', 'discount', 'additional_cost', 'final_price', 'description', 'product_property_id'
+        'product_id', 'code', 'price', 'discount', 'additional_cost', 'final_price', 'description'
     ];
 
     public function product()

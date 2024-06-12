@@ -12,7 +12,7 @@ class Sale extends Model
 
     public function biller()
     {
-    	return $this->belongsTo('App\Biller');
+        return $this->belongsTo(Biller::class)->withDefault(Biller::defaultAttributes());
     }
 
     public function customer()

@@ -16,4 +16,17 @@ class Biller extends Model
     {
     	return $this->hasMany('App\Sale');
     }
+
+    // Metode untuk mendapatkan atribut default
+    public static function defaultAttributes()
+    {
+        $instance = new static;
+        $attributes = [];
+
+        foreach ($instance->getFillable() as $attribute) {
+            $attributes[$attribute] = '-';
+        }
+
+        return $attributes;
+    }
 }

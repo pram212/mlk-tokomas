@@ -119,6 +119,12 @@ priceTable = $("#price-datatable").DataTable({
                     const url = baseUrl + "/master/price-multi-delete";
                     try {
                         const response = await axios.post(url, { ids: ids });
+
+                        if (!response.data.status) {
+                            Swal.fire("Error", response.data.message, "error");
+                            return;
+                        }
+
                         Swal.fire("Success", response.data.message, "success");
                         priceTable.ajax.reload();
                     } catch (error) {
@@ -189,12 +195,15 @@ $("#price-datatable tbody").on("click", "button.btn-delete", async function () {
             const status = response.data.status;
             const msg = response.data.message;
 
-            if (!status) throw new Error(msg);
+            if (!status) {
+                await Swal.fire("Error", msg, "error");
+                return;
+            }
 
             Swal.fire("Terhapus!", msg, "success");
             priceTable.ajax.reload();
         } catch (error) {
-            Swal.fire("Error", error.response.data.message, "error");
+            Swal.fire("Error", error.response.data, "error");
         }
     }
 });

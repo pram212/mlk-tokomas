@@ -1,4 +1,4 @@
-<?php 
+<?php
 return [
 	"dashboard" => "Dasbor",
 	"language" => "Bahasa",
@@ -21,7 +21,7 @@ return [
 	"name" => "Nama",
 	"submit" => "OK",
 	"update" => "Perbarui",
-	"The field labels marked with * are required input fields" => "Kolom yang ditandai dengan *  wajib diisi", 
+	"The field labels marked with * are required input fields" => "Kolom yang ditandai dengan *  wajib diisi",
 	"settings" => "Pengaturan",
 	"logout" => "Keluar",
 	"return" => "Retur",
@@ -191,7 +191,7 @@ return [
 	"File Link" => "Tautan File",
 	"Delivery" => "Pengiriman",
 	"Delivered" => "Terkirim",
-	"For Digital product sale_unit will be n/a" => "Untuk unit jualan produk Digital akan n / a", 
+	"For Digital product sale_unit will be n/a" => "Untuk unit jualan produk Digital akan n / a",
 	"Forgot Password?" => "Lupa kata sandi?",
 	"Do not have an account?" => "Belum punya akun?",
 	"Register" => "Daftar",
@@ -303,7 +303,7 @@ return [
 	"Add Promotional Price" => "Tambahkan Harga Promosi",
 	"Product Tax" => "Pajak Produk",
 	"Tax Method" => "Metode Pajak",
-	"Featured product will be displayed in POS" => "Produk unggulan akan ditampilkan dalam POS", 
+	"Featured product will be displayed in POS" => "Produk unggulan akan ditampilkan dalam POS",
 	"Product Invoice Details" => "Detail Invoice Produk",
 	"Purchase Status" => "Status Pembelian",
 	"Add Gift Card" => "Tambahkan Kartu Hadiah",
@@ -345,7 +345,7 @@ return [
 	"View Deposit" => "Lihat Deposit",
 	"Import Biller" => "Impor Penagih",
 	"Update Biller" => "Perbarui Penagih",
-	"To display Image it must be stored in" => "Untuk menampilkan Gambar itu harus disimpan di", 
+	"To display Image it must be stored in" => "Untuk menampilkan Gambar itu harus disimpan di",
 	"directory" => "direktori",
 	"Import Supplier" => "Impor Pemasok",
 	"Update Supplier" => "Perbarui Pemasok",
@@ -439,7 +439,7 @@ return [
 	"Exclusive" => "Eksklusif",
 	"Inclusive" => "Inklusif",
 	"Combo Products" => "Produk Combo",
-	"Image name must be same as product name" => "Nama gambar harus sama dengan nama produk", 
+	"Image name must be same as product name" => "Nama gambar harus sama dengan nama produk",
 	"Paying Amount" => "Total",
 	"Payable Amount" => "Jumlah Hutang",
 	"Change" => "Sisa Pembayaran",
@@ -469,7 +469,7 @@ return [
 	"Update Payroll" => "Perbarui Penggajian",
 	"Method" => "Metode",
 	"Sale Return" => "Retur Penjualan",
-	"Purchase Return" => "Retur Pembelian",	
+	"Purchase Return" => "Retur Pembelian",
 	"Net Sale Return" => "Retur Penjualan Bersih,",
 	"Net Purchase Return" => "Retur Pembelian Bersih,",
 	"Attendance" => "Absensi",
@@ -614,6 +614,7 @@ return [
 	"The Data was successfully deleted" => "Data berhasil dihapus",
 	"Data deleted successfully" => "Data berhasil dihapus",
 	"Failed to be deleted because it was used by grammar" =>  "Gagal dihapus karena digunakan di oleh gramasi",
+	"Failed to be deleted because it was used by product Properties" =>  "Gagal dihapus karena digunakan di oleh sifat barang",
 	"Select" => "Pilih",
 	"Gramasi" => "Gramasi",
 	"Gramasi Code" => "Kode Gramasi",
@@ -649,5 +650,3 @@ return [
 	"Cashier" => "Kasir",
 	"Product property is used in a product" => "Sifat Barang telah digunakan oleh suatu produk",
 ];
-
-?>

@@ -5,7 +5,7 @@ $(document).ready(function () {
         detail_split_add();
     }
 
-    table_historical.DataTable({
+    $table_historical.DataTable({
         responsive: true,
         fixedHeader: {
             header: true,
@@ -50,7 +50,7 @@ $(document).ready(function () {
                 data: "mg",
             },
         ],
-        order: [["3", "desc"]],
+        order: [["3", "asc"]],
         columnDefs: [
             {
                 orderable: false,
@@ -287,7 +287,7 @@ function detail_split_add(data = []) {
     }
 }
 
-input_categories_id.change(function () {
+$input_categories_id.change(function () {
     let categories_id = $(this).val();
     let product_type_id = $("#product_type_id");
     let button_product_type_id = $('button[data-id="product_type_id"]');
@@ -319,9 +319,9 @@ input_categories_id.change(function () {
     });
 });
 
-input_product_type_id.change(function () {
+$input_product_type_id.change(function () {
     let product_type_id = $(this).val();
-    let categories_id = input_categories_id.val();
+    let categories_id = $input_categories_id.val();
 
     $.ajax({
         type: "GET",
@@ -333,8 +333,8 @@ input_product_type_id.change(function () {
             product_type_id,
         success: function (data) {
             if (data.data) {
-                input_gramasi_id.val(data.data.id);
-                text_gramasi_id.text(data.data.gramasi);
+                $input_gramasi_id.val(data.data.id);
+                $text_gramasi_id.text(data.data.gramasi);
 
                 prevGramasi(data.data.id);
             }
@@ -344,14 +344,14 @@ input_product_type_id.change(function () {
     setPrice();
 });
 
-product_property_id.change(function () {
+$product_property_id.change(function () {
     setPrice();
 });
 
 function setPrice() {
-    let product_property_id_val = product_property_id.val();
-    let categories_id = input_categories_id.val();
-    let product_type_id = input_product_type_id.val();
+    let product_property_id_val = $product_property_id.val();
+    let categories_id = $input_categories_id.val();
+    let product_type_id = $input_product_type_id.val();
 
     // make sure categories_id and product_type_id is not empty
     if (!categories_id || !product_type_id) {
@@ -379,14 +379,14 @@ function setPrice() {
     });
 }
 
-input_categories_id.add(input_product_type_id).change(function () {
-    input_gramasi_id.val("");
-    text_gramasi_id.text("-");
+$input_categories_id.add($input_product_type_id).change(function () {
+    $input_gramasi_id.val("");
+    $text_gramasi_id.text("-");
 });
 
 // old image
 if (old_image) {
-    image_preview.html(
+    $image_preview.html(
         '<img style="max-height:100px" src="' +
             baseUrl +
             "/" +
@@ -397,7 +397,7 @@ if (old_image) {
 
 // preview image
 function readURL(input) {
-    let image_preview = $("#image-preview");
+    let $image_preview = $("#image-preview");
     let image = $("#image");
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -405,7 +405,7 @@ function readURL(input) {
         if (input.files[0].size > 2000000) {
             // hapus file yang sudah dipilih
             image.val("");
-            image_preview.html("");
+            $image_preview.html("");
 
             alert("Max file size is 2MB");
             return;
@@ -418,14 +418,14 @@ function readURL(input) {
         ) {
             // hapus file yang sudah dipilih
             image.val("");
-            image_preview.html("");
+            $image_preview.html("");
 
             alert("Only jpeg and png file type are allowed");
             return;
         }
 
         reader.onload = function (e) {
-            image_preview.html(
+            $image_preview.html(
                 '<img style="max-height:100px" src="' +
                     e.target.result +
                     '" class="img-fluid" />'
@@ -577,9 +577,9 @@ if (produk) {
 
 if (mode == "show") {
     $("#tag_type_id").prop("disabled", true);
-    input_categories_id.prop("disabled", true);
-    input_product_type_id.prop("disabled", true);
-    product_property_id.prop("disabled", true);
+    $input_categories_id.prop("disabled", true);
+    $input_product_type_id.prop("disabled", true);
+    $product_property_id.prop("disabled", true);
     $("#submit-btn").remove();
     detail_split_set_qty.prop("disabled", true);
     $("input[name='split_set_qty[]']").prop("disabled", true);

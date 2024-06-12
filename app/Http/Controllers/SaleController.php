@@ -58,39 +58,6 @@ use App\Helpers\ResponseHelpers;
 
 class SaleController extends Controller
 {
-    public function index_old(Request $request)
-    {
-        $role = Role::find(Auth::user()->role_id);
-        if ($role->hasPermissionTo('sales-index')) {
-            $permissions = Role::findByName($role->name)->permissions;
-            foreach ($permissions as $permission)
-                $all_permission[] = $permission->name;
-            if (empty($all_permission))
-                $all_permission[] = 'dummy text';
-
-            if ($request->input('warehouse_id'))
-                $warehouse_id = $request->input('warehouse_id');
-            else
-                $warehouse_id = 0;
-
-            if ($request->input('starting_date')) {
-                $starting_date = $request->input('starting_date');
-                $ending_date = $request->input('ending_date');
-            } else {
-                $starting_date = date("Y-m-d", strtotime(date('Y-m-d', strtotime('-1 year', strtotime(date('Y-m-d'))))));
-                $ending_date = date("Y-m-d");
-            }
-
-            $lims_gift_card_list = GiftCard::where("is_active", true)->get();
-            $lims_pos_setting_data = PosSetting::latest()->first();
-            $lims_warehouse_list = Warehouse::where('is_active', true)->get();
-            $lims_account_list = Account::where('is_active', true)->get();
-
-            return view('sale.index', compact('starting_date', 'ending_date', 'warehouse_id', 'lims_gift_card_list', 'lims_pos_setting_data', 'lims_account_list', 'lims_warehouse_list', 'all_permission'));
-        } else
-            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
-    }
-
     // new index
     public function index(Request $request)
     {
@@ -100,16 +67,28 @@ class SaleController extends Controller
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
         }
 
-        if ($request->input('starting_date')) {
-            $starting_date = $request->input('starting_date');
-            $ending_date = $request->input('ending_date');
-        } else {
-            $starting_date = date("Y-m-d", strtotime(date('Y-m-d', strtotime('-1 year', strtotime(date('Y-m-d'))))));
-            $ending_date = date("Y-m-d");
-        }
+        [
+            $starting_date, $ending_date
+        ] = $this->getDateRange($request);
 
         return view('sale.indexNew', compact('starting_date', 'ending_date'));
     }
+
+    private function getDateRange(Request $request)
+    {
+        if ($request->input('starting_date') && $request->input('ending_date')) {
+            return [
+                $request->input('starting_date'),
+                $request->input('ending_date')
+            ];
+        }
+
+        $starting_date = date("Y-m-d", strtotime('-1 year'));
+        $ending_date = date("Y-m-d");
+
+        return [$starting_date, $ending_date];
+    }
+
 
     // search_products
     public function search_products(Request $request)
@@ -117,20 +96,20 @@ class SaleController extends Controller
         $search = $request->term;
 
         $products = Product::query()
-        ->select([
-            'products.id',
-            DB::raw('CONCAT(products.name, " (", IFNULL(split.split_set_code, products.code), ")") as label'),
-            DB::raw('IFNULL(split.split_set_code, products.code) as value')
-        ])
-        ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
-        ->where('is_active', true)
-        ->where('products.product_status', 1)
-        ->where(function($query) use ($search) {
-            $query->where('products.name', 'like', '%' . $search . '%')
-                ->orWhere('products.code', 'like', '%' . $search . '%');
-        })
-        ->limit(10)
-        ->get();
+            ->select([
+                'products.id',
+                DB::raw('CONCAT(products.name, " (", IFNULL(split.split_set_code, products.code), ")") as label'),
+                DB::raw('IFNULL(split.split_set_code, products.code) as value')
+            ])
+            ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+            ->where('is_active', true)
+            ->where('products.product_status', 1)
+            ->where(function ($query) use ($search) {
+                $query->where('products.name', 'like', '%' . $search . '%')
+                    ->orWhere('products.code', 'like', '%' . $search . '%');
+            })
+            ->limit(10)
+            ->get();
 
 
         if ($products->isEmpty()) {
@@ -359,22 +338,22 @@ class SaleController extends Controller
     public function saleDataNew(Request $request)
     {
         $model = Sale::query()
-        ->select('sales.*')
-        ->when($request->filled('warehouse_id'), function ($query) use ($request) {
-            return $query->where('warehouse_id', $request->input('warehouse_id'));
-        })
-        ->when($request->filled('starting_date'), function ($query) use ($request) {
-            return $query->whereDate('sales.created_at', '>=', $request->input('starting_date'));
-        })
-        ->when($request->filled('ending_date'), function ($query) use ($request) {
-            return $query->whereDate('sales.created_at', '<=', $request->input('ending_date'));
-        })
-        ->with('biller', 'customer', 'warehouse', 'user');
+            ->select('sales.*')
+            ->when($request->filled('warehouse_id'), function ($query) use ($request) {
+                return $query->where('warehouse_id', $request->input('warehouse_id'));
+            })
+            ->when($request->filled('starting_date'), function ($query) use ($request) {
+                return $query->whereDate('sales.created_at', '>=', $request->input('starting_date'));
+            })
+            ->when($request->filled('ending_date'), function ($query) use ($request) {
+                return $query->whereDate('sales.created_at', '<=', $request->input('ending_date'));
+            })
+            ->with('biller', 'customer', 'warehouse', 'user');
 
-    
+
         // get permissions
         $permissions = PermissionHelpers::checkMenuPermission(['sales-edit', 'sales-delete']);
-    
+
         // setup datatable data
         $datatable = DataTables::of($model)
             ->addIndexColumn()
@@ -393,7 +372,7 @@ class SaleController extends Controller
                     2 => ['class' => 'danger', 'label' => trans('file.Pending')],
                     3 => ['class' => 'warning', 'label' => trans('file.Draft')],
                 ];
-    
+
                 $status = $statuses[$sale->sale_status] ?? $statuses[3];
                 return '<div class="badge badge-' . $status['class'] . '">' . $status['label'] . '</div>';
             })
@@ -404,7 +383,7 @@ class SaleController extends Controller
                     3 => ['class' => 'warning', 'label' => trans('file.Partial')],
                     4 => ['class' => 'success', 'label' => trans('file.Paid')],
                 ];
-    
+
                 $status = $statuses[$sale->payment_status] ?? ['class' => 'secondary', 'label' => trans('file.Unknown')];
                 return '<div class="badge badge-' . $status['class'] . '">' . $status['label'] . '</div>';
             })
@@ -455,15 +434,15 @@ class SaleController extends Controller
                         'permission' => true
                     ]
                 ];
-    
+
                 return $this->generateActionOptions($actions);
             })
             ->rawColumns(['sale_status', 'payment_status', 'options'])
             ->make();
-    
+
         return $datatable;
     }
-    
+
     // generate action options for saleDataNew
     private function generateActionOptions($actions)
     {
@@ -473,7 +452,7 @@ class SaleController extends Controller
                           <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">';
-    
+
         foreach ($actions as $action) {
             if ($action['permission']) {
                 if (isset($action['route'])) {
@@ -496,7 +475,7 @@ class SaleController extends Controller
                 }
             }
         }
-    
+
         $options .= '</ul></div>';
         return $options;
     }
@@ -505,15 +484,14 @@ class SaleController extends Controller
     // [GET] /sales/product-sale/{id}
     public function details(Request $request, $id)
     {
-        $sale = Sale::
-        select(['id','reference_no as invoice_number','biller_id','customer_id','warehouse_id','user_id','order_discount','order_tax','order_tax_rate','shipping_cost','grand_total','paid_amount','sale_note','staff_note','sale_status'])
-        ->selectRaw('DATE_FORMAT(sales.created_at,"%d/%m/%Y %H:%i:%s") as date')
-        ->selectRaw('CASE WHEN sales.sale_status = 1 THEN "Selesai" WHEN sales.sale_status = 2 THEN "Pending" ELSE "Draft" END as sale_status')
-        ->with('biller', 'customer', 'warehouse', 'user','productSale')
-        ->find($id);
+        $sale = Sale::select(['id', 'reference_no as invoice_number', 'biller_id', 'customer_id', 'warehouse_id', 'user_id', 'order_discount', 'order_tax', 'order_tax_rate', 'shipping_cost', 'grand_total', 'paid_amount', 'sale_note', 'staff_note', 'sale_status'])
+            ->selectRaw('DATE_FORMAT(sales.created_at,"%d/%m/%Y %H:%i:%s") as date')
+            ->selectRaw('CASE WHEN sales.sale_status = 1 THEN "Selesai" WHEN sales.sale_status = 2 THEN "Pending" ELSE "Draft" END as sale_status')
+            ->with('biller', 'customer', 'warehouse', 'user', 'productSale')
+            ->find($id);
 
         if (!$sale) {
-            return ResponseHelpers::formatResponse('error : Sale not found', [], 404,false);
+            return ResponseHelpers::formatResponse('error : Sale not found', [], 404, false);
         }
 
         return ResponseHelpers::formatResponse('success', $sale, 200);
@@ -524,57 +502,61 @@ class SaleController extends Controller
     public function payment(Request $request, $id)
     {
         $payments = Payment::where('sale_id', $id)
-        ->with('account', 'user')
-        ->get();
+            ->with('account', 'user')
+            ->get();
 
         if (!$payments) {
-            return ResponseHelpers::formatResponse('error : Sale not found', [], 404,false);
+            return ResponseHelpers::formatResponse('error : Sale not found', [], 404, false);
         }
 
         return ResponseHelpers::formatResponse('success', $payments, 200);
     }
-    
+
     // get gift card list
     // [GET] /sales/gift-card
-    public function giftCard(){
+    public function giftCard()
+    {
         try {
             $lims_gift_card_list = GiftCard::where("is_active", true)->get();
             return ResponseHelpers::formatResponse('success', $lims_gift_card_list, 200);
         } catch (\Exception $e) {
-            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500,false);
+            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500, false);
         }
     }
 
     // get pos setting
     // [GET] /sales/pos-setting
-    public function posSetting(){
+    public function posSetting()
+    {
         try {
             $lims_pos_setting_data = PosSetting::latest()->first();
             return ResponseHelpers::formatResponse('success', $lims_pos_setting_data, 200);
         } catch (\Exception $e) {
-            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500,false);
+            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500, false);
         }
     }
 
     // get warehouse list
     // [GET] /sales/warehouse
-    public function warehouseList(){
+    public function warehouseList()
+    {
         try {
             $lims_warehouse_list = Warehouse::where('is_active', true)->get();
             return ResponseHelpers::formatResponse('success', $lims_warehouse_list, 200);
         } catch (\Exception $e) {
-            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500,false);
+            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500, false);
         }
     }
 
     // get account list
     // [GET] /sales/account
-    public function accountList(){
+    public function accountList()
+    {
         try {
             $lims_account_list = Account::where('is_active', true)->get();
             return ResponseHelpers::formatResponse('success', $lims_account_list, 200);
         } catch (\Exception $e) {
-            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500,false);
+            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500, false);
         }
     }
 
@@ -616,7 +598,7 @@ class SaleController extends Controller
                 ],
             ]);
         }
-        
+
         $data['user_id'] = Auth::id();
         $cash_register_data = CashRegister::where([
             ['user_id', $data['user_id']],
@@ -702,7 +684,7 @@ class SaleController extends Controller
         $mail_data['paid_amount'] = $lims_sale_data->paid_amount;
 
         $product_id = $data['product_id'];
-        
+
         $product_code = $data['product_code'];
         $qty = $data['qty'];
         $sale_unit = $data['sale_unit'];
@@ -718,15 +700,14 @@ class SaleController extends Controller
 
         foreach ($product_id as $i => $id) {
             if (strpos($product_code[$i], '-') !== false) {
-                $lims_product_data = Product::
-                leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
-                // ->where('products.id', $id)
-                ->where('split.split_set_code', $product_code[$i])->first();
-            }else{
+                $lims_product_data = Product::leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+                    // ->where('products.id', $id)
+                    ->where('split.split_set_code', $product_code[$i])->first();
+            } else {
                 $lims_product_data = Product::where('id', $id)->first();
             }
             $product_sale['variant_id'] = null;
-            
+
             if ($lims_product_data->type == 'combo' && $data['sale_status'] == 1) {
                 $product_list = explode(",", $lims_product_data->product_list);
                 $qty_list = explode(",", $lims_product_data->qty_list);
@@ -796,7 +777,7 @@ class SaleController extends Controller
             $product_sale['product_id'] = $id;
             if (strpos($product_code[$i], '-') !== false) {
                 $product_sale['split_set_code'] = $product_code[$i];
-            }else{
+            } else {
                 $product_sale['split_set_code'] = null;
             }
             $product_sale['qty'] = $mail_data['qty'][$i] = $qty[$i];
@@ -1223,16 +1204,23 @@ class SaleController extends Controller
         $lims_category_list = Category::where('is_active', true)->get();
 
         $check_recent = auth()->user()->role_id > 2 && config('staff_access') == 'own';
-        $recent_sale = Sale::when( $check_recent, fn ($q) => $q->where( 'user_id', auth()->id() ) )
-                            ->where('sale_status', 1)->orderBy('id', 'desc')->take(10)->with('customer')->get();
+        $recent_sale = Sale::when($check_recent, fn ($q) => $q->where('user_id', auth()->id()))
+            ->where('sale_status', 1)->orderBy('id', 'desc')->take(10)->with('customer')->get();
 
-        $recent_draft = Sale::when( $check_recent, fn ($q) => $q->where( 'user_id', auth()->id() ) )
-                            ->where('sale_status', 3)->orderBy('id', 'desc')->take(10)->with('customer')->get();
-     
+        $recent_draft = Sale::when($check_recent, fn ($q) => $q->where('user_id', auth()->id()))
+            ->where('sale_status', 3)->orderBy('id', 'desc')->take(10)->with('customer')->get();
+
         $lims_coupon_list = Coupon::where('is_active', true)->get();
         $flag = 0;
 
         return view('sale.pos', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_cashier_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag'));
+    }
+
+    public function pos()
+    {
+        $this->authorize('create', Sale::class);
+
+        return view('sale.pos_new');
     }
 
     public function getProductByFilter($category_id, $brand_id)
@@ -1342,30 +1330,32 @@ class SaleController extends Controller
         }
 
         $lims_product_data = Product::query()
-            ->select([
-                'products.*', 
-                DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, products.price)) as price"),
-                'split.split_set_code']
+            ->select(
+                [
+                    'products.*',
+                    DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, products.price)) as price"),
+                    'split.split_set_code'
+                ]
             )
             // ->leftJoin('product_split_set_detail as split', 'split.product_id =', "$product_code")
-            ->leftJoin('product_split_set_detail as split', function($join) use ($product_code) {
+            ->leftJoin('product_split_set_detail as split', function ($join) use ($product_code) {
                 $join->on('products.id', '=', 'split.product_id');
-                $join->where(function($query) use ($product_code) {
-                    $query->on('split.split_set_code', '=', DB::raw("'".$product_code."'"))
+                $join->where(function ($query) use ($product_code) {
+                    $query->on('split.split_set_code', '=', DB::raw("'" . $product_code . "'"))
                         ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
                 });
             })
-            ->leftJoin('product_buyback as buyback', function($join) {
+            ->leftJoin('product_buyback as buyback', function ($join) {
                 $join->on('products.id', '=', 'buyback.product_id');
-                $join->where(function($query) {
+                $join->where(function ($query) {
                     $query->on('split.split_set_code', '=', 'buyback.code')
                         ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
                 });
             })
-            ->when($is_split, function($query) use ($product_code) {
+            ->when($is_split, function ($query) use ($product_code) {
                 $query->where('split.split_set_code', $product_code);
             })
-            ->when(!$is_split, function($query) use ($product_code) {
+            ->when(!$is_split, function ($query) use ($product_code) {
                 $query->where('products.code', $product_code);
             })
             ->first();
@@ -1631,7 +1621,7 @@ class SaleController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->except('document');
-        
+
         $document = $request->document;
         if ($document) {
             $v = Validator::make(
@@ -1889,13 +1879,13 @@ class SaleController extends Controller
         $options->setDefaultFont('Courier');
         $dompdf->setOptions($options);
         $dompdf->setPaper('A4', 'landscape');
-        
+
         $html = view('sale.invoice', $data)->render();
         $dompdf->loadHtml($html);
         $dompdf->render();
 
         $filename = 'invoice-' . $data['lims_sale_data']->reference_no . '.pdf';
-        
+
         // Open pdf in browser
         $dompdf->stream($filename, array("Attachment" => false));
     }
@@ -1904,7 +1894,7 @@ class SaleController extends Controller
     private function getInvoiceData($id)
     {
         $lims_sale_data = Sale::find($id);
-        $lims_product_sale_data = Product_Sale::with(['product','productSplitSetDetail'])->where('sale_id', $id)->get();
+        $lims_product_sale_data = Product_Sale::with(['product', 'productSplitSetDetail'])->where('sale_id', $id)->get();
         $lims_biller_data = Biller::find($lims_sale_data->biller_id);
         $lims_warehouse_data = Warehouse::find($lims_sale_data->warehouse_id);
         $lims_customer_data = Customer::find($lims_sale_data->customer_id);
@@ -1919,12 +1909,12 @@ class SaleController extends Controller
         $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
 
         return compact(
-            'lims_sale_data', 
-            'lims_product_sale_data', 
-            'lims_biller_data', 
-            'lims_warehouse_data', 
-            'lims_customer_data', 
-            'lims_payment_data', 
+            'lims_sale_data',
+            'lims_product_sale_data',
+            'lims_biller_data',
+            'lims_warehouse_data',
+            'lims_customer_data',
+            'lims_payment_data',
             'numberInWords'
         );
     }

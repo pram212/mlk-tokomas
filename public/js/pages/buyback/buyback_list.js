@@ -94,10 +94,6 @@ $(document).ready(function () {
                 searchable: false,
             },
             {
-                data: "product_property_description",
-                searchable: false,
-            },
-            {
                 data: "product_status",
                 searchable: false,
             },
@@ -153,7 +149,7 @@ $(document).ready(function () {
                 extend: "colvis",
                 text: lang_visibility,
                 // columns: ":gt(0)",
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
             },
         ],
     });
@@ -209,7 +205,6 @@ $(document).ready(function () {
                 additional_cost: $("#modal_additional_cost").val(),
                 final_price: $("#final_price").text(),
                 description: $("#modal_description").val(),
-                product_property_id: $("#modal_product_properties").val(),
             })
             .then((response) => {
                 // // show alert success
@@ -259,6 +254,8 @@ $(document).ready(function () {
             $("#modal_discount").val(parseFloat(response.data.discount));
             $("#product_id").val(response.data.id);
             $("#product_code").val(code);
+            $("#modal_additional_cost").val(0);
+            $("#modal_description").val("");
             // show modal buybackModal
             $("#buybackModal").modal("show");
         });
@@ -306,22 +303,10 @@ function filterCode(search = "") {
 
 function validation_buyback() {
     const modal_additional_cost = parseFloat($("#modal_additional_cost").val());
-    const modal_product_properties = $("#modal_product_properties").val();
 
     // if modal_additional_cost null then fill with 0
     if (!modal_additional_cost) {
         $("#modal_additional_cost").val(0);
     }
-
-    // if modal_product_properties null then show alert
-    if (!modal_product_properties) {
-        Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Product Properties is required",
-        });
-        return false;
-    }
-
     return true;
 }

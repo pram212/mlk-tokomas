@@ -140,6 +140,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 		// Sales Pos Page
 		Route::get('pos', 'SaleController@posSale')->name('pos');
+		Route::get('pos_new', 'SaleController@pos')->name('pos_new');
 
 		// Sales index Page
 		Route::get('index_old', 'SaleController@index_old');
@@ -152,7 +153,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('account', 'SaleController@accountList'); // account modal
 
 
-		
+
 		Route::post('searchProducts', 'SaleController@search_products')->name('searchProducts');
 		Route::get('print-last-reciept', 'SaleController@printLastReciept')->name('printLastReciept');
 		Route::post('updatepayment', 'SaleController@updatePayment')->name('update-payment');
@@ -174,8 +175,6 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::get('sale_by_csv', 'SaleController@saleByCsv');
 		Route::get('today-sale', 'SaleController@todaySale');
 		Route::post('sale-data', 'SaleController@saleData');
-
-		
 	});
 	Route::get('sales-print/{id}', 'SaleController@printInvoice')->name('print');
 	Route::get('sales-getproduct/{id}', 'SaleController@getProduct')->name('getproduct');
@@ -184,7 +183,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	Route::get('sales-lims_product_search', 'SaleController@limsProductSearch')->name('product_sale.search');
 
 	// delivery routes
-	Route::group(['prefix' => 'delivery', 'as' => 'delivery.'], function() {
+	Route::group(['prefix' => 'delivery', 'as' => 'delivery.'], function () {
 		Route::get('product_delivery/{id}', 'DeliveryController@productDeliveryData');
 		Route::post('deletebyselection', 'DeliveryController@deleteBySelection');
 		Route::post('sendmail', 'DeliveryController@sendMail')->name('sendMail');
@@ -199,7 +198,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	// quotation routes
 	Route::resource('/quotations', 'QuotationController');
 	Route::post('quotations-sendmail', 'QuotationController@sendMail')->name('quotations.sendmail');
-	Route::group(['prefix' => 'quotations', 'as' => 'quotations.'], function() {
+	Route::group(['prefix' => 'quotations', 'as' => 'quotations.'], function () {
 		Route::get('lims_product_search', 'QuotationController@limsProductSearch')->name('product_quotation.search');
 		Route::get('getcustomergroup/{id}', 'QuotationController@getCustomerGroup')->name('getcustomergroup');
 		Route::get('{id}/create_purchase', 'QuotationController@createPurchase')->name('create_purchase');
@@ -212,7 +211,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	// purchase routes
 	Route::resource('/purchases', 'PurchaseController');
 	Route::get('purchase_by_csv', 'PurchaseController@purchaseByCsv');
-	Route::group(['prefix' => 'purchases', 'as' => 'purchases.'], function() {
+	Route::group(['prefix' => 'purchases', 'as' => 'purchases.'], function () {
 		Route::get('lims_product_search', 'PurchaseController@limsProductSearch')->name('product_purchase.search');
 		Route::post('updatepayment', 'PurchaseController@updatePayment')->name('update-payment');
 		Route::post('deletepayment', 'PurchaseController@deletePayment')->name('delete-payment');
@@ -226,7 +225,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// tranfer routes
 	Route::resource('/transfers', 'TransferController');
-	Route::group(['prefix' => 'transfers', 'as' => 'transfers.'], function() {
+	Route::group(['prefix' => 'transfers', 'as' => 'transfers.'], function () {
 		Route::get('lims_product_search', 'TransferController@limsProductSearch')->name('product_transfer.search');
 		Route::post('importtransfer', 'TransferController@importTransfer')->name('import');
 		Route::get('getproduct/{id}', 'TransferController@getProduct')->name('getproduct');
@@ -237,7 +236,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// qty adjustment routes
 	Route::resource('/qty_adjustment', 'AdjustmentController');
-	Route::group(['prefix' => 'qty_adjustment', 'as' => 'qty_adjustment.'], function() {
+	Route::group(['prefix' => 'qty_adjustment', 'as' => 'qty_adjustment.'], function () {
 		Route::get('lims_product_search', 'AdjustmentController@limsProductSearch')->name('product_adjustment.search');
 		Route::get('getproduct/{id}', 'AdjustmentController@getProduct')->name('adjustment.getproduct');
 		Route::post('deletebyselection', 'AdjustmentController@deleteBySelection');
@@ -245,7 +244,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// return sale routes
 	Route::resource('/return-sale', 'ReturnController');
-	Route::group(['prefix' => 'return-sale', 'as' => 'return-sale.'], function() {
+	Route::group(['prefix' => 'return-sale', 'as' => 'return-sale.'], function () {
 		Route::get('getcustomergroup/{id}', 'ReturnController@getCustomerGroup')->name('getcustomergroup');
 		Route::get('lims_product_search', 'ReturnController@limsProductSearch')->name('product_search');
 		Route::get('getproduct/{id}', 'ReturnController@getProduct')->name('getproduct');
@@ -256,7 +255,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// return purchase routes
 	Route::resource('/return-purchase', 'ReturnPurchaseController');
-	Route::group(['prefix' => 'return-purchase', 'as' => 'return-purchase.'], function() {
+	Route::group(['prefix' => 'return-purchase', 'as' => 'return-purchase.'], function () {
 		Route::get('lims_product_search', 'ReturnPurchaseController@limsProductSearch')->name('product_return-purchase.search');
 		Route::get('getcustomergroup/{id}', 'ReturnPurchaseController@getCustomerGroup')->name('getcustomergroup');
 		Route::get('getproduct/{id}', 'ReturnPurchaseController@getProduct')->name('getproduct');
@@ -264,9 +263,9 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 		Route::post('deletebyselection', 'ReturnPurchaseController@deleteBySelection');
 		Route::post('sendmail', 'ReturnPurchaseController@sendMail')->name('sendmail');
 	});
-	
+
 	// report routes
-	Route::group(['prefix' => 'report', 'as' => 'report.'], function() {
+	Route::group(['prefix' => 'report', 'as' => 'report.'], function () {
 		Route::post('daily_purchase/{year}/{month}', 'ReportController@dailyPurchaseByWarehouse')->name('dailyPurchaseByWarehouse');
 		Route::post('monthly_purchase/{year}', 'ReportController@monthlyPurchaseByWarehouse')->name('monthlyPurchaseByWarehouse');
 		Route::post('daily_sale/{year}/{month}', 'ReportController@dailySaleByWarehouse')->name('dailySaleByWarehouse');
@@ -294,7 +293,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// user routes
 	Route::resource('/user', 'UserController');
-	Route::group(['prefix' => 'user', 'as' => 'user.'], function() {
+	Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
 		Route::put('update_profile/{id}', 'UserController@profileUpdate')->name('profileUpdate');
 		Route::put('changepass/{id}', 'UserController@changePassword')->name('password');
 		Route::get('profile/{id}', 'UserController@profile')->name('profile');
@@ -303,7 +302,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	});
 
 	// setting routes
-	Route::group(['prefix' => 'setting', 'as' => 'setting.'], function() {
+	Route::group(['prefix' => 'setting', 'as' => 'setting.'], function () {
 		Route::post('general_setting_store', 'SettingController@generalSettingStore')->name('generalStore');
 		Route::post('mail_setting_store', 'SettingController@mailSettingStore')->name('mailStore');
 		Route::post('hrm_setting_store', 'SettingController@hrmSettingStore')->name('hrmStore');
@@ -323,7 +322,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// expense categories routes
 	Route::resource('/expense_categories', 'ExpenseCategoryController');
-	Route::group(['prefix' => 'expense_categories', 'as' => 'expense_categories.'], function() {
+	Route::group(['prefix' => 'expense_categories', 'as' => 'expense_categories.'], function () {
 		Route::post('deletebyselection', 'ExpenseCategoryController@deleteBySelection');
 		Route::post('import', 'ExpenseCategoryController@import')->name('import');
 		Route::get('gencode', 'ExpenseCategoryController@generateCode');
@@ -331,13 +330,13 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// expenses routes
 	Route::resource('/expenses', 'ExpenseController');
-	Route::group(['prefix' => 'expenses', 'as' => 'expenses.'], function() {
+	Route::group(['prefix' => 'expenses', 'as' => 'expenses.'], function () {
 		Route::post('deletebyselection', 'ExpenseController@deleteBySelection');
 	});
 
 	// gift card routes
 	Route::resource('/gift_cards', 'GiftCardController');
-	Route::group(['prefix' => 'gift_cards', 'as' => 'gift_cards.'], function() {
+	Route::group(['prefix' => 'gift_cards', 'as' => 'gift_cards.'], function () {
 		Route::post('recharge/{id}', 'GiftCardController@recharge')->name('recharge');
 		Route::post('deletebyselection', 'GiftCardController@deleteBySelection');
 		Route::get('gencode', 'GiftCardController@generateCode');
@@ -345,14 +344,14 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// coupen routes
 	Route::resource('/coupons', 'CouponController');
-	Route::group(['prefix' => 'coupons', 'as' => 'coupons.'], function() {
+	Route::group(['prefix' => 'coupons', 'as' => 'coupons.'], function () {
 		Route::post('deletebyselection', 'CouponController@deleteBySelection');
 		Route::get('gencode', 'CouponController@generateCode');
 	});
 
 	// accounting routes
 	Route::resource('/accounts', 'AccountsController');
-	Route::group(['prefix' => 'accounts', 'as' => 'accounts.'], function() {
+	Route::group(['prefix' => 'accounts', 'as' => 'accounts.'], function () {
 		Route::post('account-statement', 'AccountsController@accountStatement')->name('statement');
 		Route::get('balancesheet', 'AccountsController@balanceSheet')->name('balancesheet');
 		Route::get('make-default/{id}', 'AccountsController@makeDefault');
@@ -363,31 +362,31 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// Departments routes
 	Route::resource('/departments', 'DepartmentController');
-	Route::group(['prefix' => 'departments', 'as' => 'departments.'], function() {
+	Route::group(['prefix' => 'departments', 'as' => 'departments.'], function () {
 		Route::post('/deletebyselection', 'DepartmentController@deleteBySelection');
 	});
 
 	// employees routes
 	Route::resource('/employees', 'EmployeeController');
-	Route::group(['prefix' => 'employees', 'as' => 'employees.'], function() {
+	Route::group(['prefix' => 'employees', 'as' => 'employees.'], function () {
 		Route::post('deletebyselection', 'EmployeeController@deleteBySelection');
 	});
 
 	// payroll routes
 	Route::resource('/payroll', 'PayrollController');
-	Route::group(['prefix' => 'payroll', 'as' => 'payroll.'], function() {
+	Route::group(['prefix' => 'payroll', 'as' => 'payroll.'], function () {
 		Route::post('deletebyselection', 'PayrollController@deleteBySelection');
 	});
 
 	// attendance routes
 	Route::resource('/attendance', 'AttendanceController');
-	Route::group(['prefix' => 'attendance', 'as' => 'attendance.'], function() {
+	Route::group(['prefix' => 'attendance', 'as' => 'attendance.'], function () {
 		Route::post('deletebyselection', 'AttendanceController@deleteBySelection');
 	});
 
 	// stock count routes
 	Route::resource('/stock-count', 'StockCountController');
-	Route::group(['prefix' => 'stock-count', 'as' => 'stock-count.'], function() {
+	Route::group(['prefix' => 'stock-count', 'as' => 'stock-count.'], function () {
 		Route::get('{id}/qty_adjustment', 'StockCountController@qtyAdjustment')->name('adjustment');
 		Route::post('finalize', 'StockCountController@finalize')->name('finalize');
 		Route::get('stockdif/{id}', 'StockCountController@stockDif');
@@ -395,14 +394,14 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 	// holidays routes
 	Route::resource('/holidays', 'HolidayController');
-	Route::group(['prefix' => 'holidays', 'as' => 'holidays.'], function() {
+	Route::group(['prefix' => 'holidays', 'as' => 'holidays.'], function () {
 		Route::get('approve-holiday/{id}', 'HolidayController@approveHoliday')->name('approveHoliday');
 		Route::get('my-holiday/{year}/{month}', 'HolidayController@myHoliday')->name('myHoliday');
 		Route::post('deletebyselection', 'HolidayController@deleteBySelection');
 	});
 
 	// cash register routes
-	Route::group(['prefix' => 'cash-register', 'as' => 'cash-register.'], function() {
+	Route::group(['prefix' => 'cash-register', 'as' => 'cash-register.'], function () {
 		Route::get('check-availability/{warehouse_id}', 'CashRegisterController@checkAvailability')->name('checkAvailability');
 		Route::get('showDetails/{warehouse_id}', 'CashRegisterController@showDetails');
 		Route::post('store', 'CashRegisterController@store')->name('store');
@@ -412,7 +411,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	});
 
 	// notifications routes
-	Route::group(['prefix' => 'notifications', 'as' => 'notifications.'], function() {
+	Route::group(['prefix' => 'notifications', 'as' => 'notifications.'], function () {
 		Route::post('store', 'NotificationController@store')->name('store');
 		Route::get('mark-as-read', 'NotificationController@markAsRead');
 	});
@@ -420,7 +419,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	// currency routes
 	Route::resource('currency', 'CurrencyController');
 
-	Route::group(['prefix' => 'master', 'as' => 'master.'], function() {
+	Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
 		Route::post('price-multi-delete', 'PriceController@destroyMultiple');
 		Route::get('price-datatable', 'PriceController@priceData');
 		Route::get('price-getProductPrice/{category_id}/{product_type_id}/{product_property_id}', 'PriceController@getProductPrice');
@@ -429,26 +428,25 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
 
 	// product categories routes
-	Route::group(['prefix' => 'product-categories', 'as' => 'product-categories.'], function() {
-		
+	Route::group(['prefix' => 'product-categories', 'as' => 'product-categories.'], function () {
+
 		Route::post('tagtype-multi-delete', 'TagTypeController@destroyMultiple');
 		Route::get('tagtype-datatable', 'TagTypeController@tagTypeData');
 		Route::resource('tagtype', 'TagTypeController');
-	
+
 		Route::post('producttype-multi-delete', 'ProductTypeController@destroyMultiple');
 		Route::get('producttype-datatable', 'ProductTypeController@productTypeData');
 		Route::get('producttype-getByCategory/{id}', 'ProductTypeController@getByCategory');
 		Route::resource('producttype', 'ProductTypeController');
-	
+
 		Route::get('productproperty-datatable', 'ProductPropertyController@productPropertyData');
 		Route::post('productproperty-multi-delete', 'ProductPropertyController@destroyMultiple');
 		Route::resource('productproperty', 'ProductPropertyController');
-	
+
 		Route::post('gramasi-multi-delete', 'GramasiController@destroyMultiple');
 		Route::get('gramasi-datatable', 'GramasiController@gramasiData');
 		Route::get('gramasi-getByCategoryAndProductType/{category_id}/{product_type_id}', 'GramasiController@getByCategoryAndProductType');
 		Route::resource('gramasi', 'GramasiController');
-
 	});
 
 	Route::resource('productbaseontag', 'ProductBaseOnTagController');
@@ -460,19 +458,16 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 	});
 
 	// route for BuyBack Controller
-	Route::group(['prefix' => 'buyback', 'as' => 'buyback.'], function() {
+	Route::group(['prefix' => 'buyback', 'as' => 'buyback.'], function () {
 		Route::get('/', 'BuyBackController@index')->name('index');
 		Route::get('buyback-datatable', 'BuyBackController@buybackDataTable')->name('buyback-datatable');
 		Route::get('getInvoiceNumber', 'BuyBackController@getInvoiceNumber')->name('getInvoiceNumber');
 		Route::get('getCode', 'BuyBackController@getCode')->name('getCode');
 		Route::get('getDataModalProductBuyBack/{id}/{split_set_code?}', 'BuyBackController@getDataModalProductBuyBack')->name('getDataModalProductBuyBack');
 		Route::post('store', 'BuyBackController@store')->name('store');
-		
 	});
-
 });
 
 Route::get('view-invoice/{invoice_number}', 'SaleController@viewInvoice')->name('viewInvoice');
 Route::get('view-product/{product_code}', 'ProductController@viewProduct')->name('viewProduct');
 Route::get('view-product/{product_code}/{split_set_code}', 'ProductController@viewProduct')->name('viewProductWithSplitSetCode');
-

@@ -1285,7 +1285,7 @@
         var row_product_code = $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.product-code')
             .val();
         pos = product_code.indexOf(row_product_code);
-        $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.in-stock').text(product_qty[pos]);
+        $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.in-stock').text(1);
         localStorageQty[rowindex] = sale_qty;
         localStorage.setItem("localStorageQty", localStorageQty);
         if (product_type[pos] == 'standard') {
