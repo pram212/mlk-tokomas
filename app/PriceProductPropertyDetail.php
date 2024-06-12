@@ -16,6 +16,17 @@ class PriceProductPropertyDetail extends Model
         'updated_by',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($productProperty) {
+            if ($productProperty->productProperty()->exists()) {
+                throw new \Exception(trans('file.Failed to be deleted because it was used by product Properties'));
+            }
+        });
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
