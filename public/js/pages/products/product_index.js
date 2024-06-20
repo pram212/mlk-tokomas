@@ -549,7 +549,8 @@ $(document).ready(function () {
             $("#dtl-gramasi-code").val(data.gramasi?.code);
             $("#dtl-discount").val(data.discount);
             $("#dtl-product-property").val(data.product_property?.description);
-            generateQRCode(data.code, "prev-qrcode");
+            const url = baseUrl + "/view-product/" + data.code;
+            generateQRCode(url, "prev-qrcode");
             // tampilkan modal box detil produk
             $("#detailModal").modal("show");
         });
