@@ -1,0 +1,18 @@
+/* hide unnecessary elements */
+
+.side-navbar {
+    top: 0;
+}
+
+.page {
+    margin-left: 0;
+}
+
+/* End: hide unnecessary elements */
+
+.header_pos {
+    /* display: block; */
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}

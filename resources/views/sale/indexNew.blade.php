@@ -82,14 +82,15 @@
     </div>
 </section>
 
-@include('partials.sale.modal_sale_detail')
-@include('partials.sale.modal_sale_view_payment')
-@include('partials.sale.modal_sale_add_payment')
-@include('partials.sale.modal_sale_add_delivery')
-{{--
-@include('partials.sale.modal_sale_add_delivery') --}}
+@include('sale.partials.modal_sale_detail')
+@include('sale.partials.modal_sale_view_payment')
+@include('sale.partials.modal_sale_add_payment')
+@include('sale.partials.modal_sale_add_delivery')
 
-<script src="{{ asset('public/js/axios.min.js') }}"></script>
+
+@endsection
+
+@section('scripts')
 <script>
     const lang_records_per_page = '{{ trans('file.records per page') }}';
     const lang_Showing = '{{ trans('file.Showing') }}' ;
@@ -101,11 +102,5 @@
     const lang_visibility = '{{ trans('file.Column visibility') }}';
     const asset_url = '{{ asset('public/vendor/bootstrap/css/bootstrap.min.css') }}';
 </script>
-<script src="{{ asset('public/js/axios.min.js') }}"></script>
-<script src="{{ asset('public/js/pages/sale/sale_index.js') }}"></script>
-
-@endsection
-
-@section('scripts')
-
+<script src="{{ asset('js/pages/sales/sale_index.js?timestamp=' . now()->timestamp) }}"></script>
 @endsection

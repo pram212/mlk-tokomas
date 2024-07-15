@@ -307,7 +307,7 @@ class SaleController extends Controller
                 if (in_array("sales-delete", $request['all_permission']))
                     $nestedData['options'] .= \Form::open(["route" => ["sales.destroy", $sale->id], "method" => "DELETE"]) . '
                             <li>
-                              <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> ' . trans("file.delete") . '</button> 
+                              <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> ' . trans("file.delete") . '</button>
                             </li>' . \Form::close() . '
                         </ul>
                     </div>';
@@ -470,7 +470,7 @@ class SaleController extends Controller
                 } elseif (isset($action['form'])) {
                     $options .= \Form::open(["route" => $action['route'], "method" => "DELETE"]) . '
                                 <li>
-                                  <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa ' . $action['icon'] . '"></i> ' . $action['label'] . '</button> 
+                                  <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa ' . $action['icon'] . '"></i> ' . $action['label'] . '</button>
                                 </li>' . \Form::close();
                 }
             }
@@ -1218,9 +1218,18 @@ class SaleController extends Controller
 
     public function pos()
     {
-        $this->authorize('create', Sale::class);
-
-        return view('sale.pos_new');
+        $role = Role::find(Auth::user()->role_id);
+        if ($role->hasPermissionTo('sales-add')) {
+            $warehouse_list = Warehouse::where('is_active', true)->get();
+            $customer_group_all = CustomerGroup::where('is_active', true)->get();
+            $customer_list = Customer::where('is_active', true)->get();
+            $cashier_list = User::where([
+                ["is_active", true],
+                ["role_id", 6] /* Kasir */
+            ])->get();
+            return view('sale.pos_new', compact('warehouse_list', 'customer_group_all', 'cashier_list', 'customer_list'));
+        } else
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
     public function getProductByFilter($category_id, $brand_id)
@@ -1363,7 +1372,7 @@ class SaleController extends Controller
 
 
         $product[] = $lims_product_data->name ?? $lims_product_data->code ?? '-'; // product name
-        $product[] = ($is_split) ? $lims_product_data->split_set_code : $lims_product_data->code; // product code 
+        $product[] = ($is_split) ? $lims_product_data->split_set_code : $lims_product_data->code; // product code
         $product[] = $lims_product_data->price; // product price
         $product[] = 0; // product discount
         $product[] = 'No Tax'; // product tax
