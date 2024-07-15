@@ -534,8 +534,8 @@ Route::group(['middleware' => ['auth', 'active']], function () {
     Route::get('/pos', function () {
         return redirect()->route('sales.pos');
     });
-});
 
-Route::get('view-invoice/{invoice_number}', 'SaleController@viewInvoice')->name('viewInvoice');
-Route::get('view-product/{product_code}', 'ProductController@viewProduct')->name('viewProduct');
-Route::get('view-product/{product_code}/{split_set_code}', 'ProductController@viewProduct')->name('viewProductWithSplitSetCode');
+    Route::get('view-invoice/{invoice_number}', 'SaleController@viewInvoice')->name('viewInvoice');
+    Route::get('view-product/{product_code}', 'ProductController@viewProduct')->name('viewProduct');
+    Route::get('view-product/{product_code}/{split_set_code}', 'ProductController@viewProduct')->name('viewProductWithSplitSetCode');
+});

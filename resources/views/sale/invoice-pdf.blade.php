@@ -1,3 +1,4 @@
+@php $logo = public_path('logo/bima_logo_1.png'); @endphp
 <!DOCTYPE html>
 <html>
 
@@ -197,11 +198,27 @@
             font-style: italic;
             font-size: 17px;
         }
+
+        #watermark {
+            background-image: url("data:image/png;base64,{{ base64_encode(file_get_contents($logo)) }}");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 25%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+            /* Ensure the watermark does not interfere with other elements */
+        }
     </style>
 </head>
 
 <body>
-
+    @if($mode != 'print')<div id="watermark" class="hidden-print"></div>@endif
     <div style="max-width:400px;margin:0 auto">
 
         @if($mode != 'print')
@@ -225,10 +242,8 @@
                     <tbody>
                         <tr>
                             <td style="width:300px;min-width: 300px;">
-                                @php
-                                $logo = public_path('logo/bima_text_1.png');
-                                @endphp
-                                <img src="data:image/png;base64,{{ base64_encode(file_get_contents($logo)) }}"
+                                @php $logo_text = public_path('logo/bima_text_1.png'); @endphp
+                                <img src="data:image/png;base64,{{ base64_encode(file_get_contents($logo_text)) }}"
                                     width="200px" alt="">
                             </td>
                             <td style="vertical-align: top;">

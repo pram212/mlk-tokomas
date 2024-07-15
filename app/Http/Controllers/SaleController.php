@@ -1886,12 +1886,32 @@ class SaleController extends Controller
         $dompdf = new Dompdf();
         $options = $dompdf->getOptions();
         $options->setDefaultFont('Courier');
+        $options->set('isPhpEnabled', 'true');
         $dompdf->setOptions($options);
         $dompdf->setPaper('A4', 'landscape');
 
         $html = view('sale.invoice-pdf', $data)->render();
         $dompdf->loadHtml($html);
         $dompdf->render();
+
+        /* add watermark */
+        // Instantiate canvas instance 
+        $canvas = $dompdf->getCanvas();
+        // Get height and width of page 
+        $w = $canvas->get_width();
+        $h = $canvas->get_height();
+        // Specify watermark image 
+        $imageURL = public_path('logo/bima_logo_1.png');
+        $imgWidth = 300;
+        $imgHeight = 300;
+        // Set image opacity 
+        $canvas->set_opacity(.1);
+        // Specify horizontal and vertical position 
+        $x = (($w - $imgWidth) / 2);
+        $y = (($h - $imgHeight) / 2);
+        // Add an image to the pdf 
+        $canvas->image($imageURL, $x, $y, $imgWidth, $imgHeight);
+        /* add watermark end*/
 
         $filename = 'invoice-' . $data['lims_sale_data']->reference_no . '.pdf';
 
