@@ -214,6 +214,14 @@
             pointer-events: none;
             /* Ensure the watermark does not interfere with other elements */
         }
+
+        #nota-penjualan {
+            font-size: 12px;
+            text-align: left;
+            display: block;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
     </style>
 </head>
 
@@ -284,6 +292,9 @@
                                 <img src="data:image/png;base64,{{ base64_encode(file_get_contents($gambar_produk)) }}"
                                     width="200px" alt="">
                                 @endif
+
+                                <span id="nota-penjualan">{{ $lims_sale_data->sale_note }}</span>
+                            </td>
                             <td class=" title" style="vertical-align: top;font-weight:bold">Kalau rusak dekok, pesok,
                                 mleot Potongan
                                 {{$lims_sale_data['discount'] ?? 0 }}/gram </td>
