@@ -1278,7 +1278,6 @@
                                             <label>{{trans('file.Change')}} : </label>
                                             <p id="change" class="ml-2">0</p>
                                         </div>
-                                        {{-- // TODO : MODAL --}}
                                         <div class="col-md-6 mt-1">
                                             <input type="hidden" name="paid_by_id">
                                             <label>{{trans('file.Paid By')}}</label>
@@ -3647,7 +3646,6 @@ function cheque() {
     $(".gift-card").hide();
 }
 
-// TODO : Credit Card Line
 function showCreditCard() {
     $credit_card_box.show();
 

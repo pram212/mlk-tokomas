@@ -127,9 +127,11 @@ function handlePaymentSubmitClick() {
         const payment_note = $("#payment_note").val();
         const payment_sale_note = $("textarea[name='sale_note']").val();
         const payment_staff_note = $("textarea[name='staff_note']").val();
-        const payment_methods = $("select[name='payment_method_id[]']").val();
 
         /* Payment */
+        const payment_methods = $("select[name='payment_method_id[]']").val();
+        if (payment_methods === null || payment_methods === "")
+            throw new Error("Please select payment method");
         // if (countPaymentMethod() === 0)
         //     throw new Error("Please add at least one payment method");
 
@@ -165,8 +167,8 @@ function handlePaymentSubmitClick() {
                     text: "Transaction success",
                 });
 
-                // window.location.href =
-                //     baseUrl + `/sales/gen_invoice/${data.id}`;
+                window.location.href =
+                    baseUrl + `/sales/gen_invoice/${data.id}`;
                 $("#btn-submit-payment").html(text).prop("disabled", false);
             })
             .catch((error) => {

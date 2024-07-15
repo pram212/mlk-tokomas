@@ -177,11 +177,6 @@ class saleController extends Controller
             $product_sales_data = $this->prepare_product_sale_data($items);
             $this->validate_product_qty($items, $requestData['warehouse_id']);
             $total_price = ceil(array_sum(array_column($product_sales_data, 'total')));
-            return response()->json([
-                'isSuccess' => true,
-                'message' => 'Sale created successfullys',
-                'data' => $product_sales_data
-            ], 201);
             $tax_data = $this->prepare_tax_data($request['tax'], $total_price);
             $discount_data = $this->prepare_discount_data($total_price, $request['discount']);
             $coupon_data = $this->prepare_coupon_data($total_price, $request['coupon_code']);
@@ -303,7 +298,10 @@ class saleController extends Controller
                 throw new \Exception("Item harus memiliki 'product_id' dan 'qty'.");
             }
 
-            $product = Product::where('code', $item['product_id'])->first();
+            $product = Product::where('code', $item['product_id'])
+                ->with('productWarehouse')
+                ->first();
+            $product_split = null;
 
             if (!$product) {
                 $product_split = ProductSplitSetDetail::where('split_set_code', $item['product_id'])->first();
@@ -313,7 +311,8 @@ class saleController extends Controller
                 }
             }
 
-            $net_unit_price = $product->price ?? $product_split->price;
+            $product_id = $product->id ?? $product_split->product_id;
+            $net_unit_price = (float)@$product->product_warehouse->price ?? (float)@$product_split->price ?? 0;
             $qty = $item['qty'];
             $total = $net_unit_price * $qty;
 
@@ -332,7 +331,8 @@ class saleController extends Controller
             ]);
 
             $product_sale_data[] = [
-                'product_id' => $item['product_id'],
+                'product_id' => $product_id,
+                'split_set_code' => $product_split->split_set_code ?? null,
                 'variant_id' => null,
                 'qty' => $qty,
                 'sale_unit_id' => $product->sale_unit_id ?? null,
@@ -417,7 +417,6 @@ class saleController extends Controller
 
     private function validate_product_qty($items, $warehouse_id)
     {
-        // ! NOTE : CEK STOK PRODUK
         /* Validate product quantity */
         foreach ($items as $item) {
             $isSplitProduct = strpos($item['product_id'], '-') !== false;

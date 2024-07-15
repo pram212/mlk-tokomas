@@ -1861,7 +1861,7 @@ class SaleController extends Controller
     {
         $data = $this->getInvoiceData($id);
         $data['mode'] = 'view';
-        return view('sale.invoice', $data);
+        return view('sale.invoice-pdf', $data);
     }
 
     // View invoice
@@ -1889,7 +1889,7 @@ class SaleController extends Controller
         $dompdf->setOptions($options);
         $dompdf->setPaper('A4', 'landscape');
 
-        $html = view('sale.invoice', $data)->render();
+        $html = view('sale.invoice-pdf', $data)->render();
         $dompdf->loadHtml($html);
         $dompdf->render();
 
