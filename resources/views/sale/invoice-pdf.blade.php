@@ -222,6 +222,36 @@
             margin-top: 10px;
             margin-left: 10px;
         }
+
+        #catatan {
+            font-size: 12px;
+            text-align: left;
+            display: block;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+        .promo-thr {
+            font-size: 12px;
+            text-align: left;
+            display: block;
+            margin-top: -20px;
+            margin-left: -15px;
+        }
+
+        .promo-thr span {
+            font-size: 14px;
+            color: red;
+            text-align: left;
+            display: block;
+            margin-top: 10px;
+            margin-left: -20px;
+        }
+
+        .promo-thr li {
+            font-size: 12px;
+            text-align: left;
+        }
     </style>
 </head>
 
@@ -295,9 +325,21 @@
 
                                 <span id="nota-penjualan">{{ $lims_sale_data->sale_note }}</span>
                             </td>
-                            <td class=" title" style="vertical-align: top;font-weight:bold">Kalau rusak dekok, pesok,
-                                mleot Potongan
-                                {{$lims_sale_data['discount'] ?? 0 }}/gram </td>
+                            <td class=" title" style="vertical-align: top;font-weight:bold">
+                                <div id="catatan">
+                                    -Sudah Diperiksa Sendiri <br>
+                                    -Timbang Ulang <br>
+                                    +6K umum
+                                    <br>
+                                    <br>
+                                    <ul class="promo-thr">
+                                        <span>Promo THR</span>
+                                        <li>R : 20.000/Gram</li>
+                                        <li>Kalau rusak dekok, pesok, mleot Potongan {{$lims_sale_data['discount'] ?? 0
+                                            }}/gram</li>
+                                    </ul>
+                                </div>
+                            </td>
                             <td class="title" style="vertical-align: top;font-weight:bold;" colspan="2">
                                 <ul>
                                     <li> Kadar :</li>
