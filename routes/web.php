@@ -14,14 +14,16 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\PromoController;
 use App\Http\Controllers\api\TaxesController as taxesController;
 use App\Http\Controllers\api\saleController as SaleControllerApi;
 use App\Http\Controllers\api\couponController as couponControllerApi;
 use App\Http\Controllers\api\productController as productControllerApi;
+use App\Http\Controllers\api\WarehouseController as WarehouseControllerApi;
+use App\Http\Controllers\api\AdjustmentContoller as AdjustmentControllerApi;
 use App\Http\Controllers\api\categoriesController as categoriesControllerApi;
 use App\Http\Controllers\api\paymentMethodController as paymentMethodControllerApi;
-use App\Http\Controllers\api\AdjustmentContoller as AdjustmentControllerApi;
-use App\Http\Controllers\api\WarehouseController as WarehouseControllerApi;
+use App\Http\Controllers\api\PromoController as PromoControllerApi;
 
 Auth::routes();
 
@@ -32,6 +34,11 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => ['auth', 'active']], function () {
 
     Route::prefix('api')->group(function () {
+        // Promo Routes
+        Route::prefix('promo')->group(function () {
+            Route::get('/', [PromoControllerApi::class, 'index']);
+        });
+
         // Warehouse Routes
         Route::prefix('warehouses')->group(function () {
             Route::get('/', [WarehouseControllerApi::class, 'index']);
@@ -90,6 +97,9 @@ Route::group(['middleware' => ['auth', 'active']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/dashboard-filter/{start_date}/{end_date}', 'HomeController@dashboardFilter');
     Route::get('language_switch/{locale}', 'LanguageController@switchLanguage');
+
+    // Promo
+    Route::resource('promo', 'PromoController');
 
     // role permission routes
     Route::resource('/role', 'RoleController');
