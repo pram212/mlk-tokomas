@@ -219,7 +219,8 @@
                                                         <label>{{ trans('file.Product Price') }} *</strong> </label>
                                                         <input type="text" id="price" name="price" @if($mode=='show' )
                                                             readonly @endif class="form-control" step="any"
-                                                            value="{{ @$product->price ?? '' }}" readonly>
+                                                            value="{{ @$product->product_warehouse->price ?? '' }}"
+                                                            readonly>
                                                         @error('price')
                                                         <span class="text-danger">{{ $message }}</span>
                                                         @enderror
@@ -409,6 +410,10 @@
 {{-- modal --}}
 @include('product.modal_split_set')
 
+
+@endsection
+
+@section('scripts')
 <script src="{{ asset('public/js/qrcode.min.js') }}"></script>
 
 <script type="text/javascript">
@@ -430,13 +435,13 @@
     let code = $("input[name='code']");
     const table_detail_split_set = $('#detail_split_set table tbody')
     const detail_split_set_qty = $('#detail_split_set_qty');
-    
+
     const produk = @if(@$product) JSON.parse('{!! $product  !!}') @else null @endif;
     const product_split_set_detail = @if(@$product) produk['product_split_set_detail'] @else null @endif;
     const split_set_id = @if(@$split_set_id) {!! $split_set_id  !!} @else null @endif;
 
     const lang_select = '{!! __('file.Select') !!}';
-    
+
     const gramasis = @if(@$gramasi) JSON.parse('{!! $gramasi  !!}') @else null @endif;
     const properties = @if(@$productProperty) JSON.parse('{!! $productProperty  !!}') @else null @endif;
 
@@ -452,4 +457,5 @@
     @endif
 </script>
 <script src="{{ asset('public/js/pages/products/product_form.js') }}"></script>
+
 @endsection

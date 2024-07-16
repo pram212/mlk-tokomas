@@ -329,7 +329,7 @@
                                 <div id="catatan">
                                     -Sudah Diperiksa Sendiri <br>
                                     -Timbang Ulang <br>
-                                    +6K umum
+                                    {{ $gold_content_convertion }}
                                     <br>
                                     <br>
                                     <ul class="promo-thr">
@@ -368,16 +368,6 @@
                                 </div>
 
                             </td>
-                            @php
-                            $totalPrice = number_format(
-                            floatval(str_replace(',', '.',
-                            ($lims_product_sale_data[0]['productSplitSetDetail'])?$lims_product_sale_data[0]['productSplitSetDetail']['price']:$lims_product_sale_data[0]['product']['price']
-                            ?? 0)),
-                            2,
-                            ',',
-                            '.'
-                            );
-                            @endphp
 
                         </tr>
                         <tr>

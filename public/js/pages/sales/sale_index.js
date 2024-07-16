@@ -18,7 +18,7 @@ const $saleDataTable = $saleTable.DataTable({
     processing: true,
     serverSide: true,
     ajax: {
-        url: baseUrl + "api/sales",
+        url: baseUrl + "/api/sales",
         type: "GET",
         dataType: "json",
         data: function (d) {
@@ -209,7 +209,7 @@ $(document).on(
     "table.sale-list tbody .add-delivery",
     function (event) {
         var id = $(this).data("id").toString();
-        $.get(baseUrl + "delivery/create/" + id, function (data) {
+        $.get(baseUrl + "/delivery/create/" + id, function (data) {
             $("#dr").text(data[0]);
             $("#sr").text(data[1]);
             if (data[2]) {
@@ -308,7 +308,7 @@ print_btn.on("click", function () {
 $(document).on("click", "table.sale-list tbody .get-payment", function (event) {
     const id = $(this).data("id");
 
-    axios.get(baseUrl + "sales/payment/" + id).then((response) => {
+    axios.get(baseUrl + "/sales/payment/" + id).then((response) => {
         const status = response.data.status;
         const data = response.data.data;
         const message = response.data.message;
@@ -382,7 +382,7 @@ function saleDetails(sale_id) {
 
     // axios get request [GET] sales/details/{id}
     axios
-        .get(baseUrl + "sales/details/" + sale_id)
+        .get(baseUrl + "/sales/details/" + sale_id)
         .then((response) => {
             const status = response.data.status;
             const data = response.data.data;
@@ -494,28 +494,28 @@ function saleDetails(sale_id) {
 
 // axios get request [GET] sales/gift-card and return the response
 function getGiftList() {
-    return axios.get(baseUrl + "sales/gift-card").then((response) => {
+    return axios.get(baseUrl + "/sales/gift-card").then((response) => {
         return response.data;
     });
 }
 
 // axios get request [GET] pos-setting and return the response
 function getPosSetting() {
-    return axios.get(baseUrl + "pos-setting").then((response) => {
+    return axios.get(baseUrl + "/pos-setting").then((response) => {
         return response.data;
     });
 }
 
 // axios get request [GET] warehouse and return the response
 function getWarehouse() {
-    return axios.get(baseUrl + "api/warehouses").then((response) => {
+    return axios.get(baseUrl + "/api/warehouses").then((response) => {
         return response.data;
     });
 }
 
 // axios get request [GET] account and return the response
 function getAccount() {
-    return axios.get(baseUrl + "sales/account").then((response) => {
+    return axios.get(baseUrl + "/sales/account").then((response) => {
         return response.data;
     });
 }

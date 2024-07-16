@@ -170,7 +170,8 @@ class ProductController extends Controller
             'productProperty:id,code,description',
             'gramasi:id,code,gramasi',
             'tagType:id,code,color',
-            'category'
+            'category',
+            'product_warehouse',
         ]);
 
         $this->authorize('update', $product);
@@ -198,7 +199,8 @@ class ProductController extends Controller
             'gramasi:id,code,gramasi',
             'tagType:id,code,color',
             'category',
-            'productSplitSetDetail'
+            'productSplitSetDetail',
+            'product_warehouse'
         ]);
 
         $mode = 'show';
@@ -849,7 +851,7 @@ class ProductController extends Controller
         $productQuery = Product::query()
             ->select([
                 DB::raw("COALESCE(split.split_set_code, products.code) as code"),
-                DB::raw("COALESCE(split.price, products.price) as price"),
+                DB::raw("COALESCE(split.price, product_warehouse.price) as price"),
                 'name',
                 DB::raw("COALESCE(split.created_at, products.created_at) as created_at"),
                 'gramasi_id',
@@ -859,6 +861,7 @@ class ProductController extends Controller
                 DB::raw("0 as history_status"), // 0 = Product Created, 1 = Product Sold, 2 = Product Buyback
             ])
             ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+            ->leftJoin('product_warehouse as product_warehouse', 'products.id', '=', 'product_warehouse.product_id')
             ->where('is_active', true)
             ->when($split_set_code || $product_id, function ($query) use ($split_set_code, $product_id) {
                 return $query->where(function ($query) use ($split_set_code, $product_id) {

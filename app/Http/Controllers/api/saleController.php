@@ -12,7 +12,7 @@ use App\PaymentDetails;
 use App\Product_Warehouse;
 use Illuminate\Http\Request;
 use App\ProductSplitSetDetail;
-use App\Helper\PermissionHelpers;
+use App\Helpers\PermissionHelpers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -77,7 +77,7 @@ class saleController extends Controller
             ->addColumn('options', function ($sale) use ($permissions) {
                 $actions = [
                     [
-                        'route' => route('sale.invoice', $sale->id),
+                        'route' => route('sales.invoice', $sale->id),
                         'icon' => 'fa-copy',
                         'label' => trans('file.Generate Invoice'),
                         'permission' => true

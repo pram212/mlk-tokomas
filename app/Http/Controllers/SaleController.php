@@ -36,7 +36,8 @@ use App\{
     ProductPurchase,
     Purchase,
     GeneralSetting,
-    ProductSplitSetDetail
+    ProductSplitSetDetail,
+    GoldContentConvertion,
 };
 use DB;
 use Stripe\Stripe;
@@ -1895,21 +1896,21 @@ class SaleController extends Controller
         $dompdf->render();
 
         /* add watermark */
-        // Instantiate canvas instance 
+        // Instantiate canvas instance
         $canvas = $dompdf->getCanvas();
-        // Get height and width of page 
+        // Get height and width of page
         $w = $canvas->get_width();
         $h = $canvas->get_height();
-        // Specify watermark image 
+        // Specify watermark image
         $imageURL = public_path('logo/bima_logo_1.png');
         $imgWidth = 300;
         $imgHeight = 300;
-        // Set image opacity 
+        // Set image opacity
         $canvas->set_opacity(.1);
-        // Specify horizontal and vertical position 
+        // Specify horizontal and vertical position
         $x = (($w - $imgWidth) / 2);
         $y = (($h - $imgHeight) / 2);
-        // Add an image to the pdf 
+        // Add an image to the pdf
         $canvas->image($imageURL, $x, $y, $imgWidth, $imgHeight);
         /* add watermark end*/
 
@@ -1928,6 +1929,16 @@ class SaleController extends Controller
         $lims_warehouse_data = Warehouse::find($lims_sale_data->warehouse_id);
         $lims_customer_data = Customer::find($lims_sale_data->customer_id);
         $lims_payment_data = Payment::where('sale_id', $id)->get();
+        $product = Product::find($lims_product_sale_data[0]->product_id);
+        $gold_content = $product->gold_content;
+        $tag_type_id = $product->tag_type_id;
+        $gold_content_convertion = GoldContentConvertion::where([
+            ['tag_types_id', $tag_type_id],
+            ['gold_content', $gold_content]
+        ])
+            ->with('tag_type')
+            ->first();
+        $gold_content_convertion = $gold_content_convertion ? $gold_content_convertion->result . ' ' . $gold_content_convertion->tag_type->description : '';
 
         $numberToWords = new NumberToWords();
         if (in_array(\App::getLocale(), ['ar', 'hi', 'vi', 'en-gb'])) {
@@ -1936,6 +1947,7 @@ class SaleController extends Controller
             $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
         }
         $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
+        $totalPrice = number_format((float)$lims_sale_data->grand_total, 2, ',', '.');
 
         return compact(
             'lims_sale_data',
@@ -1944,7 +1956,9 @@ class SaleController extends Controller
             'lims_warehouse_data',
             'lims_customer_data',
             'lims_payment_data',
-            'numberInWords'
+            'numberInWords',
+            'gold_content_convertion',
+            'totalPrice'
         );
     }
 
