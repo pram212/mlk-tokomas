@@ -74,94 +74,67 @@ class ProductController extends Controller
 
         try {
             DB::beginTransaction();
+            $imagePath = $this->handleImageUpload($request);
+            $request->merge(['image' => $imagePath, 'is_active' => 1]);
 
-            $imagePath = 'zummXD2dvAtI.png';
+            $product = Product::create($request->all());
+            $product->productWarehouse()->create([
+                "warehouse_id" => 1, // DUMMY WAREHOUSE
+                "qty" => 1, // FIX QTY
+                "price" => $request->price,
+            ]);
 
-            if ($request->file('image')) {
-                $file = $request->file('image');
-                $imagePath = "storage/app/" . $file->storeAs('product_images', time() . date('YmdHms') . "." . $file->extension());
-
-                $request->merge(['image' => $imagePath]);
-            } else {
-                // Jika tidak ada file gambar yang diunggah, pertahankan jalur gambar yang ada
-                $imagePath = $request->image;
-            }
-
-            Product::create(
-                [
-                    'tag_type_id' => $request->tag_type_id,
-                    'code' => $request->code,
-                    'gold_content' => $request->gold_content,
-                    'additional_code' => $request->additional_code,
-                    'category_id' => $request->category_id,
-                    'product_type_id' => $request->product_type_id,
-                    'price' => $request->price,
-                    'discount' => $request->discount,
-                    'gramasi_id' => $request->gramasi_id,
-                    'mg' => $request->mg,
-                    'product_property_id' => $request->product_property_id,
-                    'image' => $imagePath,
-                    'is_active' => true,
-                    'name' => $request->name,
-                    'split_set_type' => $request->split_set_type,
-                ]
-            );
-
-            // handle if split set type is split set (2)
-            if ($request->split_set_type == 2) {
-                // get product id
-                $product_id = Product::where('name', $request->name)->first()->id;
-
-                // update qty product (name=detail_split_set_qty) to products.qty
-                $product = Product::find($product_id);
-                $product->qty = $request->detail_split_set_qty;
-                // save product detail split set to product_split_set_detail split_set_code[] and split_set_qty[]
-                $split_set_code = $request->split_set_code;
-                $split_set_qty = $request->split_set_qty;
-                $split_set_harga = $request->split_set_harga;
-                $split_set_gramasi = $request->split_set_gramasi;
-                $split_set_mg = $request->split_set_mg;
-                $split_set_detail = [];
-
-                for ($i = 0; $i < count($split_set_code); $i++) {
-                    $split_set_detail[] = [
-                        'product_id' => $product_id,
-                        'split_set_code' => $split_set_code[$i],
-                        'qty_product' => $split_set_qty[$i],
-                        'price' => $split_set_harga[$i],
-                        'gramasi' => $split_set_gramasi[$i],
-                        'mg' => $split_set_mg[$i]
-                    ];
-                }
-
-                // save to product_split_set_detail
-                $product->productSplitSetDetail()->createMany($split_set_detail);
-                $product->productDetailSplitHistory()->createMany($split_set_detail);
-
-                $product->save();
-            }
+            if ($request->split_set_type == 2) $this->handleSplitSetType($product, $request);
 
             DB::commit();
 
-            $alertSession = [
-                'type' => 'alert-success',
-                'message' => 'Product created successfully'
-            ];
-
-            // return back()->with($alertSession);
-
-            return redirect(url('products'))->with($alertSession);
+            return redirect()->route('products.index')->with($this->createAlert('success', 'Product created successfully'));
         } catch (\Exception $ex) {
-
             DB::rollBack();
-
-            $alertSession = [
-                'type' => 'alert-danger',
-                'message' => $ex->getMessage()
-            ];
-
-            return back()->with($alertSession);
+            return back()->with($this->createAlert('danger', $ex->getMessage()));
         }
+    }
+
+    private function handleImageUpload($request)
+    {
+        if ($request->file('image')) {
+            $file = $request->file('image');
+            return "storage/app/" . $file->storeAs('product_images', time() . date('YmdHms') . "." . $file->extension());
+        }
+
+        return $request->image ?: 'zummXD2dvAtI.png';
+    }
+
+    private function handleSplitSetType($product, $request)
+    {
+        $splitSetDetails = $this->prepareSplitSetDetails($product->id, $request);
+
+        $product->productSplitSetDetail()->createMany($splitSetDetails);
+        $product->productDetailSplitHistory()->createMany($splitSetDetails);
+    }
+
+    private function prepareSplitSetDetails($productId, $request)
+    {
+        $splitSetDetails = [];
+        foreach ($request->split_set_code as $index => $code) {
+            $splitSetDetails[] = [
+                'product_id' => $productId,
+                'split_set_code' => $code,
+                'qty_product' => $request->split_set_qty[$index],
+                'price' => $request->split_set_harga[$index],
+                'gramasi' => $request->split_set_gramasi[$index],
+                'mg' => $request->split_set_mg[$index],
+            ];
+        }
+        return $splitSetDetails;
+    }
+
+    private function createAlert($type, $message)
+    {
+        return [
+            'type' => "alert-{$type}",
+            'message' => $message
+        ];
     }
 
     public function show($id, Request $request)

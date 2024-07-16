@@ -30,7 +30,28 @@ class Product_Sale extends Model
             $isSplited = $productSale->split_set_code ? true : false;
             $productSale->reduceStockQty($isSplited);
             $productSale->setProductStatus(0, $isSplited);
+            $productSale->setDiscountPromo();
         });
+    }
+
+    public function setDiscountPromo()
+    {
+        $product = Product::find($this->product_id);
+        $product_property_id = $product->product_property_id;
+        $current_date_time = date('Y-m-d H:i:s');
+
+        $promo = Promo::select('discount')
+            ->where([
+                ['product_properties_id', $product_property_id],
+                ['start_period', '<=', $current_date_time],
+                ['end_period', '>=', $current_date_time]
+            ])
+            ->latest()
+            ->first();
+        // ! TODO : set discount promo to product_sales
+        // if ($promo)
+        $product_sales = Product_Sale::where('product_id', $this->product_id)->get();
+        $product_sales->discount_promo = 200;
     }
 
     public function reduceStockQty($isSplited = false)
@@ -50,9 +71,10 @@ class Product_Sale extends Model
 
     private function decrementProductWarehouseQty()
     {
-        $productWarehouse = ProductWarehouse::where([
+        $sale = Sale::find($this->sale_id);
+        $productWarehouse = Product_Warehouse::where([
             ['product_id', $this->product_id],
-            ['warehouse_id', $this->sale->warehouse_id]
+            ['warehouse_id', $sale->warehouse_id]
         ])->first();
         $productWarehouse->decrement('qty', $this->qty);
     }
@@ -67,7 +89,7 @@ class Product_Sale extends Model
         if ($isSplited) {
             $this->updateProductSplitSetStatus($status);
         } else {
-            $this->updateProductWarehouseStatus($status);
+            $this->updateProductStatus($status);
         }
     }
 
@@ -77,12 +99,9 @@ class Product_Sale extends Model
         $productSplitSetDetail->update(['product_status' => $status]);
     }
 
-    private function updateProductWarehouseStatus($status)
+    private function updateProductStatus($status)
     {
-        $productWarehouse = ProductWarehouse::where([
-            ['product_id', $this->product_id],
-            ['warehouse_id', $this->sale->warehouse_id]
-        ])->first();
-        $productWarehouse->update(['product_status' => $status]);
+        $product = Product::find($this->product_id);
+        $product->update(['product_status' => $status]);
     }
 }

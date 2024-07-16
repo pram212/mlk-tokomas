@@ -98,23 +98,6 @@ class Product extends Model
 
         // tambah data product_id dan warehouse_id ke product_warehouse
         static::created(function ($product) {
-            // ambil warehouse_id dari akun yang sedang login
-            $warehouse_id = auth()->user()->warehouse_id;
-
-            // cek apakah product sudah ada di product_warehouse
-            $product_warehouse = ProductWarehouse::where([
-                ['product_id', $product->id],
-                ['warehouse_id', $warehouse_id]
-            ])->first();
-
-            // jika belum ada, tambahkan data product_id dan warehouse_id ke product_warehouse
-            if (!$product_warehouse) {
-                ProductWarehouse::create([
-                    'product_id' => $product->id,
-                    'warehouse_id' => $warehouse_id,
-                    'qty' => 0,
-                ]);
-            }
         });
     }
 }
