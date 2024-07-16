@@ -720,7 +720,7 @@ class ProductController extends Controller
                 DB::raw("COALESCE(split.split_set_code, products.code) as code"),
                 'split.split_set_code',
                 'split.id as split_id',
-                DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, products.price)) as price"),
+                DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, product_warehouse.price)) as price"),
                 'image',
                 'name',
                 'products.discount',
@@ -733,6 +733,7 @@ class ProductController extends Controller
                 DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number")
             ])
             ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+            ->leftJoin('product_warehouse as product_warehouse', 'products.id', '=', 'product_warehouse.product_id')
             ->leftJoin('product_buyback as buyback', function ($join) {
                 $join->on('products.id', '=', 'buyback.product_id');
                 $join->where(function ($query) {

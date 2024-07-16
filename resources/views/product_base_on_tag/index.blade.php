@@ -79,9 +79,4 @@
         </table>
     </div> --}}
 </section>
-
-<script src="{{ asset('public/js/axios.min.js') }}"></script>
-<script>
-
-</script>
 @endsection
