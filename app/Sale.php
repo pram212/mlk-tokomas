@@ -38,7 +38,7 @@ class Sale extends Model
 
     public function productSales()
     {
-        return $this->hasMany(Product_Sale::class);
+        return $this->hasMany(Product_Sale::class, 'sale_id');
     }
 
     public function payments()

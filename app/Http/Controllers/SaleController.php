@@ -1923,44 +1923,69 @@ class SaleController extends Controller
     // Get invoice data
     private function getInvoiceData($id)
     {
-        $lims_sale_data = Sale::find($id);
-        $lims_product_sale_data = Product_Sale::with(['product', 'productSplitSetDetail'])->where('sale_id', $id)->get();
-        $lims_biller_data = Biller::find($lims_sale_data->biller_id);
-        $lims_warehouse_data = Warehouse::find($lims_sale_data->warehouse_id);
-        $lims_customer_data = Customer::find($lims_sale_data->customer_id);
-        $lims_payment_data = Payment::where('sale_id', $id)->get();
-        $product = Product::find($lims_product_sale_data[0]->product_id);
-        $gold_content = $product->gold_content;
-        $tag_type_id = $product->tag_type_id;
-        $gold_content_convertion = GoldContentConvertion::where([
-            ['tag_types_id', $tag_type_id],
-            ['gold_content', $gold_content]
+        $data = Sale::where('id', $id)
+            ->with([
+                'customer',
+                'warehouse',
+                'biller',
+                'payments',
+                'productSales.product',
+                'productSales.product.gramasi',
+                'productSales.productSplitSetDetail'
+            ])
+            ->firstOrFail();
+
+        $goldContentConversion = $this->getGoldContentConversion($data->productSales[0]->product ?? null);
+        $numberInWords = $this->getNumberInWords($data->grand_total);
+        $totalPrice = number_format((float) $data->grand_total, 2, ',', '.');
+        $potongan = $this->getDiscount($data);
+
+        return compact('data', 'numberInWords', 'goldContentConversion', 'totalPrice', 'potongan');
+    }
+
+    private function getDiscount($sale_data)
+    {
+        $product_sales = $sale_data->productSales[0];
+        $product = $product_sales->product ?? null;
+        $productSplitSetDetail = $product_sales->productSplitSetDetail ?? null;
+        $total_discount = max($product_sales->discount - $product_sales->discount_promo, 0);
+        $gramasi = $productSplitSetDetail ? $productSplitSetDetail->gramasi : $product->gramasi ?? 0;
+
+        return $total_discount * $gramasi;
+    }
+
+    private function getGoldContentConversion($product)
+    {
+        if (!$product) {
+            return '';
+        }
+
+        $goldContent = $product->gold_content;
+        $tagTypeId = $product->tag_type_id;
+
+        $conversion = GoldContentConvertion::where([
+            ['tag_types_id', $tagTypeId],
+            ['gold_content', $goldContent]
         ])
             ->with('tag_type')
             ->first();
-        $gold_content_convertion = $gold_content_convertion ? $gold_content_convertion->result . ' ' . $gold_content_convertion->tag_type->description : '';
 
-        $numberToWords = new NumberToWords();
-        if (in_array(\App::getLocale(), ['ar', 'hi', 'vi', 'en-gb'])) {
-            $numberTransformer = $numberToWords->getNumberTransformer('en');
-        } else {
-            $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
-        }
-        $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
-        $totalPrice = number_format((float)$lims_sale_data->grand_total, 2, ',', '.');
-
-        return compact(
-            'lims_sale_data',
-            'lims_product_sale_data',
-            'lims_biller_data',
-            'lims_warehouse_data',
-            'lims_customer_data',
-            'lims_payment_data',
-            'numberInWords',
-            'gold_content_convertion',
-            'totalPrice'
-        );
+        return $conversion ? $conversion->result . ' ' . $conversion->tag_type->description : '';
     }
+
+    private function getNumberInWords($number)
+    {
+        $numberToWords = new NumberToWords();
+        $locale = \App::getLocale();
+
+        $supportedLocales = ['ar', 'hi', 'vi', 'en-gb'];
+        $transformerLocale = in_array($locale, $supportedLocales) ? 'en' : $locale;
+
+        $numberTransformer = $numberToWords->getNumberTransformer($transformerLocale);
+
+        return $numberTransformer->toWords($number);
+    }
+
 
 
     public function addPayment(Request $request)

@@ -290,6 +290,8 @@ class saleController extends Controller
 
     private function prepare_product_sale_data($items)
     {
+        /* NOTE : product_id means product code */
+
         /* Prepare product sale data for mapping product_id, qty, net_unit_price, and total */
         $product_sale_data = [];
 
@@ -312,8 +314,11 @@ class saleController extends Controller
                 }
             }
 
-            $product_id = $product->id ?? $product_split->product_id;
-            $net_unit_price = (float)@$product->product_warehouse->price ?? (float)@$product_split->price ?? 0;
+            $product_id = $product->id ?? $product_split->product_id; // Real product id
+            $product = Product::find($product_id)
+                ->with('productWarehouse')
+                ->first();
+            $net_unit_price =  (float)@$product_split->price ??  (float)@$product->product_warehouse->price ?? 0;
             $qty = $item['qty'];
             $total = $net_unit_price * $qty;
 
@@ -338,7 +343,7 @@ class saleController extends Controller
                 'qty' => $qty,
                 'sale_unit_id' => $product->sale_unit_id ?? null,
                 'net_unit_price' => $net_unit_price,
-                'discount' => 0,
+                'discount' =>  $product->discount ?? 0,
                 'sale_unit_id' => 0,
                 'tax_rate' => 0,
                 'tax' => 0,

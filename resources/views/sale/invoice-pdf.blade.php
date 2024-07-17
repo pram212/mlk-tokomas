@@ -265,8 +265,8 @@
                 <tr>
                     <td><a href="{{ url()->previous() }}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
                             {{trans('file.Back')}}</a> </td>
-                    <td><a target="_BLANK" href="{{ url('sales-print/'.$lims_sale_data->id) }}"
-                            class="btn btn-primary"><i class="dripicons-print"></i>{{trans('file.Print')}}</a></td>
+                    <td><a target="_BLANK" href="{{ url('sales-print/'.$data->id) }}" class="btn btn-primary"><i
+                                class="dripicons-print"></i>{{trans('file.Print')}}</a></td>
                 </tr>
             </table>
             <br>
@@ -287,16 +287,16 @@
                             <td style="vertical-align: top;">
                                 <center>
                                     <div>
-                                        Nomor Invoice : {{$lims_sale_data->reference_no}}
+                                        Nomor Invoice : {{$data->reference_no}}
                                     </div>
                                     <div style="margin-top: 1.5rem">Jl. Diponegoro No. 105 (Jurusan Pasar) <br>
                                         Ketanggungan Timur - Brebes</div>
                                 </center>
                             </td>
                             <td style="text-align: right; vertical-align: top;">
-                                Ketanggungan, {{$lims_sale_data->created_at}}
+                                Ketanggungan, {{$data->created_at}}
                                 <br>
-                                Kepada : {{$lims_customer_data->name}}
+                                Kepada : {{$data->customer->name}}
                             </td>
                         </tr>
                     </tbody>
@@ -316,36 +316,35 @@
                         <tr>
                             <td class="center" style="height:200px;">
                                 @php
-                                $gambar_produk = $lims_product_sale_data[0]['product']['image'] ?? '';
+                                $gambar_produk = $data->productSales[0]->product->image ?? '';
                                 @endphp
                                 @if($gambar_produk != '')
                                 <img src="data:image/png;base64,{{ base64_encode(file_get_contents($gambar_produk)) }}"
                                     width="200px" alt="">
                                 @endif
 
-                                <span id="nota-penjualan">{{ $lims_sale_data->sale_note }}</span>
+                                <span id="nota-penjualan">{{ $data->sale_note }}</span>
                             </td>
                             <td class=" title" style="vertical-align: top;font-weight:bold">
                                 <div id="catatan">
                                     -Sudah Diperiksa Sendiri <br>
                                     -Timbang Ulang <br>
-                                    {{ $gold_content_convertion }}
-                                    <br>
+                                    {{ $goldContentConversion }}
                                     <br>
                                     <ul class="promo-thr">
                                         <span>Promo THR</span>
-                                        <li>R : 20.000/Gram</li>
-                                        <li>Kalau rusak dekok, pesok, mleot Potongan {{$lims_sale_data['discount'] ?? 0
-                                            }}/gram</li>
+                                        <li>R : {{ $potongan }}/Gram</li>
                                     </ul>
+                                    <span>Kalau rusak dekok, pesok, mleot Potongan {{$potongan*2}}/gram</span>
                                 </div>
                             </td>
                             <td class="title" style="vertical-align: top;font-weight:bold;" colspan="2">
                                 <ul>
                                     <li> Kadar :</li>
-                                    <li>Deskripsi Barang : {{$lims_product_sale_data[0]['product']['name'].'
-                                        ('.($lims_product_sale_data[0]['productSplitSetDetail'] ?
-                                        $lims_product_sale_data[0]['productSplitSetDetail']['split_set_code']:$lims_product_sale_data[0]['product']['code']).')'
+                                    <li>Deskripsi Barang : {{$data->productSales[0]->product->name.'
+                                        ('.($data->productSales[0]->productSplitSetDetail ?
+                                        $data->productSales[0]->productSplitSetDetail->split_set_code :
+                                        $data->productSales[0]->product->code).')'
                                         }}</li>
                                 </ul><br>
 
@@ -353,19 +352,26 @@
                                 <div class="kadar">
                                     <h1>
                                         {{
-                                        ($lims_product_sale_data[0]['productSplitSetDetail']
-                                        ? $lims_product_sale_data[0]['productSplitSetDetail']['gramasi']
-                                        : $lims_product_sale_data[0]['product']['gramasi']['gramasi'])}}
+                                        ($data->productSales[0]->productSplitSetDetail
+                                        ?
+                                        rtrim(rtrim(number_format($data->productSales[0]->productSplitSetDetail->gramasi,
+                                        2), '0'), '.')
+                                        : rtrim(rtrim(number_format($data->productSales[0]->product->gramasi, 2), '0'),
+                                        '.')
+                                        )}}
                                         <sup>
                                             {{
-                                            ($lims_product_sale_data[0]['productSplitSetDetail']
-                                            ? $lims_product_sale_data[0]['productSplitSetDetail']['mg']
-                                            : $lims_product_sale_data[0]['product']['mg'])
-                                            }}
+                                            ($data->productSales[0]->productSplitSetDetail
+                                            ?
+                                            rtrim(rtrim(number_format($data->productSales[0]->productSplitSetDetail->mg,
+                                            2), '0'), '.')
+                                            : rtrim(rtrim(number_format($data->productSales[0]->product->mg, 2), '0'),
+                                            '.')
+                                            )}}
                                         </sup><span>gram</span>
                                     </h1>
-
                                 </div>
+
 
                             </td>
 
@@ -384,8 +390,7 @@
                             <td class="total_harga">
                                 Barcode product <br>
                                 @php
-                                $productCode = $lims_product_sale_data[0]['product']['code'];
-                                $urlProduct = url('view-product/' . $productCode);
+                                $urlProduct = url('view-product/' . @$data->productSales[0]->product->id);
                                 @endphp
                                 @if($mode != 'print')
                                 <div class="hidden-print">
@@ -399,8 +404,7 @@
                             <td class="total_harga">
                                 Barcode Invoice <br>
                                 @php
-                                $invoiceReference = $lims_sale_data->reference_no;
-                                $urlInvoice = url('view-invoice/' . $invoiceReference);
+                                $urlInvoice = url('view-invoice/' . $data->reference_no);
                                 @endphp
                                 @if($mode != 'print')
                                 <div class="hidden-print">

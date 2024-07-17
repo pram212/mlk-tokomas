@@ -88,10 +88,12 @@
                         <td>Total</td>
                         <td><Span id="info-subtotal">0</Span></td>
                         <td>
-                            Discount <button type="button" class="btn btn-link btn-sm" data-toggle="modal"
-                                data-target="#modalDiscount"><i class="dripicons-document-edit"></i></button>
+                            <div class="d-none">
+                                Discount <button type="button" class="btn btn-link btn-sm" data-toggle="modal"
+                                    data-target="#modalDiscount"><i class="dripicons-document-edit"></i></button>
+                            </div>
                         </td>
-                        <td><span id="info-discount">0</span></td>
+                        <td><span id="info-discount" class="d-none">0</span></td>
                     </tr>
                     <tr>
                         <td>Coupon <button type="button" class="btn btn-link btn-sm" data-toggle="modal"
