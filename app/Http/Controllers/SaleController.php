@@ -1914,7 +1914,7 @@ class SaleController extends Controller
         $canvas->image($imageURL, $x, $y, $imgWidth, $imgHeight);
         /* add watermark end*/
 
-        $filename = 'invoice-' . $data['lims_sale_data']->reference_no . '.pdf';
+        $filename = 'invoice-' . $data['data']->reference_no . '.pdf';
 
         // Open pdf in browser
         $dompdf->stream($filename, array("Attachment" => false));
