@@ -117,6 +117,12 @@
     {{-- sweetalert2 --}}
     <script src="{{ asset('public/vendor/sweetalert2/js/sweetalert2.all.min.js') }}"></script>
 
+    <!-- multi select filter -->
+    <link rel="stylesheet" href="<?php echo asset('public/vendor/filter-multi-select/filter_multi_select.css'); ?>"
+        type="text/css">
+    <script type="text/javascript"
+        src="<?php echo asset('public/vendor/filter-multi-select/filter-multi-select-bundle.min.js'); ?>"></script>
+
 
 
     @yield('css')
@@ -126,8 +132,11 @@
     <div id="loader"></div>
     <!-- Side Navbar -->
     @include('layout.sidebar')
+    @if (!@$pos_view)
     <!-- navbar-->
     @include('layout.navbar')
+    @endif
+
 
     <div class="page">
 
@@ -172,13 +181,8 @@
                 </button> {{ session()->get('message') }}
             </div>
             @endif
-            <script>
-                const baseUrl = "{{ url('/') }}";
-                const user_verified = "{{ env('USER_VERIFIED') }}";
-            </script>
-            <script src="{{ asset('public/js/axios.min.js') }}"></script>
-            @yield('content')
 
+            @yield('content')
         </div>
 
         <footer class="main-footer">
@@ -192,6 +196,28 @@
             </div>
         </footer>
     </div>
+    <div class="pos-page d-none">
+        <div id="content-pos">
+            @yield('content-pos')
+        </div>
+    </div>
+
+    <!-- GLOBAL JS -->
+    <script>
+        const baseUrl = "{{ url('/') }}";
+        const user_verified = "{{ env('USER_VERIFIED') }}";
+        const translations = {
+            recordsPerPage: "{{ __('file.records per page') }}",
+            search : "{{ __('file.Search') }}",
+            showing : "{{ __('file.Showing') }}",
+            pdf : "{{ __('file.PDF') }}",
+            csv : "{{ __('file.CSV') }}",
+            print : "{{ __('file.Print') }}",
+            colvis : "{{ __('file.Column visibility') }}",
+        };
+    </script>
+    <!-- END GLOBAL JS -->
+    <script src="{{ asset('public/js/axios.min.js') }}"></script>
 
     @yield('scripts')
     <script src="{{ asset('public/js/main.js') }}"></script>

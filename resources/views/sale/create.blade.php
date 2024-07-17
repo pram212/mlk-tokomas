@@ -366,7 +366,7 @@
     <div id="cash-register-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
         <div role="document" class="modal-dialog">
           <div class="modal-content">
-            {!! Form::open(['route' => 'cash-register.store', 'method' => 'post']) !!}
+            {!! Form::open(['route' => 'cashRegister.store', 'method' => 'post']) !!}
             <div class="modal-header">
               <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Cash Register')}}</h5>
               <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
@@ -451,14 +451,14 @@ $('[data-toggle="tooltip"]').tooltip();
 
 $('select[name="customer_id"]').on('change', function() {
     var id = $(this).val();
-    $.get('getcustomergroup/' + id, function(data) {
+    $.get('/getcustomergroup/' + id, function(data) {
         customer_group_rate = (data / 100);
     });
 });
 
 $('select[name="warehouse_id"]').on('change', function() {
     var id = $(this).val();
-    $.get('getproduct/' + id, function(data) {
+    $.get('/getproduct/' + id, function(data) {
         lims_product_array = [];
         product_code = data[0];
         product_name = data[1];
@@ -952,7 +952,7 @@ $('select[name="paid_by_id"]').on("change", function() {
         $('select[name="gift_card_id"]').attr('required', true);
     }
     else if (id == 3) {
-        $.getScript( "../public/vendor/stripe/checkout.js" );
+        $.getScript( "..//vendor/stripe/checkout.js" );
         $(".card-element").show();
         $("#gift-card").hide();
         $("#cheque").hide();

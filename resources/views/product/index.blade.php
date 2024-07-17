@@ -4,7 +4,8 @@
         @can('create', App\Product::class)
         <a href="{{ route('products.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
             {{ __('file.add_product') }}</a>
-        <a href="#" data-toggle="modal" data-target="#importProduct" class="btn btn-primary"><i class="dripicons-copy"></i> {{ __('file.import_product') }}</a>
+        <a href="#" data-toggle="modal" data-target="#importProduct" class="btn btn-primary"><i
+                class="dripicons-copy"></i> {{ __('file.import_product') }}</a>
         @endcan
     </div>
     <div class="table-responsive">
@@ -33,13 +34,15 @@
     </div>
 </section>
 
-<div id="importProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="importProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             {!! Form::open(['route' => 'products.import', 'method' => 'post', 'files' => true]) !!}
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">Import Product</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i
+                            class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
                 <p class="italic">
@@ -62,7 +65,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label> {{ trans('file.Sample File') }}</label>
-                            <a href="public/sample_file/sample_products.csv" class="btn btn-info btn-block btn-md"><i class="dripicons-download"></i> {{ trans('file.Download') }}</a>
+                            <a href="public/sample_file/sample_products.csv" class="btn btn-info btn-block btn-md"><i
+                                    class="dripicons-download"></i> {{ trans('file.Download') }}</a>
                         </div>
                     </div>
                 </div>
@@ -73,14 +77,16 @@
     </div>
 </div>
 
-<div id="product-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+<div id="product-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    class="modal fade text-left">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{ trans('Product Details') }}</h5>
                 <button id="print-btn" type="button" class="btn btn-default btn-sm ml-3"><i class="dripicons-print"></i>
                     {{ trans('file.Print') }}</button>
-                <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close"><span
+                        aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -119,7 +125,8 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -186,9 +193,10 @@
     </div>
 </div>
 
+@endsection
+@section('scripts')
 {{-- qrcode --}}
 <script src="{{ asset('public/js/qrcode.min.js') }}"></script>
-<script src="{{ asset('public/js/axios.min.js') }}"></script>
 <script>
     const lang_records_per_page = '{{ trans("file.records per page") }}';
     const lang_Showing = '{{ trans("file.Showing") }}';

@@ -88,31 +88,31 @@
                         </li>
                         @endcan
 
-                        @can('printBarcode', App\Product::class)
+                        {{-- @can('printBarcode', App\Product::class)
                         <li id="printBarcode-menu" class="@if (request()->is('product-print_barcode')) active @endif">
                             <a href="{{ route('printBarcode') }}">{{ __('file.print_barcode') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
-                        @can('viewAny', App\Adjustment::class)
+                        {{-- @can('viewAny', App\Adjustment::class)
                         <li id="adjustment-list-menu" class="@if (request()->is('adjustment/')) active @endif">
                             <a href="{{ route('qty_adjustment.index') }}">{{ trans('file.Adjustment List') }}</a>
                         </li>
                         <li id="adjustment-create-menu" class="@if (request()->is('adjustment/create')) active @endif">
                             <a href="{{ route('qty_adjustment.create') }}">{{ trans('file.Add Adjustment') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
-                        @can('viewAny', App\StockCount::class)
+                        {{-- @can('viewAny', App\StockCount::class)
                         <li id="stock-count-menu" class="@if (request()->is('stock-count/')) active @endif">
                             <a href="{{ route('stock-count.index') }}">{{ trans('file.Stock Count') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
                     </ul>
                 </li>
 
-                <li>
+                {{-- <li>
                     @php
                     $requestIsOnPurchaseMenu = request()->is('purchases*') ? 'true' : 'false';
                     @endphp
@@ -136,7 +136,7 @@
                         </li>
                         @endcan
                     </ul>
-                </li>
+                </li> --}}
 
 
 
@@ -161,16 +161,16 @@
                         <li id="sale-create-menu" class="@if (request()->is('sales/create')) active @endif">
                             <a href="{{ route('sales.create') }}">{{ trans('file.Add Sale') }}</a>
                         </li>
-                        <li id="sale-import-menu" class="@if (request()->is('sales/sale_by_csv')) active @endif">
+                        {{-- <li id="sale-import-menu" class="@if (request()->is('sales/sale_by_csv')) active @endif">
                             <a href="{{ url('sales/sale_by_csv') }}">{{ trans('file.Import Sale By CSV') }}</a>
-                        </li>
+                        </li> --}}
                         @endcan
 
-                        @can('viewAny', App\GiftCard::class)
+                        {{-- @can('viewAny', App\GiftCard::class)
                         <li id="gift-card-menu" class="@if (request()->is('gift_cards/')) active @endif">
                             <a href="{{ route('gift_cards.index') }}">{{ trans('file.Gift Card List') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
                         @can('viewAny', App\Coupon::class)
                         <li id="coupon-menu" class="@if (request()->is('coupons/')) active @endif">
@@ -178,17 +178,23 @@
                         </li>
                         @endcan
 
-                        @can('viewAny', App\Delivery::class)
+                        {{-- @can('viewAny', App\Delivery::class)
                         <li id="delivery-menu" class="@if (request()->is('delivery/')) active @endif">
                             <a href="{{ route('delivery.index') }}">{{ trans('file.Delivery List') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
                     </ul>
                 </li>
 
                 <li id="buyback">
                     <a href="{{ url('buyback') }}">
                         <i class="dripicons-return"></i><span>{{ __('file.buy back') }}</span>
+                    </a>
+                </li>
+
+                <li id="promo">
+                    <a href="{{ url('promo') }}">
+                        <i class="dripicons-return"></i><span>{{ __('file.promo') }}</span>
                     </a>
                 </li>
 

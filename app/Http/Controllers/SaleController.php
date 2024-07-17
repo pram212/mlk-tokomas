@@ -36,7 +36,8 @@ use App\{
     ProductPurchase,
     Purchase,
     GeneralSetting,
-    ProductSplitSetDetail
+    ProductSplitSetDetail,
+    GoldContentConvertion,
 };
 use DB;
 use Stripe\Stripe;
@@ -307,7 +308,7 @@ class SaleController extends Controller
                 if (in_array("sales-delete", $request['all_permission']))
                     $nestedData['options'] .= \Form::open(["route" => ["sales.destroy", $sale->id], "method" => "DELETE"]) . '
                             <li>
-                              <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> ' . trans("file.delete") . '</button> 
+                              <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> ' . trans("file.delete") . '</button>
                             </li>' . \Form::close() . '
                         </ul>
                     </div>';
@@ -470,7 +471,7 @@ class SaleController extends Controller
                 } elseif (isset($action['form'])) {
                     $options .= \Form::open(["route" => $action['route'], "method" => "DELETE"]) . '
                                 <li>
-                                  <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa ' . $action['icon'] . '"></i> ' . $action['label'] . '</button> 
+                                  <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa ' . $action['icon'] . '"></i> ' . $action['label'] . '</button>
                                 </li>' . \Form::close();
                 }
             }
@@ -1218,9 +1219,18 @@ class SaleController extends Controller
 
     public function pos()
     {
-        $this->authorize('create', Sale::class);
-
-        return view('sale.pos_new');
+        $role = Role::find(Auth::user()->role_id);
+        if ($role->hasPermissionTo('sales-add')) {
+            $warehouse_list = Warehouse::where('is_active', true)->get();
+            $customer_group_all = CustomerGroup::where('is_active', true)->get();
+            $customer_list = Customer::where('is_active', true)->get();
+            $cashier_list = User::where([
+                ["is_active", true],
+                ["role_id", 6] /* Kasir */
+            ])->get();
+            return view('sale.pos_new', compact('warehouse_list', 'customer_group_all', 'cashier_list', 'customer_list'));
+        } else
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
     public function getProductByFilter($category_id, $brand_id)
@@ -1363,7 +1373,7 @@ class SaleController extends Controller
 
 
         $product[] = $lims_product_data->name ?? $lims_product_data->code ?? '-'; // product name
-        $product[] = ($is_split) ? $lims_product_data->split_set_code : $lims_product_data->code; // product code 
+        $product[] = ($is_split) ? $lims_product_data->split_set_code : $lims_product_data->code; // product code
         $product[] = $lims_product_data->price; // product price
         $product[] = 0; // product discount
         $product[] = 'No Tax'; // product tax
@@ -1852,7 +1862,7 @@ class SaleController extends Controller
     {
         $data = $this->getInvoiceData($id);
         $data['mode'] = 'view';
-        return view('sale.invoice', $data);
+        return view('sale.invoice-pdf', $data);
     }
 
     // View invoice
@@ -1877,14 +1887,34 @@ class SaleController extends Controller
         $dompdf = new Dompdf();
         $options = $dompdf->getOptions();
         $options->setDefaultFont('Courier');
+        $options->set('isPhpEnabled', 'true');
         $dompdf->setOptions($options);
         $dompdf->setPaper('A4', 'landscape');
 
-        $html = view('sale.invoice', $data)->render();
+        $html = view('sale.invoice-pdf', $data)->render();
         $dompdf->loadHtml($html);
         $dompdf->render();
 
-        $filename = 'invoice-' . $data['lims_sale_data']->reference_no . '.pdf';
+        /* add watermark */
+        // Instantiate canvas instance
+        $canvas = $dompdf->getCanvas();
+        // Get height and width of page
+        $w = $canvas->get_width();
+        $h = $canvas->get_height();
+        // Specify watermark image
+        $imageURL = public_path('logo/bima_logo_1.png');
+        $imgWidth = 300;
+        $imgHeight = 300;
+        // Set image opacity
+        $canvas->set_opacity(.1);
+        // Specify horizontal and vertical position
+        $x = (($w - $imgWidth) / 2);
+        $y = (($h - $imgHeight) / 2);
+        // Add an image to the pdf
+        $canvas->image($imageURL, $x, $y, $imgWidth, $imgHeight);
+        /* add watermark end*/
+
+        $filename = 'invoice-' . $data['data']->reference_no . '.pdf';
 
         // Open pdf in browser
         $dompdf->stream($filename, array("Attachment" => false));
@@ -1893,31 +1923,69 @@ class SaleController extends Controller
     // Get invoice data
     private function getInvoiceData($id)
     {
-        $lims_sale_data = Sale::find($id);
-        $lims_product_sale_data = Product_Sale::with(['product', 'productSplitSetDetail'])->where('sale_id', $id)->get();
-        $lims_biller_data = Biller::find($lims_sale_data->biller_id);
-        $lims_warehouse_data = Warehouse::find($lims_sale_data->warehouse_id);
-        $lims_customer_data = Customer::find($lims_sale_data->customer_id);
-        $lims_payment_data = Payment::where('sale_id', $id)->get();
+        $data = Sale::where('id', $id)
+            ->with([
+                'customer',
+                'warehouse',
+                'biller',
+                'payments',
+                'productSales.product',
+                'productSales.product.gramasi',
+                'productSales.productSplitSetDetail'
+            ])
+            ->firstOrFail();
 
-        $numberToWords = new NumberToWords();
-        if (in_array(\App::getLocale(), ['ar', 'hi', 'vi', 'en-gb'])) {
-            $numberTransformer = $numberToWords->getNumberTransformer('en');
-        } else {
-            $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
-        }
-        $numberInWords = $numberTransformer->toWords($lims_sale_data->grand_total);
+        $goldContentConversion = $this->getGoldContentConversion($data->productSales[0]->product ?? null);
+        $numberInWords = $this->getNumberInWords($data->grand_total);
+        $totalPrice = number_format((float) $data->grand_total, 2, ',', '.');
+        $potongan = $this->getDiscount($data);
 
-        return compact(
-            'lims_sale_data',
-            'lims_product_sale_data',
-            'lims_biller_data',
-            'lims_warehouse_data',
-            'lims_customer_data',
-            'lims_payment_data',
-            'numberInWords'
-        );
+        return compact('data', 'numberInWords', 'goldContentConversion', 'totalPrice', 'potongan');
     }
+
+    private function getDiscount($sale_data)
+    {
+        $product_sales = $sale_data->productSales[0];
+        $product = $product_sales->product ?? null;
+        $productSplitSetDetail = $product_sales->productSplitSetDetail ?? null;
+        $total_discount = max($product_sales->discount - $product_sales->discount_promo, 0);
+        $gramasi = $productSplitSetDetail ? $productSplitSetDetail->gramasi : $product->gramasi ?? 0;
+
+        return $total_discount * $gramasi;
+    }
+
+    private function getGoldContentConversion($product)
+    {
+        if (!$product) {
+            return '';
+        }
+
+        $goldContent = $product->gold_content;
+        $tagTypeId = $product->tag_type_id;
+
+        $conversion = GoldContentConvertion::where([
+            ['tag_types_id', $tagTypeId],
+            ['gold_content', $goldContent]
+        ])
+            ->with('tag_type')
+            ->first();
+
+        return $conversion ? $conversion->result . ' ' . $conversion->tag_type->description : '';
+    }
+
+    private function getNumberInWords($number)
+    {
+        $numberToWords = new NumberToWords();
+        $locale = \App::getLocale();
+
+        $supportedLocales = ['ar', 'hi', 'vi', 'en-gb'];
+        $transformerLocale = in_array($locale, $supportedLocales) ? 'en' : $locale;
+
+        $numberTransformer = $numberToWords->getNumberTransformer($transformerLocale);
+
+        return $numberTransformer->toWords($number);
+    }
+
 
 
     public function addPayment(Request $request)

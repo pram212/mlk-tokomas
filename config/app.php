@@ -177,6 +177,9 @@ return [
         App\Providers\RouteServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
 
+        /* spatie laravel permission */
+        Spatie\Permission\PermissionServiceProvider::class,
+
     ],
 
     /*

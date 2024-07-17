@@ -46,7 +46,9 @@
     </div>
 </section>
 
-<script src="{{ asset('public/js/axios.min.js') }}"></script>
+
+@endsection
+@section('scripts')
 <script>
     const lang_records_per_page = '{{ trans('file.records per page') }}';
     const lang_Showing = '{{ trans('file.Showing') }}' ;
