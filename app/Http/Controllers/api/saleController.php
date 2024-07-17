@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Tax;
 use App\Sale;
+use App\Promo;
 use App\Coupon;
 use App\Payment;
 use App\Product;
@@ -341,13 +342,12 @@ class saleController extends Controller
                 'sale_unit_id' => 0,
                 'tax_rate' => 0,
                 'tax' => 0,
-                'total' => $total
+                'total' => $total,
             ];
         }
 
         return $product_sale_data;
     }
-
 
     private function prepare_tax_data($tax_id, $total_price)
     {

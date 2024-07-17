@@ -8,7 +8,7 @@ class Product_Sale extends Model
 {
     protected $table = 'product_sales';
     protected $fillable = [
-        "sale_id", "product_id", "variant_id", "qty", "sale_unit_id", "net_unit_price", "discount", "tax_rate", "tax", "total", "split_set_code"
+        "sale_id", "product_id", "variant_id", "qty", "sale_unit_id", "net_unit_price", "discount", "tax_rate", "tax", "total", "split_set_code", "discount_promo"
     ];
 
     public function product()
@@ -36,22 +36,27 @@ class Product_Sale extends Model
 
     public function setDiscountPromo()
     {
-        $product = Product::find($this->product_id);
-        $product_property_id = $product->product_property_id;
-        $current_date_time = date('Y-m-d H:i:s');
+        $discount_promo = null;
+        $product_id = $this->product_id;
 
-        $promo = Promo::select('discount')
-            ->where([
-                ['product_properties_id', $product_property_id],
-                ['start_period', '<=', $current_date_time],
-                ['end_period', '>=', $current_date_time]
-            ])
-            ->latest()
-            ->first();
-        // ! TODO : set discount promo to product_sales
-        // if ($promo)
-        $product_sales = Product_Sale::where('product_id', $this->product_id)->get();
-        $product_sales->discount_promo = 200;
+        // Find the product by code
+        $product = Product::where('id', $product_id)->first();
+
+        // Check if product exists
+        if ($product) {
+            $product_property_id = $product->product_property_id;
+            // Find the latest promo within the valid date range
+            $promo = Promo::where('product_properties_id', $product_property_id)
+                ->whereDate('start_period', '<=', now())
+                ->whereDate('end_period', '>=', now())
+                ->latest()
+                ->first();
+
+            // Check if promo exists
+            if ($promo) $discount_promo = $promo->discount;
+        }
+
+        $this->update(['discount_promo' => $discount_promo]);
     }
 
     public function reduceStockQty($isSplited = false)
