@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Promo;
+use App\ProductProperty;
 use Illuminate\Http\Request;
-use App\Http\Requests\StorePromoRequest;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\UpdatePromoRequest;
+use App\Http\Requests\StorePromoRequest;
 
 class PromoController extends Controller
 {
@@ -17,19 +18,23 @@ class PromoController extends Controller
 
     public function create()
     {
-        return view('promo.create');
+        $product_properties = ProductProperty::all();
+        return view('promo.form', compact('product_properties'));
     }
 
     public function store(StorePromoRequest $request)
     {
-        Promo::create($request->all());
-
-        return redirect()->route('promo.index')->with('success', 'Promo created successfully.');
+        try {
+            Promo::create($request->all());
+            return redirect()->route('promo.index')->with('created-success', 'Promo created successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('promo.index')->with('message', 'Promo failed to create');
+        }
     }
 
     public function edit(Promo $promo)
     {
-        return view('promo.edit', compact('promo'));
+        return view('promo.form', compact('promo'));
     }
 
     public function update(UpdatePromoRequest $request, Promo $promo)

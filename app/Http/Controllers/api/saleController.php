@@ -143,7 +143,7 @@ class saleController extends Controller
         foreach ($actions as $action) {
             if ($action['permission']) {
                 if (isset($action['route'])) {
-                    $options .= '<li><a href="' . $action['route'] . '" class="btn btn-link"><i class="fa ' . $action['icon'] . '"></i> ' . $action['label'] . '</a></li>';
+                    $options .= '<li><a href="' . $action['route'] . '" target="_BLANK" class="btn btn-link"><i class="fa ' . $action['icon'] . '"></i> ' . $action['label'] . '</a></li>';
                 } elseif (isset($action['button'])) {
                     $dataAttributes = '';
                     if (isset($action['data'])) {

@@ -651,4 +651,5 @@ return [
     "Cashier" => "Cashier",
     "Product property is used in a product" => "Product property is used in a product",
     "promo" => "Promo",
+    "add_promo" => "Add Promo",
 ];

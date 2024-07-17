@@ -650,6 +650,7 @@ return [
     "Cashier" => "Kasir",
     "Product property is used in a product" => "Sifat Barang telah digunakan oleh suatu produk",
     "promo" => "Promo",
+    "add_promo" => "Tambah Promo",
 
 
 ];

@@ -30,8 +30,9 @@ const $datatable = $table.DataTable({
         { data: "start_period", name: "start_period" },
         { data: "end_period", name: "end_period" },
         { data: "action", name: "action" },
+        { data: "created_at", name: "created_at", visible: false },
     ],
-    order: [["0", "desc"]],
+    order: [["6", "desc"]],
     columnDefs: [
         // {
         //     orderable: false,
