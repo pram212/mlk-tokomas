@@ -21,8 +21,8 @@ const $datatable = $table.DataTable({
             className: "text-center",
         },
         {
-            data: "product_properties",
-            name: "product_properties",
+            data: "product_property",
+            name: "product_property",
             orderable: false,
             searchable: false,
         },

@@ -1,10 +1,10 @@
 @extends('layout.main') @section('content')
 <section>
     <div class="container-fluid">
-        @can('create', App\promo::class)
+        {{-- @can('create', App\promo::class) --}}
         <a href="{{ route('promo.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
             {{ __('file.add_promo') }}</a>
-        @endcan
+        {{-- @endcan --}}
     </div>
     <div class="table-responsive">
         <table id="promo-data-table" class="table" style="width: 100%">
@@ -36,5 +36,5 @@
     const lang_delete = '{{ trans("file.delete") }}';
     const lang_visibility = '{{ trans("file.Column visibility") }}';
 </script>
-<script src="{{ asset('public/js/pages/promo/promo_index.js') }}"></script>
+<script src="{{ asset('public/js/pages/promo/promo_index.js?timestamp=' . time()) }}"></script>
 @endsection
