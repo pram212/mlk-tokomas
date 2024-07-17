@@ -1,7 +1,7 @@
 <?php
 
+use App\Bank;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class BankSeeder extends Seeder
 {
@@ -107,7 +107,7 @@ class BankSeeder extends Seeder
             ["name" => "BANK SWAGUNA", "code" => "405"],
             ["name" => "BANK JASA ARTA", "code" => "422"],
             ["name" => "BANK MEGA", "code" => "426"],
-            ["name" => "BANK JASA JAKARTA", "code" => "427"],
+            ["name" => "BANK JASA JAKARTA", "code" => "427B"],
             ["name" => "BANK BUKOPIN", "code" => "441"],
             ["name" => "BANK SYARIAH MANDIRI", "code" => "451"],
             ["name" => "BANK BISNIS INTERNASIONAL", "code" => "459"],
@@ -150,6 +150,6 @@ class BankSeeder extends Seeder
             ["name" => "BANK CTBC (CHINA TRUST)", "code" => "949"],
         ];
 
-        DB::table('banks')->insert($banks);
+        Bank::insertOrIgnore($banks);
     }
 }

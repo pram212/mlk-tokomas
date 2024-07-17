@@ -12,8 +12,8 @@ class PaymentMethodSeeder extends Seeder
      */
     public function run()
     {
-        paymentMethod::create(['name' => 'Cash']);
-        paymentMethod::create(['name' => 'Debit Card']);
-        paymentMethod::create(['name' => 'Credit Card']);
+        paymentMethod::firstOrCreate(['name' => 'Cash']);
+        paymentMethod::firstOrCreate(['name' => 'Debit Card']);
+        paymentMethod::firstOrCreate(['name' => 'Credit Card']);
     }
 }

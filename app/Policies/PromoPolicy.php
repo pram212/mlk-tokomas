@@ -67,28 +67,4 @@ class PromoPolicy
     {
         return $user->hasPermissionTo('Promos-delete');
     }
-
-    /**
-     * Determine whether the user can restore the Promo.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Promo  $promo
-     * @return mixed
-     */
-    public function restore(User $user, Promo $promo)
-    {
-        return $user->hasPermissionTo('Promos-restore');
-    }
-
-    /**
-     * Determine whether the user can permanently delete the Promo.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Promo  $promo
-     * @return mixed
-     */
-    public function forceDelete(User $user, Promo $promo)
-    {
-        return $user->hasPermissionTo('Promos-forceDelete');
-    }
 }
