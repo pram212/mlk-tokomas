@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class WarehouseTransfer extends Model
 {
     protected $fillable = [
-        'transfer_number', 'product_id', 'split_set_code'
+        'transfer_number', 'product_id', 'split_set_code', 'warehouse_id'
     ];
 
     public function product()
@@ -42,9 +42,14 @@ class WarehouseTransfer extends Model
     public function setProductStatus($status)
     {
         $product_id = $this->product_id;
-        $product = Product::where('id', $product_id)->first();
+        $split_set_code = $this->split_set_code;
 
-        if ($product) {
+        if ($split_set_code != null) {
+            $product_split_set = ProductSplitSetDetail::where('split_set_code', $split_set_code)->first();
+            $product_split_set->product_status = $status;
+            $product_split_set->save();
+        } else {
+            $product = Product::find($product_id);
             $product->product_status = $status;
             $product->save();
         }

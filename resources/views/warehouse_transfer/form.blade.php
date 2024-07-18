@@ -61,19 +61,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>{{trans('file.Note')}}</label>
-                                            <textarea rows="5" class="form-control" name="note"></textarea>
-                                            @if ($errors->has('note'))
-                                            <div class="invalid-feedback">
-                                                {{ $errors->first('note') }}
-                                            </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="form-group">
                                     <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary"
                                         id="submit-button">

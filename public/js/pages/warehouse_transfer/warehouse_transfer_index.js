@@ -24,12 +24,12 @@ const $datatable = $table.DataTable({
             data: "product.name",
             name: "product.name",
             render: function (data, type, row) {
-                return `${data} (${row.code})`;
+                return `${data} (${row.code ?? row.product.code})`;
             },
         },
         { data: "created_at", name: "created_at" },
     ],
-    order: [["1", "desc"]],
+    order: [["2", "desc"]],
     columnDefs: [
         // {
         //     orderable: false,

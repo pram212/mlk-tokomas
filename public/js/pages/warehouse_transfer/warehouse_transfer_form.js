@@ -56,6 +56,12 @@ function handleTableRemoveProduct() {
 }
 
 function addProductToTable(product_code) {
+    /* check if product exist in table */
+    if (isProductExistInTable(product_code)) {
+        Swal.fire("Product already exist in table", "", "warning");
+        return;
+    }
+
     /* get product data, then add to table */
     $.ajax({
         url: baseUrl + "/api/products/getByCode/?code=" + product_code,
@@ -65,7 +71,7 @@ function addProductToTable(product_code) {
 
             // add product to table
             $dataTable.row.add([
-                `${product.name} (${product.code})<input type='hidden' name='product_id[]' value="${product.id}">`,
+                `${product.name} (${product.code})<input type='hidden' name='product_code[]' value="${product.code}">`,
                 product.code,
                 `<button type="button" class="btn btn-danger btn-sm remove-product"><i class="dripicons-trash"></i></button>`,
             ]);
@@ -74,14 +80,14 @@ function addProductToTable(product_code) {
     });
 }
 
-function isProductExistInTable(product_id) {
-    /* get product id from product_id[] input */
-    const product_ids = $("input[name='product_id[]']");
-    const product_ids_array = [];
+function isProductExistInTable(product_code) {
+    /* get product id from product_code[] input */
+    const product_codes = $("input[name='product_code[]']");
+    const product_codes_array = [];
 
-    product_ids.each(function () {
-        product_ids_array.push(parseInt($(this).val()));
+    product_codes.each(function () {
+        product_codes_array.push($(this).val());
     });
 
-    return product_ids_array.includes(product_id);
+    return product_codes_array.includes(product_code);
 }

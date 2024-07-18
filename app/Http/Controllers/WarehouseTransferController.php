@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\WarehouseTransfer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreWarehouseTransferRequest;
 
 class WarehouseTransferController extends Controller
 {
@@ -33,9 +35,28 @@ class WarehouseTransferController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreWarehouseTransferRequest $request)
     {
-        //
+        // Validasi sudah dilakukan oleh StoreWarehouseTransferRequest
+        $dataToInsert = $request->only('data')['data'];
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($dataToInsert as $data) {
+                WarehouseTransfer::create($data); // Membuat entri baru untuk setiap data
+            }
+
+            DB::commit();
+
+            // Redirect dengan pesan sukses
+            return redirect()->route('warehouse_transfer.index')->with('message', 'Warehouse transfers created successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            dd($e);
+            // Handle error jika terjadi kegagalan saat menyimpan
+            return back()->withInput()->with('message', 'Failed to create warehouse transfers: ' . $e->getMessage());
+        }
     }
 
     /**
