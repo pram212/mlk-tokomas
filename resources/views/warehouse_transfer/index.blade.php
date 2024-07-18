@@ -10,9 +10,9 @@
         <table id="data-table" class="table" style="width: 100%">
             <thead>
                 <tr>
-                    <th class="not-exported"></th>
+                    <th class="not-exported">{{ __('file.No') }}</th>
                     <th>{{ __('file.Product Name') }}</th>
-                    <th>{{ __('file.Transfer Date') }}</th>
+                    <th>{{ __('file.warehouse_transfer_date') }}</th>
                 </tr>
             </thead>
             <tbody></tbody>

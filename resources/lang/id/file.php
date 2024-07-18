@@ -652,6 +652,7 @@ return [
     "promo" => "Promo",
     "add_promo" => "Tambah Promo",
     "warehouse_transfer" => "Transfer Gudang",
+    "warehouse_transfer_date" => "Tanggal Transfer Gudang",
 
 
 ];

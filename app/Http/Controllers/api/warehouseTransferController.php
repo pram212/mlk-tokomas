@@ -15,9 +15,19 @@ class warehouseTransferController extends Controller
     {
         $this->authorize('viewAny', Product::class);
 
-        $query = WarehouseTransfer::with(['product', 'productSplitSetDetail', 'warehouse']);
+        $query = WarehouseTransfer::select([
+            'warehouse_transfers.id',
+            'warehouse_transfers.product_id',
+            'warehouse_transfers.split_set_code',
+            'warehouse_transfers.created_at',
+        ])
+            ->with(['product', 'productSplitSetDetail', 'warehouse']);
 
         return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('code', function ($query) {
+                return $query->split_set_code ?? $query->code;
+            })
             ->make();
     }
 }

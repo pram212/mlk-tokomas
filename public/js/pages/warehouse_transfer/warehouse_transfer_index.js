@@ -21,7 +21,11 @@ const $datatable = $table.DataTable({
             className: "text-center",
         },
         {
-            data: "product_name",
+            data: "product.name",
+            name: "product.name",
+            render: function (data, type, row) {
+                return `${data} (${row.code})`;
+            },
         },
         { data: "created_at", name: "created_at" },
     ],
