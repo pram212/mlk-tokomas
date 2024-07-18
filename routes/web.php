@@ -24,6 +24,7 @@ use App\Http\Controllers\api\AdjustmentContoller as AdjustmentControllerApi;
 use App\Http\Controllers\api\categoriesController as categoriesControllerApi;
 use App\Http\Controllers\api\paymentMethodController as paymentMethodControllerApi;
 use App\Http\Controllers\api\PromoController as PromoControllerApi;
+use App\Http\Controllers\api\warehouseTransferController as WarehouseTransferControllerApi;
 
 Auth::routes();
 
@@ -34,6 +35,11 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => ['auth', 'active']], function () {
 
     Route::prefix('api')->group(function () {
+        // warehouse-transfers Routes
+        Route::prefix('warehouse-transfers')->group(function () {
+            Route::get('/', [WarehouseTransferControllerApi::class, 'index']);
+        });
+
         // Promo Routes
         Route::prefix('promo')->group(function () {
             Route::get('/', [PromoControllerApi::class, 'index']);
@@ -100,6 +106,8 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
     // Promo
     Route::resource('promo', 'PromoController');
+
+    Route::resource('warehouse_transfer', 'WarehouseTransferController');
 
     // role permission routes
     Route::resource('/role', 'RoleController');

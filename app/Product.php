@@ -85,6 +85,11 @@ class Product extends Model
         return $this->hasOne(Product_Warehouse::class);
     }
 
+    public function warehouse_transfer()
+    {
+        return $this->hasMany(WarehouseTransfer::class);
+    }
+
 
 
     protected static function boot()

@@ -197,6 +197,11 @@
                         <i class="dripicons-store"></i><span>{{ __('file.promo') }}</span>
                     </a>
                 </li>
+                <li id="warehouse_transfer">
+                    <a href="{{ url('warehouse_transfer') }}">
+                        <i class="dripicons-arrow-left"></i><span>{{ __('file.warehouse_transfer') }}</span>
+                    </a>
+                </li>
 
                 @can('viewAny', App\Expense::class)
                 <li>

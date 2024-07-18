@@ -652,4 +652,5 @@ return [
     "Product property is used in a product" => "Product property is used in a product",
     "promo" => "Promo",
     "add_promo" => "Add Promo",
+    "warehouse_transfer" => "Warehouse Transfer",
 ];
