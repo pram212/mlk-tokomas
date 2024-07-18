@@ -37,6 +37,7 @@ class Product_Sale extends Model
     public function setDiscountPromo()
     {
         $discount_promo = null;
+        $promo_name = null;
         $product_id = $this->product_id;
 
         // Find the product by code
@@ -53,10 +54,15 @@ class Product_Sale extends Model
                 ->first();
 
             // Check if promo exists
-            if ($promo) $discount_promo = $promo->discount;
+            if ($promo) {
+                $discount_promo = $promo->discount;
+                $promo_name = $promo->promo_name;
+            };
         }
 
-        $this->update(['discount_promo' => $discount_promo]);
+        $this->discount_promo = $discount_promo;
+        $this->promo_name = $promo_name;
+        $this->save();
     }
 
     public function reduceStockQty($isSplited = false)
