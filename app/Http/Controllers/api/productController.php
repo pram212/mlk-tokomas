@@ -49,6 +49,7 @@ class productController extends Controller
     {
         $warehouseId = $request->warehouse_id;
         $search = $request->search;
+        $product_status = $request->product_status;
 
         $products = Product::select([
             'products.id',
@@ -60,10 +61,10 @@ class productController extends Controller
                 $query->select('product_id', 'qty');
             }])
             ->where('is_active', true)
-            ->where('products.product_status', 1)
-            ->whereHas('product_warehouse', function ($query) {
-                $query->where('qty', '>', 0);
-            })
+            ->where(DB::raw('IFNULL(split.product_status, products.product_status)'), $product_status ?? 1)
+            // ->whereHas('product_warehouse', function ($query) {
+            //     $query->where('qty', '>', 0);
+            // })
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('products.name', 'like', '%' . $search . '%')
