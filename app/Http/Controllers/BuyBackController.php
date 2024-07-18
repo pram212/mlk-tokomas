@@ -32,7 +32,7 @@ class BuyBackController extends Controller
                 DB::raw("COALESCE(product_sales.split_set_code, products.code) as code"),
                 'product_sales.split_set_code',
                 'split.id as split_id',
-                DB::raw("COALESCE(buyback.final_price, products.price) as price"),
+                DB::raw("COALESCE(buyback.final_price, product_warehouse.price) as price"),
                 'buyback.final_price as final_price',
                 'products.image',
                 'products.name',
@@ -46,13 +46,13 @@ class BuyBackController extends Controller
                 'gramasis.gramasi',
                 DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number"),
                 // DB::raw("CASE WHEN buyback.id IS NOT NULL THEN 1 ELSE 0 END as buyback_status"),
-                DB::raw("CASE 
-                WHEN buyback.id IS NOT NULL THEN 
-                    CASE 
-                        WHEN COALESCE(max(product_sales.created_at), COALESCE(max(split.created_at), max(products.created_at))) > buyback.created_at THEN 0 
-                        ELSE 1 
-                    END 
-                ELSE 0 
+                DB::raw("CASE
+                WHEN buyback.id IS NOT NULL THEN
+                    CASE
+                        WHEN COALESCE(max(product_sales.created_at), COALESCE(max(split.created_at), max(products.created_at))) > buyback.created_at THEN 0
+                        ELSE 1
+                    END
+                ELSE 0
             END as buyback_status"),
                 DB::raw("COALESCE(split.product_status, products.product_status) as product_status")
             ])
@@ -65,6 +65,7 @@ class BuyBackController extends Controller
             })
             ->leftJoin('products', 'product_sales.product_id', '=', 'products.id')
             ->leftJoin('product_split_set_detail as split', 'product_sales.split_set_code', '=', 'split.split_set_code')
+            ->leftJoin('product_warehouse as product_warehouse', 'products.id', '=', 'product_warehouse.product_id')
             ->leftJoin('tag_types', 'products.tag_type_id', '=', 'tag_types.id')
             ->leftJoin('gramasis', 'products.gramasi_id', '=', 'gramasis.id')
             ->when($filter['invoiceNumber'] || $filter['code'], function ($query) use ($filter) {
@@ -177,32 +178,64 @@ class BuyBackController extends Controller
     public function getDataModalProductBuyBack(Request $request)
     {
         $product_id = $request->id;
-        $split_set_code = $request->split_set_code; // split set code
+        $split_set_code = $request->split_set_code;
 
-        $product = Product::select([
-            'products.id',
-            DB::raw("COALESCE(split.split_set_code, products.code) as code"),
-            'products.name',
-            DB::raw("COALESCE(buyback.final_price, products.price) as price"),
-            DB::raw('products.discount * 1000 as discount'),
-            'products.description'
+        $product = Product_Sale::select([
+            'product_sales.product_id',
+            'product_sales.split_set_code',
+            DB::raw("product_sales.product_id as code"),
+            DB::raw("COALESCE(buyback.final_price, product_sales.total) as price"),
+            DB::raw('COALESCE(product_sales.discount - product_sales.discount_promo,0) as discount'),
         ])
-            ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
             ->leftJoin('product_buyback as buyback', function ($join) {
-                $join->on('products.id', '=', 'buyback.product_id');
+                $join->on('product_sales.product_id', '=', 'buyback.product_id');
                 $join->where(function ($query) {
-                    $query->on('split.split_set_code', '=', 'buyback.code')
-                        ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
+                    $query->on('product_sales.split_set_code', '=', 'buyback.code')
+                        ->orWhereNull('product_sales.split_set_code');
                 });
             })
             ->when($split_set_code, function ($query) use ($split_set_code) {
-                return $query->where('split.split_set_code', $split_set_code);
+                return $query->where('product_sales.split_set_code', $split_set_code);
             })
-            ->where('products.id', $product_id)
+            ->where('product_sales.product_id', $product_id)
+            ->with('product', 'productSplitSetDetail')
+            ->orderByDesc('product_sales.created_at')
             ->first();
 
         return response()->json($product);
     }
+
+
+    // public function getDataModalProductBuyBack(Request $request)
+    // {
+    //     $product_id = $request->id;
+    //     $split_set_code = $request->split_set_code; // split set code
+
+    //     $product = Product::select([
+    //         'products.id',
+    //         DB::raw("COALESCE(split.split_set_code, products.code) as code"),
+    //         'products.name',
+    //         DB::raw("COALESCE(buyback.final_price, product_warehouse.price) as price"),
+    //         DB::raw('products.discount * 1000 as discount'),
+    //         'products.description'
+    //     ])
+    //         ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+    //         ->leftJoin('product_warehouse as product_warehouse', 'products.id', '=', 'product_warehouse.product_id')
+    //         ->leftJoin('product_buyback as buyback', function ($join) {
+    //             $join->on('products.id', '=', 'buyback.product_id');
+    //             $join->where(function ($query) {
+    //                 $query->on('split.split_set_code', '=', 'buyback.code')
+    //                     ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
+    //             });
+    //         })
+    //         ->when($split_set_code, function ($query) use ($split_set_code) {
+    //             return $query->where('split.split_set_code', $split_set_code);
+    //         })
+    //         ->where('products.id', $product_id)
+    //         ->first();
+
+    //     return response()->json($product);
+    // }
 
     public function store(Request $request)
     {

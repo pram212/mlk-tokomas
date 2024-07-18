@@ -1,159 +1,141 @@
-$.ajaxSetup({
-    headers: {
-        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+const table = $("#buyback-data-table").DataTable({
+    responsive: true,
+    fixedHeader: {
+        header: true,
+        footer: true,
     },
+    processing: true,
+    serverSide: true,
+    ajax: {
+        url: `${baseUrl}/buyback/buyback-datatable`,
+        dataType: "json",
+        type: "get",
+        data: function (d) {
+            d.invoice_number = invoice_number.val();
+            d.code = code.val();
+        },
+    },
+    columns: [
+        {
+            data: "code",
+            name: "products.code",
+            searchable: true,
+            render: function (data, type, row) {
+                const product_id = row.id;
+                const split_set_code = row.split_set_code ?? "";
+                let param = product_id;
+                if (split_set_code) {
+                    param = product_id + "/?split_set_code=" + split_set_code;
+                }
+                return (
+                    '<a href="' +
+                    baseUrl +
+                    "/products/" +
+                    param +
+                    '" class="btn-detail-product" style="color: blue">' +
+                    data +
+                    "</a>"
+                );
+            },
+        },
+        {
+            data: "name",
+            name: "products.name",
+            searchable: true,
+        },
+        {
+            data: "image_preview",
+            searchable: false,
+            orderable: false,
+        },
+        {
+            data: "created_at",
+            searchable: false,
+        },
+        {
+            data: "price",
+            searchable: false,
+        },
+        {
+            data: "tag_type_code",
+            searchable: false,
+            orderable: false,
+        },
+        {
+            data: "tag_type_color",
+            searchable: false,
+            orderable: false,
+        },
+        {
+            data: "mg",
+            searchable: false,
+        },
+        {
+            data: "gramasi_gramasi",
+            searchable: false,
+        },
+        {
+            data: "product_status",
+            searchable: false,
+        },
+        {
+            data: "invoice_number",
+            name: "products.invoice_number",
+            searchable: true,
+        },
+        {
+            data: "buyback_status",
+            searchable: false,
+        },
+        {
+            data: "action",
+            orderable: false,
+            searchable: false,
+        },
+        {
+            data: "invoice_number",
+            name: "split.invoice_number",
+            searchable: true,
+            visible: false,
+        },
+        {
+            data: "code",
+            name: "split.split_set_code",
+            searchable: true,
+            visible: false,
+        },
+    ],
+    order: [["3", "desc"]],
+    columnDefs: [
+        {
+            orderable: false,
+            targets: [0, 2, 6],
+        },
+        {
+            visible: false,
+            targets: [5, 6, 7, 8],
+        },
+    ],
+    select: {
+        style: "multi",
+        selector: "td:first-child",
+    },
+    lengthMenu: [
+        [10, 25, 50, -1],
+        [10, 25, 50, "All"],
+    ],
+    dom: '<"row"lfB>rtip',
+    buttons: [
+        {
+            extend: "colvis",
+            text: lang_visibility,
+            // columns: ":gt(0)",
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        },
+    ],
 });
 
-function hitungTotalPotongan() {
-    let modal_price = parseFloat($("#modal_price_default").val());
-    let discount = parseFloat($("#modal_discount").val());
-    let additional_cost = parseFloat($("#modal_additional_cost").val());
-    let total_potongan = discount + additional_cost;
-    let final_price = modal_price - total_potongan;
-    $("#modal_price_value").text(final_price);
-    $("#modal_total_discount").val(total_potongan);
-    $("#final_price").text(final_price);
-}
-
 $(document).ready(function () {
-    var table = $("#buyback-data-table").DataTable({
-        responsive: true,
-        fixedHeader: {
-            header: true,
-            footer: true,
-        },
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: `${baseUrl}/buyback/buyback-datatable`,
-            dataType: "json",
-            type: "get",
-            data: function (d) {
-                d.invoice_number = invoice_number.val();
-                d.code = code.val();
-            },
-        },
-        columns: [
-            {
-                data: "code",
-                name: "products.code",
-                searchable: true,
-                render: function (data, type, row) {
-                    const product_id = row.id;
-                    const split_set_code = row.split_set_code ?? "";
-                    let param = product_id;
-                    if (split_set_code) {
-                        param =
-                            product_id + "/?split_set_code=" + split_set_code;
-                    }
-                    return (
-                        '<a href="' +
-                        baseUrl +
-                        "/products/" +
-                        param +
-                        '" class="btn-detail-product" style="color: blue">' +
-                        data +
-                        "</a>"
-                    );
-                },
-            },
-            {
-                data: "name",
-                name: "products.name",
-                searchable: true,
-            },
-            {
-                data: "image_preview",
-                searchable: false,
-                orderable: false,
-            },
-            {
-                data: "created_at",
-                searchable: false,
-            },
-            {
-                data: "price",
-                searchable: false,
-            },
-            {
-                data: "tag_type_code",
-                searchable: false,
-                orderable: false,
-            },
-            {
-                data: "tag_type_color",
-                searchable: false,
-                orderable: false,
-            },
-            {
-                data: "mg",
-                searchable: false,
-            },
-            {
-                data: "gramasi_gramasi",
-                searchable: false,
-            },
-            {
-                data: "product_status",
-                searchable: false,
-            },
-            {
-                data: "invoice_number",
-                name: "products.invoice_number",
-                searchable: true,
-            },
-            {
-                data: "buyback_status",
-                searchable: false,
-            },
-            {
-                data: "action",
-                orderable: false,
-                searchable: false,
-            },
-            {
-                data: "invoice_number",
-                name: "split.invoice_number",
-                searchable: true,
-                visible: false,
-            },
-            {
-                data: "code",
-                name: "split.split_set_code",
-                searchable: true,
-                visible: false,
-            },
-        ],
-        order: [["3", "desc"]],
-        columnDefs: [
-            {
-                orderable: false,
-                targets: [0, 2, 6],
-            },
-            {
-                visible: false,
-                targets: [5, 6, 7, 8],
-            },
-        ],
-        select: {
-            style: "multi",
-            selector: "td:first-child",
-        },
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "All"],
-        ],
-        dom: '<"row"lfB>rtip',
-        buttons: [
-            {
-                extend: "colvis",
-                text: lang_visibility,
-                // columns: ":gt(0)",
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-            },
-        ],
-    });
-
     filterCode();
     filterInvoice();
 
@@ -189,78 +171,95 @@ $(document).ready(function () {
         table.ajax.reload();
     });
 
-    btn_submit.click(function () {
-        // validation
-        if (!validation_buyback()) {
-            return;
-        }
-
-        // POST to buyback/store with axios
-        axios
-            .post(`${baseUrl}/buyback/store`, {
-                product_id: $("#product_id").val(),
-                code: $("#product_code").val(),
-                price: $("#modal_price_default").val(),
-                discount: $("#modal_discount").val(),
-                additional_cost: $("#modal_additional_cost").val(),
-                final_price: $("#final_price").text(),
-                description: $("#modal_description").val(),
-            })
-            .then((response) => {
-                // // show alert success
-                Swal.fire({
-                    icon: "success",
-                    title: "Success",
-                    text: response.data.message,
-                });
-
-                // hide modal buybackModal
-                $("#buybackModal").modal("hide");
-
-                // reload datatable
-                table.ajax.reload();
-            })
-            .catch((error) => {
-                // show alert error
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: error.response.data.message,
-                });
-            });
-    });
+    btn_submit.click(handleSubmit);
 
     // onclick buyback button
-    $("#buyback-data-table tbody").on("click", "a.btn-buyback", function (e) {
-        const id = $(this).data("productid");
-        const code = $(this).data("productcode").toString();
-        let url = `${baseUrl}/buyback/getDataModalProductBuyBack/${id}${
-            code.includes("-") ? `/${code}` : ""
-        }`;
+    $("#buyback-data-table tbody").on("click", "a.btn-buyback", handleBuyback);
 
-        // GET data product from buyback/getDataModalProductBuyBack{id} with axios
-        axios.get(url).then((response) => {
-            // insert data to modal
-            $("#modal_desc_value").text(
-                "(" + code + ")" + " - " + response.data.name
-            );
-
-            let modal_price =
-                parseFloat(response.data.price) -
-                parseFloat(response.data.discount);
-
-            $("#modal_price_value").text(modal_price);
-            $("#modal_price_default").val(parseFloat(response.data.price));
-            $("#modal_discount").val(parseFloat(response.data.discount));
-            $("#product_id").val(response.data.id);
-            $("#product_code").val(code);
-            $("#modal_additional_cost").val(0);
-            $("#modal_description").val("");
-            // show modal buybackModal
-            $("#buybackModal").modal("show");
-        });
-    });
+    $("#barang_meleot").change(hitungTotalPotongan);
 });
+
+function handleBuyback() {
+    const id = $(this).data("productid");
+    const code = $(this).data("productcode").toString();
+    let url = `${baseUrl}/buyback/getDataModalProductBuyBack/${id}${
+        code.includes("-") ? `/${code}` : ""
+    }`;
+
+    // GET data product from buyback/getDataModalProductBuyBack{id} with axios
+    axios.get(url).then((response) => {
+        // insert data to modal
+        $("#modal_desc_value").text(
+            "(" + code + ")" + " - " + response.data.product.name
+        );
+
+        let modal_price =
+            parseFloat(response.data.price) -
+            parseFloat(response.data.discount);
+        const additional_cost = parseFloat(
+            response.data.product_split_set_detail?.additional_cost ??
+                response.data.product?.additional_cost ??
+                0
+        );
+
+        // Memastikan bahwa additional_cost adalah angka yang valid
+        const additionalCostIsValid = isNaN(additional_cost)
+            ? 0
+            : additional_cost;
+        $("#modal_price_value").text(modal_price);
+        $("#modal_price_default").val(parseFloat(response.data.price));
+        $("#modal_discount").val(parseFloat(response.data.discount));
+        $("#product_id").val(response.data.id);
+        $("#product_code").val(code);
+        $("#modal_additional_cost").val(additionalCostIsValid);
+        $("#modal_description").val("");
+        // show modal buybackModal
+        $("#buybackModal").modal("show");
+
+        hitungTotalPotongan();
+    });
+}
+
+function handleSubmit() {
+    // validation
+    if (!validation_buyback()) {
+        return;
+    }
+
+    // POST to buyback/store with axios
+    axios
+        .post(`${baseUrl}/buyback/store`, {
+            product_id: $("#product_id").val(),
+            code: $("#product_code").val(),
+            price: $("#modal_price_default").val(),
+            discount: $("#modal_discount").val(),
+            additional_cost: $("#modal_additional_cost").val(),
+            final_price: $("#final_price").text(),
+            description: $("#modal_description").val(),
+        })
+        .then((response) => {
+            // // show alert success
+            Swal.fire({
+                icon: "success",
+                title: "Success",
+                text: response.data.message,
+            });
+
+            // hide modal buybackModal
+            $("#buybackModal").modal("hide");
+
+            // reload datatable
+            table.ajax.reload();
+        })
+        .catch((error) => {
+            // show alert error
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: error.response.data.message,
+            });
+        });
+}
 
 function filterInvoice(search = "") {
     $("#invoice_number")
@@ -309,4 +308,17 @@ function validation_buyback() {
         $("#modal_additional_cost").val(0);
     }
     return true;
+}
+
+function hitungTotalPotongan() {
+    const isBarangMeleot = $(this).is(":checked");
+    let modal_price = parseFloat($("#modal_price_default").val());
+    let discount = parseFloat($("#modal_discount").val());
+    discount = isBarangMeleot ? discount * 2 : discount;
+    let additional_cost = parseFloat($("#modal_additional_cost").val());
+    let total_potongan = discount + additional_cost;
+    let final_price = modal_price - total_potongan;
+    $("#modal_price_value").text(final_price);
+    $("#modal_total_discount").val(total_potongan);
+    $("#final_price").text(final_price);
 }
