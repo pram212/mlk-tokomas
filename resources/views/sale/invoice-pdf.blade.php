@@ -332,7 +332,7 @@
                                     {{ $goldContentConversion }}
                                     <br>
                                     <ul class="promo-thr">
-                                        <span>Promo THR</span>
+                                        <span>{{ $data->productSales[0]->promo_name }}</span>
                                         <li>R : {{ $potongan }}/Gram</li>
                                     </ul>
                                     <span>Kalau rusak dekok, pesok, mleot Potongan {{$potongan*2}}/gram</span>
