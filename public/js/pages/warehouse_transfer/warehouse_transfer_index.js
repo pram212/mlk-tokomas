@@ -1,3 +1,7 @@
+$("ul#warehouse_transfer").siblings("a").attr("aria-expanded", "true");
+$("ul#warehouse_transfer").addClass("show");
+$("ul#warehouse_transfer #warehouse_transfer-list-menu").addClass("active");
+
 const $table = $("#data-table");
 const $datatable = $table.DataTable({
     processing: true,
