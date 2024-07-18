@@ -54,9 +54,21 @@
                         </div>
                         <div class="row mb-2">
                             <div class="col-md-6">Biaya tambahan</div>
-                            <div class="col-md-6"><input type="int" class="form-control"
-                                    onchange="hitungTotalPotongan()" id="modal_additional_cost" value="0">
+                            <div class="col-md-6">
+                                @can('buybackEdit', App\Product::class)
+                                <div class="input-group mb-3">
+                                    <input type="int" class="form-control" onchange="hitungTotalPotongan()"
+                                        id="modal_additional_cost" value="0">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-success" type="button"
+                                            id="btn_save_additional_cost"><i class="fa fa-save"></i></button>
+                                    </div>
+                                </div>
+                                @else
+                                <input type="int" class="form-control" id="modal_additional_cost" value="0" readonly>
+                                @endcan
                             </div>
+
                         </div>
                         <div class="row mb-2">
                             <div class="col-md-6">Keterangan</div>

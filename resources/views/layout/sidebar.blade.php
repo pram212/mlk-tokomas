@@ -185,12 +185,13 @@
                         @endcan --}}
                     </ul>
                 </li>
-
+                @can('viewAny', App\Product::class)
                 <li id="buyback">
                     <a href="{{ url('buyback') }}">
                         <i class="dripicons-return"></i><span>{{ __('file.buy back') }}</span>
                     </a>
                 </li>
+                @endcan
 
                 <li id="promo">
                     <a href="{{ url('promo') }}">

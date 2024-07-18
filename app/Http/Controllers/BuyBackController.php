@@ -205,6 +205,46 @@ class BuyBackController extends Controller
         return response()->json($product);
     }
 
+    public function update_add_cost(Request $request)
+    {
+        try {
+            $product_code = $request->code;
+            $additional_cost = $request->additional_cost;
+            $isSplited = strpos($product_code, '-');
+
+            DB::beginTransaction();
+            if ($isSplited) {
+                $product_split = ProductSplitSetDetail::where('split_set_code', $product_code)->first();
+                $product_split->additional_cost = $additional_cost;
+                $product_split->save();
+            } else {
+                $product = Product::where('code', $product_code)->first();
+                $product->additional_cost = $additional_cost;
+                $product->save();
+            }
+
+            DB::commit();
+
+            $response = [
+                'isSuccess' => true,
+                'data' => $product_code,
+                'message' => 'Additional cost has been updated'
+            ];
+
+            return response()->json($response);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            $response = [
+                'isSuccess' => false,
+                'data' => $product_code,
+                'message' => $exception->getMessage()
+            ];
+
+            return response()->json($response);
+        }
+    }
+
 
     // public function getDataModalProductBuyBack(Request $request)
     // {

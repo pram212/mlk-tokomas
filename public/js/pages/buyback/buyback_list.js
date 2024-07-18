@@ -172,6 +172,7 @@ $(document).ready(function () {
     });
 
     btn_submit.click(handleSubmit);
+    btn_save_additional_cost.click(handleSubmitAdditionalCost);
 
     // onclick buyback button
     $("#buyback-data-table tbody").on("click", "a.btn-buyback", handleBuyback);
@@ -179,6 +180,33 @@ $(document).ready(function () {
     $("#barang_meleot").change(hitungTotalPotongan);
 });
 
+function handleSubmitAdditionalCost() {
+    const code = $("#product_code").val();
+    const additional_cost = $("#modal_additional_cost").val() ?? 0;
+
+    // POST to buyback/update_add_cost with axios
+    axios
+        .post(`${baseUrl}/buyback/update_add_cost`, {
+            code: code,
+            additional_cost: additional_cost,
+        })
+        .then((response) => {
+            // show alert success
+            Swal.fire({
+                icon: "success",
+                title: "Success",
+                text: response.data.message,
+            });
+        })
+        .catch((error) => {
+            // show alert error
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: error.response.data.message,
+            });
+        });
+}
 function handleBuyback() {
     const id = $(this).data("productid");
     const code = $(this).data("productcode").toString();

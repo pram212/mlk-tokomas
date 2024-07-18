@@ -100,6 +100,7 @@
     const table_body = $('#buyback-data-table tbody');
     const buybackModal = $('#buybackModal');
     const lang_select = '{{ __("file.Select") }}';
+    const btn_save_additional_cost = $('#btn_save_additional_cost');
 </script>
 <script src="{{ asset('public/js/pages/buyback/buyback_list.js?timestamp=' . now()->timestamp) }}"></script>
 @endsection
