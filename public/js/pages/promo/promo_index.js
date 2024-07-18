@@ -26,13 +26,14 @@ const $datatable = $table.DataTable({
             orderable: false,
             searchable: false,
         },
+        { data: "promo_name", name: "promo_name" },
         { data: "discount", name: "discount" },
         { data: "start_period", name: "start_period" },
         { data: "end_period", name: "end_period" },
         { data: "action", name: "action" },
         { data: "created_at", name: "created_at", visible: false },
     ],
-    order: [["6", "desc"]],
+    order: [["7", "desc"]],
     columnDefs: [
         // {
         //     orderable: false,

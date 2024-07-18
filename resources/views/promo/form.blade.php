@@ -38,6 +38,13 @@
                     @endif
                     <div class="col-md-6">
                         <div class="form-group">
+                            <label>{{ __('file.name') }} *</label>
+                            <input type="text" name="promo_name" class="form-control" id="promo_name"
+                                value="{{ old('promo_name', @$promo->promo_name) }}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
                             <label>{{ __('file.Product Property') }} * </label>
                             <select name="product_properties_id" class="form-control" id="product_properties_id"
                                 data-live-search="true">

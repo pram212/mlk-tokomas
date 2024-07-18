@@ -12,6 +12,7 @@
                 <tr>
                     <th class="not-exported"></th>
                     <th>{{ __('file.Product Property') }}</th>
+                    <th>{{ __('file.name') }}</th>
                     <th>{{ __('file.Discount') }}</th>
                     <th>{{ __('file.Promotion Starts') }}</th>
                     <th>{{ __('file.Promotion Ends') }}</th>

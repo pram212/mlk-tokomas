@@ -194,7 +194,7 @@
 
                 <li id="promo">
                     <a href="{{ url('promo') }}">
-                        <i class="dripicons-return"></i><span>{{ __('file.promo') }}</span>
+                        <i class="dripicons-store"></i><span>{{ __('file.promo') }}</span>
                     </a>
                 </li>
 

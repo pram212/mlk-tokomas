@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Promo extends Model
 {
     protected $fillable = [
-        'product_properties_id', 'discount', 'start_period', 'end_period'
+        'product_properties_id', 'promo_name', 'discount', 'start_period', 'end_period'
     ];
 
     public function product_properties()
