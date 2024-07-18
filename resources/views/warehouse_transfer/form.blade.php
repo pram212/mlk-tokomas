@@ -1,102 +1,88 @@
 @extends('layout.main')
-@section('title', trans('file.promo'))
 @section('content')
-
-<section>
-    <div class="container">
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <h4>{{__('file.add_promo') }}</h4>
-            </div>
-
-            <div class="card-body">
-                <p class="italic">
-                    <small>{{ trans('file.The field labels marked with * are required input fields') }}.</small>
-                </p>
-                @php
-                $action = @$promo ? route('promo.update', @$promo->id) :
-                route('promo.store');
-                @endphp
-
-                @error('duplicate_data')
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <strong>{{ $message }}</strong>
-                </div>
-
-                <script>
-                    $(".alert").alert();
-                </script>
-                @enderror
-
-                <form action="{{ $action }}" class="row" method="POST">
-                    @csrf
-                    @if (@$promo)
-                    @method('put')
-                    @endif
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>{{ __('file.name') }} *</label>
-                            <input type="text" name="promo_name" class="form-control" id="promo_name"
-                                value="{{ old('promo_name', @$promo->promo_name) }}">
-                        </div>
+<section class="forms">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex align-items-center">
+                        <h4>{{trans('file.warehouse_transfer_add')}}</h4>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>{{ __('file.Product Property') }} * </label>
-                            <select name="product_properties_id" class="form-control" id="product_properties_id"
-                                data-live-search="true">
-                                <option value="">{{ __('file.Select') }}</option>
-                                @foreach ($product_properties as $item)
-                                <option value="{{ $item->id }}" {{ old('product_properties_id', @$promo->
-                                    product_properties_id) ==
-                                    $item->id ? 'selected' : '' }}>
-                                    {{ $item->code.' - '.$item->description }}
-                                </option>
+                    <div class="card-body">
+                        <p class="italic"><small>{{trans('file.The field labels marked with * are required input
+                                fields')}}.</small></p>
+                        <!-- Tampilkan Pesan Error -->
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
                                 @endforeach
-                            </select>
-                            @error('product_properties_id')
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
+                            </ul>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>{{ __('file.Discount') }} *</label>
-                            <input type="text" name="discount" class="form-control" id="discount"
-                                value="{{ old('discount', @$promo->discount) }}">
+                        @endif
+                        {!! Form::open(['route' => 'warehouse_transfer.store', 'method' => 'post', 'files' => true, 'id'
+                        =>
+                        'warehouse_transfer-form']) !!}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label>{{trans('file.Select Product')}}</label>
+                                        <div class="search-box input-group">
+                                            <input type="text" id="product_search"
+                                                placeholder="Please type product code and select..."
+                                                class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-5">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive mt-3">
+                                            <table id="table" class="table table-hover order-list">
+                                                <thead>
+                                                    <tr>
+                                                        <th>{{trans('file.name')}}</th>
+                                                        <th>{{trans('file.Code')}}</th>
+                                                        <th><i class="dripicons-trash"></i></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            {{-- <input type="hidden" name="total_qty" /> --}}
+                                            {{-- <input type="hidden" name="item" /> --}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>{{trans('file.Note')}}</label>
+                                            <textarea rows="5" class="form-control" name="note"></textarea>
+                                            @if ($errors->has('note'))
+                                            <div class="invalid-feedback">
+                                                {{ $errors->first('note') }}
+                                            </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary"
+                                        id="submit-button">
+                                </div>
+                            </div>
                         </div>
+                        {!! Form::close() !!}
                     </div>
-
-                    {{-- daterange --}}
-                    <div class="col-md-6">
-                        <div class="form-group ">
-                            <label>{{ __('file.Promotion Starts') }} *</label>
-                            <input type="text" name="start_period" class="form-control datepicker" id="start_period"
-                                value="{{ old('start_period', @$promo->start_period) }}">
-                            @error('start_period')
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group ">
-                            <label>{{ __('file.Promotion Ends') }} *</label>
-                            <input type="text" name="end_period" class="form-control datepicker" id="end_period"
-                                value="{{ old('end_period', @$promo->end_period) }}">
-                            @error('end_period')
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-md-12">
-                        <button class="btn btn-primary">{{__('file.submit')}}</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -104,29 +90,10 @@
 @endsection
 
 @section('scripts')
-<script>
-    const $discount = $('#discount');
-    $(function () {
-        $('.datepicker').datepicker(
-            {
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-                todayHighlight: true,
-            }
-        );
-
-            $discount.on('input', onInputDiscount);
-            $discount.on('click', onClickDiscount);
-
-    });
-
-    function onInputDiscount() {
-        const value = formatMoneyToDecimal($(this).val()) || 0;
-        $(this).val(formatMoney(value));
-    }
-
-    function onClickDiscount() {
-        $(this).select();
-    }
+<script type="text/javascript">
+    $("ul#product").siblings('a').attr('aria-expanded','true');
+    $("ul#product").addClass("show");
+    $("ul#product #warehouse_transfer-create-menu").addClass("active");
 </script>
+<script src="{{asset('public/js/pages/warehouse_transfer/warehouse_transfer_form.js?timestamp=' . now())}}"></script>
 @endsection

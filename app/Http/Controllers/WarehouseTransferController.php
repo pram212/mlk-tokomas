@@ -24,7 +24,7 @@ class WarehouseTransferController extends Controller
      */
     public function create()
     {
-        //
+        return view('warehouse_transfer.form');
     }
 
     /**

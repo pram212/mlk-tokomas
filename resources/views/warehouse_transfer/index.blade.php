@@ -3,7 +3,7 @@
     <div class="container-fluid">
         {{-- @can('create', App\warehouse_transfer::class) --}}
         <a href="{{ route('warehouse_transfer.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
-            {{ __('file.add_warehouse_transfer') }}</a>
+            {{ __('file.warehouse_transfer_add') }}</a>
         {{-- @endcan --}}
     </div>
     <div class="table-responsive">

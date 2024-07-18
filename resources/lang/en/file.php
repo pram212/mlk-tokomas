@@ -654,5 +654,6 @@ return [
     "add_promo" => "Add Promo",
     "warehouse_transfer" => "Warehouse Transfer",
     "warehouse_transfer_date" => "Warehouse Transfer Date",
+    "warehouse_transfer_add" => "Add Warehouse Transfer",
 
 ];
