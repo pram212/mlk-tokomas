@@ -356,7 +356,8 @@
                                         ?
                                         rtrim(rtrim(number_format($data->productSales[0]->productSplitSetDetail->gramasi,
                                         2), '0'), '.')
-                                        : rtrim(rtrim(number_format($data->productSales[0]->product->gramasi, 2), '0'),
+                                        : rtrim(rtrim(number_format($data->productSales[0]->product->gramasi->gramasi,
+                                        2), '0'),
                                         '.')
                                         )}}
                                         <sup>
