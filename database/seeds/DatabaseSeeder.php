@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             BankSeeder::class,
             PaymentMethodSeeder::class,
             RolesPermissionSedeer::class,
+            UsersSedeer::class,
         ]);
     }
 }

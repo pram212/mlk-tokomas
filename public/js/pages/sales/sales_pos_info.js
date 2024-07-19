@@ -15,11 +15,10 @@ const table_product_info = $("#table_product_info").DataTable({
         { data: "code" },
         { data: "name" },
         { data: "price" },
-        { data: "qty", name: "qty" },
     ],
     columnDefs: [
         {
-            targets: [0, 4],
+            targets: [0],
             searchable: false,
         },
         {
@@ -31,7 +30,7 @@ const table_product_info = $("#table_product_info").DataTable({
             orderable: false,
         },
     ],
-    order: [[4, "desc"]],
+    order: [[1, "desc"]],
     dom: "rtp",
     lengthChange: false,
     pageLength: 5,

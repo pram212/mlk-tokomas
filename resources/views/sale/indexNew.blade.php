@@ -14,39 +14,50 @@
             <div class="card-header mt-2">
                 <h3 class="text-center">{{trans('file.Sale List')}}</h3>
             </div>
-            {!! Form::open(['route' => 'sales.index', 'method' => 'get']) !!}
-            <div class="row mb-3">
-                <div class="col-md-4 offset-md-2 mt-3">
-                    <div class="form-group row">
-                        <label class="d-tc mt-2"><strong>{{trans('file.Date')}}</strong> &nbsp;</label>
-                        <div class="d-tc">
-                            <div class="input-group">
-                                <input type="text" class="daterangepicker-field form-control"
-                                    value="{{$starting_date}} To {{$ending_date}}" required />
-                                <input type="hidden" name="starting_date" value="{{$starting_date}}" />
-                                <input type="hidden" name="ending_date" value="{{$ending_date}}" />
+            <div class="card-body">
+                {!! Form::open(['route' => 'sales.index', 'method' => 'get']) !!}
+                <div class="row mb-3 align-items-end">
+                    @php
+                    $now = \Carbon\Carbon::now();
+                    $date = $now->hour >= 12 ? $now->format('Y-m-d') :
+                    $now->subDay()->format('Y-m-d');
+                    @endphp
+                    <div class="col-md-3 mt-3">
+                        <div class="form-group">
+                            <label class="d-tc mt-2"><strong>{{ trans('file.start_date') }}</strong> &nbsp;</label>
+                            <input type="text" name="start_date" class="form-control datepicker" id="start_date"
+                                value="{{ $date }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3 mt-3">
+                        <div class="form-group">
+                            <label class="d-tc mt-2"><strong>{{ trans('file.end_date') }}</strong> &nbsp;</label>
+                            <input type="text" name="end_date" class="form-control datepicker" id="end_date"
+                                value="{{ $date }}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mt-3">
+                        <div class="form-group">
+                            <label class="d-tc mt-2"><strong>{{trans('file.Warehouse')}}</strong> &nbsp;</label>
+                            <div class="d-tc">
+                                <select id="warehouse_id" name="warehouse_id" class="selectpicker form-control"
+                                    data-live-search="true" data-live-search-style="begins">
+                                    <option value="">{{trans('file.All Warehouse')}}</option>
+                                </select>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4 mt-3 @if(\Auth::user()->role_id > 2){{'d-none'}}@endif">
-                    <div class="form-group row">
-                        <label class="d-tc mt-2"><strong>{{trans('file.Warehouse')}}</strong> &nbsp;</label>
-                        <div class="d-tc">
-                            <select id="warehouse_id" name="warehouse_id" class="selectpicker form-control"
-                                data-live-search="true" data-live-search-style="begins">
-                                <option value="">{{trans('file.All Warehouse')}}</option>
-                            </select>
+                    <div class="col-md-2 mt-3 d-flex align-items-end">
+                        <div class="form-group">
+                            <button class="btn btn-primary" id="filter-btn"
+                                type="button">{{trans('file.submit')}}</button>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 mt-3">
-                    <div class="form-group">
-                        <button class="btn btn-primary" id="filter-btn" type="button">{{trans('file.submit')}}</button>
-                    </div>
-                </div>
+
+                {!! Form::close() !!}
             </div>
-            {!! Form::close() !!}
         </div>
     </div>
     <div class="table-responsive">
@@ -58,10 +69,7 @@
                     <th>{{trans('file.Invoice')}}</th>
                     <th>{{trans('file.Cashier')}}</th>
                     <th>{{trans('file.customer')}}</th>
-                    <th>{{trans('file.Sale Status')}}</th>
-                    <th>{{trans('file.Payment Status')}}</th>
                     <th>{{trans('file.grand total')}}</th>
-                    <th>{{trans('file.Paid')}}</th>
                     <th class="not-exported">{{trans('file.action')}}</th>
                 </tr>
             </thead>
@@ -69,9 +77,6 @@
             <tfoot class="tfoot active">
                 <th></th>
                 <th>{{trans('file.Total')}}</th>
-                <th></th>
-                <th></th>
-                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>

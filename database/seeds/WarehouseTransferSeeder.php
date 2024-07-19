@@ -1,9 +1,8 @@
 <?php
 
-use App\paymentMethod;
 use Illuminate\Database\Seeder;
 
-class PaymentMethodSeeder extends Seeder
+class WarehouseTransferSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,6 +11,6 @@ class PaymentMethodSeeder extends Seeder
      */
     public function run()
     {
-        paymentMethod::firstOrCreate(['name' => 'Cash']);
+        //
     }
 }

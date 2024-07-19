@@ -1,22 +1,18 @@
 @extends('layout.main') @section('content')
 <section>
     <div class="container-fluid">
-        {{-- @can('create', App\promo::class) --}}
-        <a href="{{ route('promo.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
-            {{ __('file.add_promo') }}</a>
+        {{-- @can('create', App\warehouse_transfer::class) --}}
+        <a href="{{ route('warehouse_transfer.create') }}" class="btn btn-info"><i class="dripicons-plus"></i>
+            {{ __('file.warehouse_transfer_add') }}</a>
         {{-- @endcan --}}
     </div>
     <div class="table-responsive">
-        <table id="promo-data-table" class="table" style="width: 100%">
+        <table id="data-table" class="table" style="width: 100%">
             <thead>
                 <tr>
-                    <th class="not-exported"></th>
-                    <th>{{ __('file.Product Property') }}</th>
-                    <th>{{ __('file.name') }}</th>
-                    <th>{{ __('file.Discount') }}</th>
-                    <th>{{ __('file.Promotion Starts') }}</th>
-                    <th>{{ __('file.Promotion Ends') }}</th>
-                    <th class="not-exported">{{ trans('file.action') }}</th>
+                    <th class="not-exported">{{ __('file.No') }}</th>
+                    <th>{{ __('file.Product Name') }}</th>
+                    <th>{{ __('file.warehouse_transfer_date') }}</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -37,5 +33,6 @@
     const lang_delete = '{{ trans("file.delete") }}';
     const lang_visibility = '{{ trans("file.Column visibility") }}';
 </script>
-<script src="{{ asset('public/js/pages/promo/promo_index.js?timestamp=' . time()) }}"></script>
+<script src="{{ asset('public/js/pages/warehouse_transfer/warehouse_transfer_index.js?timestamp=' . time()) }}">
+</script>
 @endsection

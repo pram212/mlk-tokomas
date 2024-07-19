@@ -23,6 +23,12 @@ class ProductPolicy
         return $role->hasPermissionTo('products-index');
     }
 
+    public function buybackEdit(User $user)
+    {
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('products-buyback-edit');
+    }
+
     /**
      * Determine whether the user can view the product.
      *

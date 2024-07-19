@@ -277,7 +277,7 @@ return [
     "Supplier List" => "Daftar Pemasok",
     "Add Supplier" => "Tambahkan Pemasok",
     "Product Report" => "Laporan Produk",
-    "Sale Report" => "Laporan Jualan",
+    "Sale Report" => "Laporan Penjualan",
     "Purchase Report" => "Laporan Pembelian",
     "Payment Report" => "Laporan Pembayaran",
     "Warehouse Stock Chart" => "Grafik Stok Gudang / Toko",
@@ -651,6 +651,10 @@ return [
     "Product property is used in a product" => "Sifat Barang telah digunakan oleh suatu produk",
     "promo" => "Promo",
     "add_promo" => "Tambah Promo",
-
-
+    "warehouse_transfer" => "Transfer Gudang",
+    "warehouse_transfer_date" => "Tanggal Transfer Gudang",
+    "warehouse_transfer_add" => "Tambah Transfer Gudang",
+    "start_date" => "Tanggal Awal",
+    "end_date" => "Tanggal Akhir",
+    "sale_report" => "Laporan Penjualan",
 ];

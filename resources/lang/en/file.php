@@ -652,4 +652,11 @@ return [
     "Product property is used in a product" => "Product property is used in a product",
     "promo" => "Promo",
     "add_promo" => "Add Promo",
+    "warehouse_transfer" => "Warehouse Transfer",
+    "warehouse_transfer_date" => "Warehouse Transfer Date",
+    "warehouse_transfer_add" => "Add Warehouse Transfer",
+    "start_date" => "Start Date",
+    "end_date" => "End Date",
+    "sale_report" => "Sale Report",
+
 ];

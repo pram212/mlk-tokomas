@@ -19,7 +19,8 @@
                                     <div class="col-md-8">
                                         {{-- select2 --}}
                                         <div class="form-group">
-                                            <select class="form-control" id="invoice_number" name="invoice_number" data-live-search="true">
+                                            <select class="form-control" id="invoice_number" name="invoice_number"
+                                                data-live-search="true">
                                                 <option value="">{{ __('file.Select') }}</option>
                                             </select>
                                         </div>
@@ -86,7 +87,10 @@
 {{-- modal --}}
 @include('partials.buyback.modal_buyback')
 
-<script src="{{ asset('public/js/qrcode.min.js') }}"></script>
+
+@endsection
+
+@section('scripts')
 <script>
     const lang_visibility = '{{ __("file.Column visibility") }}';
     const invoice_number = $('#invoice_number');
@@ -96,6 +100,7 @@
     const table_body = $('#buyback-data-table tbody');
     const buybackModal = $('#buybackModal');
     const lang_select = '{{ __("file.Select") }}';
+    const btn_save_additional_cost = $('#btn_save_additional_cost');
 </script>
-<script src="{{ asset('public/js/pages/buyback/buyback_list.js') }}"></script>
+<script src="{{ asset('public/js/pages/buyback/buyback_list.js?timestamp=' . now()->timestamp) }}"></script>
 @endsection

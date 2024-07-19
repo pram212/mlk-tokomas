@@ -324,7 +324,7 @@ function addProductToCart(product_code) {
             $cartTable.row.add([
                 `${product.name} (${product.code})
                 <br>
-                <small>In Stock: ${product.qty}</small>
+                <small>In Stock: 1</small>
                     <input type='hidden' name='product_id[]' value="${product.code}">`,
                 product.price,
                 `

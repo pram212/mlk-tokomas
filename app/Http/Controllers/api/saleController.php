@@ -26,17 +26,24 @@ class saleController extends Controller
     public function index(Request $request)
     {
         $model = Sale::query()
-            ->select('sales.*')
             ->when($request->filled('warehouse_id'), function ($query) use ($request) {
                 return $query->where('warehouse_id', $request->input('warehouse_id'));
             })
-            ->when($request->filled('starting_date'), function ($query) use ($request) {
-                return $query->whereDate('sales.created_at', '>=', $request->input('starting_date'));
+            ->when($request->filled('start_date'), function ($query) use ($request) {
+                return $query->where('sales.created_at', '>=', $request->input('start_date') . ' 12:00:00');
             })
-            ->when($request->filled('ending_date'), function ($query) use ($request) {
-                return $query->whereDate('sales.created_at', '<=', $request->input('ending_date'));
+            ->when($request->filled('end_date'), function ($query) use ($request) {
+                $endingDate = \Carbon\Carbon::parse($request->input('end_date'))->addDay()->format('Y-m-d') . ' 12:00:00';
+                return $query->where('sales.created_at', '<=', $endingDate);
             })
             ->with('biller', 'customer', 'warehouse', 'user');
+
+        // Melihat query yang dihasilkan
+        // $sql = $model->toSql();
+        // $bindings = $model->getBindings();
+
+        // dd($sql, $bindings);
+
 
 
         // get permissions
@@ -45,35 +52,11 @@ class saleController extends Controller
         // setup datatable data
         $datatable = DataTables::of($model)
             ->addIndexColumn()
-            ->editColumn('created_at', function ($sale) {
-                return date(config('date_format'), strtotime($sale->created_at->toDateString()));
-            })
+            // ->editColumn('created_at', function ($sale) {
+            //     return date(config('date_format'), strtotime($sale->created_at->toDateString()));
+            // })
             ->editColumn('grand_total', function ($sale) {
                 return number_format($sale->grand_total, 2);
-            })
-            ->editColumn('paid_amount', function ($sale) {
-                return number_format($sale->paid_amount, 2);
-            })
-            ->addColumn('sale_status', function ($sale) {
-                $statuses = [
-                    1 => ['class' => 'success', 'label' => trans('file.Completed')],
-                    2 => ['class' => 'danger', 'label' => trans('file.Pending')],
-                    3 => ['class' => 'warning', 'label' => trans('file.Draft')],
-                ];
-
-                $status = $statuses[$sale->sale_status] ?? $statuses[3];
-                return '<div class="badge badge-' . $status['class'] . '">' . $status['label'] . '</div>';
-            })
-            ->addColumn('payment_status', function ($sale) {
-                $statuses = [
-                    1 => ['class' => 'danger', 'label' => trans('file.Pending')],
-                    2 => ['class' => 'danger', 'label' => trans('file.Due')],
-                    3 => ['class' => 'warning', 'label' => trans('file.Partial')],
-                    4 => ['class' => 'success', 'label' => trans('file.Paid')],
-                ];
-
-                $status = $statuses[$sale->payment_status] ?? ['class' => 'secondary', 'label' => trans('file.Unknown')];
-                return '<div class="badge badge-' . $status['class'] . '">' . $status['label'] . '</div>';
             })
             ->addColumn('options', function ($sale) use ($permissions) {
                 $actions = [
@@ -125,7 +108,7 @@ class saleController extends Controller
 
                 return $this->generateActionOptions($actions);
             })
-            ->rawColumns(['sale_status', 'payment_status', 'options'])
+            ->rawColumns(['options'])
             ->make();
 
         return $datatable;

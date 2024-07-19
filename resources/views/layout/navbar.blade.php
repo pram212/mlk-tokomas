@@ -112,13 +112,13 @@
                                         <i class="dripicons-swap"></i> {{ trans('file.My Transaction') }}
                                     </a>
                                 </li>
-                                @if (Auth::user()->role_id != 5)
+                                {{-- @if (Auth::user()->role_id != 5)
                                 <li>
                                     <a href="{{ url('holidays/my-holiday/' . date('Y') . '/' . date('m')) }}">
                                         <i class="dripicons-vibrate"></i> {{ trans('file.My Holiday') }}
                                     </a>
                                 </li>
-                                @endif
+                                @endif --}}
 
                                 @can('emptyDatabase')
                                 <li>

@@ -6,14 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Warehouse extends Model
 {
-    protected $fillable =[
+    protected $fillable = [
 
         "name", "phone", "email", "address", "is_active"
     ];
 
     public function product()
     {
-    	return $this->hasMany('App\Product');
-    	
+        return $this->hasMany('App\Product');
+    }
+
+    public function warehouseTransfer()
+    {
+        return $this->hasMany('App\WarehouseTransfer');
     }
 }

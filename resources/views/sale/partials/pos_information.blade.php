@@ -18,9 +18,7 @@
                             <th>No</th>
                             <th>Code</th>
                             <th>Product Name</th>
-                            {{-- <th>Category</th> --}}
                             <th>Price</th>
-                            <th>In Stock</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

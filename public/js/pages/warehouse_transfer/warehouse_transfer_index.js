@@ -1,9 +1,13 @@
-const $table = $("#promo-data-table");
+$("ul#warehouse_transfer").siblings("a").attr("aria-expanded", "true");
+$("ul#warehouse_transfer").addClass("show");
+$("ul#warehouse_transfer #warehouse_transfer-list-menu").addClass("active");
+
+const $table = $("#data-table");
 const $datatable = $table.DataTable({
     processing: true,
     serverSide: true,
     ajax: {
-        url: baseUrl + "/api/promo",
+        url: baseUrl + "/api/warehouse-transfers",
         type: "GET",
         dataType: "json",
         data: function (d) {
@@ -21,19 +25,15 @@ const $datatable = $table.DataTable({
             className: "text-center",
         },
         {
-            data: "product_property",
-            name: "product_property",
-            orderable: false,
-            searchable: false,
+            data: "product.name",
+            name: "product.name",
+            render: function (data, type, row) {
+                return `${data} (${row.code ?? row.product.code})`;
+            },
         },
-        { data: "promo_name", name: "promo_name" },
-        { data: "discount", name: "discount" },
-        { data: "start_period", name: "start_period" },
-        { data: "end_period", name: "end_period" },
-        { data: "action", name: "action" },
-        { data: "created_at", name: "created_at", visible: false },
+        { data: "created_at", name: "created_at" },
     ],
-    order: [["7", "desc"]],
+    order: [["2", "desc"]],
     columnDefs: [
         // {
         //     orderable: false,

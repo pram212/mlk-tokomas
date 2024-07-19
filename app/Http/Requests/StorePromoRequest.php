@@ -26,6 +26,7 @@ class StorePromoRequest extends FormRequest
     {
         return [
             'product_properties_id' => 'required|int|exists:product_properties,id',
+            'promo_name' => 'required|string|max:100',
             'discount' => 'required|numeric',
             'start_period' => 'required|date|before_or_equal:end_period',
             'end_period' => 'required|date|after_or_equal:start_period',
