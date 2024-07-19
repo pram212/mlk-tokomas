@@ -655,5 +655,6 @@ return [
     "warehouse_transfer_date" => "Tanggal Transfer Gudang",
     "warehouse_transfer_add" => "Tambah Transfer Gudang",
     "start_date" => "Tanggal Awal",
-    "end_date" => "Tanggal Akhir"
+    "end_date" => "Tanggal Akhir",
+    "sale_report" => "Laporan Penjualan",
 ];

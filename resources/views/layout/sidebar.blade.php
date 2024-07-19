@@ -421,12 +421,8 @@
                     </a>
                     <ul id="report" class="collapse list-unstyled @if ($requestIsOnReportMenu === 'true') show @endif">
                         @can('report', App\Product::class)
-                        <li id="product-report-menu" @if (request()->is('report/sale')) active @endif>
-                            <a href="{{ route('report.sale')}}">{{ trans('file.Sale Report') }}</a>
-                        </li>
-
-                        <li id="product-report-menu">
-                            <a href="{{ route('report.product') }}">{{ trans('file.Product Report') }}</a>
+                        <li @if (request()->is('report/sale')) active @endif>
+                            <a href="{{ route('report.sale')}}">{{ trans('file.sale_report') }}</a>
                         </li>
                         @endcan
                     </ul>
