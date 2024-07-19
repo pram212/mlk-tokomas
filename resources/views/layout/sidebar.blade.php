@@ -93,7 +93,7 @@
                         </li>
                         @endcan
 
-                        <li id="warehouse_transfer">
+                        <li id="warehouse_transfer" @if (request()->is('warehouse_transfer*')) active @endif>
                             <a href="{{ url('warehouse_transfer') }}">
                                 <i class="dripicons-arrow-left"></i><span>{{ __('file.warehouse_transfer') }}</span>
                             </a>
@@ -114,19 +114,19 @@
                     </a>
                     <ul id="sale" class="collapse list-unstyled @if ($requestIsOnSalesMenu === 'true') show @endif">
                         @can('viewAny', App\Sale::class)
-                        <li id="sale-list-menu" class="@if (request()->is('sales/')) active @endif">
+                        <li id="sale-list-menu" class="@if (request()->is('sales')) active @endif">
                             <a href="{{ route('sales.index') }}">{{ trans('file.Sale List') }}</a>
                         </li>
                         @endcan
 
                         @can('create', App\Sale::class)
-                        <li class="@if (request()->is('sales/')) active @endif">
+                        <li class="@if (request()->is('sales/pos')) active @endif">
                             <a href="{{ route('sales.pos') }}" target="_blank">POS</a>
                         </li>
                         @endcan
 
                         @can('viewAny', App\Coupon::class)
-                        <li id="coupon-menu" class="@if (request()->is('coupons/')) active @endif">
+                        <li id="coupon-menu" class="@if (request()->is('coupons*')) active @endif">
                             <a href="{{ route('coupons.index') }}">{{ trans('file.Coupon List') }}</a>
                         </li>
                         @endcan
@@ -421,14 +421,12 @@
                     </a>
                     <ul id="report" class="collapse list-unstyled @if ($requestIsOnReportMenu === 'true') show @endif">
                         @can('report', App\Product::class)
+                        <li id="product-report-menu" @if (request()->is('report/sale')) active @endif>
+                            <a href="{{ route('report.sale')}}">{{ trans('file.Sale Report') }}</a>
+                        </li>
+
                         <li id="product-report-menu">
-                            {!! Form::open(['route' => 'report.product', 'method' => 'post', 'id' =>
-                            'product-report-form']) !!}
-                            <input type="hidden" name="start_date" value="{{ date('Y-m') . '-' . '01' }}" />
-                            <input type="hidden" name="end_date" value="{{ date('Y-m-d') }}" />
-                            <input type="hidden" name="warehouse_id" value="0" />
-                            <a id="report-link" href="">{{ trans('file.Product Report') }}</a>
-                            {!! Form::close() !!}
+                            <a href="{{ route('report.product') }}">{{ trans('file.Product Report') }}</a>
                         </li>
                         @endcan
                     </ul>

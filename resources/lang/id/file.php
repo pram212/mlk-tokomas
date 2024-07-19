@@ -277,7 +277,7 @@ return [
     "Supplier List" => "Daftar Pemasok",
     "Add Supplier" => "Tambahkan Pemasok",
     "Product Report" => "Laporan Produk",
-    "Sale Report" => "Laporan Jualan",
+    "Sale Report" => "Laporan Penjualan",
     "Purchase Report" => "Laporan Pembelian",
     "Payment Report" => "Laporan Pembayaran",
     "Warehouse Stock Chart" => "Grafik Stok Gudang / Toko",

@@ -348,6 +348,10 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
     // report routes
     Route::group(['prefix' => 'report', 'as' => 'report.'], function () {
+        Route::get('sale_report', 'SaleController@index')->name('sale');
+        Route::get('product_report', 'ReportController@productReport')->name('product');
+
+
         Route::post('daily_purchase/{year}/{month}', 'ReportController@dailyPurchaseByWarehouse')->name('dailyPurchaseByWarehouse');
         Route::post('monthly_purchase/{year}', 'ReportController@monthlyPurchaseByWarehouse')->name('monthlyPurchaseByWarehouse');
         Route::post('daily_sale/{year}/{month}', 'ReportController@dailySaleByWarehouse')->name('dailySaleByWarehouse');
@@ -360,7 +364,6 @@ Route::group(['middleware' => ['auth', 'active']], function () {
         Route::post('due_report_by_date', 'ReportController@dueReportByDate')->name('dueByDate');
         Route::post('warehouse_report', 'ReportController@warehouseReport')->name('warehouse');
         Route::post('customer_report', 'ReportController@customerReport')->name('customer');
-        Route::post('product_report', 'ReportController@productReport')->name('product');
         Route::get('daily_purchase/{year}/{month}', 'ReportController@dailyPurchase');
         Route::post('profit_loss', 'ReportController@profitLoss')->name('profitLoss');
         Route::post('purchase', 'ReportController@purchaseReport')->name('purchase');
