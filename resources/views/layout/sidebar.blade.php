@@ -13,7 +13,8 @@
                 {{-- PRODUCT CATEGORY MENU --}}
                 <li>
                     @php
-                    $requestIsOnProductCategoryMenu = request()->is('product-categories*', 'master*', 'category*') ?
+                    $requestIsOnProductCategoryMenu = request()->is('product-categories*', 'master*',
+                    'category*','promo*') ?
                     'true' : 'false';
                     @endphp
                     <a href="#productcategory" data-toggle="collapse"
@@ -50,6 +51,10 @@
                         <li id="price-list-menu" class="@if (request()->is('master/price*')) active @endif">
                             <a href="{{ route('master.price.index') }}">{{ __('file.Price') }}</a>
                         </li>
+                        <li id="promo" class="@if (request()->is('promo*')) active @endif">
+                            <a href="{{ url('promo') }}">{{ __('file.promo') }}</a>
+                        </li>
+
                     </ul>
                 </li>
                 {{-- PRODUCT CATEGORY MENU END --}}
@@ -88,55 +93,15 @@
                         </li>
                         @endcan
 
-                        {{-- @can('printBarcode', App\Product::class)
-                        <li id="printBarcode-menu" class="@if (request()->is('product-print_barcode')) active @endif">
-                            <a href="{{ route('printBarcode') }}">{{ __('file.print_barcode') }}</a>
+                        <li id="warehouse_transfer">
+                            <a href="{{ url('warehouse_transfer') }}">
+                                <i class="dripicons-arrow-left"></i><span>{{ __('file.warehouse_transfer') }}</span>
+                            </a>
                         </li>
-                        @endcan --}}
-
-                        {{-- @can('viewAny', App\Adjustment::class)
-                        <li id="adjustment-list-menu" class="@if (request()->is('adjustment/')) active @endif">
-                            <a href="{{ route('qty_adjustment.index') }}">{{ trans('file.Adjustment List') }}</a>
-                        </li>
-                        <li id="adjustment-create-menu" class="@if (request()->is('adjustment/create')) active @endif">
-                            <a href="{{ route('qty_adjustment.create') }}">{{ trans('file.Add Adjustment') }}</a>
-                        </li>
-                        @endcan --}}
-
-                        {{-- @can('viewAny', App\StockCount::class)
-                        <li id="stock-count-menu" class="@if (request()->is('stock-count/')) active @endif">
-                            <a href="{{ route('stock-count.index') }}">{{ trans('file.Stock Count') }}</a>
-                        </li>
-                        @endcan --}}
 
                     </ul>
                 </li>
 
-                {{-- <li>
-                    @php
-                    $requestIsOnPurchaseMenu = request()->is('purchases*') ? 'true' : 'false';
-                    @endphp
-                    <a href="#purchase" aria-expanded="{{ $requestIsOnPurchaseMenu }}" data-toggle="collapse">
-                        <i class="dripicons-card"></i><span>{{ trans('file.Purchase') }}</span>
-                    </a>
-                    <ul id="purchase"
-                        class="collapse list-unstyled @if ($requestIsOnPurchaseMenu === 'true') show @endif">
-                        @can('viewAny', App\Purchase::class)
-                        <li id="purchase-list-menu" class="@if (request()->is('purchases/')) active @endif">
-                            <a href="{{ route('purchases.index') }}">{{ trans('file.Purchase List') }}</a>
-                        </li>
-                        @endcan
-
-                        @can('create', App\Purchase::class)
-                        <li id="purchase-create-menu" class="@if (request()->is('purchases/create')) active @endif">
-                            <a href="{{ route('purchases.create') }}">{{ trans('file.Add Purchase') }}</a>
-                        </li>
-                        <li id="purchase-import-menu" class="@if (request()->is('/purchase_by_csv')) active @endif">
-                            <a href="{{ url('/purchase_by_csv') }}">{{ trans('file.Import Purchase By CSV') }}</a>
-                        </li>
-                        @endcan
-                    </ul>
-                </li> --}}
 
 
 
@@ -158,19 +123,7 @@
                         <li class="@if (request()->is('sales/')) active @endif">
                             <a href="{{ route('sales.pos') }}" target="_blank">POS</a>
                         </li>
-                        <li id="sale-create-menu" class="@if (request()->is('sales/create')) active @endif">
-                            <a href="{{ route('sales.create') }}">{{ trans('file.Add Sale') }}</a>
-                        </li>
-                        {{-- <li id="sale-import-menu" class="@if (request()->is('sales/sale_by_csv')) active @endif">
-                            <a href="{{ url('sales/sale_by_csv') }}">{{ trans('file.Import Sale By CSV') }}</a>
-                        </li> --}}
                         @endcan
-
-                        {{-- @can('viewAny', App\GiftCard::class)
-                        <li id="gift-card-menu" class="@if (request()->is('gift_cards/')) active @endif">
-                            <a href="{{ route('gift_cards.index') }}">{{ trans('file.Gift Card List') }}</a>
-                        </li>
-                        @endcan --}}
 
                         @can('viewAny', App\Coupon::class)
                         <li id="coupon-menu" class="@if (request()->is('coupons/')) active @endif">
@@ -178,11 +131,6 @@
                         </li>
                         @endcan
 
-                        {{-- @can('viewAny', App\Delivery::class)
-                        <li id="delivery-menu" class="@if (request()->is('delivery/')) active @endif">
-                            <a href="{{ route('delivery.index') }}">{{ trans('file.Delivery List') }}</a>
-                        </li>
-                        @endcan --}}
                     </ul>
                 </li>
                 @can('viewAny', App\Product::class)
@@ -193,16 +141,7 @@
                 </li>
                 @endcan
 
-                <li id="promo">
-                    <a href="{{ url('promo') }}">
-                        <i class="dripicons-store"></i><span>{{ __('file.promo') }}</span>
-                    </a>
-                </li>
-                <li id="warehouse_transfer">
-                    <a href="{{ url('warehouse_transfer') }}">
-                        <i class="dripicons-arrow-left"></i><span>{{ __('file.warehouse_transfer') }}</span>
-                    </a>
-                </li>
+
 
                 @can('viewAny', App\Expense::class)
                 <li>
@@ -481,24 +420,6 @@
                         <i class="dripicons-document-remove"></i><span>{{ trans('file.Reports') }}</span>
                     </a>
                     <ul id="report" class="collapse list-unstyled @if ($requestIsOnReportMenu === 'true') show @endif">
-                        @can('viewProfitLoss')
-                        <li id="profit-loss-report-menu">
-                            {!! Form::open(['route' => 'report.profitLoss', 'method' => 'post', 'id' =>
-                            'profitLoss-report-form']) !!}
-                            <input type="hidden" name="start_date" value="{{ date('Y-m') . '-' . '01' }}" />
-                            <input type="hidden" name="end_date" value="{{ date('Y-m-d') }}" />
-                            <a id="profitLoss-link" href="">{{ trans('file.Summary Report') }}</a>
-                            {!! Form::close() !!}
-                        </li>
-                        @endcan
-
-                        @can('viewBestSeller')
-                        <li id="best-seller-report-menu"
-                            class="@if (request()->is('report/best_seller*')) active @endif">
-                            <a href="{{ url('report/best_seller') }}">{{ trans('file.Best Seller') }}</a>
-                        </li>
-                        @endcan
-
                         @can('report', App\Product::class)
                         <li id="product-report-menu">
                             {!! Form::open(['route' => 'report.product', 'method' => 'post', 'id' =>
@@ -510,121 +431,6 @@
                             {!! Form::close() !!}
                         </li>
                         @endcan
-
-                        @can('dailyReport', App\Sale::class)
-                        <li id="daily-sale-report-menu" class="@if (request()->is('report/daily_sale*')) active @endif">
-                            <a href="{{ url('report/daily_sale/' . date('Y') . '/' . date('m')) }}">{{ trans('file.Daily
-                                Sale') }}</a>
-                        </li>
-                        @endcan
-
-                        @can('monthlyReport', App\Sale::class)
-                        <li id="monthly-sale-report-menu"
-                            class="@if (request()->is('report/monthly_sale*')) active @endif">
-                            <a href="{{ url('report/monthly_sale/' . date('Y')) }}">{{ trans('file.Monthly Sale') }}</a>
-                        </li>
-                        @endcan
-
-                        @can('dailyReport', App\Purchase::class)
-                        <li id="daily-purchase-report-menu"
-                            class="@if (request()->is('report/daily_purchase*')) active @endif">
-                            <a href="{{ url('report/daily_purchase/' . date('Y') . '/' . date('m')) }}">{{
-                                trans('file.Daily Purchase') }}</a>
-                        </li>
-                        @endcan
-
-                        @can('monthlyReport', App\Purchase::class)
-                        <li id="monthly-purchase-report-menu"
-                            class="@if (request()->is('report/monthly_purchase*')) active @endif">
-                            <a href="{{ url('report/monthly_purchase/' . date('Y')) }}">{{ trans('file.Monthly
-                                Purchase') }}</a>
-                        </li>
-                        @endcan
-
-                        @can('report', App\Sale::class)
-                        <li id="sale-report-menu">
-                            {!! Form::open(['route' => 'report.sale', 'method' => 'post', 'id' => 'sale-report-form'])
-                            !!}
-                            <input type="hidden" name="start_date" value="{{ date('Y-m') . '-' . '01' }}" />
-                            <input type="hidden" name="end_date" value="{{ date('Y-m-d') }}" />
-                            <input type="hidden" name="warehouse_id" value="0" />
-                            <a id="sale-report-link" href="">{{ trans('file.Sale Report') }}</a>
-                            {!! Form::close() !!}
-                        </li>
-                        @endcan
-
-                        @can('report', App\Payment::class)
-                        <li id="payment-report-menu">
-                            {!! Form::open(['route' => 'report.paymentByDate', 'method' => 'post', 'id' =>
-                            'payment-report-form']) !!}
-                            <input type="hidden" name="start_date" value="{{ date('Y-m') . '-' . '01' }}" />
-                            <input type="hidden" name="end_date" value="{{ date('Y-m-d') }}" />
-                            <a id="payment-report-link" href="">{{ trans('file.Payment Report') }}</a>
-                            {!! Form::close() !!}
-                        </li>
-                        @endcan
-
-                        @can('report', App\Purchase::class)
-                        <li id="purchase-report-menu">
-                            {!! Form::open(['route' => 'report.purchase', 'method' => 'post', 'id' =>
-                            'purchase-report-form']) !!}
-                            <input type="hidden" name="start_date" value="{{ date('Y-m') . '-' . '01' }}" />
-                            <input type="hidden" name="end_date" value="{{ date('Y-m-d') }}" />
-                            <input type="hidden" name="warehouse_id" value="0" />
-                            <a id="purchase-report-link" href="">{{ trans('file.Purchase Report') }}</a>
-                            {!! Form::close() !!}
-                        </li>
-                        @endcan
-
-                        @can('report', App\Warehouse::class)
-                        <li id="warehouse-report-menu">
-                            <a id="warehouse-report-link" href="">{{ trans('file.Warehouse Report') }}</a>
-                        </li>
-                        @endcan
-
-                        @can('stockReport', App\Warehouse::class)
-                        <li id="warehouse-stock-report-menu"
-                            class="@if (request()->is('report/warehouse_stock*')) active @endif">
-                            <a href="{{ route('report.warehouseStock') }}">{{ trans('file.Warehouse Stock Chart') }}</a>
-                        </li>
-                        @endcan
-
-                        @can('viewProdukQtyAlert', App\Producr::class)
-                        <li id="qtyAlert-report-menu"
-                            class="@if (request()->is('report/product_quantity_alert*')) active @endif">
-                            <a href="{{ route('report.qtyAlert') }}">{{ trans('file.Product Quantity Alert') }}</a>
-                        </li>
-                        @endcan
-
-                        @can('report', App\User::class)
-                        <li id="user-report-menu">
-                            <a id="user-report-link" href="">{{ trans('file.User Report') }}</a>
-                        </li>
-                        @endcan
-
-                        @can('report', App\Customer::class)
-                        <li id="customer-report-menu">
-                            <a id="customer-report-link" href="">{{ trans('file.Customer Report') }}</a>
-                        </li>
-                        @endcan
-
-                        @can('report', App\Supplier::class)
-                        <li id="supplier-report-menu">
-                            <a id="supplier-report-link" href="">{{ trans('file.Supplier Report') }}</a>
-                        </li>
-                        @endcan
-
-                        @can('viewDue')
-                        <li id="due-report-menu">
-                            {!! Form::open(['route' => 'report.dueByDate', 'method' => 'post', 'id' =>
-                            'due-report-form']) !!}
-                            <input type="hidden" name="start_date" value="{{ date('Y-m') . '-' . '01' }}" />
-                            <input type="hidden" name="end_date" value="{{ date('Y-m-d') }}" />
-                            <a id="due-report-link" href="">{{ trans('file.Due Report') }}</a>
-                            {!! Form::close() !!}
-                        </li>
-                        @endcan
-
                     </ul>
                 </li>
 
@@ -676,13 +482,13 @@
                         </li>
                         @endcan
 
-                        @can('viewAny', App\Brand::class)
+                        {{-- @can('viewAny', App\Brand::class)
                         <li id="brand-menu" class="@if (request()->is('brand*')) active @endif">
                             <a href="{{ route('brand.index') }}">{{ trans('file.Brand') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
-                        @can('viewAny', App\Unit::class)
+                        {{-- @can('viewAny', App\Unit::class)
                         <li id="unit-menu" class="@if (request()->is('unit*')) active @endif">
                             <a href="{{ route('unit.index') }}">{{ trans('file.Unit') }}</a>
                         </li>
@@ -692,7 +498,7 @@
                         <li id="currency-menu" class="@if (request()->is('currency*')) active @endif">
                             <a href="{{ route('currency.index') }}">{{ trans('file.Currency') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
                         @can('viewAny', App\Tax::class)
                         <li id="tax-menu" class="@if (request()->is('tax*')) active @endif">
@@ -705,17 +511,17 @@
                                 }}</a>
                         </li>
 
-                        @can('createSms')
+                        {{-- @can('createSms')
                         <li id="create-sms-menu" class="@if (request()->is('setting/createsms*')) active @endif">
                             <a href="{{ route('setting.createSms') }}">{{ trans('file.Create SMS') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
-                        @can('backUpDatabase')
+                        {{-- @can('backUpDatabase')
                         <li class="@if (request()->is('backup*')) active @endif">
                             <a href="{{ route('setting.backup') }}">{{ trans('file.Backup Database') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
                         @can('viewAny', App\GeneralSetting::class)
                         <li id="general-setting-menu"
@@ -724,7 +530,7 @@
                         </li>
                         @endcan
 
-                        @can('mailSetting')
+                        {{-- @can('mailSetting')
                         <li id="mail-setting-menu" class="@if (request()->is('setting/mail_setting*')) active @endif">
                             <a href="{{ route('setting.mail') }}">{{ trans('file.Mail Setting') }}</a>
                         </li>
@@ -734,7 +540,7 @@
                         <li id="sms-setting-menu" class="@if (request()->is('setting/sms_setting*')) active @endif">
                             <a href="{{ route('setting.sms') }}">{{ trans('file.SMS Setting') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
                         @can('posSetting')
                         <li id="pos-setting-menu" class="@if (request()->is('setting/pos_setting*')) active @endif">
@@ -742,11 +548,11 @@
                         </li>
                         @endcan
 
-                        @can('viewAny', App\HrmSetting::class)
+                        {{-- @can('viewAny', App\HrmSetting::class)
                         <li id="hrm-setting-menu" class="@if (request()->is('setting/hrm_setting*')) active @endif">
                             <a href="{{ route('setting.hrm') }}">{{ trans('file.HRM Setting') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
                     </ul>
                 </li>
             </ul>
