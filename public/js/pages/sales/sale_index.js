@@ -23,8 +23,8 @@ const $saleDataTable = $saleTable.DataTable({
         dataType: "json",
         data: function (d) {
             d.warehouse_id = $("#warehouse_id").val();
-            d.start_date = $("input[name='starting_date']").val();
-            d.end_date = $("input[name='ending_date']").val();
+            d.start_date = $("#start_date").val();
+            d.end_date = $("#end_date").val();
         },
     },
     columns: [
@@ -39,17 +39,14 @@ const $saleDataTable = $saleTable.DataTable({
         { data: "reference_no", name: "reference_no" },
         { data: "user.name", name: "user.name" },
         { data: "customer.name", name: "customer.name" },
-        { data: "sale_status", name: "sale_status" },
-        { data: "payment_status", name: "payment_status" },
         { data: "grand_total", name: "grand_total", className: "text-right" },
-        { data: "paid_amount", name: "paid_amount", className: "text-right" },
         { data: "options", name: "options" },
     ],
     order: [["1", "desc"]],
     columnDefs: [
         {
             orderable: false,
-            targets: [0, 2, 9],
+            targets: [0, 2, 6],
         },
     ],
     dom: '<"row"lfB>rtip',
@@ -98,8 +95,7 @@ const $saleDataTable = $saleTable.DataTable({
     ],
     drawCallback: function () {
         var api = this.api();
-        sumDatatableColumn(api, 7);
-        sumDatatableColumn(api, 8);
+        sumDatatableColumn(api, 5);
     },
 });
 
@@ -107,16 +103,21 @@ const modal_add_payment = $("#add-payment");
 const filter_btn = $("#filter-btn");
 
 // on ready
-$(document).ready(function () {
+$(function () {
+    // init datepicker
+    $(".datepicker").datepicker({
+        autoclose: true,
+        format: "yyyy-mm-dd",
+        orientation: "bottom",
+    });
+
     // set data selectpicker warehouse_id
     getWarehouse().then((response) => {
         const status = response.status;
         const data = response.data;
         const message = response.message;
 
-        if (!status) {
-            return;
-        }
+        if (!status) return;
 
         let warehouse_id = $("select[name='warehouse_id']");
 
@@ -139,96 +140,6 @@ filter_btn.on("click", reloadDatatable);
 function reloadDatatable() {
     $saleDataTable.ajax.reload();
 }
-
-// View sale button action
-$(document).on("click", ".view", function () {
-    // Get the record's ID via attribute
-    var sale_id = $(this).attr("data-id");
-    saleDetails(sale_id);
-});
-
-// Add payment button action
-$(document).on("click", "table.sale-list tbody .add-payment", function () {
-    const id = $(this).data("id");
-
-    // set sale id to form
-    $("#add-payment input[name='sale_id']").val(id);
-
-    // get gift card list
-    getGiftList().then((response) => {
-        const status = response.status;
-        const data = response.data;
-        const message = response.message;
-
-        if (!status) {
-            return;
-        }
-        let gift_card_id = $("#add-payment select[name='gift_card_id']");
-
-        gift_card_id.html("");
-
-        data.forEach((gift_card) => {
-            gift_card_id.append(
-                `<option value="${gift_card.id}">${gift_card.card_no}</option>`
-            );
-        });
-
-        // refresh selectpicker
-        gift_card_id.selectpicker("refresh");
-    });
-
-    // get account list
-    getAccount().then((response) => {
-        const status = response.status;
-        const data = response.data;
-        const message = response.message;
-
-        if (!status) {
-            return;
-        }
-
-        let account_id = $("#add-payment select[name='account_id']");
-
-        account_id.html("");
-
-        data.forEach((account) => {
-            account_id.append(
-                `<option value="${account.id}">${account.name} [${account.account_no}]</option>`
-            );
-        });
-
-        // refresh selectpicker
-        account_id.selectpicker("refresh");
-    });
-
-    // show modal add payment
-    modal_add_payment.modal("show");
-});
-
-// add delivery button action
-$(document).on(
-    "click",
-    "table.sale-list tbody .add-delivery",
-    function (event) {
-        var id = $(this).data("id").toString();
-        $.get(baseUrl + "/delivery/create/" + id, function (data) {
-            $("#dr").text(data[0]);
-            $("#sr").text(data[1]);
-            if (data[2]) {
-                $('select[name="status"]').val(data[2]);
-                $(".selectpicker").selectpicker("refresh");
-            }
-            $('input[name="delivered_by"]').val(data[3]);
-            $('input[name="recieved_by"]').val(data[4]);
-            $("#customer").text(data[5]);
-            $('textarea[name="address"]').val(data[6]);
-            $('textarea[name="note"]').val(data[7]);
-            $('input[name="reference_no"]').val(data[0]);
-            $('input[name="sale_id"]').val(id);
-            $("#add-delivery").modal("show");
-        });
-    }
-);
 
 // Print button action
 print_btn.on("click", function () {
