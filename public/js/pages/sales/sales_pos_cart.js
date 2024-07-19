@@ -335,7 +335,7 @@ function addProductToCart(product_code) {
                             <span class="dripicons-minus"></span>
                         </button>
                     </span>
-                    <input type="text" name="qty[]" data-product_id="${product.code}" class="form-control qty numkey input-number" step="any" value="1" min="1" max="${product.qty}">
+                    <input type="text" name="qty[]" data-product_id="${product.code}" class="form-control qty numkey input-number" step="any" value="1" min="1" max="1" readonly>
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default plus btn-qty-counter" data-type="plus">
                             <span class="dripicons-plus"></span>
