@@ -1948,12 +1948,9 @@ class SaleController extends Controller
     private function getDiscount($sale_data)
     {
         $product_sales = $sale_data->productSales[0];
-        $product = $product_sales->product ?? null;
-        $productSplitSetDetail = $product_sales->productSplitSetDetail ?? null;
         $total_discount = max($product_sales->discount - $product_sales->discount_promo, 0);
-        $gramasi = $productSplitSetDetail ? $productSplitSetDetail->gramasi : $product->gramasi->gramasi ?? 0;
 
-        return $total_discount * $gramasi;
+        return $total_discount;
     }
 
     private function getGoldContentConversion($product)

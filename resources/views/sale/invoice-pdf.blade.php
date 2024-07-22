@@ -331,9 +331,10 @@
                                     <br>
                                     <ul class="promo-thr">
                                         <span>{{ $data->productSales[0]->promo_name }}</span>
-                                        <li>R : {{ $potongan }}/Gram</li>
+                                        <li>R : {{ number_format($potongan,2) }}/Gram</li>
                                     </ul>
-                                    <span>Kalau rusak dekok, pesok, mleot Potongan {{$potongan*2}}/gram</span>
+                                    <span>Kalau rusak dekok, pesok, mleot Potongan
+                                        {{number_format($potongan*2,2)}}/gram</span>
                                 </div>
                             </td>
                             <td class="title" style="vertical-align: top;font-weight:bold;" colspan="2">

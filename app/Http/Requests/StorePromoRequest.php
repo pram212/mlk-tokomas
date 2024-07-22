@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Promo;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePromoRequest extends FormRequest
@@ -15,6 +16,16 @@ class StorePromoRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+
+    protected function prepareForValidation()
+    {
+        // Bersihkan pemisah ribuan dari input discount
+        $this->merge([
+            'discount' => str_replace('.', '', $this->discount),
+            'start_period' => Carbon::parse($this->start_period)->format('Y-m-d') . ' 00:00:00',
+            'end_period' => Carbon::parse($this->end_period)->format('Y-m-d') . ' 23:59:59',
+        ]);
     }
 
     /**
@@ -47,15 +58,15 @@ class StorePromoRequest extends FormRequest
      * @param  \Illuminate\Validation\Validator  $validator
      * @return void
      */
-    public function withValidator($validator)
-    {
-        $this->merge([
-            'discount' => str_replace('.', '', $this->discount),
-            'start_period' => $this->start_period . ' 00:00:00',
-            'end_period' => $this->end_period . ' 23:59:59',
-        ]);
+    // public function withValidator($validator)
+    // {
+    //     $this->merge([
+    //         'discount' => str_replace('.', '', $this->discount),
+    //         'start_period' => $this->start_period . ' 00:00:00',
+    //         'end_period' => $this->end_period . ' 23:59:59',
+    //     ]);
 
-        $validator->after(function ($validator) {
-        });
-    }
+    //     $validator->after(function ($validator) {
+    //     });
+    // }
 }
