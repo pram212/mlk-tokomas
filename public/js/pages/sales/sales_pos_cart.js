@@ -45,7 +45,7 @@ $(function () {
                 type: "GET",
                 data: {
                     search: request.term,
-                    warehouse_id: warehouse_id,
+                    // warehouse_id: warehouse_id, // DON'T REMOVE THIS LINE, WILL BE USED LATER
                 },
                 success: function (data) {
                     const products = data.map((product) => {

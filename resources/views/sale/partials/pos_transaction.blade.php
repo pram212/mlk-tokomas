@@ -21,7 +21,7 @@
                     <select class="form-control selectpicker" id="cashier_id" name="cashier_id" data-live-search="true"
                         data-live-search-style="begins" title="Select cashier...">
                         @foreach ($cashier_list as $cashier)
-                        <option value="{{ $cashier->id }}">{{ $cashier->name }}</option>
+                        <option value="{{ $cashier->id }}" selected>{{ $cashier->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -51,7 +51,7 @@
             <div class="col-md-12">
                 <div class="form-group ui-widget">
                     <input type="text" class="form-control" id="product_search" name="product_search"
-                        placeholder="{{ __('file.Search product by name/code') }}">
+                        placeholder="{{ __('file.search_product_pos') }}">
                 </div>
             </div>
         </div>

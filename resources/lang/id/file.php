@@ -657,4 +657,5 @@ return [
     "start_date" => "Tanggal Awal",
     "end_date" => "Tanggal Akhir",
     "sale_report" => "Laporan Penjualan",
+    "search_product_pos" => "Cari Produk berdasarkan Kode atau Nama",
 ];
