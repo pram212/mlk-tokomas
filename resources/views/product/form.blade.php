@@ -167,7 +167,7 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="">{{ __('file.Gold Content') }} *</label>
-                                                        <input type="text" @if($mode=='show' ) readonly @endif
+                                                        <input type="number" @if($mode=='show' ) readonly @endif
                                                             class="form-control" name="gold_content"
                                                             value="{{ old('gold_content', @$product->gold_content) }}"
                                                             id="input-gold_content" required>

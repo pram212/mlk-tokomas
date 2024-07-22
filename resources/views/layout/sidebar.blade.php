@@ -94,9 +94,7 @@
                         @endcan
 
                         <li id="warehouse_transfer" @if (request()->is('warehouse_transfer*')) active @endif>
-                            <a href="{{ url('warehouse_transfer') }}">
-                                <i class="dripicons-arrow-left"></i><span>{{ __('file.warehouse_transfer') }}</span>
-                            </a>
+                            <a href="{{ url('warehouse_transfer') }}">{{ __('file.warehouse_transfer') }}</a>
                         </li>
 
                     </ul>
