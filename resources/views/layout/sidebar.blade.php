@@ -534,6 +534,11 @@
                         </li>
                         @endcan --}}
 
+                        <li id="invoice-setting-menu"
+                            class="@if (request()->is('setting/invoice_setting*')) active @endif">
+                            <a href="{{ route('setting.invoice') }}">{{ trans('file.invoice_setting') }}</a>
+                        </li>
+
                         @can('posSetting')
                         <li id="pos-setting-menu" class="@if (request()->is('setting/pos_setting*')) active @endif">
                             <a href="{{ route('setting.pos') }}">POS {{ trans('file.settings') }}</a>

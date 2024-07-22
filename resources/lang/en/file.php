@@ -659,5 +659,8 @@ return [
     "end_date" => "End Date",
     "sale_report" => "Sale Report",
     "search_product_pos" => "Search Product by Name or Code",
-
+    "invoice_setting" => "Invoice Setting",
+    "invoice_setting_logo" => "Logo Invoice",
+    "invoice_setting_watermark" => "Watermark Invoice",
+    "preview" => "Preview",
 ];

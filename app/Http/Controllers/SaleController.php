@@ -38,6 +38,7 @@ use App\{
     GeneralSetting,
     ProductSplitSetDetail,
     GoldContentConvertion,
+    InvoiceSetting,
 };
 use DB;
 use Stripe\Stripe;
@@ -1902,7 +1903,7 @@ class SaleController extends Controller
         $w = $canvas->get_width();
         $h = $canvas->get_height();
         // Specify watermark image
-        $imageURL = public_path('logo/bima_logo_1.png');
+        $imageURL = $data['invoice_setting']->invoice_logo_watermark;
         $imgWidth = 300;
         $imgHeight = 300;
         // Set image opacity
@@ -1923,6 +1924,7 @@ class SaleController extends Controller
     // Get invoice data
     private function getInvoiceData($id)
     {
+        $invoice_setting = InvoiceSetting::first();
         $data = Sale::where('id', $id)
             ->with([
                 'customer',
@@ -1940,7 +1942,7 @@ class SaleController extends Controller
         $totalPrice = number_format((float) $data->grand_total, 2, ',', '.');
         $potongan = $this->getDiscount($data);
 
-        return compact('data', 'numberInWords', 'goldContentConversion', 'totalPrice', 'potongan');
+        return compact('data', 'numberInWords', 'goldContentConversion', 'totalPrice', 'potongan', 'invoice_setting');
     }
 
     private function getDiscount($sale_data)
