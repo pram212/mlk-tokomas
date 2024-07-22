@@ -657,4 +657,9 @@ return [
     "start_date" => "Tanggal Awal",
     "end_date" => "Tanggal Akhir",
     "sale_report" => "Laporan Penjualan",
+    "search_product_pos" => "Cari Produk berdasarkan Kode atau Nama",
+    "invoice_setting" => "Pengaturan Invoice",
+    "invoice_setting_logo" => "Logo Invoice",
+    "invoice_setting_watermark" => "Watermark Invoice",
+    "preview" => "Pratinjau",
 ];

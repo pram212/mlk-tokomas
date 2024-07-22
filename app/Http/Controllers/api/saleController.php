@@ -159,7 +159,7 @@ class saleController extends Controller
         try {
             $items = $request['items'];
             $product_sales_data = $this->prepare_product_sale_data($items);
-            $this->validate_product_qty($items, $requestData['warehouse_id']);
+            $this->validate_product_status($items, $requestData['warehouse_id'], 1);
             $total_price = ceil(array_sum(array_column($product_sales_data, 'total')));
             $tax_data = $this->prepare_tax_data($request['tax'], $total_price);
             $discount_data = $this->prepare_discount_data($total_price, $request['discount']);
@@ -280,44 +280,25 @@ class saleController extends Controller
 
         foreach ($items as $item) {
             // Validasi input
-            if (!isset($item['product_id']) || !isset($item['qty'])) {
-                throw new \Exception("Item harus memiliki 'product_id' dan 'qty'.");
-            }
+            if (!isset($item['product_id']) || !isset($item['qty'])) throw new \Exception("Item harus memiliki 'product_id' dan 'qty'.");
 
-            $product = Product::where('code', $item['product_id'])
-                ->with('productWarehouse')
-                ->first();
+
+            $product = Product::where('code', $item['product_id'])->with('productWarehouse', 'gramasi')->first();
             $product_split = null;
+            $discount = 0;
 
             if (!$product) {
                 $product_split = ProductSplitSetDetail::where('split_set_code', $item['product_id'])->first();
-
-                if (!$product_split) {
-                    throw new \Exception("Product dengan kode {$item['product_id']} tidak ditemukan.");
-                }
+                if (!$product_split) throw new \Exception("Product dengan kode {$item['product_id']} tidak ditemukan.");
             }
 
             $product_id = $product->id ?? $product_split->product_id; // Real product id
-            $product = Product::find($product_id)
-                ->with('productWarehouse')
-                ->first();
+            $product = Product::where('id', $product_id)->with('productWarehouse', 'gramasi')->first();
+
             $net_unit_price =  (float)@$product_split->price ??  (float)@$product->product_warehouse->price ?? 0;
             $qty = $item['qty'];
             $total = $net_unit_price * $qty;
-
-            // Logging untuk debugging
-            Log::info('Mempersiapkan data penjualan produk', [
-                'product_id' => $item['product_id'],
-                'variant_id' => null,
-                'qty' => $qty,
-                'sale_unit_id' => $product->sale_unit_id ?? null,
-                'net_unit_price' => $net_unit_price,
-                'discount' => 0,
-                'sale_unit_id' => 0,
-                'tax_rate' => 0,
-                'tax' => 0,
-                'total' => $total
-            ]);
+            $gramasi = $product_split->gramasi ?? $product->gramasi->gramasi ?? 0;
 
             $product_sale_data[] = [
                 'product_id' => $product_id,
@@ -326,7 +307,7 @@ class saleController extends Controller
                 'qty' => $qty,
                 'sale_unit_id' => $product->sale_unit_id ?? null,
                 'net_unit_price' => $net_unit_price,
-                'discount' =>  $product->discount ?? 0,
+                'discount' => ($product->discount * 1000 * $gramasi) ?? 0,
                 'sale_unit_id' => 0,
                 'tax_rate' => 0,
                 'tax' => 0,
@@ -437,6 +418,37 @@ class saleController extends Controller
 
                 if ($productWarehouse->qty < $qty) {
                     throw new \Exception("Product {$product->name} is out of stock");
+                }
+            }
+        }
+    }
+
+    private function validate_product_status($items, $warehouse_id, $status = 1)
+    {
+        /* Validate product quantity */
+        foreach ($items as $item) {
+            $isSplitProduct = strpos($item['product_id'], '-') !== false;
+            $qty = $item['qty'];
+
+            if ($isSplitProduct) {
+                $productSplit = ProductSplitSetDetail::where('split_set_code', $item['product_id'])->first();
+
+                if (!$productSplit) {
+                    throw new \Exception("Product with code {$item['product_id']} not found");
+                }
+
+                if ($productSplit->product_status != $status) {
+                    throw new \Exception("Product {$productSplit->product->name} is not available");
+                }
+            } else {
+                $product = Product::where('code', $item['product_id'])->first();
+
+                if (!$product) {
+                    throw new \Exception("Product with code {$item['product_id']} not found");
+                }
+
+                if ($product->product_status != $status) {
+                    throw new \Exception("Product {$product->name} is not available");
                 }
             }
         }

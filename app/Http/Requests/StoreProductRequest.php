@@ -34,7 +34,7 @@ class StoreProductRequest extends FormRequest
             'code' => ['required'],
             'mg' => ['required'],
             'product_type_id' => ['required'],
-            'image' => ['required'],
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             'split_set_type' => ['required'],
         ];
     }

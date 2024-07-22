@@ -94,9 +94,7 @@
                         @endcan
 
                         <li id="warehouse_transfer" @if (request()->is('warehouse_transfer*')) active @endif>
-                            <a href="{{ url('warehouse_transfer') }}">
-                                <i class="dripicons-arrow-left"></i><span>{{ __('file.warehouse_transfer') }}</span>
-                            </a>
+                            <a href="{{ url('warehouse_transfer') }}">{{ __('file.warehouse_transfer') }}</a>
                         </li>
 
                     </ul>
@@ -535,6 +533,11 @@
                             <a href="{{ route('setting.sms') }}">{{ trans('file.SMS Setting') }}</a>
                         </li>
                         @endcan --}}
+
+                        <li id="invoice-setting-menu"
+                            class="@if (request()->is('setting/invoice_setting*')) active @endif">
+                            <a href="{{ route('setting.invoice') }}">{{ trans('file.invoice_setting') }}</a>
+                        </li>
 
                         @can('posSetting')
                         <li id="pos-setting-menu" class="@if (request()->is('setting/pos_setting*')) active @endif">

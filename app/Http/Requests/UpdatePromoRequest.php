@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Promo;
 use Illuminate\Foundation\Http\FormRequest;
+use carbon\Carbon;
 
 class UpdatePromoRequest extends FormRequest
 {
@@ -17,6 +18,16 @@ class UpdatePromoRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation()
+    {
+        // Bersihkan pemisah ribuan dari input discount
+        $this->merge([
+            'discount' => str_replace('.', '', $this->discount),
+            'start_period' => Carbon::parse($this->start_period)->format('Y-m-d') . ' 00:00:00',
+            'end_period' => Carbon::parse($this->end_period)->format('Y-m-d') . ' 23:59:59',
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,10 +36,19 @@ class UpdatePromoRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'discount' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
+            'product_properties_id' => 'required|int|exists:product_properties,id',
+            'promo_name' => 'required|string|max:100',
+            'discount' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'start_period' => 'required|date|before_or_equal:end_period',
+            'end_period' => 'required|date|after_or_equal:start_period',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'start_date.before_or_equal' => 'The start date must be a date before or equal to the end date.',
+            'end_date.after_or_equal' => 'The end date must be a date after or equal to the start date.',
         ];
     }
 
@@ -38,17 +58,15 @@ class UpdatePromoRequest extends FormRequest
      * @param  \Illuminate\Validation\Validator  $validator
      * @return void
      */
-    public function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
-            // $id = $this->route('promo'); // get the id from the route
-            // $isExist = Promo::where('code', $this->code)
-            //     ->where('id', '!=', $id)
-            //     ->first();
+    // public function withValidator($validator)
+    // {
+    //     $this->merge([
+    //         'discount' => str_replace('.', '', $this->discount),
+    //         'start_period' => Carbon::parse($this->start_period)->format('Y-m-d') . ' 00:00:00',
+    //         'end_period' => Carbon::parse($this->end_period)->format('Y-m-d') . ' 23:59:59',
+    //     ]);
 
-            // if ($isExist) {
-            //     $validator->errors()->add('duplicate_data', 'Failed! Promo is already exist!');
-            // }
-        });
-    }
+    //     $validator->after(function ($validator) {
+    //     });
+    // }
 }

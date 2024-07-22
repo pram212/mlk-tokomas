@@ -6,7 +6,7 @@
     <div class="container">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h4>{{__('file.add_promo') }}</h4>
+                <h4>{{__('file.promo') }}</h4>
             </div>
 
             <div class="card-body">
@@ -31,6 +31,16 @@
                 </script>
                 @enderror
 
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
                 <form action="{{ $action }}" class="row" method="POST">
                     @csrf
                     @if (@$promo)
@@ -40,14 +50,15 @@
                         <div class="form-group">
                             <label>{{ __('file.name') }} *</label>
                             <input type="text" name="promo_name" class="form-control" id="promo_name"
-                                value="{{ old('promo_name', @$promo->promo_name) }}">
+                                value="{{ old('promo_name', @$promo->promo_name) }}" {{ @$is_readonly ? 'disabled' : ''
+                                }}>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>{{ __('file.Product Property') }} * </label>
                             <select name="product_properties_id" class="form-control" id="product_properties_id"
-                                data-live-search="true">
+                                data-live-search="true" {{ @$is_readonly ? 'disabled' : '' }}>
                                 <option value="">{{ __('file.Select') }}</option>
                                 @foreach ($product_properties as $item)
                                 <option value="{{ $item->id }}" {{ old('product_properties_id', @$promo->
@@ -66,7 +77,7 @@
                         <div class="form-group">
                             <label>{{ __('file.Discount') }} *</label>
                             <input type="text" name="discount" class="form-control" id="discount"
-                                value="{{ old('discount', @$promo->discount) }}">
+                                value="{{ old('discount', @$promo->discount) }}" {{ @$is_readonly ? 'disabled' : '' }}>
                         </div>
                     </div>
 
@@ -75,7 +86,8 @@
                         <div class="form-group ">
                             <label>{{ __('file.Promotion Starts') }} *</label>
                             <input type="text" name="start_period" class="form-control datepicker" id="start_period"
-                                value="{{ old('start_period', @$promo->start_period) }}">
+                                value="{{ old('start_period', @$promo->start_period) }}" {{ @$is_readonly ? 'disabled'
+                                : '' }}>
                             @error('start_period')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -86,7 +98,8 @@
                         <div class="form-group ">
                             <label>{{ __('file.Promotion Ends') }} *</label>
                             <input type="text" name="end_period" class="form-control datepicker" id="end_period"
-                                value="{{ old('end_period', @$promo->end_period) }}">
+                                value="{{ old('end_period', @$promo->end_period) }}" {{ @$is_readonly ? 'disabled' : ''
+                                }}>
                             @error('end_period')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -94,7 +107,9 @@
                     </div>
 
                     <div class="col-md-12">
-                        <button class="btn btn-primary">{{__('file.submit')}}</button>
+                        <a class="btn btn-warning" href={{ route('promo.index') }}>{{__('file.Back')}}</a>
+                        <button class="btn btn-primary {{ @$is_readonly ? 'd-none' : ''
+                            }}" {{ @$is_readonly ? 'disabled' : '' }}>{{__('file.submit')}}</button>
                     </div>
                 </form>
             </div>

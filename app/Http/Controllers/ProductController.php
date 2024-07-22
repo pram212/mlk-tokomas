@@ -77,7 +77,7 @@ class ProductController extends Controller
             $imagePath = $this->handleImageUpload($request);
             $request->merge(['image' => $imagePath, 'is_active' => 1]);
 
-            $product = Product::create($request->all());
+            $product = Product::create($request->request->all());
             $product->productWarehouse()->create([
                 "warehouse_id" => 1, // DUMMY WAREHOUSE
                 "qty" => 1, // FIX QTY

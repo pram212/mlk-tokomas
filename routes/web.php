@@ -386,6 +386,9 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
     // setting routes
     Route::group(['prefix' => 'setting', 'as' => 'setting.'], function () {
+        Route::get('invoice', 'SettingController@invoiceSetting')->name('invoice');
+        Route::post('invoice_setting_store', 'SettingController@invoiceSettingStore')->name('invoiceSettingStore');
+
         Route::post('general_setting_store', 'SettingController@generalSettingStore')->name('generalStore');
         Route::post('mail_setting_store', 'SettingController@mailSettingStore')->name('mailStore');
         Route::post('hrm_setting_store', 'SettingController@hrmSettingStore')->name('hrmStore');

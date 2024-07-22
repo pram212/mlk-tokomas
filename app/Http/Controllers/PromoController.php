@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Promo;
+use Carbon\Carbon;
 use App\ProductProperty;
 use Illuminate\Http\Request;
+use App\Http\Requests\StorePromoRequest;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\UpdatePromoRequest;
-use App\Http\Requests\StorePromoRequest;
 
 class PromoController extends Controller
 {
@@ -34,7 +35,11 @@ class PromoController extends Controller
 
     public function edit(Promo $promo)
     {
-        return view('promo.form', compact('promo'));
+        $product_properties = ProductProperty::all();
+        $promo->start_period = Carbon::parse($promo->start_period)->format('Y-m-d') ?? '';
+        $promo->end_period = Carbon::parse($promo->end_period)->format('Y-m-d') ?? '';
+        $promo->discount = number_format($promo->discount, 0, ',', '.');
+        return view('promo.form', compact('promo', 'product_properties'));
     }
 
     public function update(UpdatePromoRequest $request, Promo $promo)
@@ -54,7 +59,12 @@ class PromoController extends Controller
 
     public function show(Promo $promo)
     {
-        return view('promo.show', compact('promo'));
+        $product_properties = ProductProperty::all();
+        $promo->start_period = Carbon::parse($promo->start_period)->format('Y-m-d') ?? '';
+        $promo->end_period = Carbon::parse($promo->end_period)->format('Y-m-d') ?? '';
+        $promo->discount = number_format($promo->discount, 0, ',', '.');
+        $is_readonly = true;
+        return view('promo.form', compact('promo', 'product_properties', 'is_readonly'));
     }
 
     public function destroyAll(Request $request)

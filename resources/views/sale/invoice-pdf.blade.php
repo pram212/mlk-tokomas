@@ -1,4 +1,3 @@
-@php $logo = public_path('logo/bima_logo_1.png'); @endphp
 <!DOCTYPE html>
 <html>
 
@@ -200,7 +199,7 @@
         }
 
         #watermark {
-            background-image: url("data:image/png;base64,{{ base64_encode(file_get_contents($logo)) }}");
+            background-image: url("data:image/png;base64,{{ base64_encode(file_get_contents(@$invoice_setting->invoice_logo_watermark)) }}");
             background-repeat: no-repeat;
             background-position: center;
             background-size: 25%;
@@ -209,7 +208,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0.2;
+            opacity: 0.5;
             z-index: -1;
             pointer-events: none;
             /* Ensure the watermark does not interfere with other elements */
@@ -280,8 +279,7 @@
                     <tbody>
                         <tr>
                             <td style="width:300px;min-width: 300px;">
-                                @php $logo_text = public_path('logo/bima_text_1.png'); @endphp
-                                <img src="data:image/png;base64,{{ base64_encode(file_get_contents($logo_text)) }}"
+                                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(@$invoice_setting->invoice_logo)) }}"
                                     width="200px" alt="">
                             </td>
                             <td style="vertical-align: top;">
@@ -333,9 +331,10 @@
                                     <br>
                                     <ul class="promo-thr">
                                         <span>{{ $data->productSales[0]->promo_name }}</span>
-                                        <li>R : {{ $potongan }}/Gram</li>
+                                        <li>R : {{ number_format($potongan,2) }}/Gram</li>
                                     </ul>
-                                    <span>Kalau rusak dekok, pesok, mleot Potongan {{$potongan*2}}/gram</span>
+                                    <span>Kalau rusak dekok, pesok, mleot Potongan
+                                        {{number_format($potongan*2,2)}}/gram</span>
                                 </div>
                             </td>
                             <td class="title" style="vertical-align: top;font-weight:bold;" colspan="2">
