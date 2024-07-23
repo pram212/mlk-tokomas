@@ -735,7 +735,16 @@ class ProductController extends Controller
             ->addColumn('tag_type_code', fn ($product) => $product->tagType->code ?? "-")
             ->addColumn('gramasi_code', fn ($product) => $product->gramasi->code ?? "-")
             ->addColumn('product_status', function ($product) {
-                return $product->product_status == 1 ? 'STORE' : 'SOLD';
+                switch ($product->product_status) {
+                    case 0:
+                        return 'SOLD';
+                    case 1:
+                        return 'STORE';
+                    case 2:
+                        return 'Transfer to Gudang';
+                    default:
+                        return 'STORE';
+                }
             })
             ->addColumn('invoice_number', function ($product) {
                 return $product->invoice_number ?? "-";
@@ -865,7 +874,16 @@ class ProductController extends Controller
             ->addColumn('tag_type_code', fn ($product) => $product->tagType->code ?? "-")
             ->addColumn('gramasi_code', fn ($product) => $product->gramasi->code ?? "-")
             ->addColumn('product_status', function ($product) {
-                return $product->product_status == 1 ? 'STORE' : 'SOLD';
+                switch ($product->product_status) {
+                    case 0:
+                        return 'SOLD';
+                    case 1:
+                        return 'STORE';
+                    case 2:
+                        return 'Transfer to Gudang';
+                    default:
+                        return 'STORE';
+                }
             })
             ->addColumn('history_status', function ($product) {
                 // 0 = Product Created, 1 = Product Sold, 2 = Product Buyback

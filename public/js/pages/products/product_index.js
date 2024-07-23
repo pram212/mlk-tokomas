@@ -338,6 +338,7 @@ $(document).ready(function () {
             },
             {
                 data: "price",
+                searchable: false,
             },
             {
                 data: "tag_type_code",
