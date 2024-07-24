@@ -167,8 +167,8 @@ function handlePaymentSubmitClick() {
                     text: "Transaction success",
                 });
 
-                window.location.href =
-                    baseUrl + `/sales/gen_invoice/${data.id}`;
+                // window.location.href =
+                //     baseUrl + `/sales/gen_invoice/${data.id}`;
                 $("#btn-submit-payment").html(text).prop("disabled", false);
             })
             .catch((error) => {

@@ -14,6 +14,7 @@
             <thead>
                 <tr>
                     <th class="not-exported"></th>
+                    <th>Barcode</th>
                     <th>{{ trans('file.Code') }}</th>
                     <th>{{ __('file.Product Name') }}</th>
                     <th>{{ __('file.Product Image') }}</th>

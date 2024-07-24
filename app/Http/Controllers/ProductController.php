@@ -21,7 +21,7 @@ use App\TagType;
 use App\Brand;
 use App\Unit;
 use App\Product_Sale;
-use DNS1D;
+use Milon\Barcode\DNS1D;
 use Keygen;
 use Dompdf\Dompdf;
 use View;
@@ -689,6 +689,8 @@ class ProductController extends Controller
     public function productDataTable()
     {
         $this->authorize('viewAny', Product::class);
+        $dns1d = new DNS1D();
+
         $productQuery = Product::query()
             ->select([
                 'products.id',
@@ -727,6 +729,11 @@ class ProductController extends Controller
 
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
+            ->addColumn('barcode', function ($product) use ($dns1d) {
+                $barcode = $dns1d->getBarcodePNG($product->code, 'C128');
+                $url = "data:image/png;base64,$barcode";
+                return '<a target="_BLANK" href="' . $url . '"><img src="' . $url . '" class="img-thumbnail" width="200px"></a>';
+            })
             ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
             ->editColumn('price', fn ($product) => $product->price)
             ->addColumn('product_property_description', fn ($product) => $product->productProperty->description ?? "-")
@@ -794,7 +801,7 @@ class ProductController extends Controller
 
                 return $element;
             })
-            ->rawColumns(['tag_type_color', 'action', 'image_preview'])
+            ->rawColumns(['tag_type_color', 'action', 'image_preview', 'barcode'])
             ->make();
 
         return $datatable;

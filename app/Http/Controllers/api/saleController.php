@@ -159,6 +159,11 @@ class saleController extends Controller
         try {
             $items = $request['items'];
             $product_sales_data = $this->prepare_product_sale_data($items);
+            return response()->json([
+                'isSuccess' => true,
+                'message' => 'Sale created successfully',
+                'data' => $product_sales_data
+            ], 201);
             $this->validate_product_status($items, $requestData['warehouse_id'], 1);
             $total_price = ceil(array_sum(array_column($product_sales_data, 'total')));
             $tax_data = $this->prepare_tax_data($request['tax'], $total_price);
@@ -280,38 +285,48 @@ class saleController extends Controller
 
         foreach ($items as $item) {
             // Validasi input
-            if (!isset($item['product_id']) || !isset($item['qty'])) throw new \Exception("Item harus memiliki 'product_id' dan 'qty'.");
+            if (!isset($item['product_id']) || !isset($item['qty']))
+                throw new \Exception("Item harus memiliki 'product_id' dan 'qty'.");
 
 
-            $product = Product::where('code', $item['product_id'])->with('productWarehouse', 'gramasi')->first();
+            $product = Product::where('code', $item['product_id'])
+                ->with('productWarehouse', 'gramasi')
+                ->first();
+
             $product_split = null;
             $discount = 0;
 
             if (!$product) {
                 $product_split = ProductSplitSetDetail::where('split_set_code', $item['product_id'])->first();
-                if (!$product_split) throw new \Exception("Product dengan kode {$item['product_id']} tidak ditemukan.");
+                if (!$product_split)
+                    throw new \Exception("Product dengan kode {$item['product_id']} tidak ditemukan.");
             }
 
             $product_id = $product->id ?? $product_split->product_id; // Real product id
             $product = Product::where('id', $product_id)->with('productWarehouse', 'gramasi')->first();
 
-            $net_unit_price =  (float)@$product_split->price ??  (float)@$product->product_warehouse->price ?? 0;
-            $qty = $item['qty'];
+            $net_unit_price = $product_split
+                ? (float)$product_split->price
+                : (float)($product->product_warehouse['price'] ?? 0);
+
+            $qty = (int)$item['qty'];
             $total = $net_unit_price * $qty;
-            $gramasi = $product_split->gramasi ?? $product->gramasi->gramasi ?? 0;
+            $gramasi = $product_split
+                ? $product_split->gramasi
+                : $product->gramasi->gramasi ?? 0;
 
             $product_sale_data[] = [
                 'product_id' => $product_id,
                 'split_set_code' => $product_split->split_set_code ?? null,
                 'variant_id' => null,
-                'qty' => $qty,
+                'qty' => $qty ?? 0,
                 'sale_unit_id' => $product->sale_unit_id ?? null,
-                'net_unit_price' => $net_unit_price,
+                'net_unit_price' => $net_unit_price ?? 0,
                 'discount' => ($product->discount * 1000 * $gramasi) ?? 0,
                 'sale_unit_id' => 0,
                 'tax_rate' => 0,
                 'tax' => 0,
-                'total' => $total,
+                'total' => $total ?? 0,
             ];
         }
 

@@ -6,6 +6,10 @@ const $btn_modal_tax = $("#modalTax");
 const $input_redeem_coupon = $("#coupon_code");
 const $input_discount_percent = $("#discount_percent");
 const $hdn_coupon_code = $("input[name='coupon_code_val']");
+const $btn_scan_barcode = $("#btn_scan_barcode");
+const $barcode_data = $("input[name='barcode_data']");
+let intervalId;
+let isScaningBarcode = false;
 
 const cart_info = {
     coupon: {
@@ -82,11 +86,39 @@ $(function () {
     /* Modal Discount */
     $btn_discount.click(handleDiscount);
 
+    /* Scan Barcode */
+    $btn_scan_barcode.click(handleScanBarcode);
+
     /* Modal Tax */
     $("#btn_modal_tax").click(handleModalTax);
 
     $("#btn_submit_tax").click(handleModalTaxSubmit);
 });
+
+function getBarcodeData() {
+    $barcode_data.focus();
+    addProductToCart($barcode_data.val());
+    $barcode_data.val("");
+}
+
+function handleScanBarcode() {
+    $btn_scan_barcode.toggleClass("btn-danger");
+    $btn_scan_barcode.find("span").toggleClass("fa-stop");
+    $search_box_product.prop("disabled", function (i, v) {
+        return !v;
+    });
+    $barcode_data.focus();
+
+    if (isScaningBarcode) {
+        clearInterval(intervalId);
+    } else {
+        intervalId = setInterval(() => {
+            getBarcodeData();
+        }, 3000);
+    }
+
+    isScaningBarcode = !isScaningBarcode;
+}
 
 function handleCartRemoveProduct() {
     $cartTable.row($(this).parents("tr")).remove().draw();
@@ -289,7 +321,7 @@ function handleDiscount() {
 
 function addProductToCart(product_code) {
     /* check if product already exist in cart, then increase qty */
-    if (isProductExistInCart(product_code)) {
+    if (isProductExistInCart(product_code) && product_code !== "") {
         // addQtyByProductId(product_code);
         Swal.fire({
             icon: "error",
@@ -303,7 +335,7 @@ function addProductToCart(product_code) {
     /* Make sure user just can add product with qty 1 */
 
     /* Make sure just 1 product in cart */
-    if (countTotalItems() > 0) {
+    if (countTotalItems() > 0 && product_code !== "") {
         Swal.fire({
             icon: "error",
             title: "Error",
@@ -320,14 +352,15 @@ function addProductToCart(product_code) {
         success: function (data) {
             const product = data;
 
-            // add product to cart
-            $cartTable.row.add([
-                `${product.name} (${product.code})
+            if (product.id != null) {
+                // add product to cart
+                $cartTable.row.add([
+                    `${product.name} (${product.code})
                 <br>
                 <small>In Stock: 1</small>
                     <input type='hidden' name='product_id[]' value="${product.code}">`,
-                product.price,
-                `
+                    product.price,
+                    `
                 <div>
                 <div class="input-group">
                     <span class="input-group-btn">
@@ -344,11 +377,12 @@ function addProductToCart(product_code) {
                 </div>
                 </div>
                 `,
-                product.price,
-                `<button type="button" class="btn btn-danger btn-sm remove-product"><i class="dripicons-trash"></i></button>`,
-            ]);
-            $cartTable.draw();
-            updateInfo();
+                    product.price,
+                    `<button type="button" class="btn btn-danger btn-sm remove-product"><i class="dripicons-trash"></i></button>`,
+                ]);
+                $cartTable.draw();
+                updateInfo();
+            }
         },
     });
 }

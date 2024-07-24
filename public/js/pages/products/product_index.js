@@ -306,6 +306,9 @@ $(document).ready(function () {
                 searchable: false,
             },
             {
+                data: "barcode",
+            },
+            {
                 data: "code",
                 render: function (data, type, row) {
                     const product_id = row.id;
