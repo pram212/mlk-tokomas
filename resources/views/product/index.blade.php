@@ -14,6 +14,7 @@
             <thead>
                 <tr>
                     <th class="not-exported"></th>
+                    {{-- <th>Barcode</th> --}}
                     <th>{{ trans('file.Code') }}</th>
                     <th>{{ __('file.Product Name') }}</th>
                     <th>{{ __('file.Product Image') }}</th>
@@ -227,5 +228,5 @@
 
     const url_asset_bootstrap = '{{ asset("public/vendor/bootstrap/css/bootstrap.min.css") }}';
 </script>
-<script src="{{ asset('public/js/pages/products/product_index.js') }}"></script>
+<script src="{{ asset('public/js/pages/products/product_index.js?timestamp=' . time()) }}"></script>
 @endsection

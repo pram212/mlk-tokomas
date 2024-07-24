@@ -21,7 +21,7 @@ use App\TagType;
 use App\Brand;
 use App\Unit;
 use App\Product_Sale;
-use DNS1D;
+use Milon\Barcode\DNS1D;
 use Keygen;
 use Dompdf\Dompdf;
 use View;
@@ -689,6 +689,8 @@ class ProductController extends Controller
     public function productDataTable()
     {
         $this->authorize('viewAny', Product::class);
+        $dns1d = new DNS1D();
+
         $productQuery = Product::query()
             ->select([
                 'products.id',
@@ -727,6 +729,9 @@ class ProductController extends Controller
 
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
+            ->addColumn('barcode', function ($product) {
+                return $this->getBarcodeDownloadLink($product);
+            })
             ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
             ->editColumn('price', fn ($product) => $product->price)
             ->addColumn('product_property_description', fn ($product) => $product->productProperty->description ?? "-")
@@ -735,7 +740,16 @@ class ProductController extends Controller
             ->addColumn('tag_type_code', fn ($product) => $product->tagType->code ?? "-")
             ->addColumn('gramasi_code', fn ($product) => $product->gramasi->code ?? "-")
             ->addColumn('product_status', function ($product) {
-                return $product->product_status == 1 ? 'STORE' : 'SOLD';
+                switch ($product->product_status) {
+                    case 0:
+                        return 'SOLD';
+                    case 1:
+                        return 'STORE';
+                    case 2:
+                        return 'Transfer to Gudang';
+                    default:
+                        return 'STORE';
+                }
             })
             ->addColumn('invoice_number', function ($product) {
                 return $product->invoice_number ?? "-";
@@ -785,10 +799,30 @@ class ProductController extends Controller
 
                 return $element;
             })
-            ->rawColumns(['tag_type_color', 'action', 'image_preview'])
+            ->rawColumns(['tag_type_color', 'action', 'image_preview', 'barcode'])
             ->make();
 
         return $datatable;
+    }
+
+    // Fungsi untuk mendapatkan barcode dan mengembalikannya sebagai tautan unduhan
+    function getBarcodeDownloadLink($product)
+    {
+        $barcode = $this->getCustomBarcodePNG($product->code);
+        $url = "data:image/png;base64,$barcode";
+        $filename = "barcode_{$product->code}.png";
+
+        return '<a href="' . $url . '" download="' . $filename . '">
+                    <img src="' . $url . '" class="img-thumbnail p-2">
+                </a>';
+    }
+
+    function getCustomBarcodePNG($code)
+    {
+        $dns1d = new DNS1D();
+        // Set color: foreground = black, background = white
+        $barcode = $dns1d->getBarcodePNG($code, 'C128', 1, 30, [0, 0, 0], true);
+        return $barcode;
     }
 
     public function detailHistoricalProductDataTable($product_id, $split_set_code = "")
@@ -865,7 +899,16 @@ class ProductController extends Controller
             ->addColumn('tag_type_code', fn ($product) => $product->tagType->code ?? "-")
             ->addColumn('gramasi_code', fn ($product) => $product->gramasi->code ?? "-")
             ->addColumn('product_status', function ($product) {
-                return $product->product_status == 1 ? 'STORE' : 'SOLD';
+                switch ($product->product_status) {
+                    case 0:
+                        return 'SOLD';
+                    case 1:
+                        return 'STORE';
+                    case 2:
+                        return 'Transfer to Gudang';
+                    default:
+                        return 'STORE';
+                }
             })
             ->addColumn('history_status', function ($product) {
                 // 0 = Product Created, 1 = Product Sold, 2 = Product Buyback

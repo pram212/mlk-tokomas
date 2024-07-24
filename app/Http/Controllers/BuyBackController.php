@@ -107,7 +107,16 @@ class BuyBackController extends Controller
             ->addColumn('tag_type_code', fn ($product) => $product->tag_type_code ?? "-")
             ->addColumn('gramasi_code', fn ($product) => $product->gramasi_code ?? "-")
             ->addColumn('product_status', function ($product) {
-                return $product->product_status == 1 ? 'STORE' : 'SOLD';
+                switch ($product->product_status) {
+                    case 0:
+                        return 'SOLD';
+                    case 1:
+                        return 'STORE';
+                    case 2:
+                        return 'Transfer to Gudang';
+                    default:
+                        return 'STORE';
+                }
             })
             ->editColumn('buyback_status', function ($product) {
                 return $product->buyback_status == 1 ? 'OK' : '-';

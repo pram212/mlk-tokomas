@@ -50,8 +50,13 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group ui-widget">
-                    <input type="text" class="form-control" id="product_search" name="product_search"
-                        placeholder="{{ __('file.search_product_pos') }}">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="product_search" name="product_search"
+                            placeholder="{{ __('file.search_product_pos') }}">
+                        {{-- <button class="btn btn-success" id="btn_scan_barcode"><span class="fa fa-barcode"
+                                title="scan barcode product"></span></button> --}}
+                    </div>
+                    <input type="text" name="barcode_data" class="hidden-input">
                 </div>
             </div>
         </div>
