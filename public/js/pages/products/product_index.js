@@ -305,9 +305,9 @@ $(document).ready(function () {
                 orderable: false,
                 searchable: false,
             },
-            {
-                data: "barcode",
-            },
+            // {
+            //     data: "barcode",
+            // },
             {
                 data: "code",
                 render: function (data, type, row) {
@@ -335,6 +335,7 @@ $(document).ready(function () {
             },
             {
                 data: "image_preview",
+                orderable: false,
             },
             {
                 data: "created_at",
@@ -380,10 +381,6 @@ $(document).ready(function () {
         // },
         order: [["3", "desc"]],
         columnDefs: [
-            {
-                orderable: false,
-                targets: [0, 3],
-            },
             {
                 render: function (data, type, row, meta) {
                     if (type === "display") {

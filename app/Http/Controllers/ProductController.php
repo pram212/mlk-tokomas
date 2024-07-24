@@ -729,10 +729,8 @@ class ProductController extends Controller
 
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
-            ->addColumn('barcode', function ($product) use ($dns1d) {
-                $barcode = $dns1d->getBarcodePNG($product->code, 'C128');
-                $url = "data:image/png;base64,$barcode";
-                return '<a target="_BLANK" href="' . $url . '"><img src="' . $url . '" class="img-thumbnail" width="200px"></a>';
+            ->addColumn('barcode', function ($product) {
+                return $this->getBarcodeDownloadLink($product);
             })
             ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
             ->editColumn('price', fn ($product) => $product->price)
@@ -805,6 +803,26 @@ class ProductController extends Controller
             ->make();
 
         return $datatable;
+    }
+
+    // Fungsi untuk mendapatkan barcode dan mengembalikannya sebagai tautan unduhan
+    function getBarcodeDownloadLink($product)
+    {
+        $barcode = $this->getCustomBarcodePNG($product->code);
+        $url = "data:image/png;base64,$barcode";
+        $filename = "barcode_{$product->code}.png";
+
+        return '<a href="' . $url . '" download="' . $filename . '">
+                    <img src="' . $url . '" class="img-thumbnail p-2">
+                </a>';
+    }
+
+    function getCustomBarcodePNG($code)
+    {
+        $dns1d = new DNS1D();
+        // Set color: foreground = black, background = white
+        $barcode = $dns1d->getBarcodePNG($code, 'C128', 1, 30, [0, 0, 0], true);
+        return $barcode;
     }
 
     public function detailHistoricalProductDataTable($product_id, $split_set_code = "")
