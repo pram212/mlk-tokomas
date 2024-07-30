@@ -234,10 +234,11 @@ function handleBuyback() {
         const additionalCostIsValid = isNaN(additional_cost)
             ? 0
             : additional_cost;
+
         $("#modal_price_value").text(modal_price);
         $("#modal_price_default").val(parseFloat(response.data.price));
         $("#modal_discount").val(parseFloat(response.data.discount));
-        $("#product_id").val(response.data.id);
+        $("#product_id").val(response.data.product_id);
         $("#product_code").val(code);
         $("#modal_additional_cost").val(additionalCostIsValid);
         $("#modal_description").val("");
