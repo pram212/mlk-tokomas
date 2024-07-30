@@ -159,11 +159,6 @@ class saleController extends Controller
         try {
             $items = $request['items'];
             $product_sales_data = $this->prepare_product_sale_data($items);
-            return response()->json([
-                'isSuccess' => true,
-                'message' => 'Sale created successfully',
-                'data' => $product_sales_data
-            ], 201);
             $this->validate_product_status($items, $requestData['warehouse_id'], 1);
             $total_price = ceil(array_sum(array_column($product_sales_data, 'total')));
             $tax_data = $this->prepare_tax_data($request['tax'], $total_price);
