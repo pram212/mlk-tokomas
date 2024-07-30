@@ -28,7 +28,7 @@ class Product_Sale extends Model
 
         static::created(function ($productSale) {
             $isSplited = $productSale->split_set_code ? true : false;
-            $productSale->reduceStockQty($isSplited);
+            // $productSale->reduceStockQty($isSplited);
             $productSale->setProductStatus(0, $isSplited);
             $productSale->setDiscountPromo();
         });
