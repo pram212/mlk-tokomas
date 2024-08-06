@@ -36,3 +36,13 @@ function formatDateInIndonesian($date, $format = 'd F Y', $locale = 'id')
 
     return $formattedDate;
 }
+
+function formatNumber($value, $decimals = 2)
+{
+    return rtrim(rtrim(number_format($value, $decimals), '0'), '.');
+}
+
+function getValueOrFallback($detail, $fallback, $attribute)
+{
+    return $detail ? $detail->$attribute : $fallback->$attribute;
+}

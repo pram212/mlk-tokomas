@@ -93,6 +93,14 @@
             text-transform: lowercase;
         }
 
+        .sifat-barang {
+            font-size: 12px;
+            text-align: right;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
 
         @media print {
             * {
@@ -330,6 +338,9 @@
                                     {{ $goldContentConversion }}
                                     <br>
                                     <ul class="promo-thr">
+                                        <li>H : {{ number_format($pricePerGram,2) }}/Gram</li>
+                                    </ul>
+                                    <ul class="promo-thr">
                                         <span>{{ $data->productSales[0]->promo_name }}</span>
                                         <li>R : {{ number_format($potongan,2) }}/Gram</li>
                                     </ul>
@@ -350,26 +361,14 @@
 
                                 <div class="kadar">
                                     <h1>
-                                        {{
-                                        ($data->productSales[0]->productSplitSetDetail
-                                        ?
-                                        rtrim(rtrim(number_format($data->productSales[0]->productSplitSetDetail->gramasi,
-                                        2), '0'), '.')
-                                        : rtrim(rtrim(number_format($data->productSales[0]->product->gramasi->gramasi,
-                                        2), '0'),
-                                        '.')
-                                        )}}
+                                        {{$gramasi}}
                                         <sup>
-                                            {{
-                                            ($data->productSales[0]->productSplitSetDetail
-                                            ?
-                                            rtrim(rtrim(number_format($data->productSales[0]->productSplitSetDetail->mg,
-                                            2), '0'), '.')
-                                            : rtrim(rtrim(number_format($data->productSales[0]->product->mg, 2), '0'),
-                                            '.')
-                                            )}}
+                                            {{$miligram}}
                                         </sup><span>gram</span>
                                     </h1>
+                                </div>
+                                <div class="sifat-barang">
+                                    {{ $sifatBarang }}
                                 </div>
 
 

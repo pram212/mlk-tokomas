@@ -153,7 +153,6 @@ class saleController extends Controller
     public function pos_store(StoreSalePosRequest $request)
     {
         $requestData = $request->all();
-
         $user_id = auth()->user()->id;
 
         try {
@@ -164,7 +163,6 @@ class saleController extends Controller
             $tax_data = $this->prepare_tax_data($request['tax'], $total_price);
             $discount_data = $this->prepare_discount_data($total_price, $request['discount']);
             $coupon_data = $this->prepare_coupon_data($total_price, $request['coupon_code']);
-
 
             DB::beginTransaction();
 
@@ -299,16 +297,21 @@ class saleController extends Controller
 
             $product_id = $product->id ?? $product_split->product_id; // Real product id
             $product = Product::where('id', $product_id)->with('productWarehouse', 'gramasi')->first();
+            $qty = (int)$item['qty'];
+
+            $gramasi = $product_split
+                ? $product_split->gramasi
+                : $product->gramasi->gramasi ?? 0;
+
+            $miligram = $product_split
+                ? $product_split->mg
+                : $product->mg ?? 0;
 
             $net_unit_price = $product_split
                 ? (float)$product_split->price
                 : (float)($product->product_warehouse['price'] ?? 0);
 
-            $qty = (int)$item['qty'];
-            $total = $net_unit_price * $qty;
-            $gramasi = $product_split
-                ? $product_split->gramasi
-                : $product->gramasi->gramasi ?? 0;
+            $total = $net_unit_price * ($gramasi + ($miligram / 1000));
 
             $product_sale_data[] = [
                 'product_id' => $product_id,
@@ -317,7 +320,7 @@ class saleController extends Controller
                 'qty' => $qty ?? 0,
                 'sale_unit_id' => $product->sale_unit_id ?? null,
                 'net_unit_price' => $net_unit_price ?? 0,
-                'discount' => ($product->discount * 1000 * $gramasi) ?? 0,
+                'discount' => (($product->discount * 1000) * ($gramasi + ($miligram / 1000))) ?? 0,
                 'sale_unit_id' => 0,
                 'tax_rate' => 0,
                 'tax' => 0,
