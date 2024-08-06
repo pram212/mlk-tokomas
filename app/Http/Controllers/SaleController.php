@@ -1931,18 +1931,28 @@ class SaleController extends Controller
                 'warehouse',
                 'biller',
                 'payments',
+                'productSales',
                 'productSales.product',
                 'productSales.product.gramasi',
+                'productSales.product.productProperty',
                 'productSales.productSplitSetDetail'
             ])
             ->firstOrFail();
 
+        $productSales = $data->productSales[0];
+        $productSplitSetDetail = $productSales->productSplitSetDetail;
+        $product = $productSales->product;
+
         $goldContentConversion = $this->getGoldContentConversion($data->productSales[0]->product ?? null);
         $numberInWords = $this->getNumberInWords($data->grand_total);
+        $pricePerGram = $productSales->net_unit_price ?? 0;
         $totalPrice = number_format((float) $data->grand_total, 2, ',', '.');
         $potongan = $this->getDiscount($data);
+        $gramasi = formatNumber(getValueOrFallback($productSplitSetDetail, $product->gramasi, 'gramasi'));
+        $miligram = formatNumber(getValueOrFallback($productSplitSetDetail, $product, 'mg'));
+        $sifatBarang = $product->productProperty->code . " (" . $product->productProperty->description . ")";
 
-        return compact('data', 'numberInWords', 'goldContentConversion', 'totalPrice', 'potongan', 'invoice_setting');
+        return compact('data', 'numberInWords', 'goldContentConversion', 'totalPrice', 'potongan', 'invoice_setting', 'pricePerGram', 'gramasi', 'miligram', 'sifatBarang');
     }
 
     private function getDiscount($sale_data)

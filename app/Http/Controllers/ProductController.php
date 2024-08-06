@@ -84,7 +84,7 @@ class ProductController extends Controller
                 "price" => $request->price,
             ]);
 
-            if ($request->split_set_type == 2) $this->handleSplitSetType($product, $request);
+            if ($request->split_set_type == 2) $this->handleStoreSplitSetType($product, $request);
 
             DB::commit();
 
@@ -105,7 +105,7 @@ class ProductController extends Controller
         return $request->image ?: 'zummXD2dvAtI.png';
     }
 
-    private function handleSplitSetType($product, $request)
+    private function handleStoreSplitSetType($product, $request)
     {
         $splitSetDetails = $this->prepareSplitSetDetails($product->id, $request);
 
@@ -274,9 +274,7 @@ class ProductController extends Controller
                 $imagePath = "storage/app/" . $file->storeAs('product_images', time() . date('YmdHms') . "." . $file->extension());
 
                 // Jika ada file gambar yang diunggah, hapus file gambar lama
-                if ($product->image) {
-                    unlink($product->image);
-                }
+                if ($product->image) unlink($product->image);
 
                 $request->merge(['image' => $imagePath]);
 
@@ -293,13 +291,18 @@ class ProductController extends Controller
                 'additional_code' => $request->additional_code,
                 'category_id' => $request->category_id,
                 'product_type_id' => $request->product_type_id,
-                'price' => $request->price,
                 'discount' => $request->discount,
                 'gramasi_id' => $request->gramasi_id,
                 'mg' => $request->mg,
                 'product_property_id' => $request->product_property_id,
                 'name' => $request->name,
                 'split_set_type' => $request->split_set_type,
+            ]);
+
+            $product->productWarehouse()->update([
+                "warehouse_id" => 1, // DUMMY WAREHOUSE
+                "qty" => 1, // FIX QTY
+                "price" => $request->price,
             ]);
 
             // handle if split set type is split set (2)
