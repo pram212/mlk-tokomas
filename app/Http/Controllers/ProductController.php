@@ -47,6 +47,7 @@ class ProductController extends Controller
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
         $mode = 'create';
+        $warehouses = Warehouse::where('is_active', true)->get();
         $split_set_type = [
             [
                 'id' => 1,
@@ -64,7 +65,8 @@ class ProductController extends Controller
             'gramasi',
             'category',
             'mode',
-            'split_set_type'
+            'split_set_type',
+            'warehouses'
         ));
     }
 
@@ -79,7 +81,7 @@ class ProductController extends Controller
 
             $product = Product::create($request->request->all());
             $product->productWarehouse()->create([
-                "warehouse_id" => 1, // DUMMY WAREHOUSE
+                "warehouse_id" => $request->warehouse_id,
                 "qty" => 1, // FIX QTY
                 "price" => $request->price,
             ]);
@@ -220,6 +222,7 @@ class ProductController extends Controller
         $productType = ProductType::all();
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
+        $warehouses = Warehouse::where('is_active', true)->get();
         $product_type = ProductType::where('categories_id', $product->category_id)->get();
         $split_set_type = [
             [
@@ -252,7 +255,8 @@ class ProductController extends Controller
             'product_type',
             'mode',
             'split_set_type',
-            'split_set_id'
+            'split_set_id',
+            'warehouses'
         ));
     }
 
@@ -300,7 +304,7 @@ class ProductController extends Controller
             ]);
 
             $product->productWarehouse()->update([
-                "warehouse_id" => 1, // DUMMY WAREHOUSE
+                "warehouse_id" => $request->warehouse_id,
                 "qty" => 1, // FIX QTY
                 "price" => $request->price,
             ]);
