@@ -72,6 +72,28 @@
                                             </div>
                                         </div>
 
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>{{ __('file.Warehouse') }} *</strong> </label>
+                                                <select name="warehouse_id" class="form-control selectpicker"
+                                                    @if($mode=='show' ) readonly @endif id="warehouse_id"
+                                                    data-live-search="true">
+                                                    <option value="">{{ __('file.Select') }}</option>
+                                                    @foreach ($warehouses as $item)
+                                                    <option value="{{ $item->id }}"
+                                                        style="color: {{ $item->color }}; font-weight: bold" {{ $item->
+                                                        id == @$product->product_warehouse->warehouse_id ?
+                                                        'selected' : '' }}>
+                                                        {{ $item->name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('warehouse_id')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>{{ __('file.Tag Type Code') }} *</strong> </label>

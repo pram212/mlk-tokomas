@@ -33,6 +33,7 @@ class UpdateProductRequest extends FormRequest
             'price' => ['required'],
             'code' => ['required'],
             'mg' => ['required'],
+            'warehouse_id' => ['required', 'exists:warehouses,id'],
         ];
     }
 }

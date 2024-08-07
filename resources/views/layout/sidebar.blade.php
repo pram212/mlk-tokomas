@@ -66,6 +66,8 @@
                     'category*',
                     'qty_adjustment*',
                     'stock-count*',
+                    'product_stock*',
+                    'warehouse_transfer*',
                     )
                     ? 'true'
                     : 'false';
@@ -76,26 +78,32 @@
                     <ul id="product"
                         class="collapse list-unstyled @if ($requestIsOnProductMenu === 'true') show @endif">
                         @can('viewAny', App\Category::class)
-                        <li id="category-menu" class="@if (request()->is('category*')) active @endif">
+                        <li id="category-menu" class="{{ request()->is('category*') ? 'active' : '' }}">
                             <a href="{{ route('category.index') }}">{{ __('file.category') }}</a>
                         </li>
                         @endcan
 
                         @can('viewAny', App\Product::class)
-                        <li id="product-list-menu" class="@if (request()->is('products/')) active @endif">
+                        <li id="product-list-menu" class="{{ request()->is('products/') ? 'active' : '' }}">
                             <a href="{{ route('products.index') }}">{{ __('file.product_list') }}</a>
                         </li>
                         @endcan
 
                         @can('create', App\Product::class)
-                        <li id="product-create-menu" class="@if (request()->is('products/create')) active @endif">
+                        <li id="product-create-menu" class="{{ request()->is('products/create') ? 'active' : '' }}">
                             <a href="{{ route('products.create') }}">{{ __('file.add_product') }}</a>
                         </li>
                         @endcan
 
-                        <li id="warehouse_transfer" @if (request()->is('warehouse_transfer*')) active @endif>
+                        <li id="warehouse_transfer" class="{{ request()->is('warehouse_transfer*') ? 'active' : '' }}">
                             <a href="{{ url('warehouse_transfer') }}">{{ __('file.warehouse_transfer') }}</a>
                         </li>
+
+                        @can('productsStock',App\Product::class)
+                        <li id="product_stock" class="{{ request()->is('product_stock*') ? 'active' : '' }}">
+                            <a href="{{ url('product_stock') }}">{{ __('file.product_stock') }}</a>
+                        </li>
+                        @endcan
 
                     </ul>
                 </li>

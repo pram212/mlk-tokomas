@@ -662,4 +662,5 @@ return [
     "invoice_setting_logo" => "Logo Invoice",
     "invoice_setting_watermark" => "Watermark Invoice",
     "preview" => "Pratinjau",
+    "product_stock" => "Stok Produk",
 ];

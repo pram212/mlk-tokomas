@@ -47,6 +47,7 @@ class ProductController extends Controller
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
         $mode = 'create';
+        $warehouses = Warehouse::where('is_active', true)->get();
         $split_set_type = [
             [
                 'id' => 1,
@@ -64,7 +65,8 @@ class ProductController extends Controller
             'gramasi',
             'category',
             'mode',
-            'split_set_type'
+            'split_set_type',
+            'warehouses'
         ));
     }
 
@@ -79,7 +81,7 @@ class ProductController extends Controller
 
             $product = Product::create($request->request->all());
             $product->productWarehouse()->create([
-                "warehouse_id" => 1, // DUMMY WAREHOUSE
+                "warehouse_id" => $request->warehouse_id,
                 "qty" => 1, // FIX QTY
                 "price" => $request->price,
             ]);
@@ -220,6 +222,7 @@ class ProductController extends Controller
         $productType = ProductType::all();
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
+        $warehouses = Warehouse::where('is_active', true)->get();
         $product_type = ProductType::where('categories_id', $product->category_id)->get();
         $split_set_type = [
             [
@@ -252,7 +255,8 @@ class ProductController extends Controller
             'product_type',
             'mode',
             'split_set_type',
-            'split_set_id'
+            'split_set_id',
+            'warehouses'
         ));
     }
 
@@ -300,7 +304,7 @@ class ProductController extends Controller
             ]);
 
             $product->productWarehouse()->update([
-                "warehouse_id" => 1, // DUMMY WAREHOUSE
+                "warehouse_id" => $request->warehouse_id,
                 "qty" => 1, // FIX QTY
                 "price" => $request->price,
             ]);
@@ -689,10 +693,9 @@ class ProductController extends Controller
         }
     }
 
-    public function productDataTable()
+    public function productDataTable(Request $request)
     {
         $this->authorize('viewAny', Product::class);
-        $dns1d = new DNS1D();
 
         $productQuery = Product::query()
             ->select([
@@ -721,13 +724,17 @@ class ProductController extends Controller
                         ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
                 });
             })
-            ->where('is_active', true)
-            ->orderByDesc('products.created_at')
-            ->with([
-                'tagType:id,code,color',
-                'productProperty:id,code,description',
-                'gramasi:id,code,gramasi'
-            ]);
+            ->where('products.is_active', true)
+            ->orderByDesc('products.created_at');
+
+        if ($warehouseIds = $request->get('warehouse_ids')) {
+            $productQuery->whereIn('product_warehouse.warehouse_id', explode(',', $warehouseIds));
+        }
+
+        if ($statusIds = $request->get('status_ids') !== null) {
+            $statusIds = $request->get('status_ids');
+            $productQuery->whereIn(DB::raw('COALESCE(split.product_status, products.product_status)'), explode(',', $statusIds));
+        }
 
 
         $datatable =  DataTables::of($productQuery)
@@ -763,6 +770,9 @@ class ProductController extends Controller
             ->addColumn('tag_type_color', function ($product) {
                 $color = $product->tagType->color ?? "none";
                 return '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color . '</div>';
+            })
+            ->addColumn('warehouse_name', function ($product) {
+                return $product->product_warehouse->warehouse->name ?? "-";
             })
             ->addColumn('action', function ($product) {
                 $user = auth()->user();

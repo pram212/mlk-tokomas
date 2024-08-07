@@ -215,10 +215,16 @@
             print : "{{ __('file.Print') }}",
             colvis : "{{ __('file.Column visibility') }}",
         };
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+        });
     </script>
     <!-- END GLOBAL JS -->
     <script src="{{ asset('public/js/axios.min.js') }}"></script>
 
+    <script src="{{ asset('public/js/custom.js') }}"></script>
     @yield('scripts')
     <script src="{{ asset('public/js/main.js') }}"></script>
 

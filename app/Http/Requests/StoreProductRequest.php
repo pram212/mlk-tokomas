@@ -36,6 +36,7 @@ class StoreProductRequest extends FormRequest
             'product_type_id' => ['required'],
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             'split_set_type' => ['required'],
+            'warehouse_id' => ['required', 'exists:warehouses,id'],
         ];
     }
 }
