@@ -292,6 +292,11 @@ $(document).ready(function () {
         },
         processing: true,
         serverSide: true,
+        fixedColumns: {
+            start: 1,
+            end: 1,
+        },
+        scrollX: true,
         ajax: {
             // url: '{!! route('product-datatable') !!}',
             url: baseUrl + "/product-datatable",
@@ -328,14 +333,17 @@ $(document).ready(function () {
                         "</a>"
                     );
                 },
+                responsivePriority: 1,
             },
 
             {
                 data: "name",
+                responsivePriority: 1,
             },
             {
                 data: "image_preview",
                 orderable: false,
+                responsivePriority: 1,
             },
             {
                 data: "created_at",
@@ -343,30 +351,45 @@ $(document).ready(function () {
             {
                 data: "price",
                 searchable: false,
+                responsivePriority: 1,
+                className: "text-right",
             },
             {
                 data: "tag_type_code",
+                responsivePriority: 10001,
+                className: "none",
             },
             {
                 data: "tag_type_color",
+                responsivePriority: 10001,
+                className: "none",
             },
             {
                 data: "mg",
+                responsivePriority: 10001,
+                className: "none",
             },
             {
                 data: "gramasi_gramasi",
+                responsivePriority: 10001,
+                className: "none",
             },
             {
                 data: "product_property_description",
+                responsivePriority: 1,
+                className: "none",
             },
             {
                 data: "product_status",
+                responsivePriority: 1,
             },
             {
                 data: "invoice_number",
+                responsivePriority: 1,
             },
             {
                 data: "action",
+                responsivePriority: 1,
             },
         ],
         // 'language': {

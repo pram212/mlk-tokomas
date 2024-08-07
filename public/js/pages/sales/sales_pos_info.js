@@ -50,10 +50,10 @@ $(function () {
             });
 
             // filter category change
-            $("#filter_category").on("optionselected", function (event) {
+            $(this).on("optionselected", function (event) {
                 filterProduct();
             });
-            $("#filter_category").on("optiondeselected", function (event) {
+            $(this).on("optiondeselected", function (event) {
                 filterProduct();
             });
         })
@@ -80,22 +80,9 @@ function getFilterCategoryData() {
 }
 
 function filterProduct() {
-    const selected_category = getJson(false).filter_category;
+    const selected_category = filterMultiSelect_getJson(false).filter_category;
     table_product_info.ajax.url(
         baseUrl + "/api/products/datatables?category_id=" + selected_category
     );
     table_product_info.ajax.reload();
 }
-
-var getJson = function (b) {
-    var result = $.fn.filterMultiSelect.applied
-        .map((e) => JSON.parse(e.getSelectedOptionsAsJson(b)))
-        .reduce((prev, curr) => {
-            prev = {
-                ...prev,
-                ...curr,
-            };
-            return prev;
-        });
-    return result;
-};

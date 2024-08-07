@@ -14,6 +14,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\ProductStockController;
 use App\Http\Controllers\PromoController;
 use App\Http\Controllers\api\TaxesController as taxesController;
 use App\Http\Controllers\api\saleController as SaleControllerApi;
@@ -25,6 +26,7 @@ use App\Http\Controllers\api\categoriesController as categoriesControllerApi;
 use App\Http\Controllers\api\paymentMethodController as paymentMethodControllerApi;
 use App\Http\Controllers\api\PromoController as PromoControllerApi;
 use App\Http\Controllers\api\warehouseTransferController as WarehouseTransferControllerApi;
+use App\Http\Controllers\api\CommonController as CommonControllerApi;
 
 Auth::routes();
 
@@ -35,6 +37,12 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => ['auth', 'active']], function () {
 
     Route::prefix('api')->group(function () {
+        // common Routes
+        Route::prefix('common')->group(function () {
+            Route::get('product-status', [CommonControllerApi::class, 'product_status']);
+        });
+
+
         // warehouse-transfers Routes
         Route::prefix('warehouse-transfers')->group(function () {
             Route::get('/', [WarehouseTransferControllerApi::class, 'index']);
@@ -187,6 +195,9 @@ Route::group(['middleware' => ['auth', 'active']], function () {
         Route::get('getdata/{id}', 'ProductController@getData');
         Route::get('search', 'ProductController@search');
     });
+
+    // product stock routes
+    Route::get('product_stock', [ProductStockController::class, 'index'])->name('product_stock.index');
 
     // customer group routes
     Route::resource('customer_group', 'CustomerGroupController');

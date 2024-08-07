@@ -9,7 +9,6 @@
         @endcan
     </div>
     <div class="table-responsive">
-
         <table id="product-data-table" class="table" style="width: 100%">
             <thead>
                 <tr>

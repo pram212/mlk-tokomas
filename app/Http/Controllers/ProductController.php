@@ -693,10 +693,9 @@ class ProductController extends Controller
         }
     }
 
-    public function productDataTable()
+    public function productDataTable(Request $request)
     {
         $this->authorize('viewAny', Product::class);
-        $dns1d = new DNS1D();
 
         $productQuery = Product::query()
             ->select([
@@ -725,13 +724,17 @@ class ProductController extends Controller
                         ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
                 });
             })
-            ->where('is_active', true)
-            ->orderByDesc('products.created_at')
-            ->with([
-                'tagType:id,code,color',
-                'productProperty:id,code,description',
-                'gramasi:id,code,gramasi'
-            ]);
+            ->where('products.is_active', true)
+            ->orderByDesc('products.created_at');
+
+        if ($warehouseIds = $request->get('warehouse_ids')) {
+            $productQuery->whereIn('product_warehouse.warehouse_id', explode(',', $warehouseIds));
+        }
+
+        if ($statusIds = $request->get('status_ids') !== null) {
+            $statusIds = $request->get('status_ids');
+            $productQuery->whereIn(DB::raw('COALESCE(split.product_status, products.product_status)'), explode(',', $statusIds));
+        }
 
 
         $datatable =  DataTables::of($productQuery)
@@ -767,6 +770,9 @@ class ProductController extends Controller
             ->addColumn('tag_type_color', function ($product) {
                 $color = $product->tagType->color ?? "none";
                 return '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color . '</div>';
+            })
+            ->addColumn('warehouse_name', function ($product) {
+                return $product->product_warehouse->warehouse->name ?? "-";
             })
             ->addColumn('action', function ($product) {
                 $user = auth()->user();
