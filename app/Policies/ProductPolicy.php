@@ -29,88 +29,46 @@ class ProductPolicy
         return $role->hasPermissionTo('products-buyback-edit');
     }
 
-    /**
-     * Determine whether the user can view the product.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Product  $product
-     * @return mixed
-     */
+    public function productsStock(User $user)
+    {
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('products-stock');
+    }
+
     public function view(User $user, Product $product)
     {
         //
     }
 
-    /**
-     * Determine whether the user can create products.
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
     public function create(User $user)
     {
         $role = Role::find($user->role_id);
         return $role->hasPermissionTo('products-add');
     }
 
-    /**
-     * Determine whether the user can update the product.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Product  $product
-     * @return mixed
-     */
     public function update(User $user, Product $product)
     {
         $role = Role::find($user->role_id);
         return $role->hasPermissionTo('products-edit');
     }
 
-    /**
-     * Determine whether the user can delete the product.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Product  $product
-     * @return mixed
-     */
     public function delete(User $user, Product $product)
     {
         $role = Role::find($user->role_id);
         return $role->hasPermissionTo('products-delete');
     }
 
-    /**
-     * Determine whether the user can restore the product.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Product  $product
-     * @return mixed
-     */
     public function restore(User $user, Product $product)
     {
         $role = Role::find($user->role_id);
         return $role->hasPermissionTo('products-restore');
     }
 
-    /**
-     * Determine whether the user can permanently delete the product.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Product  $product
-     * @return mixed
-     */
     public function forceDelete(User $user, Product $product)
     {
         //
     }
 
-    /**
-     * Determine whether the user can permanently delete the product.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Product  $product
-     * @return mixed
-     */
     public function printBarcode(User $user)
     {
         $role = Role::find($user->role_id);

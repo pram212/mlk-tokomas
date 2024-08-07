@@ -97,6 +97,12 @@
                             <a href="{{ url('warehouse_transfer') }}">{{ __('file.warehouse_transfer') }}</a>
                         </li>
 
+                        @can('productsStock',App\Product::class)
+                        <li id="product_stock" @if (request()->is('product_stock*')) active @endif>
+                            <a href="{{ url('product_stock') }}">{{ __('file.product_stock') }}</a>
+                        </li>
+                        @endcan
+
                     </ul>
                 </li>
 
