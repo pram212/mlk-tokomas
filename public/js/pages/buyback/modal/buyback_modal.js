@@ -128,12 +128,15 @@ function handleSubmit() {
     axios
         .post(`${baseUrl}/buyback/store`, {
             product_id: $_product_id.val(),
-            code: $_product_code.val(),
-            price: $_buyback_price_start.val(),
-            discount: $_buyback_price_decrease.val(),
-            additional_cost: $_buyback_additional_cost.val(),
-            final_price: $_final_price.text(),
+            product_code: $_product_code.val(),
+            // price: formatMoneyToDecimal($_buyback_price_start.val()),
+            // discount: formatMoneyToDecimal($_buyback_price_decrease.val()),
+            // additional_cost: formatMoneyToDecimal(
+            //     $_buyback_additional_cost.val()
+            // ),
+            // final_price: formatMoneyToDecimal($_final_price.text()),
             description: $_buyback_desc.val(),
+            is_barang_meleot: $("#barang_meleot").is(":checked"),
         })
         .then((response) => {
             // // show alert success

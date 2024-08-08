@@ -44,7 +44,7 @@ class BuyBackController extends Controller
                 'tag_types.color as tag_type_color',
                 'tag_types.code as tag_type_code',
                 'gramasis.gramasi',
-                DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number"),
+                'product_buyback.invoice_number',
                 DB::raw("
                 CASE
                     WHEN buyback.id IS NOT NULL THEN
@@ -277,13 +277,14 @@ class BuyBackController extends Controller
         DB::beginTransaction();
 
         $productBuyback = new ProductBuyback();
-        $productBuyback->product_id = $request->product_id;
-        $productBuyback->code = $request->code;
-        $productBuyback->price = $request->price;
-        $productBuyback->discount = $request->discount;
-        $productBuyback->additional_cost = $request->additional_cost;
-        $productBuyback->final_price = $request->final_price;
-        $productBuyback->description = $request->description;
+        $productBuyback->product_id = $request->product_id; // product id
+        $productBuyback->invoice_number = $request->invoice_number; // product code
+        $productBuyback->code = $request->code; // product code
+        $productBuyback->price = $request->price; // Latest grand total from product_sale
+        $productBuyback->discount = $request->discount; // total discount after calculate discount (Product Sales) + additional cost (set by Management in Table Products)
+        $productBuyback->additional_cost = $request->additional_cost; // additional cost set by Management (Table Products)
+        $productBuyback->final_price = $request->final_price; // price - (discount + additional cost)
+        $productBuyback->description = $request->description; // description
         $productBuyback->save();
 
         DB::commit();
