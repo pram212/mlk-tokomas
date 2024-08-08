@@ -724,8 +724,7 @@ class ProductController extends Controller
                         ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
                 });
             })
-            ->where('products.is_active', true)
-            ->orderByDesc('products.created_at');
+            ->where('products.is_active', true);
 
         if ($warehouseIds = $request->get('warehouse_ids')) {
             $productQuery->whereIn('product_warehouse.warehouse_id', explode(',', $warehouseIds));
@@ -739,9 +738,9 @@ class ProductController extends Controller
 
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
-            ->addColumn('barcode', function ($product) {
-                return $this->getBarcodeDownloadLink($product);
-            })
+            // ->addColumn('barcode', function ($product) {
+            //     return $this->getBarcodeDownloadLink($product);
+            // })
             ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
             ->editColumn('price', fn ($product) => $product->price)
             ->addColumn('product_property_description', fn ($product) => $product->productProperty->description ?? "-")
