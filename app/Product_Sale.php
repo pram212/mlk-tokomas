@@ -11,6 +11,12 @@ class Product_Sale extends Model
         "sale_id", "product_id", "variant_id", "qty", "sale_unit_id", "net_unit_price", "discount", "tax_rate", "tax", "total", "split_set_code", "discount_promo"
     ];
 
+    // relation with Sale by sale_id
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class);
+    }
+
     public function product()
     {
         return $this->belongsTo('App\Product');

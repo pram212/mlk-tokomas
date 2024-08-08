@@ -175,32 +175,3 @@ $(document).ready(function () {
         }
     );
 });
-
-function formatMoney(
-    amount,
-    {
-        lang = "id",
-        showSymbol = false,
-        currency = "IDR",
-        style = "currency",
-    } = {}
-) {
-    let options = {};
-
-    if (showSymbol) {
-        options = {
-            style: style,
-            currency: currency,
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-        };
-    }
-
-    return new Intl.NumberFormat(lang, options).format(amount);
-}
-
-function formatMoneyToDecimal(value) {
-    let string = value.toString().replace(/\./g, "");
-    const result = parseFloat(string.replace(/[^0-9.-]+/g, ""));
-    return result;
-}

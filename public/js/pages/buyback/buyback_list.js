@@ -1,4 +1,7 @@
-const table = $("#buyback-data-table").DataTable({
+const $invoice_number = $("#invoice_number");
+const $code = $("#code");
+const $btn_filter = $("#filter");
+const $table = $("#buyback-data-table").DataTable({
     responsive: true,
     fixedHeader: {
         header: true,
@@ -11,8 +14,8 @@ const table = $("#buyback-data-table").DataTable({
         dataType: "json",
         type: "get",
         data: function (d) {
-            d.invoice_number = invoice_number.val();
-            d.code = code.val();
+            d.invoice_number = $invoice_number.val();
+            d.code = $code.val();
         },
     },
     columns: [
@@ -135,7 +138,7 @@ const table = $("#buyback-data-table").DataTable({
     ],
 });
 
-$(document).ready(function () {
+$(function () {
     filterCode();
     filterInvoice();
 
@@ -167,128 +170,10 @@ $(document).ready(function () {
         });
 
     // onclick filter button
-    btn_filter.click(function () {
-        table.ajax.reload();
+    $btn_filter.click(function () {
+        $table.ajax.reload();
     });
-
-    btn_submit.click(handleSubmit);
-    btn_save_additional_cost.click(handleSubmitAdditionalCost);
-
-    // onclick buyback button
-    $("#buyback-data-table tbody").on("click", "a.btn-buyback", handleBuyback);
-
-    $("#barang_meleot").change(hitungTotalPotongan);
 });
-
-function handleSubmitAdditionalCost() {
-    const code = $("#product_code").val();
-    const additional_cost = $("#modal_additional_cost").val() ?? 0;
-
-    // POST to buyback/update_add_cost with axios
-    axios
-        .post(`${baseUrl}/buyback/update_add_cost`, {
-            code: code,
-            additional_cost: additional_cost,
-        })
-        .then((response) => {
-            // show alert success
-            Swal.fire({
-                icon: "success",
-                title: "Success",
-                text: response.data.message,
-            });
-        })
-        .catch((error) => {
-            // show alert error
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: error.response.data.message,
-            });
-        });
-}
-function handleBuyback() {
-    const id = $(this).data("productid");
-    const code = $(this).data("productcode").toString();
-    let url = `${baseUrl}/buyback/getDataModalProductBuyBack/${id}${
-        code.includes("-") ? `/${code}` : ""
-    }`;
-
-    // GET data product from buyback/getDataModalProductBuyBack{id} with axios
-    axios.get(url).then((response) => {
-        // insert data to modal
-        $("#modal_desc_value").text(
-            "(" + code + ")" + " - " + response.data.product.name
-        );
-
-        let modal_price =
-            parseFloat(response.data.price) -
-            parseFloat(response.data.discount);
-        const additional_cost = parseFloat(
-            response.data.product_split_set_detail?.additional_cost ??
-                response.data.product?.additional_cost ??
-                0
-        );
-
-        // Memastikan bahwa additional_cost adalah angka yang valid
-        const additionalCostIsValid = isNaN(additional_cost)
-            ? 0
-            : additional_cost;
-
-        $("#modal_price_value").text(modal_price);
-        $("#modal_price_default").val(parseFloat(response.data.price));
-        $("#modal_discount").val(parseFloat(response.data.discount));
-        $("#product_id").val(response.data.product_id);
-        $("#product_code").val(code);
-        $("#modal_additional_cost").val(additionalCostIsValid);
-        $("#modal_description").val("");
-        // show modal buybackModal
-        $("#buybackModal").modal("show");
-
-        hitungTotalPotongan();
-    });
-}
-
-function handleSubmit() {
-    // validation
-    if (!validation_buyback()) {
-        return;
-    }
-
-    // POST to buyback/store with axios
-    axios
-        .post(`${baseUrl}/buyback/store`, {
-            product_id: $("#product_id").val(),
-            code: $("#product_code").val(),
-            price: $("#modal_price_default").val(),
-            discount: $("#modal_discount").val(),
-            additional_cost: $("#modal_additional_cost").val(),
-            final_price: $("#final_price").text(),
-            description: $("#modal_description").val(),
-        })
-        .then((response) => {
-            // // show alert success
-            Swal.fire({
-                icon: "success",
-                title: "Success",
-                text: response.data.message,
-            });
-
-            // hide modal buybackModal
-            $("#buybackModal").modal("hide");
-
-            // reload datatable
-            table.ajax.reload();
-        })
-        .catch((error) => {
-            // show alert error
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: error.response.data.message,
-            });
-        });
-}
 
 function filterInvoice(search = "") {
     $("#invoice_number")
@@ -327,27 +212,4 @@ function filterCode(search = "") {
             // refresh selectpicker
             $("#code").selectpicker("refresh");
         });
-}
-
-function validation_buyback() {
-    const modal_additional_cost = parseFloat($("#modal_additional_cost").val());
-
-    // if modal_additional_cost null then fill with 0
-    if (!modal_additional_cost) {
-        $("#modal_additional_cost").val(0);
-    }
-    return true;
-}
-
-function hitungTotalPotongan() {
-    const isBarangMeleot = $(this).is(":checked");
-    let modal_price = parseFloat($("#modal_price_default").val());
-    let discount = parseFloat($("#modal_discount").val());
-    discount = isBarangMeleot ? discount * 2 : discount;
-    let additional_cost = parseFloat($("#modal_additional_cost").val());
-    let total_potongan = discount + additional_cost;
-    let final_price = modal_price - total_potongan;
-    $("#modal_price_value").text(final_price);
-    $("#modal_total_discount").val(total_potongan);
-    $("#final_price").text(final_price);
 }

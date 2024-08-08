@@ -390,6 +390,8 @@ $(document).ready(function () {
             },
             {
                 data: "action",
+                orderable: false,
+                searchable: false,
                 responsivePriority: 1,
             },
         ],

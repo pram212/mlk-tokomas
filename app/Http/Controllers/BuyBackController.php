@@ -45,15 +45,15 @@ class BuyBackController extends Controller
                 'tag_types.code as tag_type_code',
                 'gramasis.gramasi',
                 DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number"),
-                // DB::raw("CASE WHEN buyback.id IS NOT NULL THEN 1 ELSE 0 END as buyback_status"),
-                DB::raw("CASE
-                WHEN buyback.id IS NOT NULL THEN
-                    CASE
-                        WHEN COALESCE(max(product_sales.created_at), COALESCE(max(split.created_at), max(products.created_at))) > buyback.created_at THEN 0
-                        ELSE 1
-                    END
-                ELSE 0
-            END as buyback_status"),
+                DB::raw("
+                CASE
+                    WHEN buyback.id IS NOT NULL THEN
+                        CASE
+                            WHEN COALESCE(max(product_sales.created_at), COALESCE(max(split.created_at), max(products.created_at))) > buyback.created_at THEN 0
+                            ELSE 1
+                        END
+                    ELSE 0
+                END as buyback_status"),
                 DB::raw("COALESCE(split.product_status, products.product_status) as product_status")
             ])
             ->leftJoin('product_buyback as buyback', function ($join) {
@@ -80,7 +80,6 @@ class BuyBackController extends Controller
                     }
                 });
             })
-            ->orderByDesc('product_sales.created_at')
             ->groupBy('product_sales.product_id', 'product_sales.split_set_code');
 
         return $productQuery;
@@ -132,22 +131,8 @@ class BuyBackController extends Controller
                 return '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color . '</div>';
             })
             ->addColumn('action', function ($product) {
-                $user = auth()->user();
-
-                $btnBuyBack = $product->buyback_status == 0 ? '<a class="dropdown-item btn-buyback" href="#" data-productId="' . $product->id . '" data-productCode="' . $product->code . '"><i class="fa fa-arrow-left"></i> Buy Back</a>'
-                    : '<a class="dropdown-item btn-disabled bg-default" disabled title="Produk ini telah dibeli sebelumnya!" href="#">-</a>';
-
-                $element =
-                    '<div class="dropdown">
-                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Action
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        ' . $btnBuyBack .
-                    '</div>
-                </div>';
-
-                return $element;
+                $show_buyback_button = ($product->buyback_status == 0 && $product->product_status != 2) ? true : false;
+                return view('buyback.index_action', compact('product', 'show_buyback_button'));
             })
             ->rawColumns(['tag_type_color', 'action', 'image_preview'])
             ->make();
@@ -191,6 +176,7 @@ class BuyBackController extends Controller
 
         $product = Product_Sale::select([
             'product_sales.product_id',
+            'product_sales.sale_id',
             'product_sales.split_set_code',
             DB::raw("product_sales.product_id as code"),
             DB::raw("COALESCE(buyback.final_price, product_sales.total) as price"),
@@ -207,7 +193,7 @@ class BuyBackController extends Controller
                 return $query->where('product_sales.split_set_code', $split_set_code);
             })
             ->where('product_sales.product_id', $product_id)
-            ->with('product', 'productSplitSetDetail')
+            ->with('product:id,additional_cost,mg,name,gramasi_id,product_property_id', 'product.productProperty:id,code,description', 'product.gramasi:id,gramasi', 'productSplitSetDetail:id,additional_cost,mg', 'sale:id,reference_no as invoice_number,sale_note')
             ->orderByDesc('product_sales.created_at')
             ->first();
 

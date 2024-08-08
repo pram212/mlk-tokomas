@@ -775,41 +775,7 @@ class ProductController extends Controller
             })
             ->addColumn('action', function ($product) {
                 $user = auth()->user();
-
-                // handle if split set type is split set (2)
-                $urlEdit = url("products/$product->id/edit");
-                if ($product->split_set_code) {
-                    $urlEdit = url("products/$product->id/edit?split_set_id=$product->split_id");
-                }
-                $btnEdit = '';
-                $btnDelete = '';
-                $btnPrint = '';
-
-                if ($product->product_status == 1) {
-                    $btnEdit = $user->can('update', $product)
-                        ? '<a class="dropdown-item btn-edit" href="' . $urlEdit . '"><i class="fa fa-edit"></i> Edit</a>'
-                        : '';
-
-                    $btnDelete = $user->can('delete', $product)
-                        ? '<a class="dropdown-item btn-delete" href="#" data-id="' . $product->id . '" data-splitid="' . $product->split_id . '"><i class="fa fa-trash"></i> Delete</a>'
-                        : '';
-                }
-                $btnPrint = '<a class="dropdown-item btn-print" target="_BLANK" data-id="' . $product->id . '" href="' . url("products/print/$product->id") . '"><i class="fa fa-print"></i> Print</a>';
-
-                $element =
-                    '<div class="dropdown">
-                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Action
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item btn-view" href="#" data-id="' . $product->id . '"><i class="fa fa-eye"></i> View</a>'
-                    . $btnEdit
-                    . $btnPrint
-                    . $btnDelete .
-                    '</div>
-                </div>';
-
-                return $element;
+                return view('product.index_action', compact('product', 'user'));
             })
             ->rawColumns(['tag_type_color', 'action', 'image_preview', 'barcode'])
             ->make();

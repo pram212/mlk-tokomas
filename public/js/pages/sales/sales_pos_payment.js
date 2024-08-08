@@ -35,10 +35,6 @@ $(function () {
         handleMoneyFormatCardNumber
     );
 
-    // Other Event Bindings
-    $(".format-money").on("input", handleMoneyFormat);
-    $(".format-money").on("click", handleMoneyFormatClick);
-
     /* Calculate change */
     $paying_amount.on("change", handlePayingAmountChange);
 
@@ -255,15 +251,6 @@ function handlePayingAmountChange() {
     }
 
     calculateChange();
-}
-
-function handleMoneyFormat() {
-    const value = formatMoneyToDecimal($(this).val()) || 0;
-    $(this).val(formatMoney(value));
-}
-
-function handleMoneyFormatClick() {
-    $(this).select();
 }
 
 function getPaymentMethod() {
