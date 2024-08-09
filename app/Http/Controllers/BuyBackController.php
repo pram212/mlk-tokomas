@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateProductRequest;
-use App\Http\Requests\StoreProductRequest;
-use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 use App\Product;
-use App\ProductProperty;
-use App\ProductBuyback;
-use App\ProductSplitSetDetail;
 use App\Product_Sale;
+use App\ProductBuyback;
+use App\ProductProperty;
+use Illuminate\Http\Request;
+use App\ProductSplitSetDetail;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
+use App\Http\Requests\StoreBuybackRequest;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 
 
 class BuyBackController extends Controller
@@ -44,7 +45,7 @@ class BuyBackController extends Controller
                 'tag_types.color as tag_type_color',
                 'tag_types.code as tag_type_code',
                 'gramasis.gramasi',
-                'product_buyback.invoice_number',
+                DB::raw("COALESCE(buyback.invoice_number, '') as invoice_number"),
                 DB::raw("
                 CASE
                     WHEN buyback.id IS NOT NULL THEN
@@ -175,12 +176,13 @@ class BuyBackController extends Controller
         $split_set_code = $request->split_set_code;
 
         $product = Product_Sale::select([
+            'product_sales.id',
             'product_sales.product_id',
             'product_sales.sale_id',
             'product_sales.split_set_code',
             DB::raw("product_sales.product_id as code"),
             DB::raw("COALESCE(buyback.final_price, product_sales.total) as price"),
-            DB::raw('COALESCE(product_sales.discount - product_sales.discount_promo,0) as discount'),
+            DB::raw('(COALESCE(product_sales.discount,0)-COALESCE(product_sales.discount_promo,0)) as discount'),
         ])
             ->leftJoin('product_buyback as buyback', function ($join) {
                 $join->on('product_sales.product_id', '=', 'buyback.product_id');
@@ -272,28 +274,31 @@ class BuyBackController extends Controller
     //     return response()->json($product);
     // }
 
-    public function store(Request $request)
+    public function store(StoreBuybackRequest $request)
     {
-        DB::beginTransaction();
+        try {
+            DB::beginTransaction();
 
-        $productBuyback = new ProductBuyback();
-        $productBuyback->product_id = $request->product_id; // product id
-        $productBuyback->invoice_number = $request->invoice_number; // product code
-        $productBuyback->code = $request->code; // product code
-        $productBuyback->price = $request->price; // Latest grand total from product_sale
-        $productBuyback->discount = $request->discount; // total discount after calculate discount (Product Sales) + additional cost (set by Management in Table Products)
-        $productBuyback->additional_cost = $request->additional_cost; // additional cost set by Management (Table Products)
-        $productBuyback->final_price = $request->final_price; // price - (discount + additional cost)
-        $productBuyback->description = $request->description; // description
-        $productBuyback->save();
+            /* note: data for insert handled in StoreBuybackRequest */
+            ProductBuyback::create($request->all());
 
-        DB::commit();
+            DB::commit();
 
-        $response = [
-            'status' => true,
-            'message' => 'Product has been buyback'
-        ];
+            $response = [
+                'status' => true,
+                'message' => 'Product has been buyback'
+            ];
 
-        return response()->json($response);
+            return response()->json($response);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            $response = [
+                'status' => false,
+                'message' => $exception->getMessage()
+            ];
+
+            return response()->json($response);
+        }
     }
 }
