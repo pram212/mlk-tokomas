@@ -20,6 +20,6 @@ Mohon ikuti step by step secara berurutan.
 -   buat database dengan nama <strong>tokomas</strong>
 -   buka file env dan sesuaikan koneksi database local anda
 -   import database dari sumber database/tokomas.sql.
--   <code>php artisan migrate</code>
+-   <code>php artisan migrate --seed</code>
 -   buka aplikasi di browser dengan alamat (http://localhost/tokomas).
 -   login dengan username: test dan password: password
