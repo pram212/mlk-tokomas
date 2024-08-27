@@ -22,4 +22,13 @@ Mohon ikuti step by step secara berurutan.
 -   import database dari sumber database/tokomas.sql.
 -   <code>php artisan migrate --seed</code>
 -   buka aplikasi di browser dengan alamat (http://localhost/tokomas).
--   login dengan username: test dan password: password
+
+### Credential
+
+Super Admin
+username: test
+password: password
+
+Management
+username : management
+password : password
