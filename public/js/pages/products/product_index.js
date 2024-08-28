@@ -347,6 +347,7 @@ $(document).ready(function () {
             },
             {
                 data: "created_at",
+                name: "products.created_at",
             },
             {
                 data: "price",
@@ -389,6 +390,8 @@ $(document).ready(function () {
             },
             {
                 data: "action",
+                orderable: false,
+                searchable: false,
                 responsivePriority: 1,
             },
         ],
@@ -402,7 +405,7 @@ $(document).ready(function () {
         //             'next': '<i class="dripicons-chevron-right"></i>'
         //     }
         // },
-        order: [["3", "desc"]],
+        order: [["4", "desc"]],
         columnDefs: [
             {
                 render: function (data, type, row, meta) {

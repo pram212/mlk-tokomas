@@ -1,3 +1,18 @@
+@section('css')
+<style>
+    .top-buyback-modal {
+        font-size: 13px;
+        font-weight: bold;
+        border-bottom: 1px solid rgba(99, 99, 99, 0.3);
+        padding-bottom: 10px;
+    }
+
+    .top-buyback-modal td {
+        padding-right: 10px;
+    }
+</style>
+@endsection
+
 <div class="modal fade" id="buybackModal" tabindex="-1" role="dialog" aria-labelledby="buybackModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -21,7 +36,35 @@
             </div>
 
             <div class="modal-body">
-                <div class="row">
+                <div class="row top-buyback-modal">
+                    <div class="col">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Catatan Penjualan</td>
+                                    <td>:</td>
+                                    <td><span id="sale_note"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>Gramasi</td>
+                                    <td>:</td>
+                                    <td><span id="gramasi"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>Sifat Barang</td>
+                                    <td>:</td>
+                                    <td><span id="product_property"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>Invoice</td>
+                                    <td>:</td>
+                                    <td><span id="invoice_number_sales"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="row p-2 modal_desc">
                             <p id="modal_desc_value"></p>

@@ -32,9 +32,6 @@ const table = $table.DataTable({
             orderable: false,
             searchable: false,
         },
-        // {
-        //     data: "barcode",
-        // },
         {
             data: "code",
             render: function (data, type, row) {
@@ -59,11 +56,13 @@ const table = $table.DataTable({
 
         {
             data: "name",
+            name: "products.name",
             responsivePriority: 1,
         },
         {
             data: "image_preview",
             orderable: false,
+            searchable: false,
             responsivePriority: 1,
             className: "none",
         },
@@ -73,9 +72,11 @@ const table = $table.DataTable({
         },
         {
             data: "created_at",
+            name: "products.created_at",
         },
         {
             data: "price",
+            name: "price",
             searchable: false,
             responsivePriority: 1,
             className: "text-right",
@@ -115,7 +116,7 @@ const table = $table.DataTable({
             className: "none",
         },
     ],
-    order: [["3", "desc"]],
+    order: [["5", "desc"]],
     columnDefs: [],
     lengthMenu: [
         [10, 25, 50, -1],

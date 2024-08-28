@@ -27,6 +27,7 @@ use Dompdf\Dompdf;
 use View;
 use QrCode;
 use App\Helpers\ResponseHelpers;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -703,6 +704,7 @@ class ProductController extends Controller
                 DB::raw("COALESCE(split.split_set_code, products.code) as code"),
                 'split.split_set_code',
                 'split.id as split_id',
+                'product_warehouse.warehouse_id',
                 DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, product_warehouse.price)) as price"),
                 'image',
                 'name',
@@ -724,8 +726,7 @@ class ProductController extends Controller
                         ->orWhereNull('split.split_set_code'); // Handle case when split_set_code is NULL
                 });
             })
-            ->where('products.is_active', true)
-            ->orderByDesc('products.created_at');
+            ->where('products.is_active', true);
 
         if ($warehouseIds = $request->get('warehouse_ids')) {
             $productQuery->whereIn('product_warehouse.warehouse_id', explode(',', $warehouseIds));
@@ -735,13 +736,24 @@ class ProductController extends Controller
             $statusIds = $request->get('status_ids');
             $productQuery->whereIn(DB::raw('COALESCE(split.product_status, products.product_status)'), explode(',', $statusIds));
         }
+        // query untuk by produk status hanya by status STORE
+        $productQuery->where(DB::raw('COALESCE(split.product_status, products.product_status)'), 1);
+        // query untuk role sales dan cashier by warehouse id
+        $warehouse_id = Auth::user()->warehouse_id; // get warehouse from user
+        $role_id = Auth::user()->role_id;
 
-
+        $getRole = DB::table('roles')->where('id', '=', $role_id)->first();
+        $nameRole = $getRole->name;
+        // jika role sales dan cashier maka filter by warehouse
+        // jika management maka tampil semua by status STORE
+        if($nameRole == 'Cashier' || $nameRole == 'Sales') {
+            $productQuery->where('product_warehouse.warehouse_id', $warehouse_id);
+        }
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
-            ->addColumn('barcode', function ($product) {
-                return $this->getBarcodeDownloadLink($product);
-            })
+            // ->addColumn('barcode', function ($product) {
+            //     return $this->getBarcodeDownloadLink($product);
+            // })
             ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
             ->editColumn('price', fn ($product) => $product->price)
             ->addColumn('product_property_description', fn ($product) => $product->productProperty->description ?? "-")
@@ -776,41 +788,7 @@ class ProductController extends Controller
             })
             ->addColumn('action', function ($product) {
                 $user = auth()->user();
-
-                // handle if split set type is split set (2)
-                $urlEdit = url("products/$product->id/edit");
-                if ($product->split_set_code) {
-                    $urlEdit = url("products/$product->id/edit?split_set_id=$product->split_id");
-                }
-                $btnEdit = '';
-                $btnDelete = '';
-                $btnPrint = '';
-
-                if ($product->product_status == 1) {
-                    $btnEdit = $user->can('update', $product)
-                        ? '<a class="dropdown-item btn-edit" href="' . $urlEdit . '"><i class="fa fa-edit"></i> Edit</a>'
-                        : '';
-
-                    $btnDelete = $user->can('delete', $product)
-                        ? '<a class="dropdown-item btn-delete" href="#" data-id="' . $product->id . '" data-splitid="' . $product->split_id . '"><i class="fa fa-trash"></i> Delete</a>'
-                        : '';
-                }
-                $btnPrint = '<a class="dropdown-item btn-print" target="_BLANK" data-id="' . $product->id . '" href="' . url("products/print/$product->id") . '"><i class="fa fa-print"></i> Print</a>';
-
-                $element =
-                    '<div class="dropdown">
-                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Action
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item btn-view" href="#" data-id="' . $product->id . '"><i class="fa fa-eye"></i> View</a>'
-                    . $btnEdit
-                    . $btnPrint
-                    . $btnDelete .
-                    '</div>
-                </div>';
-
-                return $element;
+                return view('product.index_action', compact('product', 'user'));
             })
             ->rawColumns(['tag_type_color', 'action', 'image_preview', 'barcode'])
             ->make();

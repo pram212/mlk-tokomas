@@ -93,14 +93,8 @@
 @section('scripts')
 <script>
     const lang_visibility = '{{ __("file.Column visibility") }}';
-    const invoice_number = $('#invoice_number');
-    const code = $('#code');
-    const btn_filter = $('#filter');
-    const btn_submit = $('#btn_submit');
-    const table_body = $('#buyback-data-table tbody');
-    const buybackModal = $('#buybackModal');
     const lang_select = '{{ __("file.Select") }}';
-    const btn_save_additional_cost = $('#btn_save_additional_cost');
 </script>
 <script src="{{ asset('public/js/pages/buyback/buyback_list.js?timestamp=' . now()->timestamp) }}"></script>
+<script src="{{ asset('public/js/pages/buyback/modal/buyback_modal.js?timestamp=' . now()->timestamp) }}"></script>
 @endsection
