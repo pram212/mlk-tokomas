@@ -27,6 +27,7 @@ use Dompdf\Dompdf;
 use View;
 use QrCode;
 use App\Helpers\ResponseHelpers;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -703,6 +704,7 @@ class ProductController extends Controller
                 DB::raw("COALESCE(split.split_set_code, products.code) as code"),
                 'split.split_set_code',
                 'split.id as split_id',
+                'product_warehouse.warehouse_id',
                 DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, product_warehouse.price)) as price"),
                 'image',
                 'name',
@@ -734,7 +736,11 @@ class ProductController extends Controller
             $statusIds = $request->get('status_ids');
             $productQuery->whereIn(DB::raw('COALESCE(split.product_status, products.product_status)'), explode(',', $statusIds));
         }
-
+        // query untuk by produk status hanya ready stok / STORE saja
+        $productQuery->where(DB::raw('COALESCE(split.product_status, products.product_status)'), 1);
+        // query untuk role sales dan cashier by warehouse id
+        $warehouse_id = Auth::user()->warehouse_id; // get warehouse from user
+        $productQuery->where('product_warehouse.warehouse_id', $warehouse_id);
 
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
