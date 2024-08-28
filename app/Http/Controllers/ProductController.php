@@ -736,12 +736,19 @@ class ProductController extends Controller
             $statusIds = $request->get('status_ids');
             $productQuery->whereIn(DB::raw('COALESCE(split.product_status, products.product_status)'), explode(',', $statusIds));
         }
-        // query untuk by produk status hanya ready stok / STORE saja
+        // query untuk by produk status hanya by status STORE
         $productQuery->where(DB::raw('COALESCE(split.product_status, products.product_status)'), 1);
         // query untuk role sales dan cashier by warehouse id
         $warehouse_id = Auth::user()->warehouse_id; // get warehouse from user
-        $productQuery->where('product_warehouse.warehouse_id', $warehouse_id);
+        $role_id = Auth::user()->role_id;
 
+        $getRole = DB::table('roles')->where('id', '=', $role_id)->first();
+        $nameRole = $getRole->name;
+        // jika role sales dan cashier maka filter by warehouse
+        // jika management maka tampil semua by status STORE
+        if($nameRole == 'Cashier' || $nameRole == 'Sales') {
+            $productQuery->where('product_warehouse.warehouse_id', $warehouse_id);
+        }
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
             // ->addColumn('barcode', function ($product) {
