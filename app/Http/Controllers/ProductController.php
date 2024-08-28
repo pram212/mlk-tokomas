@@ -27,6 +27,7 @@ use Dompdf\Dompdf;
 use View;
 use QrCode;
 use App\Helpers\ResponseHelpers;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -703,6 +704,7 @@ class ProductController extends Controller
                 DB::raw("COALESCE(split.split_set_code, products.code) as code"),
                 'split.split_set_code',
                 'split.id as split_id',
+                'product_warehouse.warehouse_id',
                 DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, product_warehouse.price)) as price"),
                 'image',
                 'name',
@@ -734,8 +736,19 @@ class ProductController extends Controller
             $statusIds = $request->get('status_ids');
             $productQuery->whereIn(DB::raw('COALESCE(split.product_status, products.product_status)'), explode(',', $statusIds));
         }
+        // query untuk by produk status hanya by status STORE
+        $productQuery->where(DB::raw('COALESCE(split.product_status, products.product_status)'), 1);
+        // query untuk role sales dan cashier by warehouse id
+        $warehouse_id = Auth::user()->warehouse_id; // get warehouse from user
+        $role_id = Auth::user()->role_id;
 
-
+        $getRole = DB::table('roles')->where('id', '=', $role_id)->first();
+        $nameRole = $getRole->name;
+        // jika role sales dan cashier maka filter by warehouse
+        // jika management maka tampil semua by status STORE
+        if($nameRole == 'Cashier' || $nameRole == 'Sales') {
+            $productQuery->where('product_warehouse.warehouse_id', $warehouse_id);
+        }
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
             // ->addColumn('barcode', function ($product) {
