@@ -61,6 +61,22 @@
 
                 <li>
                     @php
+                    $requestIsProductStockMenu = request()->is('product_stock*') ? 'true' : 'false';
+                    @endphp
+                    <a href="#stock" aria-expanded="{{ $requestIsProductStockMenu }}" data-toggle="collapse">
+                        <i class="dripicons-document-remove"></i><span>{{ trans('file.product_stock') }}</span>
+                    </a>
+                    <ul id="stock" class="collapse list-unstyled @if ($requestIsProductStockMenu === 'true') show @endif">
+                        @can('viewAny', App\Product::class)
+                        <li @if (request()->is('product')) active @endif>
+                            <a href="{{ route('product_stock.index')}}">{{ trans('file.product_stock') }}</a>
+                        </li>
+                        @endcan
+                    </ul>
+                </li>
+
+                <li>
+                    @php
                     $requestIsOnProductMenu = request()->is(
                     'products*',
                     'category*',
