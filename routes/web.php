@@ -563,6 +563,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
         Route::get('getDataModalProductBuyBack/{id}/{split_set_code?}', 'BuyBackController@getDataModalProductBuyBack')->name('getDataModalProductBuyBack');
         Route::post('store', 'BuyBackController@store')->name('store');
         Route::post('update_add_cost', 'BuyBackController@update_add_cost')->name('update_add_cost');
+        Route::post('/print', 'BuyBackController@printInvoice');
     });
 
     Route::get('/pos', function () {

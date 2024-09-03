@@ -13,7 +13,10 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\StoreBuybackRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
-
+use App\InvoiceSetting;
+use Dompdf\Dompdf;
+use QrCode;
+use View;
 
 class BuyBackController extends Controller
 {
@@ -301,4 +304,79 @@ class BuyBackController extends Controller
             return response()->json($response);
         }
     }
+
+    public function printInvoice(Request $request) {
+        $product_id = $request->idProduct;
+        $split_set_code = $request->splitCode;
+        $harga = $request->harga;
+        $hargaAwal = $request->hargaAwal;
+        $potongan = $request->potongan;
+        $totalPotongan = $request->totalPotongan;
+
+        $invoice_setting = InvoiceSetting::first();
+
+        $product = Product_Sale::select([
+                'product_sales.id',
+                'product_sales.product_id',
+                'product_sales.sale_id',
+                'product_sales.split_set_code',
+                DB::raw("product_sales.product_id as code"),
+                DB::raw("COALESCE(buyback.final_price, product_sales.total) as price"),
+                DB::raw('(COALESCE(product_sales.discount,0) - COALESCE(product_sales.discount_promo,0)) as discount'),
+            ])
+            ->leftJoin('product_buyback as buyback', function ($join) {
+                $join->on('product_sales.product_id', '=', 'buyback.product_id')
+                     ->where(function ($query) {
+                         $query->on('product_sales.split_set_code', '=', 'buyback.code')
+                               ->orWhereNull('product_sales.split_set_code');
+                     });
+            })
+            ->when($split_set_code, function ($query) use ($split_set_code) {
+                return $query->where('product_sales.split_set_code', $split_set_code);
+            })
+            ->where('product_sales.product_id', $product_id)
+            ->with([
+                'product:id,additional_cost,mg,name,gramasi_id,product_property_id,code',
+                'product.productProperty:id,code,description',
+                'product.gramasi:id,gramasi',
+                'productSplitSetDetail:id,additional_cost,mg',
+                'sale:id,reference_no as invoice_number,sale_note'
+            ])
+            ->orderByDesc('product_sales.created_at')
+            ->first();
+
+        // Convert the product to an array if it exists, or use an empty array
+        $productArray = $product ? $product->toArray() : [];
+
+        $dompdf = new Dompdf();
+        $options = $dompdf->getOptions();
+        $options->setDefaultFont('Courier');
+        $options->set('isPhpEnabled', true); // Set to true as a boolean value
+        $dompdf->setOptions($options);
+        $dompdf->setPaper('A4', 'landscape');
+
+        $filename = "buyback_{$product->id}.pdf"; // Make sure to access a valid property of the product
+
+        // Load view
+        $html = View::make('buyback.print', [
+            'data' => $productArray,
+            'mode' => 'print',
+            'invoice_setting' => $invoice_setting,
+            'filename' => $filename,
+            'harga' => $harga,
+            'hargaAwal' => $hargaAwal,
+            'potongan' => $potongan,
+            'totalPotongan' => $totalPotongan
+        ])->render();
+
+        // Load HTML into Dompdf
+        $dompdf->loadHtml($html);
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Open PDF in browser
+        $dompdf->stream($filename, ["Attachment" => false]);
+    }
+
 }

@@ -13,6 +13,81 @@
 </style>
 @endsection
 
+<script>
+  function printButton() {
+    var idProduct = document.getElementById('product_id').value;
+    var splitCode = document.getElementById('product_code').value;
+    var harga = document.getElementById('modal_price_value').innerHTML;
+    var hargaAwal = document.getElementById('modal_price_default').value;
+    var potongan = document.getElementById('modal_discount').value;
+    var totalPotongan = document.getElementById('modal_total_discount').value;
+
+
+    const baseUrl = "{{ url('buyback/print/') }}"; // Server-side base URL
+
+    // Create a form element
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = baseUrl; // Set the form action to the base URL
+
+    // Add CSRF token input
+    var csrfToken = "{{ csrf_token() }}"; // This should be the server-side generated CSRF token
+    var inputCsrf = document.createElement('input');
+    inputCsrf.type = 'hidden';
+    inputCsrf.name = '_token';
+    inputCsrf.value = csrfToken;
+    form.appendChild(inputCsrf);
+
+    // Create input elements for each piece of data
+    var inputIdProduct = document.createElement('input');
+    inputIdProduct.type = 'hidden';
+    inputIdProduct.name = 'idProduct';
+    inputIdProduct.value = idProduct;
+    form.appendChild(inputIdProduct);
+
+
+    // Check if splitCode includes a hyphen and add it to the form if it does
+    if (splitCode.includes("-")) {
+        var inputSplitCode = document.createElement('input');
+        inputSplitCode.type = 'hidden';
+        inputSplitCode.name = 'splitCode';
+        inputSplitCode.value = splitCode;
+        form.appendChild(inputSplitCode);
+    }
+
+
+    var inputHarga = document.createElement('input');
+    inputHarga.type = 'hidden';
+    inputHarga.name = 'harga';
+    inputHarga.value = harga;
+    form.appendChild(inputHarga);
+
+    var inputHargaAwal = document.createElement('input');
+    inputHargaAwal.type = 'hidden';
+    inputHargaAwal.name = 'hargaAwal';
+    inputHargaAwal.value = hargaAwal;
+    form.appendChild(inputHargaAwal);
+
+    var inputPotongan = document.createElement('input');
+    inputPotongan.type = 'hidden';
+    inputPotongan.name = 'potongan';
+    inputPotongan.value = potongan;
+    form.appendChild(inputPotongan);
+
+    var inputTotalPotongan = document.createElement('input');
+    inputTotalPotongan.type = 'hidden';
+    inputTotalPotongan.name = 'totalPotongan';
+    inputTotalPotongan.value = totalPotongan;
+    form.appendChild(inputTotalPotongan);
+
+    // Append the form to the body and submit it
+    document.body.appendChild(form);
+    form.submit();
+}
+
+
+</script>
+
 <div class="modal fade" id="buybackModal" tabindex="-1" role="dialog" aria-labelledby="buybackModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -23,10 +98,10 @@
                         BuyBack
                     </span>
                     <img class="mr-2 "
-                        src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('logo/bima_logo_1.png'))) }}"
+                        src="data:image/png;base64,{{ asset('public/logo/bima_logo_1.png') }}"
                         height="40px" alt="">
                     <img class=""
-                        src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('logo/bima_text_1.png'))) }}"
+                        src="data:image/png;base64,{{ asset('public/logo/bima_text_1.png') }}"
                         height="40px" alt="">
                 </div>
 
@@ -38,6 +113,24 @@
             <div class="modal-body">
                 <div class="row top-buyback-modal">
                     <div class="col">
+                        <div class="hidden-print">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Back">
+                                        <span class="btn btn-info"><i class="fa fa-arrow-left"></i>
+                                            {{trans('file.Back')}}
+                                        </span>
+                                    </button>
+                                    </td>
+                                    <td>
+                                        <a target="_BLANK" onclick="printButton()"
+                                            class="btn btn-primary"><i class="dripicons-print"></i>{{trans('file.Print')}}</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br>
+                        </div>
                         <table>
                             <tbody>
                                 <tr>
@@ -66,7 +159,7 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-6">
-                        <div class="row p-2 modal_desc">
+                        <div class="row p-2 modal_desc" style="margin-left: 30px;">
                             <p id="modal_desc_value"></p>
                             <span>Deskripsi</span>
                         </div>
