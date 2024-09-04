@@ -561,6 +561,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
         Route::get('getInvoiceNumber', 'BuyBackController@getInvoiceNumber')->name('getInvoiceNumber');
         Route::get('getCode', 'BuyBackController@getCode')->name('getCode');
         Route::get('getDataModalProductBuyBack/{id}/{split_set_code?}', 'BuyBackController@getDataModalProductBuyBack')->name('getDataModalProductBuyBack');
+        Route::get('getDataModalDetailProductBuyBack/{id}/{split_set_code?}', 'BuyBackController@getDataModalDetailProductBuyBack')->name('getDataModalDetailProductBuyBack');
         Route::post('store', 'BuyBackController@store')->name('store');
         Route::post('update_add_cost', 'BuyBackController@update_add_cost')->name('update_add_cost');
         Route::post('/print', 'BuyBackController@printInvoice');

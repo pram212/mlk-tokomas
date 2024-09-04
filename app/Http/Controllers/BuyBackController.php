@@ -204,6 +204,37 @@ class BuyBackController extends Controller
 
         return response()->json($product);
     }
+    public function getDataModalDetailProductBuyBack(Request $request)
+    {
+        $product_id = $request->id;
+        $split_set_code = $request->split_set_code;
+
+        $product = Product_Sale::select([
+            'product_sales.id',
+            'product_sales.product_id',
+            'product_sales.sale_id',
+            'product_sales.split_set_code',
+            DB::raw("product_sales.product_id as code"),
+            DB::raw("COALESCE(buyback.final_price, product_sales.total) as price"),
+            DB::raw('(COALESCE(product_sales.discount,0)-COALESCE(product_sales.discount_promo,0)) as discount'),
+        ])
+            ->leftJoin('product_buyback as buyback', function ($join) {
+                $join->on('product_sales.product_id', '=', 'buyback.product_id');
+                $join->where(function ($query) {
+                    $query->on('product_sales.split_set_code', '=', 'buyback.code')
+                        ->orWhereNull('product_sales.split_set_code');
+                });
+            })
+            ->when($split_set_code, function ($query) use ($split_set_code) {
+                return $query->where('product_sales.split_set_code', $split_set_code);
+            })
+            ->where('product_sales.product_id', $product_id)
+            ->with('product:id,additional_cost,mg,name,gramasi_id,product_property_id', 'product.productProperty:id,code,description', 'product.gramasi:id,gramasi', 'productSplitSetDetail:id,additional_cost,mg', 'sale:id,reference_no as invoice_number,sale_note')
+            ->orderByDesc('product_sales.created_at')
+            ->first();
+
+        return response()->json($product);
+    }
 
     public function update_add_cost(Request $request)
     {
