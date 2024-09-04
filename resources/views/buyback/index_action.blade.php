@@ -7,6 +7,8 @@
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item btn-buyback" href="#" data-productId="{{ $product->id }}"
             data-productCode="{{ $product->code }}"><i class="fa fa-arrow-left"></i> Buyback</a>
+        <a class="dropdown-item btn-detail" href="#" data-productId="{{ $product->id }}"
+            data-productCode="{{ $product->code }}"><i class="fa fa-print"></i> Print To Customer</a>
     </div>
 </div>
 @else
