@@ -30,10 +30,10 @@ class Price extends Model
         return $this->belongsTo('App\User', 'updated_by');
     }
 
-    // public function gramasi()
-    // {
-    //     return $this->belongsTo('App\Gramasi', 'gramasi_id');
-    // }
+    public function gramasi()
+    {
+        return $this->belongsTo('App\Gramasi', 'gramasi_id');
+    }
 
     public function tagType()
     {
