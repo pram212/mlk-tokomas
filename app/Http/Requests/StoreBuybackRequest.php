@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Sale;
 use App\Product;
-use App\Models\Product_sale;
+use App\Product_sale;
 use App\ProductBuyback as Buyback;
 use Illuminate\Foundation\Http\FormRequest;
 
