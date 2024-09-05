@@ -166,7 +166,7 @@
 
         #receipt-data {
             margin: 0 auto;
-            height: 600px;
+            height: 650px;
             border: 1px solid #ccc;
             padding: 10px;
         }
@@ -283,7 +283,7 @@
 </head>
 
 <body>
-    @if($mode != 'print')<div id="watermark" class="hidden-print"></div>@endif
+    <div id="watermark" class="hidden-print"></div>
     <div style="max-width:400px;margin:0 auto">
 
         @if($mode != 'print')
@@ -371,6 +371,11 @@
                                     <p id="modal_price_value">Rp. {{ $harga }}</p>
                                 </div>
                             </div>
+                            <div style="margin: 230px 0xpx 0px 20px;width:50%; position: absolute;">
+                                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(@$data['product']['image'])) }}"
+                                width="380px" height="180px" alt="">
+                            </div>
+
                             <div class="col-md-6 p-2" style="position: absolute; right: 0px;">
                                 <div class="row mb-2">
                                     <div class="col-md-6">Harga Awal</div>

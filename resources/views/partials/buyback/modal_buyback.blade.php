@@ -113,24 +113,6 @@
             <div class="modal-body">
                 <div class="row top-buyback-modal">
                     <div class="col">
-                        <div class="hidden-print">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Back">
-                                        <span class="btn btn-info"><i class="fa fa-arrow-left"></i>
-                                            {{trans('file.Back')}}
-                                        </span>
-                                    </button>
-                                    </td>
-                                    <td>
-                                        <a target="_BLANK" onclick="printButton()"
-                                            class="btn btn-primary" style="color: white"><i class="dripicons-print"></i>{{trans('file.Print')}}</a>
-                                    </td>
-                                </tr>
-                            </table>
-                            <br>
-                        </div>
                         <table>
                             <tbody>
                                 <tr>
@@ -155,6 +137,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="col px-5">
+                        <img id="imagePreview" width="350" height="200"/>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -194,14 +179,15 @@
                                 @can('buybackEdit', App\Product::class)
                                 <div class="input-group mb-3">
                                     <input type="int" class="form-control" onchange="hitungTotalPotongan()"
-                                        id="modal_additional_cost" value="0">
-                                    <div class="input-group-append">
+                                        id="modal_additional_cost">
+                                        {{-- Comment karena fungsi input sudah dipindah ke  --}}
+                                    {{-- <div class="input-group-append">
                                         <button class="btn btn-outline-success" type="button"
                                             id="btn_save_additional_cost"><i class="fa fa-save"></i></button>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 @else
-                                <input type="int" class="form-control" id="modal_additional_cost" value="0" readonly>
+                                <input type="int" class="form-control" id="modal_additional_cost"  readonly>
                                 @endcan
                             </div>
 
@@ -220,10 +206,7 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <button type="button" class="btn btn-primary" id="btn_submit">Beli Kembali</button>
-                            </div>
-                            <div class="col-md-3">
-                                <button type="button" class="btn btn-info">Ubah Data</button>
+                                <button type="button" class="btn btn-primary" id="btn_submit">Submit</button>
                             </div>
                             <div class="col-md-3">
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
@@ -295,6 +278,9 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="col px-5">
+                        <img id="imagePreview_detail" width="350" height="200"/>
+                    </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-6" style="font-weight: bold">
@@ -333,11 +319,13 @@
                                 @can('buybackEdit', App\Product::class)
                                 <div class="input-group mb-3">
                                     <input type="int" class="form-control" onchange="hitungTotalPotongan()"
-                                        id="modal_additional_cost" value="0">
-                                    <div class="input-group-append">
+                                        id="modal_additional_cost_2" readonly>
+                                        {{-- Comment karena fungsi input sudah dipindah ke submit --}}
+
+                                    {{-- <div class="input-group-append">
                                         <button class="btn btn-outline-success" type="button"
                                             id="btn_save_additional_cost_detail"><i class="fa fa-save"></i></button>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 @else
                                 <input type="int" class="form-control" id="modal_additional_cost" value="0" readonly>
@@ -347,7 +335,7 @@
                         </div>
                         <div class="row mb-2">
                             <div class="col-md-6">Keterangan</div>
-                            <div class="col-md-6"><input type="text" class="form-control" id="modal_description" disabled>
+                            <div class="col-md-6"><input type="text" class="form-control" id="modal_description_2" disabled>
                             </div>
                         </div>
                         <div class="row mb-2">
