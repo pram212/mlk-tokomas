@@ -313,15 +313,15 @@ class BuyBackController extends Controller
     //     return response()->json($product);
     // }
 
-    public function store(Request $request, ProductBuyback $productBuyback)
+    public function store(Request $request)
     {
         try {
             $product_code = $request->product_code;
             $additional_cost = $request->additional_cost;
-            $isSplited = strpos($request->code, '-');
+            $isSplited = strpos($request->product_code, '-');
 
-            $checkBuybackUlang = ProductBuyback::where('product_id', '=', $request->product_id)->get();
             DB::beginTransaction();
+            $checkBuybackUlang = ProductBuyback::where('product_id', '=', $request->product_id)->get();
 
             // pengecekan update untuk total Biaya tambahan ( additional_cost )
             if ($isSplited) {
@@ -337,13 +337,15 @@ class BuyBackController extends Controller
             // pengecekan request update field keterangan di perhitungan buyback
             if(!$checkBuybackUlang->isEmpty()) {
                 $input = $request->all();
+                $productBuyback = new ProductBuyback();
                 $productBuyback = ProductBuyback::where('product_id', '=', $request->product_id)->first(); // Find the record by id
 
                 if ($productBuyback) {
                     $productBuyback->fill($input)->save(); // Update the record
                 }
             } else {
-                ProductBuyback::create($request->all());
+                $post = new StoreBuybackRequest();
+                ProductBuyback::create($post->all());
             }
             /* note: data for insert handled in StoreBuybackRequest */
 
