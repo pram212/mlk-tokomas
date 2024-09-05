@@ -180,11 +180,10 @@
                                 <div class="input-group mb-3">
                                     <input type="int" class="form-control" onchange="hitungTotalPotongan()"
                                         id="modal_additional_cost">
-                                        {{-- Comment karena fungsi input sudah dipindah ke  --}}
-                                    {{-- <div class="input-group-append">
+                                    <div class="input-group-append">
                                         <button class="btn btn-outline-success" type="button"
                                             id="btn_save_additional_cost"><i class="fa fa-save"></i></button>
-                                    </div> --}}
+                                    </div>
                                 </div>
                                 @else
                                 <input type="int" class="form-control" id="modal_additional_cost"  readonly>
