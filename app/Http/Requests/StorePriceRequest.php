@@ -30,7 +30,7 @@ class StorePriceRequest extends FormRequest
             'tag_type_id' => ['required'],
             'categories_id' => ['required'],
             'product_type_id' => ['required'],
-            'carat' => ['required'],
+            // 'carat' => ['required'],
         ];
     }
 
