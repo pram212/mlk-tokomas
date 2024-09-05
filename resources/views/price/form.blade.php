@@ -54,17 +54,16 @@
                             @enderror
                         </div>
                     </div>
-                    {{-- Hide Field By Request --}}
-                    {{-- <div class="col-md-6">
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <label>{{ __('file.Carat') }} *</strong> </label>
-                            <input type="text" name="carat" class="form-control" id="carat"
-                                value="{{ old('carat', @$price->carat) }}">
-                            @error('carat')
+                            {{-- Default 0 By Request --}}
+                            {{-- <label>{{ __('file.Carat') }} *</strong> </label> --}}
+                            <input type="hidden" name="carat" class="form-control" id="carat">
+                            {{-- @error('carat')
                             <span class="text-danger">{{ $message }}</span>
-                            @enderror
+                            @enderror --}}
                         </div>
-                    </div> --}}
+                    </div>
 
                     <div class="col-12">
                         <div class="row">
@@ -113,11 +112,11 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    {{-- Hide Field Gramasi By Request --}}
-                                    {{-- <div class="col-md-12">
+                                    <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>{{ __('file.Gramasi') }} *</strong></label>
-                                            <div id="text-kd-gramasi">{{ $price->gramasi->gramasi ?? '-' }}</div>
+                                            {{-- Hide by Request --}}
+                                            {{-- <label>{{ __('file.Gramasi') }} *</strong></label> --}}
+                                            {{-- <div id="text-kd-gramasi">{{ $price->gramasi->gramasi ?? '-' }}</div> --}}
                                             <input class="form-control" type="hidden" name="gramasi_id"
                                                 id="input-kd-gramasi"
                                                 value="{{ old('gramasi_id',@$price->gramasi_id) }}">
@@ -125,7 +124,7 @@
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                    </div> --}}
+                                    </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>{{ __('file.Created By') }} *</strong></label>
@@ -213,7 +212,7 @@
     let input_product_type_id = $('#product_type_id');
     let input_gramasi_id = $('#input-kd-gramasi');
     let text_gramasi_id = $('#text-kd-gramasi');
-    // let carat = $("#carat");
+    let carat = $("#carat");
     let product_property_price= $('.product_property_price');
 
     input_categories_id.change(function() {
@@ -271,10 +270,10 @@
     // product_property_type.maskMoney()
 
     // carat handle number
-    // carat.on("input", function() {
-    //     var value = $(this).val();
-    //     var value = value.replace(/[^0-9.]/g, '');
-    //     $(this).val(value);
-    // });
+    carat.on("input", function() {
+        var value = $(this).val();
+        var value = value.replace(/[^0-9.]/g, '');
+        $(this).val(value);
+    });
 </script>
 @endsection
