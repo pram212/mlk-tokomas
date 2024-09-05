@@ -160,6 +160,7 @@ class ProductController extends Controller
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
         $product_type = ProductType::where('categories_id', $product->category_id)->get();
+        $warehouses = Warehouse::where('id', $product->product_warehouse->warehouse_id)->get();
         $split_set_type = [
             [
                 'id' => 1,
@@ -190,6 +191,7 @@ class ProductController extends Controller
             'category',
             'product_type',
             'mode',
+            'warehouses',
             'split_set_type',
             'split_set_code'
         ));
