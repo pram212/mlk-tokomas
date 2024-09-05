@@ -98,7 +98,7 @@ function showBuyBackModal() {
                 0
         );
         const img = document.getElementById('imagePreview');
-        img.src = `${response.data.product.image}`;
+        img.src = response.data.product.image;
 
         let gramasi =
             response.data.product_split_set_detail?.gramasi ??
@@ -166,8 +166,7 @@ function showDetailModalToPrint() {
         );
 
         const img = document.getElementById('imagePreview_detail');
-        img.src = `${response.data.product.image}`;
-        console.log('res', img);
+        img.src = response.data.product.image;
 
         let gramasi =
             response.data.product_split_set_detail?.gramasi ??
