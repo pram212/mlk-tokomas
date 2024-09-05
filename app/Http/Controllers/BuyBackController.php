@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\GeneralSetting;
 use App\Product;
 use App\Product_Sale;
 use App\ProductBuyback;
@@ -135,8 +136,10 @@ class BuyBackController extends Controller
                 return '<div class="h-100 w-100" style="background-color: ' . $color . '">' . $color . '</div>';
             })
             ->addColumn('action', function ($product) {
-                $show_buyback_button = ($product->buyback_status == 0 && $product->product_status != 2) ? true : false;
-                return view('buyback.index_action', compact('product', 'show_buyback_button'));
+                // Comment karena bisa disubmit beberapa kali
+                // $show_buyback_button = ($product->buyback_status == 0 && $product->product_status != 2) ? true : false;
+                // return view('buyback.index_action', compact('product', 'show_buyback_button'));
+                return view('buyback.index_action',compact('product', $product));
             })
             ->rawColumns(['tag_type_color', 'action', 'image_preview'])
             ->make();
@@ -183,6 +186,7 @@ class BuyBackController extends Controller
             'product_sales.product_id',
             'product_sales.sale_id',
             'product_sales.split_set_code',
+            'buyback.description as buyback_desc',
             DB::raw("product_sales.product_id as code"),
             DB::raw("COALESCE(buyback.final_price, product_sales.total) as price"),
             DB::raw('(COALESCE(product_sales.discount,0)-COALESCE(product_sales.discount_promo,0)) as discount'),
@@ -198,7 +202,7 @@ class BuyBackController extends Controller
                 return $query->where('product_sales.split_set_code', $split_set_code);
             })
             ->where('product_sales.product_id', $product_id)
-            ->with('product:id,additional_cost,mg,name,gramasi_id,product_property_id', 'product.productProperty:id,code,description', 'product.gramasi:id,gramasi', 'productSplitSetDetail:id,additional_cost,mg', 'sale:id,reference_no as invoice_number,sale_note')
+            ->with('product:id,additional_cost,mg,name,gramasi_id,product_property_id,image', 'product.productProperty:id,code,description', 'product.gramasi:id,gramasi', 'productSplitSetDetail:id,additional_cost,mg', 'sale:id,reference_no as invoice_number,sale_note')
             ->orderByDesc('product_sales.created_at')
             ->first();
 
@@ -214,6 +218,7 @@ class BuyBackController extends Controller
             'product_sales.product_id',
             'product_sales.sale_id',
             'product_sales.split_set_code',
+            'buyback.description as buyback_desc',
             DB::raw("product_sales.product_id as code"),
             DB::raw("COALESCE(buyback.final_price, product_sales.total) as price"),
             DB::raw('(COALESCE(product_sales.discount,0)-COALESCE(product_sales.discount_promo,0)) as discount'),
@@ -229,7 +234,7 @@ class BuyBackController extends Controller
                 return $query->where('product_sales.split_set_code', $split_set_code);
             })
             ->where('product_sales.product_id', $product_id)
-            ->with('product:id,additional_cost,mg,name,gramasi_id,product_property_id', 'product.productProperty:id,code,description', 'product.gramasi:id,gramasi', 'productSplitSetDetail:id,additional_cost,mg', 'sale:id,reference_no as invoice_number,sale_note')
+            ->with('product:id,additional_cost,mg,name,gramasi_id,product_property_id,image', 'product.productProperty:id,code,description', 'product.gramasi:id,gramasi', 'productSplitSetDetail:id,additional_cost,mg', 'sale:id,reference_no as invoice_number,sale_note')
             ->orderByDesc('product_sales.created_at')
             ->first();
 
@@ -308,13 +313,39 @@ class BuyBackController extends Controller
     //     return response()->json($product);
     // }
 
-    public function store(StoreBuybackRequest $request)
+    public function store(Request $request, ProductBuyback $productBuyback)
     {
         try {
+            $product_code = $request->product_code;
+            $additional_cost = $request->additional_cost;
+            $isSplited = strpos($request->code, '-');
+
+            $checkBuybackUlang = ProductBuyback::where('product_id', '=', $request->product_id)->get();
             DB::beginTransaction();
 
+            // pengecekan update untuk total Biaya tambahan ( additional_cost )
+            if ($isSplited) {
+                $product_split = ProductSplitSetDetail::where('split_set_code', $product_code)->first();
+                $product_split->additional_cost = $additional_cost;
+                $product_split->save();
+            } else {
+                $product = Product::where('code', $product_code)->first();
+                $product->additional_cost = $additional_cost;
+                $product->save();
+            }
+
+            // pengecekan request update field keterangan di perhitungan buyback
+            if(!$checkBuybackUlang->isEmpty()) {
+                $input = $request->all();
+                $productBuyback = ProductBuyback::where('product_id', '=', $request->product_id)->first(); // Find the record by id
+
+                if ($productBuyback) {
+                    $productBuyback->fill($input)->save(); // Update the record
+                }
+            } else {
+                ProductBuyback::create($request->all());
+            }
             /* note: data for insert handled in StoreBuybackRequest */
-            ProductBuyback::create($request->all());
 
             DB::commit();
 
@@ -345,6 +376,7 @@ class BuyBackController extends Controller
         $totalPotongan = $request->totalPotongan;
 
         $invoice_setting = InvoiceSetting::first();
+        $general_setting = GeneralSetting::first();
 
         $product = Product_Sale::select([
                 'product_sales.id',
@@ -367,7 +399,7 @@ class BuyBackController extends Controller
             })
             ->where('product_sales.product_id', $product_id)
             ->with([
-                'product:id,additional_cost,mg,name,gramasi_id,product_property_id,code',
+                'product:id,additional_cost,mg,name,gramasi_id,product_property_id,code,image',
                 'product.productProperty:id,code,description',
                 'product.gramasi:id,gramasi',
                 'productSplitSetDetail:id,additional_cost,mg',
@@ -393,6 +425,7 @@ class BuyBackController extends Controller
             'data' => $productArray,
             'mode' => 'print',
             'invoice_setting' => $invoice_setting,
+            'general_setting' => $general_setting,
             'filename' => $filename,
             'harga' => $harga,
             'hargaAwal' => $hargaAwal,
