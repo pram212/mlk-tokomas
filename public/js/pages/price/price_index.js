@@ -20,11 +20,12 @@ priceTable = $("#price-datatable").DataTable({
         },
         {
             data: "gramasi",
+            visible: false
         },
         {
             data: "carat",
+            visible: false
         },
-
         {
             data: "categories",
         },
@@ -170,8 +171,8 @@ priceTable = $("#price-datatable").DataTable({
         {
             extend: "colvis",
             text: lang_visibility,
-            columns: ":gt(0)",
-        },
+            columns: ':gt(0):not(:eq(2)):not(:eq(3))',
+        }
     ],
 });
 

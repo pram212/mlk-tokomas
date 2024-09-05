@@ -107,11 +107,11 @@ class PriceController extends Controller
 
             Price::create([
                 // 'price' =>  moneyToNumeric($request->price, ","),
-                'gramasi_id' => $request->gramasi_id,
+                // 'gramasi_id' => $request->gramasi_id, // hide field by request
                 'tag_type_id' => $request->tag_type_id,
                 'categories_id' => $request->categories_id,
                 'product_type_id' => $request->product_type_id,
-                'carat' => $request->carat,
+                // 'carat' => $request->carat, // hide field by request
                 'created_by' => auth()->id()
             ]);
             $price_created_id = Price::latest()->first()->id;
@@ -149,8 +149,8 @@ class PriceController extends Controller
 
             $price->update([
                 // 'price' => moneyToNumeric($request->price, ","),
-                'gramasi_id' => $request->gramasi_id,
-                'carat' => $request->carat,
+                // 'gramasi_id' => $request->gramasi_id, // hide field by request
+                // 'carat' => $request->carat, // hide field by request
                 'tag_type_id' => $request->tag_type_id,
                 'categories_id' => $request->categories_id,
                 'product_type_id' => $request->product_type_id,
