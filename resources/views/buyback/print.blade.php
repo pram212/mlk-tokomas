@@ -40,12 +40,12 @@
             width: 100%;
         }
 
-        td,
+        /* td,
         th,
         tr,
         table {
             border-collapse: collapse;
-        }
+        } */
 
         table {
             width: 100%;
@@ -141,10 +141,6 @@
             }
         }
 
-        #table_body td,
-        #table_body th {
-            border: 1px solid #ccc;
-        }
 
         #table_body td {
             /* Atur lebar maksimum untuk sel item */
@@ -167,7 +163,6 @@
         #receipt-data {
             margin: 0 auto;
             height: 650px;
-            border: 1px solid #ccc;
             padding: 10px;
         }
 
@@ -269,7 +264,7 @@
         .top-buyback-modal {
             font-size: 13px;
             font-weight: bold;
-            border-bottom: 1px solid rgba(99, 99, 99, 0.3);
+            /* border-bottom: 1px solid rgba(99, 99, 99, 0.3); */
             padding-bottom: 10px;
         }
 
@@ -277,7 +272,9 @@
             padding-right: 10px;
         }
         .partlife {
-            margin-left: 30px; border: 1px solid #ccc; padding: 10px; width: 340px; margin-top: 10px;
+            margin-left: 30px;
+            padding: 10px; width: 340px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -303,117 +300,81 @@
     <div style="max-width:150vh;margin:0 auto" style="position: relative">
         <div id="receipt-data">
             <div class="head">
-                <table style="width: 100%" id="table_head">
-                    <tbody>
-                        <tr>
-                            <td style="width:300px;min-width: 300px;">
-                                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(@$invoice_setting->invoice_logo)) }}"
-                                width="200px" alt="">
-                            </td>
-                            <td style="vertical-align: top;">
-                                <center style="font-size: 30px;font-weight:bold; padding-top: 35px;">
-                                    Perhitungan BuyBack
-                                </center>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div style="border-top: 1px solid black; border-bottom: 1px solid black; padding: 10px; width: 100%;">
+                    <table style="width: 100%" id="table_head">
+                        <tbody>
+                            <tr>
+                                <td style="width:300px;min-width: 300px;">
+                                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(@$invoice_setting->invoice_logo)) }}"
+                                        width="200px" alt="">
+                                </td>
+                                <td style="vertical-align: top;">
+                                    <center>
+                                        <div>
+                                            {{-- Nomor Invoice : {{$data->reference_no}} --}}
+                                            Nomor Buyback : B00 - {{$data['code']}}
+                                        </div>
+                                        <div style="margin-top: 1.5rem">Jl. Diponegoro No. 105 (Jurusan Pasar) <br>
+                                            Ketanggungan Timur - Brebes</div>
+                                    </center>
+                                </td>
+                                <td style="text-align: right; vertical-align: top;">
+                                    {{-- Ketanggungan, {{$data['created_at']}} --}}
+                                    Ketanggungan, {{ $data['created_at_buyback']}}
+                                    <br>
+                                    {{-- Kepada : {{$data->customer->name}} --}}
+                                    Kepada : Customer 1
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="npwp">
+                        NPWP : 04.011.521.4.501.00
+                    </div>
+                </div>
                 <table>
                     <tbody>
-                        {{-- @php
-                            dd($data);
-                        @endphp --}}
-                        <tr>
-                            <td>Catatan Penjualan</td>
-                            <td>:</td>
-                            <td><span id="sale_note">{{ $data['sale']['sale_note']}}</span></td>
-                        </tr>
-                        <tr>
-                            <td>Gramasi</td>
-                            <td>:</td>
-                            <td>
-                                <span id="gramasi">{{ $data['product_split_set_detail']['gramasi'] ?? $data['product']['gramasi']['gramasi'] ?? 0 }}
-                                    <sup>{{ $data['product_split_set_detail']['mg'] ??
+                    <div class="row mt-3" >
+                            <div class="col-md-6" style="position: absolute; left: 0px;">
+                                <table>
+                                    <tr>
+                                        <td>Deskripsi</td>
+                                        <td>:</td>
+                                        <td> ( {{ $data['product']['code'] }} ) - {{ $data['product']['name']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Harga Awal</td>
+                                        <td>:</td>
+                                        <td>Rp. {{ $hargaAwal }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Keterangan</td>
+                                        <td>:</td>
+                                        <td> {{ $data['buyback_desc']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Totalnya potongan</td>
+                                        <td>:</td>
+                                        <td>Rp. {{ $totalPotongan  }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Totalnya Buyback</td>
+                                        <td>:</td>
+                                        <td>Rp. {{ $harga }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div style="position:absolute; margin-left: 500px; margin-top:70px;">
+                                <span   style="font-size: 100px;" id="gramasi">{{ $data['product_split_set_detail']['gramasi'] ?? $data['product']['gramasi']['gramasi'] ?? 0 }}
+                                    <sup style="font-size: 20px;">{{ $data['product_split_set_detail']['mg'] ??
                                         $data['product']['mg'] ??
                                         0 }} gram</sup>
+                                        <span style="font-size: 20px;"> {{ $data['product']['product_property']['code'] }}</span>
                                 </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Sifat Barang</td>
-                            <td>:</td>
-                            <td><span id="product_property">
-                                @if ($data['product']['product_property']['code'] && $data['product']['product_property']['description'])
-                                    {{ $data['product']['product_property']['code'] }} - {{ $data['product']['product_property']['description']}}
-                                @else
-                                    "-"
-                                @endif
-                            </span></td>
-                        </tr>
-                        <tr>
-                            <td>Invoice</td>
-                            <td>:</td>
-                            <td><span id="invoice_number_sales">
-                                {{$data['sale']['invoice_number'] }}</span></td>
-                        </tr>
-                        <tr>
-
-                               <div class="row mt-3" >
-                            <div class="col-md-6" style="position: absolute; left: 0px;">
-                                <div class="row p-2 partlife">
-                                    <span class="titleModal">Deskripsi</span>
-                                    <p id="modal_desc_value">
-                                        ( {{ $data['product']['code'] }} ) - {{ $data['product']['name']}}
-                                    </p>
-                                </div>
-                                <div class="row p-2 partlife">
-                                    <span class="titleModal">Harga</span>
-                                    <p id="modal_price_value">Rp. {{ $harga }}</p>
-                                </div>
                             </div>
-                            <div style="margin: 230px 0xpx 0px 20px;width:50%; position: absolute;">
+                            <div style="right:0px; position:absolute; margin-top: 70px;">
                                 <img src="data:image/png;base64,{{ base64_encode(file_get_contents(@$data['product']['image'])) }}"
-                                width="380px" height="180px" alt="">
-                            </div>
-
-                            <div class="col-md-6 p-2" style="position: absolute; right: 0px;">
-                                <div class="row mb-2">
-                                    <div class="col-md-6">Harga Awal</div>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" id="modal_price_default" readonly value="{{ $hargaAwal }}">
-                                        <input type="hidden" class="form-control" id="product_id">
-                                        <input type="hidden" class="form-control" id="product_code">
-                                        <input type="hidden" class="form-control" id="final_price">
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-md-6">Potongan</div>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" id="modal_discount" readonly value="{{ $potongan }}">
-                                        <div class="form-group form-check" title="Potongan akan dikalikan 2 jika ini diceklis!">
-                                            <input type="checkbox" class="form-check-input" id="barang_meleot">
-                                            <label class="form-check-label" for="barang_meleot">Barang meleot dekok</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-md-6">Biaya tambahan</div>
-                                    <div class="col-md-6">
-                                        <input type="int" class="form-control" id="modal_additional_cost" value="0" readonly>
-                                    </div>
-
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-md-6">Keterangan</div>
-                                    <div class="col-md-6"><input type="text" class="form-control" id="modal_description" >
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-md-6">Totalnya potongan</div>
-                                    <div class="col-md-6"><input type="text" class="form-control" id="modal_total_discount" value="{{ $totalPotongan }}"
-                                             readonly>
-                                    </div>
-                                </div>
+                                width="280px" height="200px" alt="">
                             </div>
                         </tr>
                         </table>
