@@ -313,7 +313,7 @@ class BuyBackController extends Controller
     //     return response()->json($product);
     // }
 
-    public function store(Request $request)
+    public function store(Request $request, StoreBuybackRequest $post)
     {
         try {
             $product_code = $request->product_code;
@@ -344,7 +344,7 @@ class BuyBackController extends Controller
                     $productBuyback->fill($input)->save(); // Update the record
                 }
             } else {
-                $post = new StoreBuybackRequest();
+                // $post = new StoreBuybackRequest();
                 ProductBuyback::create($post->all());
             }
             /* note: data for insert handled in StoreBuybackRequest */
