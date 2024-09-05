@@ -1,7 +1,7 @@
 @extends('layout.main')
 @section('content')
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 <section class="forms">
     <div class="container-fluid">
@@ -396,6 +396,21 @@
 								                <input type="checkbox" value="1" id="returns-delete" name="returns-delete">
 								                @endif
 								                <label for="returns-delete"></label>
+								            </div>
+						            	</div>
+						            </td>
+						        </tr>
+						        <tr>
+						            <td>{{trans('file.buy back')}}</td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("buyback-edit", $all_permission))
+								                <input type="checkbox" value="1" id="buyback-edit" name="buyback-edit" checked>
+								                @else
+								                <input type="checkbox" value="1" id="buyback-edit" name="buyback-edit">
+								                @endif
+								                <label for="buyback-edit"></label>
 								            </div>
 						            	</div>
 						            </td>
@@ -1343,7 +1358,7 @@
 	$("#select_all").on( "change", function() {
 	    if ($(this).is(':checked')) {
 	        $("tbody input[type='checkbox']").prop('checked', true);
-	    } 
+	    }
 	    else {
 	        $("tbody input[type='checkbox']").prop('checked', false);
 	    }
