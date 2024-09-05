@@ -16,6 +16,8 @@ const $_product_code = $("#product_code");
 const $_buyback_additional_cost = $("#modal_additional_cost");
 const $_buyback_additional_cost_2 = $("#modal_additional_cost_2");
 const $_buyback_desc = $("#modal_description");
+const $_buyback_desc_2 = $("#modal_description_2");
+const $_image_preview = $("#imagePreview");
 const $_final_price = $("#final_price");
 const $_final_price_2 = $("#final_price_2");
 const $_total_discount = $("#modal_total_discount");
@@ -95,6 +97,8 @@ function showBuyBackModal() {
                 response.data.product?.additional_cost ??
                 0
         );
+        const img = document.getElementById('imagePreview');
+        img.src = response.data.product.image;
 
         let gramasi =
             response.data.product_split_set_detail?.gramasi ??
@@ -123,7 +127,7 @@ function showBuyBackModal() {
         $_product_id.val(response.data.product_id);
         $_product_code.val(code);
         $_buyback_additional_cost.val(formatMoney(additionalCostIsValid));
-        $_buyback_desc.val("");
+        $_buyback_desc.val(response.data.buyback_desc);
 
         $ProductProperty.text(product_property);
         $Gramasi.html(gramasi);
@@ -141,7 +145,7 @@ function showBuyBackModal() {
 function showDetailModalToPrint() {
     const id = $(this).data("productid");
     const code = $(this).data("productcode").toString();
-    let url = `${baseUrl}/buyback/getDataModalDetailProductBuyBack/${id}${
+    let url = `${baseUrl}/buyback/getDataModalProductBuyBack/${id}${
         code.includes("-") ? `/${code}` : ""
     }`;
 
@@ -160,6 +164,9 @@ function showDetailModalToPrint() {
                 response.data.product?.additional_cost ??
                 0
         );
+
+        const img = document.getElementById('imagePreview_detail');
+        img.src = response.data.product.image;
 
         let gramasi =
             response.data.product_split_set_detail?.gramasi ??
@@ -188,7 +195,7 @@ function showDetailModalToPrint() {
         $_product_id.val(response.data.product_id);
         $_product_code.val(code);
         $_buyback_additional_cost_2.val(formatMoney(additionalCostIsValid));
-        $_buyback_desc.val("");
+        $_buyback_desc_2.val(response.data.buyback_desc);
 
         $ProductProperty_2.text(product_property);
         $Gramasi_2.html(gramasi);
@@ -204,6 +211,7 @@ function showDetailModalToPrint() {
 }
 
 function handleSubmit() {
+    const additional_cost = $_buyback_additional_cost.val() ?? 0;
     // validation
     if (!validation_buyback()) return;
 
@@ -213,6 +221,7 @@ function handleSubmit() {
             product_id: $_product_id.val(),
             product_code: $_product_code.val(),
             description: $_buyback_desc.val(),
+            additional_cost: additional_cost,
             is_barang_meleot: $_barang_meleot.is(":checked"),
         })
         .then((response) => {
