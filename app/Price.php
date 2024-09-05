@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Price extends Model
 {
     protected $guarded = [];
-    protected $fillable = ['carat', 'gramasi_id', 'tag_type_id', 'categories_id', 'product_type_id', 'created_by', 'updated_by'];
+    // protected $fillable = ['carat', 'gramasi_id', 'tag_type_id', 'categories_id', 'product_type_id', 'created_by', 'updated_by'];
+    protected $fillable = ['tag_type_id', 'categories_id', 'product_type_id', 'created_by', 'updated_by'];
 
     public static function boot()
     {
@@ -30,10 +31,10 @@ class Price extends Model
         return $this->belongsTo('App\User', 'updated_by');
     }
 
-    public function gramasi()
-    {
-        return $this->belongsTo('App\Gramasi', 'gramasi_id');
-    }
+    // public function gramasi()
+    // {
+    //     return $this->belongsTo('App\Gramasi', 'gramasi_id');
+    // }
 
     public function tagType()
     {

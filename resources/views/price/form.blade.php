@@ -54,7 +54,8 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    {{-- Hide Field By Request --}}
+                    {{-- <div class="col-md-6">
                         <div class="form-group">
                             <label>{{ __('file.Carat') }} *</strong> </label>
                             <input type="text" name="carat" class="form-control" id="carat"
@@ -63,7 +64,7 @@
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="col-12">
                         <div class="row">
@@ -112,7 +113,8 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    {{-- Hide Field Gramasi By Request --}}
+                                    {{-- <div class="col-md-12">
                                         <div class="form-group">
                                             <label>{{ __('file.Gramasi') }} *</strong></label>
                                             <div id="text-kd-gramasi">{{ $price->gramasi->gramasi ?? '-' }}</div>
@@ -123,7 +125,7 @@
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>{{ __('file.Created By') }} *</strong></label>
@@ -211,7 +213,7 @@
     let input_product_type_id = $('#product_type_id');
     let input_gramasi_id = $('#input-kd-gramasi');
     let text_gramasi_id = $('#text-kd-gramasi');
-    let carat = $("#carat");
+    // let carat = $("#carat");
     let product_property_price= $('.product_property_price');
 
     input_categories_id.change(function() {
@@ -231,7 +233,7 @@
                 res.data.forEach(element => {
                     options += `<option value="${element.id}">${element.code+' - '+element.description}</option>`;
                 });
-                
+
                 product_type_id.html(options);
 
                 // trigger change to set the value
@@ -243,7 +245,7 @@
     input_product_type_id.change(function() {
         let product_type_id = $(this).val();
         let categories_id = input_categories_id.val();
-        
+
         $.ajax({
             type: "GET",
             url: "{{ url('product-categories/gramasi-getByCategoryAndProductType') }}/" + categories_id+"/"+product_type_id,
@@ -267,12 +269,12 @@
 
     product_property_price.maskMoney()
     // product_property_type.maskMoney()
-    
+
     // carat handle number
-    carat.on("input", function() {
-        var value = $(this).val();
-        var value = value.replace(/[^0-9.]/g, '');
-        $(this).val(value);
-    });
+    // carat.on("input", function() {
+    //     var value = $(this).val();
+    //     var value = value.replace(/[^0-9.]/g, '');
+    //     $(this).val(value);
+    // });
 </script>
 @endsection
