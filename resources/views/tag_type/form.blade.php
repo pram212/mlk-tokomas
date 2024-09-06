@@ -74,6 +74,30 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>{{ __('file.Gold Conversion') }}*</strong> </label>
+                            <input type="number" name="conversion" class="form-control @error('conversion')
+                                        is-invalid
+                                    @enderror" id="conversion" value="{{ old('conversion', @$goldContentConversion->gold_content) }}">
+                            @error('conversion')
+                            <small class="text-danger text-sm">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>{{ __('file.Result Conversion') }}*</strong> </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">±</div>
+                                </div>
+                                <input type="text" name="result" class="form-control @error('result')
+                                        is-invalid
+                                    @enderror" id="result" value="{{ old('result', str_replace('± ','',@$goldContentConversion->result)) }}">
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>{{ __('file.Description') }} *</strong> </label>

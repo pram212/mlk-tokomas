@@ -1975,7 +1975,7 @@ class SaleController extends Controller
         $tagTypeId = $product->tag_type_id;
 
         $conversion = GoldContentConvertion::where([
-            ['tag_types_id', $tagTypeId],
+            // ['tag_types_id', $tagTypeId],
             ['gold_content', $goldContent]
         ])
             ->with('tag_type')
