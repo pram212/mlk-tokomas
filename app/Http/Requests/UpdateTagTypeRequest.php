@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\GoldContentConvertion;
 use App\TagType;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -45,8 +46,15 @@ class UpdateTagTypeRequest extends FormRequest
                     ->where('id', '!=', $id)
                     ->first();
 
+            $isConversionExist = GoldContentConvertion::where('gold_content', $this->conversion)
+                    ->where('tag_types_id', '!=', $id)
+                    ->first();
+
             if ($isTagTypeExist) {
                 $validator->errors()->add('duplicate_data', 'Failed! TagType is already exist!');
+            }
+            if ($isConversionExist) {
+                $validator->errors()->add('duplicate_data', 'Failed! Gold Conversion / Konversi Emas is already exist!');
             }
         });
     }

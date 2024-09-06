@@ -628,6 +628,8 @@ return [
     "Gold Price" => "Gold Price",
     "Additional Code" => "Additional Cod",
     "Gold Content" => "Gold Content",
+    "Gold Conversion" => "Gold Conversion",
+    "Result Conversion" => "Result Conversion",
     "Carat" => "Carat",
     "Type category name" => "Type category name",
     "Tag Type" => "Tag Type",

@@ -337,6 +337,7 @@
                                     -Timbang Ulang <br>
                                     {{ $goldContentConversion }}
                                     <br>
+                                    <br>
                                     <ul class="promo-thr">
                                         <li>H : {{ number_format($pricePerGram,2) }}/Gram</li>
                                     </ul>
