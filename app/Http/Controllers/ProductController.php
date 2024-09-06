@@ -738,18 +738,25 @@ class ProductController extends Controller
             $statusIds = $request->get('status_ids');
             $productQuery->whereIn(DB::raw('COALESCE(split.product_status, products.product_status)'), explode(',', $statusIds));
         }
-        // query untuk by produk status hanya by status STORE
-        $productQuery->where(DB::raw('COALESCE(split.product_status, products.product_status)'), 1);
-        // query untuk role sales dan cashier by warehouse id
-        $warehouse_id = Auth::user()->warehouse_id; // get warehouse from user
-        $role_id = Auth::user()->role_id;
+        // check jika menu product stock
+        // maka query untuk by produk status hanya by status STORE
+        $currenturl = url()->previous();
+        $jikaMenuStock = str_contains($currenturl, 'product_stock');
+        if($jikaMenuStock) {// (STOK PRODUCT)
+            $productQuery->where(DB::raw('COALESCE(split.product_status, products.product_status)'), 1);
+             // query untuk role sales dan cashier by warehouse id
+            $warehouse_id = Auth::user()->warehouse_id; // get warehouse from user
+            $role_id = Auth::user()->role_id;
 
-        $getRole = DB::table('roles')->where('id', '=', $role_id)->first();
-        $nameRole = $getRole->name;
-        // jika role sales dan cashier maka filter by warehouse
-        // jika management maka tampil semua by status STORE
-        if($nameRole == 'Cashier' || $nameRole == 'Sales') {
-            $productQuery->where('product_warehouse.warehouse_id', $warehouse_id);
+            $getRole = DB::table('roles')->where('id', '=', $role_id)->first();
+            $nameRole = $getRole->name;
+            // jika role sales dan cashier maka filter by warehouse
+            // jika management maka tampil semua by status STORE
+            if($nameRole == 'Cashier' || $nameRole == 'Sales') {
+                $productQuery->where('product_warehouse.warehouse_id', $warehouse_id);
+            }
+        } else { // (PRODUCT)(NO VALIDASI) jika tidak maka query untuk by produk all status
+
         }
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
