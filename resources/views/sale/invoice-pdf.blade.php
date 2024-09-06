@@ -350,7 +350,8 @@
                             </td>
                             <td class="title" style="vertical-align: top;font-weight:bold;" colspan="2">
                                 <ul>
-                                    <li> Kadar :</li>
+                                    <li> Kadar : {{ $data->productSales[0]->product->gold_content }}</li>
+
                                     <li>Deskripsi Barang : {{$data->productSales[0]->product->name.'
                                         ('.($data->productSales[0]->productSplitSetDetail ?
                                         $data->productSales[0]->productSplitSetDetail->split_set_code :
@@ -367,7 +368,7 @@
                                         </sup><span>gram</span>
                                     </h1>
                                 </div>
-                                <div class="sifat-barang">
+                                <div class="sifat-barang" style="margin-right: 100px; font-size: 40px;">
                                     {{ $sifatBarang }}
                                 </div>
 

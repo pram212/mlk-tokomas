@@ -12,36 +12,32 @@
                     </select>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <div class="table-responsive">
-                        <table id="product-data-table" class="table" style="width: 100%">
-                            <thead>
-                                <tr>
-                                    <th class="not-exported"></th>
-                                    {{-- <th>Barcode</th> --}}
-                                    <th>{{ trans('file.Code') }}</th>
-                                    <th>{{ __('file.Product Name') }}</th>
-                                    <th>{{ __('file.Product Image') }}</th>
-                                    <th>{{ __('file.Warehouse') }}</th>
-                                    <th>{{ __('file.Date') }}</th>
-                                    <th>{{ trans('file.Price') }}</th>
-                                    <th>{{ __('file.Tag Type Code') }}</th>
-                                    <th>{{ __('file.Color') }}</th>
-                                    <th>Miligram</th>
-                                    <th>Gramasi</th>
-                                    <th>{{ __('file.Product Property') }}</th>
-                                    <th>{{ __('file.Product Status') }}</th>
-                                    <th>{{ __('file.Invoice') }}</th>
-
-                                </tr>
-                            </thead>
-
-                        </table>
-                    </div>
-                </div>
-            </div>
         </div>
+    </div>
+    <div class="table-responsive">
+        <table id="product-data-table" class="table" style="width: 100%">
+            <thead>
+                <tr>
+                    <th class="not-exported"></th>
+                    {{-- <th>Barcode</th> --}}
+                    <th>{{ trans('file.Code') }}</th>
+                    <th>{{ __('file.Product Name') }}</th>
+                    <th>{{ __('file.Product Image') }}</th>
+                    <th>{{ __('file.Warehouse') }}</th>
+                    <th>{{ __('file.Date') }}</th>
+                    <th>{{ trans('file.Price') }}</th>
+                    <th>{{ __('file.Tag Type Code') }}</th>
+                    <th>{{ __('file.Color') }}</th>
+                    <th>Miligram</th>
+                    <th>Gramasi</th>
+                    <th>{{ __('file.Product Property') }}</th>
+                    <th>{{ __('file.Product Status') }}</th>
+                    <th>{{ __('file.Invoice') }}</th>
+
+                </tr>
+            </thead>
+
+        </table>
     </div>
 </section>
 

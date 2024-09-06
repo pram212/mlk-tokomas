@@ -320,7 +320,9 @@ class saleController extends Controller
                 'qty' => $qty ?? 0,
                 'sale_unit_id' => $product->sale_unit_id ?? null,
                 'net_unit_price' => $net_unit_price ?? 0,
-                'discount' => (($product->discount * 1000) * ($gramasi + ($miligram / 1000))) ?? 0,
+                // 'discount' => (($product->discount * 1000) * ($gramasi + ($miligram / 1000))) ?? 0,
+                // dikomen karena kondisi potongan tidak perlu dikalikan ke gramasi dan miligram dulu
+                'discount' => ($product->discount * 1000) ?? 0,
                 'sale_unit_id' => 0,
                 'tax_rate' => 0,
                 'tax' => 0,
