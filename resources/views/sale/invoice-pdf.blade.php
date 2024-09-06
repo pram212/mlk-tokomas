@@ -321,13 +321,13 @@
                     <tbody>
                         <tr>
                             <td class="center" style="height:200px;">
-                                {{-- @php
+                                @php
                                 $gambar_produk = $data->productSales[0]->product->image ?? '';
                                 @endphp
                                 @if($gambar_produk != '')
                                 <img src="data:image/png;base64,{{ base64_encode(file_get_contents($gambar_produk)) }}"
                                     width="200px" alt="">
-                                @endif --}}
+                                @endif
 
                                 <span id="nota-penjualan">{{ $data->sale_note }}</span>
                             </td>
