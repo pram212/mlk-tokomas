@@ -1950,7 +1950,9 @@ class SaleController extends Controller
         $potongan = $this->getDiscount($data);
         $gramasi = formatNumber(getValueOrFallback($productSplitSetDetail, $product->gramasi, 'gramasi'));
         $miligram = formatNumber(getValueOrFallback($productSplitSetDetail, $product, 'mg'));
-        $sifatBarang = $product->productProperty->code . " (" . $product->productProperty->description . ")";
+        // Dicomment karena menampilkan hanya kode sifat barang yang ditampikan
+        // $sifatBarang = $product->productProperty->code . " (" . $product->productProperty->description . ")";
+        $sifatBarang = $product->productProperty->code;
 
         return compact('data', 'numberInWords', 'goldContentConversion', 'totalPrice', 'potongan', 'invoice_setting', 'pricePerGram', 'gramasi', 'miligram', 'sifatBarang');
     }
