@@ -239,14 +239,29 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>{{ trans('file.Product Price') }} *</strong> </label>
-                                                        <input type="text" id="price" name="price" @if($mode=='show' )
+                                                        <div class="input-group">
+                                                            <input type="text" id="price" name="price" @if($mode=='show' )
                                                             readonly @endif class="form-control" step="any"
                                                             value="{{ @$product->product_warehouse->price ?? '' }}"
                                                             readonly>
-                                                        @error('price')
+                                                            @error('price')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                            <span class="validation-msg"></span>
+                                                            <div class="input-group-prepend">
+                                                                <div class="input-group-text">/ gram</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>{{ __('file.Total Price') }} *</strong> </label>
+                                                        <input type="text" class="form-control" name="total_price" id="total_price"
+                                                            value="{{ @$product->total_price ?? '' }}" readonly>
+                                                        @error('total_price')
                                                         <span class="text-danger">{{ $message }}</span>
                                                         @enderror
-                                                        <span class="validation-msg"></span>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -449,6 +464,8 @@
     const $image_preview = $('#image-preview');
     const $product_property_id = $('#input-kd-sifat');
     const price_col = $('#price');
+    const price_total = $('#total_price');
+    const $prev_diskon = $('#prev-diskon');
     const input_split_type = $('#input-split-type');
     const detail_split_set = $('#detail_split_set');
     const genbutton = $('#genbutton');

@@ -73,4 +73,10 @@ class PromoController extends Controller
 
         return response()->json(['success' => "Promo deleted successfully."]);
     }
+    public function getPromoProduct($product_properties_id)
+    {
+        $price = Promo::where('product_properties_id', $product_properties_id)->first();
+
+        return response()->json($price);
+    }
 }
