@@ -620,6 +620,7 @@ return [
     "Gramasi Code" => "Kode Gramasi",
     "Add Product" => "Tambah Produk",
     "Add Price" => "Tambah Harga",
+    "Total Price" => "Total Harga",
     "Created At" => "Dibuat Pada",
     "Updated At" => "Diubah Pada",
     "Created By" => "Dibuat Oleh",

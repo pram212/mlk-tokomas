@@ -52,6 +52,7 @@ return [
     'Sale' => 'Sale',
     'Purchase' => 'Purchase',
     'Cost' => 'Cost',
+    "Total Price" => "Total Price",
     'Alert' => 'Alert',
     'Promotional Price' => 'Promotional Price',
     'Promotion' => 'Promotion',
