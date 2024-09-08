@@ -520,6 +520,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
         Route::post('price-multi-delete', 'PriceController@destroyMultiple');
         Route::get('price-datatable', 'PriceController@priceData');
         Route::get('price-getProductPrice/{category_id}/{product_type_id}/{product_property_id}', 'PriceController@getProductPrice');
+        Route::get('promo-getPromo/{product_property_id}', 'PromoController@getPromoProduct');
         Route::resource("/price", 'PriceController');
     });
 
