@@ -201,6 +201,7 @@ class ProductController extends Controller
     {
         $product = Product::find($id)->load([
             'productProperty:id,code,description',
+            'productWarehouse',
             'gramasi:id,code,gramasi',
             'tagType:id,code,color',
             'category'
