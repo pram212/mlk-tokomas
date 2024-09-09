@@ -17,6 +17,7 @@ use App\TagType;
 use App\PriceProductPropertyDetail;
 use App\ProductType;
 use App\Helpers\ResponseHelpers;
+use App\Product;
 
 class PriceController extends Controller
 {
@@ -242,5 +243,13 @@ class PriceController extends Controller
         $product_property_price = PriceProductPropertyDetail::where('price_id', $price[0]->id)->where('product_property_id', $product_property_id)->first();
 
         return response()->json($product_property_price);
+    }
+
+    public function getTotalPriceProduct($product_code) {
+        $TotalPriceByCode = Product::where('code', '=', $product_code)->first();
+
+        $getTotalPrice = $TotalPriceByCode->total_price;
+
+        return response()->json($getTotalPrice);
     }
 }
