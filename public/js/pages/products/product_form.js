@@ -542,11 +542,16 @@ $("#input-mg").bind("input", function (e) {
     const valGramasi = $text_gramasi_id.html();
     const price = price_col.val();
 
-    const countTotalPrice = (price * valGramasi) + ( price / 1000  * mg);
 
-    localStorage.setItem('price_total_sementara', countTotalPrice)
+    if(mg === "") {
+        price_total.val("")
+    } else {
+        const countTotalPrice = (price * valGramasi) + ( price / 1000  * mg);
 
-    price_total.val(countTotalPrice)
+        localStorage.setItem('price_total_sementara', countTotalPrice)
+
+        price_total.val(countTotalPrice)
+    }
 
     $("#prev-mg").text(mg);
 });
@@ -568,40 +573,44 @@ $("#input-diskon").bind("input", function (e) {
     e.preventDefault();
     const diskon = e.target.value;
     $("#prev-diskon").text(diskon);
+    getTotalPrice(diskon)
+});
 
+function getTotalPrice(diskon) {
+     // fungsi get total price
 
-    // fungsi get total price
+     const propertyId = $product_property_id.val();
 
-    const propertyId = $product_property_id.val();
-    $.ajax({
+     $.ajax({
         type: "GET",
         url:
             baseUrl +
             "/master/promo-getPromo/" +
             propertyId,
         success: function (data) {
-            if (data) {
-                let promoValue = data.discount
-                const getTotalSementara = localStorage.getItem('price_total_sementara');
-                let summingTotalPrice = parseFloat(getTotalSementara) || 0;
+            const getTotalSementara = localStorage.getItem('price_total_sementara');
 
-                if(promoValue) {
-                    const totalPriceAll = summingTotalPrice - (diskon - promoValue );
+            if(diskon === "") {
+                price_total.val(getTotalSementara);
+            } else {
+                if (data) {
+                    let promoValue = data.discount
+                    let summingTotalPrice = parseFloat(getTotalSementara) || 0;
 
-                    console.log('total price 1 :', summingTotalPrice);
-                    console.log('potongan', diskon);
-                    console.log('promo', promoValue);
-                    console.log('hasil : ', totalPriceAll);
-                    price_total.val(totalPriceAll);
+                    if(promoValue) {
+                        const totalPriceAll = summingTotalPrice - (diskon - promoValue );
 
-                } else {
-                    price_total.val(summingTotalPrice);
+                        price_total.val(totalPriceAll);
+
+                    } else {
+                        price_total.val(getTotalSementara);
+                    }
                 }
             }
+
         },
     });
-
-});
+}
 
 // if edit mode
 if (produk) {
