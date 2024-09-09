@@ -571,7 +571,7 @@ $(document).ready(function () {
         $.get(baseUrl + "/products/getDetailById" + "/" + id, function (data) {
             // isi inputan yang ada di modal box detail product
             $("#dtl-code").val(data.code);
-            $("#dtl-price").val(data.price);
+            $("#dtl-price").val(data.product_warehouse[0]?.price);
             $("#dtl-tag-code").val(data.tag_type?.code);
             $("#dtl-gramasi-code").val(data.gramasi?.code);
             $("#dtl-discount").val(data.discount);

@@ -529,6 +529,7 @@ function prevGramasi(id) {
 
 $("#input-kd-sifat").change(function (e) {
     e.preventDefault();
+    console.log('input kd sifat');
     id = parseInt(e.target.value);
     const property = getKdSifat(id);
     $("#prev-kd-sifat").text(property);
@@ -537,12 +538,15 @@ $("#input-kd-sifat").change(function (e) {
 $("#input-mg").bind("input", function (e) {
     e.preventDefault();
     const mg = e.target.value;
+    console.log('mg:', mg)
 
     // getTotalPrice(mg)
     const valGramasi = $text_gramasi_id.html();
     const price = price_col.val();
 
     const summingTotalPrice = (price * valGramasi) + ( price / 1000  * mg);
+    console.log('summing :', summingTotalPrice)
+
     price_total.val(summingTotalPrice)
     $("#prev-mg").text(mg);
 });
@@ -559,10 +563,13 @@ $("#input-additional_code").bind("input", function (e) {
     $("#prev-additional_code").text(code);
 });
 
+
 $("#input-diskon").bind("input", function (e) {
     e.preventDefault();
     const diskon = e.target.value;
     $("#prev-diskon").text(diskon);
+
+    console.log('input diskon', diskon)
 
     // fungsi get total price
 
