@@ -573,44 +573,45 @@ $("#input-diskon").bind("input", function (e) {
     e.preventDefault();
     const diskon = e.target.value;
     $("#prev-diskon").text(diskon);
-    getTotalPrice(diskon)
+    // getTotalPrice(diskon)
 });
 
-function getTotalPrice(diskon) {
-     // fungsi get total price
+// comment karena total potongan tidak dihitung di total harga dan diubah tidak mandatory
+// function getTotalPrice(diskon) {
+//      // fungsi get total price
 
-     const propertyId = $product_property_id.val();
+//      const propertyId = $product_property_id.val();
 
-     $.ajax({
-        type: "GET",
-        url:
-            baseUrl +
-            "/master/promo-getPromo/" +
-            propertyId,
-        success: function (data) {
-            const getTotalSementara = localStorage.getItem('price_total_sementara');
+//      $.ajax({
+//         type: "GET",
+//         url:
+//             baseUrl +
+//             "/master/promo-getPromo/" +
+//             propertyId,
+//         success: function (data) {
+//             const getTotalSementara = localStorage.getItem('price_total_sementara');
 
-            if(diskon === "") {
-                price_total.val(getTotalSementara);
-            } else {
-                if (data) {
-                    let promoValue = data.discount
-                    let summingTotalPrice = parseFloat(getTotalSementara) || 0;
+//             if(diskon === "") {
+//                 price_total.val(getTotalSementara);
+//             } else {
+//                 if (data) {
+//                     let promoValue = data.discount
+//                     let summingTotalPrice = parseFloat(getTotalSementara) || 0;
 
-                    if(promoValue) {
-                        const totalPriceAll = summingTotalPrice - (diskon - promoValue );
+//                     if(promoValue) {
+//                         const totalPriceAll = summingTotalPrice - (diskon - promoValue );
 
-                        price_total.val(totalPriceAll);
+//                         price_total.val(totalPriceAll);
 
-                    } else {
-                        price_total.val(getTotalSementara);
-                    }
-                }
-            }
+//                     } else {
+//                         price_total.val(getTotalSementara);
+//                     }
+//                 }
+//             }
 
-        },
-    });
-}
+//         },
+//     });
+// }
 
 // if edit mode
 if (produk) {
