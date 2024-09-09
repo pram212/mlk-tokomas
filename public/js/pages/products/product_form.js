@@ -523,13 +523,9 @@ function prevGramasi(id) {
 }
 
 // fungsi get total price
-function getTotalPrice(mg) {
-    const valGramasi = $text_gramasi_id.html();
-    const price = price_col.val();
+// function getTotalPrice(mg) {
 
-    const summingTotalPrice = (price * valGramasi) + ( price / 1000  * mg);
-    price_total.val(summingTotalPrice)
-}
+// }
 
 $("#input-kd-sifat").change(function (e) {
     e.preventDefault();
@@ -542,7 +538,12 @@ $("#input-mg").bind("input", function (e) {
     e.preventDefault();
     const mg = e.target.value;
 
-    getTotalPrice(mg)
+    // getTotalPrice(mg)
+    const valGramasi = $text_gramasi_id.html();
+    const price = price_col.val();
+
+    const summingTotalPrice = (price * valGramasi) + ( price / 1000  * mg);
+    price_total.val(summingTotalPrice)
     $("#prev-mg").text(mg);
 });
 
