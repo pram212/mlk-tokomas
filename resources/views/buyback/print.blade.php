@@ -335,30 +335,34 @@
                 <table>
                     <tbody>
                     <div class="row mt-3" >
-                            <div class="col-md-6" style="position: absolute; left: 0px;">
+                            <div class="col-md-6" style="position: absolute; left: 0px">
                                 <table>
                                     <tr>
-                                        <td>Deskripsi</td>
+                                        <td style="font-size: 18px;">Deskripsi</td>
                                         <td>:</td>
                                         <td> ( {{ $data['product']['code'] }} ) - {{ $data['product']['name']}}</td>
                                     </tr>
+                                    <br>
                                     <tr>
-                                        <td>Harga Awal</td>
-                                        <td>:</td>
-                                        <td>Rp. {{ $hargaAwal }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Keterangan</td>
+                                        <td style="font-size: 18px;">Keterangan</td>
                                         <td>:</td>
                                         <td> {{ $data['buyback_desc']}}</td>
                                     </tr>
+                                    <br>
                                     <tr>
-                                        <td>Totalnya potongan</td>
+                                        <td style="font-size: 18px;">Harga Awal</td>
+                                        <td>:</td>
+                                        <td>Rp. {{ $hargaAwal }}</td>
+                                    </tr>
+                                    <br>
+                                    <tr>
+                                        <td style="font-size: 18px;">Totalnya potongan</td>
                                         <td>:</td>
                                         <td>Rp. {{ $totalPotongan  }}</td>
                                     </tr>
+                                    <br>
                                     <tr>
-                                        <td>Totalnya Buyback</td>
+                                        <td style="font-size: 18px;">Totalnya Buyback</td>
                                         <td>:</td>
                                         <td>Rp. {{ $harga }}</td>
                                     </tr>
@@ -373,8 +377,8 @@
                                 </span>
                             </div>
                             <div style="right:0px; position:absolute; margin-top: 70px;">
-                                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(@$data['product']['image'])) }}"
-                                width="280px" height="200px" alt="">
+                                {{-- <img src="data:image/png;base64,{{ base64_encode(file_get_contents(@$data['product']['image'])) }}"
+                                width="280px" height="200px" alt=""> --}}
                             </div>
                         </tr>
                         </table>
