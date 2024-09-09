@@ -542,9 +542,10 @@ $("#input-mg").bind("input", function (e) {
     const valGramasi = $text_gramasi_id.html();
     const price = price_col.val();
 
-    const summingTotalPrice = (price * valGramasi) + ( price / 1000  * mg);
+    const countTotalPrice = (price * valGramasi) + ( price / 1000  * mg);
 
-    price_total.val(summingTotalPrice)
+    localStorage.setItem('price_total_sementara', countTotalPrice)
+
     $("#prev-mg").text(mg);
 });
 
@@ -579,7 +580,8 @@ $("#input-diskon").bind("input", function (e) {
         success: function (data) {
             if (data) {
                 let promoValue = data.discount
-                let summingTotalPrice = parseFloat(price_total.val()) || 0;
+                const getTotalSementara = localStorage.getItem('price_total_sementara');
+                let summingTotalPrice = parseFloat(getTotalSementara) || 0;
 
                 if(promoValue) {
                     const totalPriceAll = summingTotalPrice - (diskon - promoValue );
