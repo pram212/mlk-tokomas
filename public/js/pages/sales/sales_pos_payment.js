@@ -373,12 +373,37 @@ function removePaymentMethod() {
 function updatePaymentInfo() {
     const grand_total = calculateGrandTotal();
 
+    const productCode = localStorage.getItem('product_code')
+    // const productCode = $product_code_val.val();
+    $.ajax({
+        type: "GET",
+        url:
+            baseUrl +
+            "/master/getTotalPriceProduct/" +
+            productCode,
+        success: function (data) {
+            if (data) {
+                $paid_amount.val(data);
+            } else {
+                $paid_amount.val(0);
+            }
+        },
+    });
     $paying_amount.val(formatMoney(grand_total));
-    $paid_amount.val(formatMoney(grand_total));
+    // $paid_amount.val(formatMoney(total_price));
     $payment_discount.val(
         formatMoney(calculateDiscountPercent() + calculateCouponDiscount())
     );
     $payment_change.val(formatMoney(0));
+
+    // console.log('warehouse', warehouse_id);
+    // console.log('customer', customer_id);
+    // console.log('cashier', cashier_id);
+
+    // console.log('payingamount', $paying_amount.val());
+    // console.log('paidamount', $paid_amount.val());
+    // console.log('payment_discount', $payment_discount.val());
+
 }
 
 function calculateChange() {
