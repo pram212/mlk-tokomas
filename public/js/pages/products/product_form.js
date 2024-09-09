@@ -498,6 +498,7 @@ $(window).keydown(function (e) {
 });
 
 $("#price").maskMoney({ thousands: ".", decimal: "," });
+$("#total_price").maskMoney({ thousands: ".", decimal: "," });
 
 const getGramasi = (id_gramasi) => {
     const selectedGramasi = gramasis.find(({ id }) => id === id_gramasi);
@@ -529,7 +530,6 @@ function prevGramasi(id) {
 
 $("#input-kd-sifat").change(function (e) {
     e.preventDefault();
-    console.log('input kd sifat');
     id = parseInt(e.target.value);
     const property = getKdSifat(id);
     $("#prev-kd-sifat").text(property);
@@ -538,16 +538,22 @@ $("#input-kd-sifat").change(function (e) {
 $("#input-mg").bind("input", function (e) {
     e.preventDefault();
     const mg = e.target.value;
-    console.log('mg:', mg)
 
     // getTotalPrice(mg)
     const valGramasi = $text_gramasi_id.html();
     const price = price_col.val();
 
-    const summingTotalPrice = (price * valGramasi) + ( price / 1000  * mg);
-    console.log('summing :', summingTotalPrice)
 
-    price_total.val(summingTotalPrice)
+    if(mg === "") {
+        price_total.val("")
+    } else {
+        const countTotalPrice = (price * valGramasi) + ( price / 1000  * mg);
+
+        localStorage.setItem('price_total_sementara', countTotalPrice)
+
+        price_total.val(countTotalPrice)
+    }
+
     $("#prev-mg").text(mg);
 });
 
@@ -568,37 +574,45 @@ $("#input-diskon").bind("input", function (e) {
     e.preventDefault();
     const diskon = e.target.value;
     $("#prev-diskon").text(diskon);
-
-    console.log('input diskon', diskon)
-
-    // fungsi get total price
-
-    const propertyId = $product_property_id.val();
-    console.log('propertyId',propertyId )
-    $.ajax({
-        type: "GET",
-        url:
-            baseUrl +
-            "/master/promo-getPromo/" +
-            propertyId,
-        success: function (data) {
-            if (data) {
-                let promoValue = data.discount
-                let summingTotalPrice = parseFloat(price_total.val()) || 0;
-
-                if(promoValue) {
-                    const totalPriceAll = summingTotalPrice - (diskon - promoValue );
-
-                    price_total.val(totalPriceAll);
-
-                } else {
-                    price_total.val(summingTotalPrice);
-                }
-            }
-        },
-    });
-
+    // getTotalPrice(diskon)
 });
+
+// comment karena total potongan tidak dihitung di total harga dan diubah tidak mandatory
+// function getTotalPrice(diskon) {
+//      // fungsi get total price
+
+//      const propertyId = $product_property_id.val();
+
+//      $.ajax({
+//         type: "GET",
+//         url:
+//             baseUrl +
+//             "/master/promo-getPromo/" +
+//             propertyId,
+//         success: function (data) {
+//             const getTotalSementara = localStorage.getItem('price_total_sementara');
+
+//             if(diskon === "") {
+//                 price_total.val(getTotalSementara);
+//             } else {
+//                 if (data) {
+//                     let promoValue = data.discount
+//                     let summingTotalPrice = parseFloat(getTotalSementara) || 0;
+
+//                     if(promoValue) {
+//                         const totalPriceAll = summingTotalPrice - (diskon - promoValue );
+
+//                         price_total.val(totalPriceAll);
+
+//                     } else {
+//                         price_total.val(getTotalSementara);
+//                     }
+//                 }
+//             }
+
+//         },
+//     });
+// }
 
 // if edit mode
 if (produk) {
