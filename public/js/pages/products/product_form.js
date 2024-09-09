@@ -546,6 +546,8 @@ $("#input-mg").bind("input", function (e) {
 
     localStorage.setItem('price_total_sementara', countTotalPrice)
 
+    price_col.val(countTotalPrice)
+
     $("#prev-mg").text(mg);
 });
 
