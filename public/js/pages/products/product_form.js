@@ -498,6 +498,7 @@ $(window).keydown(function (e) {
 });
 
 $("#price").maskMoney({ thousands: ".", decimal: "," });
+$("#total_price").maskMoney({ thousands: ".", decimal: "," });
 
 const getGramasi = (id_gramasi) => {
     const selectedGramasi = gramasis.find(({ id }) => id === id_gramasi);
