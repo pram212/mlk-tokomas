@@ -4,6 +4,7 @@ return [
     'language' => 'Language',
     'revenue' => 'Revenue',
     'product' => 'Product',
+    'Master' => 'Master',
     'category' => 'Category',
     'sub category' => 'Sub Category',
     'product_list' => 'Product List',

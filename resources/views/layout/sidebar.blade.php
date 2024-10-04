@@ -17,10 +17,12 @@
                     'category*','promo*') ?
                     'true' : 'false';
                     @endphp
+                    @can('parentView', App\Master::class)
                     <a href="#productcategory" data-toggle="collapse"
                         aria-expanded="{{ $requestIsOnProductCategoryMenu }}">
                         <i class="dripicons-card"></i><span>Master</span>
                     </a>
+                    @endcan
 
                     <ul id="productcategory"
                         class="collapse list-unstyled @if ($requestIsOnProductCategoryMenu === 'true') show @endif">
@@ -30,30 +32,47 @@
                         </li>
                         @endcan
 
-                        <li id="productcategory-list-menu"
-                            class="@if (request()->is('product-categories/tagtype*')) active @endif">
-                            <a href="{{ route('product-categories.tagtype.index') }}">{{ __('file.Tagging Type') }}</a>
-                        </li>
-                        <li id="productcategory-list-menu"
+                        @can('taggingType', App\Master::class)
+                            <li id="productcategory-list-menu"
+                                class="@if (request()->is('product-categories/tagtype*')) active @endif">
+                                <a href="{{ route('product-categories.tagtype.index') }}">{{ __('file.Tagging Type') }}</a>
+                            </li>
+                        @endcan
+
+                        @can('productProperty', App\Master::class)
+                            <li id="productcategory-list-menu"
                             class="@if (request()->is('product-categories/productproperty*')) active @endif">
                             <a href="{{ route('product-categories.productproperty.index') }}">
                                 {{ __('file.Product Property') }}</a>
-                        </li>
+                            </li>
+                        @endcan
+
+                        @can('productType', App\Master::class)
                         <li id="productcategory-list-menu"
                             class="@if (request()->is('product-categories/producttype*')) active @endif">
                             <a href="{{ route('product-categories.producttype.index') }}">{{ __('file.Product Type')
                                 }}</a>
                         </li>
+                        @endcan
+
+                        @can('gramasi', App\Master::class)
                         <li id="productcategory-list-menu"
                             class="@if (request()->is('product-categories/gramasi*')) active @endif">
                             <a href="{{ route('product-categories.gramasi.index') }}">{{ __('file.Gramasi List') }}</a>
                         </li>
+                        @endcan
+
+                        @can('price', App\Master::class)
                         <li id="price-list-menu" class="@if (request()->is('master/price*')) active @endif">
                             <a href="{{ route('master.price.index') }}">{{ __('file.Price') }}</a>
                         </li>
+                        @endcan
+
+                        @can('promo', App\Master::class)
                         <li id="promo" class="@if (request()->is('promo*')) active @endif">
                             <a href="{{ url('promo') }}">{{ __('file.promo') }}</a>
                         </li>
+                        @endcan
 
                     </ul>
                 </li>
@@ -88,9 +107,11 @@
                     ? 'true'
                     : 'false';
                     @endphp
-                    <a href="#product" data-toggle="collapse" aria-expanded="{{ $requestIsOnProductMenu }}">
+                    @can('parentView', App\Product::class)
+                    <a href="#sale" aria-expanded="{{ $requestIsOnProductMenu }}" data-toggle="collapse">
                         <i class="dripicons-list"></i><span>{{ __('file.product') }}</span><span>
                     </a>
+                    @endcan
                     <ul id="product"
                         class="collapse list-unstyled @if ($requestIsOnProductMenu === 'true') show @endif">
                         @can('viewAny', App\Category::class)
@@ -131,9 +152,11 @@
                     @php
                     $requestIsOnSalesMenu = request()->is('sales*') ? 'true' : 'false';
                     @endphp
+                    @can('parentView', App\Sale::class)
                     <a href="#sale" aria-expanded="{{ $requestIsOnSalesMenu }}" data-toggle="collapse">
                         <i class="dripicons-cart"></i><span>{{ trans('file.Sale') }}</span>
                     </a>
+                    @endcan
                     <ul id="sale" class="collapse list-unstyled @if ($requestIsOnSalesMenu === 'true') show @endif">
                         @can('viewAny', App\Sale::class)
                         <li id="sale-list-menu" class="@if (request()->is('sales')) active @endif">
@@ -164,8 +187,9 @@
                 @endcan
 
 
+                {{-- HIDE ACM --}}
 
-                @can('viewAny', App\Expense::class)
+                {{-- @can('viewAny', App\Expense::class)
                 <li>
                     @php
                     $requestIsOnExpenseMenu = request()->is('expenses*') ? 'true' : 'false';
@@ -188,9 +212,9 @@
                         @endcan
                     </ul>
                 </li>
-                @endcan
+                @endcan --}}
 
-                @can('viewAny', App\Quotation::class)
+                {{-- @can('viewAny', App\Quotation::class)
                 <li>
                     @php
                     $requestIsOnQuotationMenu = request()->is('quotations*') ? 'true' : 'false';
@@ -211,9 +235,9 @@
                         @endcan
                     </ul>
                 </li>
-                @endcan
+                @endcan --}}
 
-                <li>
+                {{-- <li>
                     @php
                     $requestIsOnTransferMenu = request()->is('transfers*') ? 'true' : 'false';
                     @endphp
@@ -242,9 +266,9 @@
                         @endcan
 
                     </ul>
-                </li>
+                </li> --}}
 
-                <li>
+                {{-- <li>
                     @php
                     $requestIsOnReturnMenu = request()->is('return*') ? 'true' : 'false';
                     @endphp
@@ -268,9 +292,9 @@
                         @endcan
 
                     </ul>
-                </li>
+                </li> --}}
 
-                <li>
+                {{-- <li>
                     @php
                     $requestIsOnAccountingMenu = request()->is('accounts*', 'money-transfers*', 'balancesheet*')
                     ? 'true'
@@ -311,9 +335,9 @@
                         </li>
                         @endcan
                     </ul>
-                </li>
+                </li> --}}
 
-                @if (Auth::user()->role_id != 5)
+                {{-- @if (Auth::user()->role_id != 5)
                 <li>
                     @php
                     $requestIsOnHRMMenu = request()->is(
@@ -362,7 +386,7 @@
 
                     </ul>
                 </li>
-                @endif
+                @endif --}}
 
                 @php
                 $role = DB::table('roles')->find(Auth::user()->role_id);

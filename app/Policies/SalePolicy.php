@@ -17,6 +17,11 @@ class SalePolicy
      * @param  \App\User  $user
      * @return mixed
      */
+    public function parentView(User $user)
+    {
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('sales-parent');
+    }
     public function viewAny(User $user)
     {
         $role = Role::find($user->role_id);

@@ -4,6 +4,7 @@ return [
     "language" => "Bahasa",
     "revenue" => "Pendapatan",
     "product" => "Produk",
+    "Master" => "Master",
     "category" => "Kategori",
     "sub category" => "Sub Kategori",
     "product_list" => "Daftar produk",
