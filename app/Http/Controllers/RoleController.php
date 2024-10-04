@@ -22,10 +22,10 @@ class RoleController extends Controller
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
-    
+
     public function create()
     {
-        
+
     }
 
     public function store(Request $request)
@@ -92,6 +92,87 @@ class RoleController extends Controller
             return redirect()->back()->with('not_permitted', 'This feature is disable for demo!');
 
         $role = Role::firstOrCreate(['id' => $request['role_id']]);
+
+        if($request->has('master-parent')){
+            $permission = Permission::firstOrCreate(['name' => 'master-parent']);
+            if(!$role->hasPermissionTo('master-parent')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('master-parent');
+
+        if($request->has('master-tagging')){
+            $permission = Permission::firstOrCreate(['name' => 'master-tagging']);
+            if(!$role->hasPermissionTo('master-tagging')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('master-tagging');
+
+        if($request->has('master-product-property')){
+            $permission = Permission::firstOrCreate(['name' => 'master-product-property']);
+            if(!$role->hasPermissionTo('master-product-property')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('master-product-property');
+
+        if($request->has('master-product-tipe')){
+            $permission = Permission::firstOrCreate(['name' => 'master-product-tipe']);
+            if(!$role->hasPermissionTo('master-product-tipe')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('master-product-tipe');
+
+        if($request->has('master-gramasi')){
+            $permission = Permission::firstOrCreate(['name' => 'master-gramasi']);
+            if(!$role->hasPermissionTo('master-gramasi')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('master-gramasi');
+
+        if($request->has('master-price')){
+            $permission = Permission::firstOrCreate(['name' => 'master-price']);
+            if(!$role->hasPermissionTo('master-price')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('master-price');
+
+        if($request->has('master-promo')){
+            $permission = Permission::firstOrCreate(['name' => 'master-promo']);
+            if(!$role->hasPermissionTo('master-promo')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('master-promo');
+
+        if($request->has('products-parent')){
+            $permission = Permission::firstOrCreate(['name' => 'products-parent']);
+            if(!$role->hasPermissionTo('products-parent')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('products-parent');
+
+        if($request->has('sales-parent')){
+            $permission = Permission::firstOrCreate(['name' => 'sales-parent']);
+            if(!$role->hasPermissionTo('sales-parent')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('sales-parent');
 
         if($request->has('products-index')){
             $permission = Permission::firstOrCreate(['name' => 'products-index']);

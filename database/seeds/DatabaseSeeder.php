@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             PaymentMethodSeeder::class,
             RolesPermissionSedeer::class,
             UsersSedeer::class,
+            RolePermissionMasterAndParentSeeder::class,
         ]);
     }
 }
