@@ -68,6 +68,7 @@ $(function () {
             const product_id = ui.item.value;
             addProductToCart(product_id);
 
+            localStorage.setItem('product_code', product_id);
             // clear search box
             $search_box_product.val("");
             return false;
