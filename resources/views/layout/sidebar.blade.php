@@ -82,11 +82,14 @@
                     @php
                     $requestIsProductStockMenu = request()->is('product_stock*') ? 'true' : 'false';
                     @endphp
+
+                    @can('parentView', App\ProductStock::class)
                     <a href="#stock" aria-expanded="{{ $requestIsProductStockMenu }}" data-toggle="collapse">
                         <i class="dripicons-document-remove"></i><span>{{ trans('file.product_stock') }}</span>
                     </a>
+                    @endcan
                     <ul id="stock" class="collapse list-unstyled @if ($requestIsProductStockMenu === 'true') show @endif">
-                        @can('viewAny', App\Product::class)
+                        @can('productStock', App\ProductStock::class)
                         <li @if (request()->is('product')) active @endif>
                             <a href="{{ route('product_stock.index')}}">{{ trans('file.product_stock') }}</a>
                         </li>
@@ -403,9 +406,11 @@
                     ? 'true'
                     : 'false';
                     @endphp
-                    <a href="#people" aria-expanded="{{ $requestIsOnPeopleMenu }}" data-toggle="collapse">
-                        <i class="dripicons-user"></i><span>{{ trans('file.People') }}</span>
-                    </a>
+                    @can('parentView', App\User::class)
+                        <a href="#people" aria-expanded="{{ $requestIsOnPeopleMenu }}" data-toggle="collapse">
+                            <i class="dripicons-user"></i><span>{{ trans('file.People') }}</span>
+                        </a>
+                    @endcan
                     <ul id="people" class="collapse list-unstyled @if ($requestIsOnPeopleMenu === 'true') show @endif">
                         @can('viewAny', App\User::class)
                         <li id="user-list-menu" class="@if (request()->is('user/')) active @endif">
@@ -462,9 +467,11 @@
                     @php
                     $requestIsOnReportMenu = request()->is('report*') ? 'true' : 'false';
                     @endphp
-                    <a href="#report" aria-expanded="{{ $requestIsOnReportMenu }}" data-toggle="collapse">
-                        <i class="dripicons-document-remove"></i><span>{{ trans('file.Reports') }}</span>
-                    </a>
+                    @can('parentView', App\Report::class)
+                        <a href="#report" aria-expanded="{{ $requestIsOnReportMenu }}" data-toggle="collapse">
+                            <i class="dripicons-document-remove"></i><span>{{ trans('file.Reports') }}</span>
+                        </a>
+                    @endcan
                     <ul id="report" class="collapse list-unstyled @if ($requestIsOnReportMenu === 'true') show @endif">
                         @can('report', App\Product::class)
                         <li @if (request()->is('report/sale')) active @endif>
