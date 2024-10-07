@@ -667,5 +667,5 @@ return [
     "invoice_setting_logo" => "Logo Invoice",
     "invoice_setting_watermark" => "Watermark Invoice",
     "preview" => "Preview",
-    "product_stock" => "Stok Produk",
+    "product_stock" => "Stock Product",
 ];

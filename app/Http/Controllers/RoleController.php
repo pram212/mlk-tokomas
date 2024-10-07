@@ -156,6 +156,43 @@ class RoleController extends Controller
         else
             $role->revokePermissionTo('master-promo');
 
+        if($request->has('product-stock-parent')){
+            $permission = Permission::firstOrCreate(['name' => 'product-stock-parent']);
+            if(!$role->hasPermissionTo('product-stock-parent')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('product-stock-parent');
+
+        if($request->has('product-stock')){
+            $permission = Permission::firstOrCreate(['name' => 'product-stock']);
+            if(!$role->hasPermissionTo('product-stock')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('product-stock');
+
+        if($request->has('users-parent')){
+            $permission = Permission::firstOrCreate(['name' => 'users-parent']);
+            if(!$role->hasPermissionTo('users-parent')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('users-parent');
+
+        if($request->has('report-parent')){
+            $permission = Permission::firstOrCreate(['name' => 'report-parent']);
+            if(!$role->hasPermissionTo('report-parent')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('report-parent');
+
+
         if($request->has('products-parent')){
             $permission = Permission::firstOrCreate(['name' => 'products-parent']);
             if(!$role->hasPermissionTo('products-parent')){

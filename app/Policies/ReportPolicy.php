@@ -20,6 +20,12 @@ class ReportPolicy
         //
     }
 
+    public function parentView(User $user)
+    {
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('report-parent');
+    }
+
     public function viewProfitLoss(User $user)
     {
         $role = Role::find($user->role_id);

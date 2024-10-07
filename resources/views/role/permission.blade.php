@@ -57,88 +57,193 @@
                                         <span>
                                             <div aria-checked="false" aria-disabled="false">
                                                 <div class="checkbox">
-                                                    @if(in_array("category", $all_permission))
-                                                    <input type="checkbox" value="1" id="category" name="category" checked>
+                                                    @if(in_array("master-parent", $all_permission))
+                                                        @if(in_array("category", $all_permission))
+                                                        <input type="checkbox" value="1" id="category" name="category" checked>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="category" name="category">
+                                                        @endif
+                                                        <label for="category" class="padding05">{{trans('file.Product Category')}} &nbsp;&nbsp;</label>
                                                     @else
-                                                    <input type="checkbox" value="1" id="category" name="category">
+                                                        @if(in_array("category", $all_permission))
+                                                        <input type="checkbox" value="1" id="category" name="category" checked disabled>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="category" name="category" disabled>
+                                                        @endif
+                                                        <label for="category" class="padding05">{{trans('file.Product Category')}} &nbsp;&nbsp;</label>
                                                     @endif
-                                                    <label for="category" class="padding05">{{trans('file.Product Category')}} &nbsp;&nbsp;</label>
                                                 </div>
                                             </div>
                                         </span>
 						                <span>
 						                    <div aria-checked="false" aria-disabled="false">
 								                <div class="checkbox">
-							                    	@if(in_array("master-tagging", $all_permission))
-							                    	<input type="checkbox" value="1" id="master-tagging" name="master-tagging" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="master-tagging" name="master-tagging">
-							                    	@endif
-								                    <label for="master-tagging" class="padding05">{{ __('file.Tagging Type')}} &nbsp;&nbsp;</label>
+                                                    @if(in_array("master-parent", $all_permission))
+                                                        @if(in_array("master-tagging", $all_permission))
+                                                        <input type="checkbox" value="1" id="master-tagging" name="master-tagging" checked>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="master-tagging" name="master-tagging">
+                                                        @endif
+                                                        <label for="master-tagging" class="padding05">{{ __('file.Tagging Type')}} &nbsp;&nbsp;</label>
+                                                    @else
+                                                        @if(in_array("master-tagging", $all_permission))
+                                                        <input type="checkbox" value="1" id="master-tagging" name="master-tagging" checked disabled>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="master-tagging" name="master-tagging" disabled>
+                                                        @endif
+                                                        <label for="master-tagging" class="padding05">{{ __('file.Tagging Type')}} &nbsp;&nbsp;</label>
+                                                    @endif
 								                </div>
 								            </div>
 						                </span>
 						                <span>
 						                    <div aria-checked="false" aria-disabled="false">
 								                <div class="checkbox">
-							                    	@if(in_array("master-product-property", $all_permission))
-							                    	<input type="checkbox" value="1" id="master-product-property" name="master-product-property" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="master-product-property" name="master-product-property">
-							                    	@endif
-								                    <label for="master-product-property" class="padding05">{{__('file.Product Property')}} &nbsp;&nbsp;</label>
+                                                    @if(in_array("master-parent", $all_permission))
+                                                        @if(in_array("master-product-property", $all_permission))
+                                                        <input type="checkbox" value="1" id="master-product-property" name="master-product-property" checked>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="master-product-property" name="master-product-property">
+                                                        @endif
+                                                        <label for="master-product-property" class="padding05">{{__('file.Product Property')}} &nbsp;&nbsp;</label>
+                                                    @else
+                                                        @if(in_array("master-product-property", $all_permission))
+                                                        <input type="checkbox" value="1" id="master-product-property" name="master-product-property" checked disabled>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="master-product-property" name="master-product-property" disabled>
+                                                        @endif
+                                                        <label for="master-product-property" class="padding05">{{__('file.Product Property')}} &nbsp;&nbsp;</label>
+                                                    @endif
 								                </div>
 								            </div>
 						                </span>
 						                <span>
 						                    <div aria-checked="false" aria-disabled="false">
 								                <div class="checkbox">
-							                    	@if(in_array("master-product-tipe", $all_permission))
-							                    	<input type="checkbox" value="1" id="master-product-tipe" name="master-product-tipe" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="master-product-tipe" name="master-product-tipe">
-							                    	@endif
-								                    <label for="master-product-tipe" class="padding05">{{__('file.Product Type')}} &nbsp;&nbsp;</label>
+                                                    @if(in_array("master-parent", $all_permission))
+                                                        @if(in_array("master-product-tipe", $all_permission))
+                                                        <input type="checkbox" value="1" id="master-product-tipe" name="master-product-tipe" checked>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="master-product-tipe" name="master-product-tipe">
+                                                        @endif
+                                                        <label for="master-product-tipe" class="padding05">{{__('file.Product Type')}} &nbsp;&nbsp;</label>
+                                                    @else
+                                                        @if(in_array("master-product-tipe", $all_permission))
+                                                        <input type="checkbox" value="1" id="master-product-tipe" name="master-product-tipe" checked disabled>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="master-product-tipe" name="master-product-tipe" disabled>
+                                                        @endif
+                                                        <label for="master-product-tipe" class="padding05">{{__('file.Product Type')}} &nbsp;&nbsp;</label>
+                                                    @endif
+
 								                </div>
 								            </div>
 						                </span>
 						                <span>
 						                    <div aria-checked="false" aria-disabled="false">
 								                <div class="checkbox">
-							                    	@if(in_array("master-gramasi", $all_permission))
-							                    	<input type="checkbox" value="1" id="master-gramasi" name="master-gramasi" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="master-gramasi" name="master-gramasi">
-							                    	@endif
-								                    <label for="master-gramasi" class="padding05">{{ __('file.Gramasi List')}} &nbsp;&nbsp;</label>
+                                                    @if(in_array("master-parent", $all_permission))
+                                                        @if(in_array("master-gramasi", $all_permission))
+                                                        <input type="checkbox" value="1" id="master-gramasi" name="master-gramasi" checked>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="master-gramasi" name="master-gramasi">
+                                                        @endif
+                                                        <label for="master-gramasi" class="padding05">{{ __('file.Gramasi List')}} &nbsp;&nbsp;</label>
+                                                    @else
+                                                        @if(in_array("master-gramasi", $all_permission))
+                                                        <input type="checkbox" value="1" id="master-gramasi" name="master-gramasi" checked disabled>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="master-gramasi" name="master-gramasi" disabled>
+                                                        @endif
+                                                        <label for="master-gramasi" class="padding05">{{ __('file.Gramasi List')}} &nbsp;&nbsp;</label>
+                                                    @endif
 								                </div>
 								            </div>
 						                </span>
+                                        <span>
+                                            <div aria-checked="false" aria-disabled="false">
+                                                <div class="checkbox">
+                                                    @if(in_array("master-parent", $all_permission))
+                                                        @if(in_array("master-price", $all_permission))
+                                                            <input type="checkbox" value="1" id="master-price" name="master-price" checked>
+                                                        @else
+                                                            <input type="checkbox" value="1" id="master-price" name="master-price">
+                                                        @endif
+                                                        <label for="master-price" class="padding05">{{__('file.Price')}} &nbsp;&nbsp;</label>
+                                                    @else
+                                                        @if(in_array("master-price", $all_permission))
+                                                            <input type="checkbox" value="1" id="master-price" name="master-price" checked disabled>
+                                                        @else
+                                                            <input type="checkbox" value="1" id="master-price" name="master-price" disabled>
+                                                        @endif
+                                                        <label for="master-price" class="padding05">{{__('file.Price')}} &nbsp;&nbsp;</label>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </span>
 						                <span>
 						                    <div aria-checked="false" aria-disabled="false">
 								                <div class="checkbox">
-							                    	@if(in_array("master-price", $all_permission))
-							                    	<input type="checkbox" value="1" id="master-price" name="master-price" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="master-price" name="master-price">
-							                    	@endif
-								                    <label for="master-price" class="padding05">{{__('file.Price')}} &nbsp;&nbsp;</label>
+                                                    @if(in_array("master-parent", $all_permission))
+                                                        @if(in_array("master-promo", $all_permission))
+                                                        <input type="checkbox" value="1" id="master-promo" name="master-promo" checked>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="master-promo" name="master-promo">
+                                                        @endif
+                                                        <label for="master-promo" class="padding05">{{__('file.promo')
+                                                        }} &nbsp;&nbsp;</label>
+                                                    @else
+                                                        @if(in_array("master-promo", $all_permission))
+                                                        <input type="checkbox" value="1" id="master-promo" name="master-promo" checked disabled>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="master-promo" name="master-promo" disabled>
+                                                        @endif
+                                                        <label for="master-promo" class="padding05">{{__('file.promo')
+                                                        }} &nbsp;&nbsp;</label>
+                                                    @endif
 								                </div>
 								            </div>
 						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("master-promo", $all_permission))
-							                    	<input type="checkbox" value="1" id="master-promo" name="master-promo" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="master-promo" name="master-promo">
-							                    	@endif
-								                    <label for="master-promo" class="padding05">{{__('file.promo')
-                                                    }} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
+						            </td>
+						        </tr>
+						        <tr>
+						            {{-- <td></td> --}}
+                                    <td >
+						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                                @if(in_array("product-stock-parent", $all_permission))
+                                                <input type="checkbox" value="1" id="product-stock-parent" name="product-stock-parent" checked />
+                                                @else
+                                                <input type="checkbox" value="1" id="product-stock-parent" name="product-stock-parent" />
+                                                @endif
+                                                <label for="product-stock-parent">
+                                                    {{trans('file.product_stock')}}
+                                                </label>
+							            	</div>
+						            	</div>
+						            </td>
+                                    <td class="product-stock-permissions" colspan="5">
+                                        <span>
+                                            <div aria-checked="false" aria-disabled="false">
+                                                <div class="checkbox">
+                                                    @if(in_array("master-parent", $all_permission))
+                                                        @if(in_array("product-stock", $all_permission))
+                                                        <input type="checkbox" value="1" id="product-stock" name="product-stock" checked>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="product-stock" name="product-stock">
+                                                        @endif
+                                                        <label for="product-stock" class="padding05">{{trans('file.product_stock')}} &nbsp;&nbsp;</label>
+                                                    @else
+                                                        @if(in_array("product-stock", $all_permission))
+                                                        <input type="checkbox" value="1" id="product-stock" name="product-stock" checked disabled>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="product-stock" name="product-stock" disabled>
+                                                        @endif
+                                                        <label for="product-stock" class="padding05">{{trans('file.product_stock')}} &nbsp;&nbsp;</label>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </span>
 						            </td>
 						        </tr>
 						        <tr>
@@ -160,48 +265,84 @@
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
-								                @if(in_array("products-index", $all_permission))
-								                <input type="checkbox" value="1" id="products-index" name="products-index" checked />
-								                @else
-								                <input type="checkbox" value="1" id="products-index" name="products-index" />
-								                @endif
-								                <label for="products-index"></label>
+                                                @if(in_array("products-parent", $all_permission))
+                                                    @if(in_array("products-index", $all_permission))
+                                                    <input type="checkbox" value="1" id="products-index" name="products-index" checked />
+                                                    @else
+                                                    <input type="checkbox" value="1" id="products-index" name="products-index" />
+                                                    @endif
+                                                    <label for="products-index"></label>
+                                                @else
+                                                    @if(in_array("products-index", $all_permission))
+                                                    <input type="checkbox" value="1" id="products-index" name="products-index" checked disabled/>
+                                                    @else
+                                                    <input type="checkbox" value="1" id="products-index" name="products-index" disabled/>
+                                                    @endif
+                                                    <label for="products-index"></label>
+                                                @endif
 							            	</div>
 						            	</div>
 						            </td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
-								                @if(in_array("products-add", $all_permission))
-								               	<input type="checkbox" value="1" id="products-add" name="products-add" checked>
-								                @else
-								                <input type="checkbox" value="1" id="products-add" name="products-add">
-								                @endif
-								                <label for="products-add"></label>
+                                                @if(in_array("products-parent", $all_permission))
+                                                    @if(in_array("products-add", $all_permission))
+                                                    <input type="checkbox" value="1" id="products-add" name="products-add" checked>
+                                                    @else
+                                                    <input type="checkbox" value="1" id="products-add" name="products-add">
+                                                    @endif
+                                                    <label for="products-add"></label>
+                                                @else
+                                                    @if(in_array("products-add", $all_permission))
+                                                    <input type="checkbox" value="1" id="products-add" name="products-add" checked disabled>
+                                                    @else
+                                                    <input type="checkbox" value="1" id="products-add" name="products-add" disabled>
+                                                    @endif
+                                                    <label for="products-add"></label>
+                                                @endif
 							                </div>
 							            </div>
 						            </td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
-								                @if(in_array("products-edit", $all_permission))
-								                <input type="checkbox" value="1" id="products-edit" name="products-edit" checked />
-								                @else
-								                <input type="checkbox" value="1" id="products-edit" name="products-edit" />
-								                @endif
-								                <label for="products-edit"></label>
+                                                @if(in_array("products-parent", $all_permission))
+                                                    @if(in_array("products-edit", $all_permission))
+                                                    <input type="checkbox" value="1" id="products-edit" name="products-edit" checked />
+                                                    @else
+                                                    <input type="checkbox" value="1" id="products-edit" name="products-edit" />
+                                                    @endif
+                                                    <label for="products-edit"></label>
+                                                @else
+                                                    @if(in_array("products-edit", $all_permission))
+                                                    <input type="checkbox" value="1" id="products-edit" name="products-edit" checked disabled/>
+                                                    @else
+                                                    <input type="checkbox" value="1" id="products-edit" name="products-edit" disabled/>
+                                                    @endif
+                                                    <label for="products-edit"></label>
+                                                @endif
 							                </div>
 							            </div>
 						            </td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
-								                @if(in_array("products-delete", $all_permission))
-								                <input type="checkbox" value="1" id="products-delete" name="products-delete" checked />
-								                @else
-								                <input type="checkbox" value="1" id="products-delete" name="products-delete" />
-								                @endif
-								                <label for="products-delete"></label>
+                                                @if(in_array("products-parent", $all_permission))
+                                                    @if(in_array("products-delete", $all_permission))
+                                                    <input type="checkbox" value="1" id="products-delete" name="products-delete" checked />
+                                                    @else
+                                                    <input type="checkbox" value="1" id="products-delete" name="products-delete" />
+                                                    @endif
+                                                    <label for="products-delete"></label>
+                                                @else
+                                                    @if(in_array("products-delete", $all_permission))
+                                                    <input type="checkbox" value="1" id="products-delete" name="products-delete" checked disabled/>
+                                                    @else
+                                                    <input type="checkbox" value="1" id="products-delete" name="products-delete" disabled/>
+                                                    @endif
+                                                    <label for="products-delete"></label>
+                                                @endif
 							                </div>
 							            </div>
 						            </td>
@@ -278,48 +419,84 @@
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
+                                            @if(in_array("sales-parent", $all_permission))
 								                @if(in_array("sales-index", $all_permission))
 								                <input type="checkbox" value="1" id="sales-index" name="sales-index" checked />
 								                @else
 								                <input type="checkbox" value="1" id="sales-index" name="sales-index">
 								                @endif
 								                <label for="sales-index"></label>
+                                            @else
+                                                @if(in_array("sales-index", $all_permission))
+                                                <input type="checkbox" value="1" id="sales-index" name="sales-index" checked disabled/>
+                                                @else
+                                                <input type="checkbox" value="1" id="sales-index" name="sales-index" disabled>
+                                                @endif
+                                                <label for="sales-index"></label>
+                                            @endif
 								            </div>
 						            	</div>
 						            </td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
+                                            @if(in_array("sales-parent", $all_permission))
 								                @if(in_array("sales-add", $all_permission))
 								                <input type="checkbox" value="1" id="sales-add" name="sales-add" checked />
 								                @else
 								                <input type="checkbox" value="1" id="sales-add" name="sales-add">
 								                @endif
 								                <label for="sales-add"></label>
+                                            @else
+								                @if(in_array("sales-add", $all_permission))
+								                <input type="checkbox" value="1" id="sales-add" name="sales-add" checked disabled/>
+								                @else
+								                <input type="checkbox" value="1" id="sales-add" name="sales-add" disabled>
+								                @endif
+								                <label for="sales-add"></label>
+                                            @endif
 								            </div>
 						            	</div>
 						            </td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
+                                            @if(in_array("sales-parent", $all_permission))
 								                @if(in_array("sales-edit", $all_permission))
 								                <input type="checkbox" value="1" id="sales-edit" name="sales-edit" checked>
 								                @else
 								                <input type="checkbox" value="1" id="sales-edit" name="sales-edit">
 								                @endif
 								                <label for="sales-edit"></label>
+                                            @else
+								                @if(in_array("sales-edit", $all_permission))
+								                <input type="checkbox" value="1" id="sales-edit" name="sales-edit" checked disabled>
+								                @else
+								                <input type="checkbox" value="1" id="sales-edit" name="sales-edit" disabled>
+								                @endif
+								                <label for="sales-edit"></label>
+                                            @endif
 								            </div>
 						            	</div>
 						            </td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
+                                            @if(in_array("sales-parent", $all_permission))
 								                @if(in_array("sales-delete", $all_permission))
 								                <input type="checkbox" value="1" id="sales-delete" name="sales-delete" checked>
 								                @else
 								                <input type="checkbox" value="1" id="sales-delete" name="sales-delete">
 								                @endif
 								                <label for="sales-delete"></label>
+                                            @else
+                                                @if(in_array("sales-delete", $all_permission))
+                                                <input type="checkbox" value="1" id="sales-delete" name="sales-delete" checked disabled>
+                                                @else
+                                                <input type="checkbox" value="1" id="sales-delete" name="sales-delete" disabled>
+                                                @endif
+                                                <label for="sales-delete"></label>
+                                            @endif
 								            </div>
 						            	</div>
 						            </td>
@@ -651,52 +828,101 @@
 						            </td>
 						        </tr> --}}
 						        <tr>
-						            <td>{{trans('file.User')}}</td>
+						            <td>
+                                        <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("users-parent", $all_permission))
+								                <input type="checkbox" value="1" id="users-parent" name="users-parent" checked />
+								                @else
+								                <input type="checkbox" value="1" id="users-parent" name="users-parent" />
+								                @endif
+								                <label for="users-parent">
+                                                    {{trans('file.User')}}
+                                                </label>
+							            	</div>
+						            	</div>
+                                    </td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
+                                            @if(in_array("users-parent", $all_permission))
 								                @if(in_array("users-index", $all_permission))
 								                <input type="checkbox" value="1" id="users-index" name="users-index" checked>
 								                @else
 								                <input type="checkbox" value="1" id="users-index" name="users-index">
 								                @endif
 								                <label for="users-index"></label>
+                                            @else
+								                @if(in_array("users-index", $all_permission))
+								                <input type="checkbox" value="1" id="users-index" name="users-index" checked disabled>
+								                @else
+								                <input type="checkbox" value="1" id="users-index" name="users-index" disabled>
+								                @endif
+								                <label for="users-index"></label>
+                                            @endif
 								            </div>
 						            	</div>
 						            </td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
+                                            @if(in_array("users-parent", $all_permission))
 								                @if(in_array("users-add", $all_permission))
 								                <input type="checkbox" value="1" id="users-add" name="users-add" checked>
 								                @else
 								                <input type="checkbox" value="1" id="users-add" name="users-add">
 								                @endif
 								                <label for="users-add"></label>
+                                            @else
+								                @if(in_array("users-add", $all_permission))
+								                <input type="checkbox" value="1" id="users-add" name="users-add" checked disabled>
+								                @else
+								                <input type="checkbox" value="1" id="users-add" name="users-add" disabled>
+								                @endif
+								                <label for="users-add"></label>
+                                            @endif
 								            </div>
 						            	</div>
 						            </td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
+                                            @if(in_array("users-parent", $all_permission))
 								                @if(in_array("users-edit", $all_permission))
 								                <input type="checkbox" value="1" id="users-edit" name="users-edit" checked>
 								                @else
 								                <input type="checkbox" value="1" id="users-edit" name="users-edit">
 								                @endif
 								                <label for="users-edit"></label>
+                                            @else
+                                                @if(in_array("users-edit", $all_permission))
+                                                <input type="checkbox" value="1" id="users-edit" name="users-edit" checked disabled>
+                                                @else
+                                                <input type="checkbox" value="1" id="users-edit" name="users-edit" disabled>
+                                                @endif
+                                                <label for="users-edit"></label>
+                                            @endif
 								            </div>
 						            	</div>
 						            </td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
 							                <div class="checkbox">
+                                            @if(in_array("users-parent", $all_permission))
 								                @if(in_array("users-delete", $all_permission))
 								                <input type="checkbox" value="1" id="users-delete" name="users-delete" checked>
 								                @else
 								                <input type="checkbox" value="1" id="users-delete" name="users-delete">
 								                @endif
 								                <label for="users-delete"></label>
+                                            @else
+								                @if(in_array("users-delete", $all_permission))
+								                <input type="checkbox" value="1" id="users-delete" name="users-delete" checked disabled>
+								                @else
+								                <input type="checkbox" value="1" id="users-delete" name="users-delete" disabled>
+								                @endif
+								                <label for="users-delete"></label>
+                                            @endif
 								            </div>
 						            	</div>
 						            </td>
@@ -960,213 +1186,44 @@
 						                </span>
 						            </td>
 						        </tr> --}}
-						        <tr>
-						            <td>{{trans('file.Reports')}}</td>
-						            <td class="report-permissions" colspan="5">
-						            	<span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("profit-loss", $all_permission))
-							                    	<input type="checkbox" value="1" id="profit-loss" name="profit-loss" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="profit-loss" name="profit-loss">
-							                    	@endif
-								                    <label for="profit-loss" class="padding05">{{trans('file.Summary Report')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("best-seller", $all_permission))
-							                    	<input type="checkbox" value="1" id="best-seller" name="best-seller" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="best-seller" name="best-seller">
-							                    	@endif
-								                    <label for="best-seller" class="padding05">{{trans('file.Best Seller')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("daily-sale", $all_permission))
-							                    	<input type="checkbox" value="1" id="daily-sale" name="daily-sale" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="daily-sale" name="daily-sale">
-							                    	@endif
-								                    <label for="daily-sale" class="padding05">{{trans('file.Daily Sale')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("monthly-sale", $all_permission))
-							                    	<input type="checkbox" value="1" id="monthly-sale" name="monthly-sale" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="monthly-sale" name="monthly-sale">
-							                    	@endif
-								                    <label for="monthly-sale" class="padding05">{{trans('file.Monthly Sale')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("daily-purchase", $all_permission))
-							                    	<input type="checkbox" value="1" id="daily-purchase" name="daily-purchase" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="daily-purchase" name="daily-purchase">
-							                    	@endif
-								                    <label for="daily-purchase" class="padding05">{{trans('file.Daily Purchase')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-						                    	<div class="checkbox">
-							                    	@if(in_array("monthly-purchase", $all_permission))
-							                    	<input type="checkbox" value="1" id="monthly-purchase" name="monthly-purchase" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="monthly-purchase" name="monthly-purchase">
-							                    	@endif
-								                    <label for="monthly-purchase" class="padding05">{{trans('file.Monthly Purchase')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("product-report", $all_permission))
-							                    	<input type="checkbox" value="1" id="product-report" name="product-report" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="product-report" name="product-report">
-							                    	@endif
-								                    <label for="product-report" class="padding05">{{trans('file.Product Report')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("payment-report", $all_permission))
-							                    	<input type="checkbox" value="1" id="payment-report" name="payment-report" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="payment-report" name="payment-report">
-							                    	@endif
-								                    <label for="payment-report" class="padding05">{{trans('file.Payment Report')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("purchase-report", $all_permission))
-							                    	<input type="checkbox" value="1" id="purchase-report" name="purchase-report" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="purchase-report" name="purchase-report">
-							                    	@endif
-								                    <label for="purchase-report" class="padding05"> {{trans('file.Purchase Report')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("sale-report", $all_permission))
-							                    	<input type="checkbox" value="1" id="sale-report" name="sale-report" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="sale-report" name="sale-report">
-							                    	@endif
-								                    <label for="sale-report" class="padding05">{{trans('file.Sale Report')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-						                    	<div class="checkbox">
-							                    	@if(in_array("warehouse-report", $all_permission))
-							                    	<input type="checkbox" value="1" id="warehouse-report" name="warehouse-report" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="warehouse-report" name="warehouse-report">
-							                    	@endif
-								                    <label for="warehouse-report" class="padding05">{{trans('file.Warehouse Report')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-						                    	<div class="checkbox">
-							                    	@if(in_array("warehouse-stock-report", $all_permission))
-							                    	<input type="checkbox" value="1" id="warehouse-stock-report" name="warehouse-stock-report" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="warehouse-stock-report" name="warehouse-stock-report">
-							                    	@endif
-								                    <label for="warehouse-stock-report" class="padding05">{{trans('file.Warehouse Stock Chart')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-						                    	<div class="checkbox">
-							                    	@if(in_array("product-qty-alert", $all_permission))
-							                    	<input type="checkbox" value="1" id="product-qty-alert" name="product-qty-alert" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="product-qty-alert" name="product-qty-alert">
-							                    	@endif
-													<label for="product-qty-alert" class="padding05">{{trans('file.Product Quantity Alert')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-								        </span>
-								        <span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("user-report", $all_permission))
-							                    	<input type="checkbox" value="1" id="user-report" name="user-report" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="user-report" name="user-report">
-							                    	@endif
-								                    <label for="user-report" class="padding05">{{trans('file.User Report')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("customer-report", $all_permission))
-							                    	<input type="checkbox" value="1" id="customer-report" name="customer-report" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="customer-report" name="customer-report">
-							                    	@endif
-								                    <label for="customer-report" class="padding05">{{trans('file.Customer Report')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("supplier-report", $all_permission))
-							                    	<input type="checkbox" value="1" id="supplier-report" name="supplier-report" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="supplier-report" name="supplier-report">
-							                    	@endif
-								                    <label for="Supplier-report" class="padding05">{{trans('file.Supplier Report')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
-						                <span>
-						                    <div aria-checked="false" aria-disabled="false">
-								                <div class="checkbox">
-							                    	@if(in_array("due-report", $all_permission))
-							                    	<input type="checkbox" value="1" id="due-report" name="due-report" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="due-report" name="due-report">
-							                    	@endif
-								                    <label for="due-report" class="padding05">{{trans('file.Due Report')}} &nbsp;&nbsp;</label>
-								                </div>
-								            </div>
-						                </span>
+                                <tr>
+						            {{-- <td></td> --}}
+                                    <td >
+						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                                @if(in_array("report-parent", $all_permission))
+                                                <input type="checkbox" value="1" id="report-parent" name="report-parent" checked />
+                                                @else
+                                                <input type="checkbox" value="1" id="report-parent" name="report-parent" />
+                                                @endif
+                                                <label for="report-parent">
+                                                    {{trans('file.Reports')}}
+                                                </label>
+							            	</div>
+						            	</div>
+						            </td>
+                                    <td class="report-permissions" colspan="5">
+                                        <span>
+                                            <div aria-checked="false" aria-disabled="false">
+                                                <div class="checkbox">
+                                                    @if(in_array("report-parent", $all_permission))
+                                                        @if(in_array("sale-report", $all_permission))
+                                                        <input type="checkbox" value="1" id="sale-report" name="sale-report" checked>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="sale-report" name="sale-report">
+                                                        @endif
+                                                        <label for="sale-report" class="padding05">{{trans('file.sale_report')}} &nbsp;&nbsp;</label>
+                                                    @else
+                                                        @if(in_array("sale-report", $all_permission))
+                                                        <input type="checkbox" value="1" id="sale-report" name="sale-report" checked disabled>
+                                                        @else
+                                                        <input type="checkbox" value="1" id="sale-report" name="sale-report" disabled>
+                                                        @endif
+                                                        <label for="sale-report" class="padding05">{{trans('file.sale_report')}} &nbsp;&nbsp;</label>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </span>
 						            </td>
 						        </tr>
 						        <tr>
@@ -1365,13 +1422,13 @@
     $("ul#setting").addClass("show");
     $("ul#setting #role-menu").addClass("active");
 
-	$("#select_all").on( "change", function() {
-	    if ($(this).is(':checked')) {
-	        $("tbody input[type='checkbox']").prop('checked', true);
-	    }
-	    else {
-	        $("tbody input[type='checkbox']").prop('checked', false);
-	    }
-	});
+	$("#select_all").on("change", function() {
+        if ($(this).is(':checked')) {
+            $("tbody input[type='checkbox']:enabled").prop('checked', true);
+        } else {
+            $("tbody input[type='checkbox']:enabled").prop('checked', false);
+        }
+    });
+
 </script>
 @endsection
