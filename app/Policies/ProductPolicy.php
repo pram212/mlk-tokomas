@@ -91,4 +91,25 @@ class ProductPolicy
         $role = Role::find($user->role_id);
         return $role->hasPermissionTo('product-qty-alert');
     }
+    public function viewActionButton(User $user)
+    {
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('action-parent');
+    }
+    public function viewActionButtonAdd(User $user)
+    {
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('action-add');
+    }
+    public function viewActionButtonEdit(User $user)
+    {
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('action-edit');
+    }
+    public function viewActionButtonDelete(User $user)
+    {
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('action-delete');
+    }
+
 }

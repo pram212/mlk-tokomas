@@ -10,7 +10,7 @@
                     </a>
                 </li>
 
-                {{-- PRODUCT CATEGORY MENU --}}
+                {{-- MASTER MENU --}}
                 <li>
                     @php
                     $requestIsOnProductCategoryMenu = request()->is('product-categories*', 'master*',
@@ -76,8 +76,9 @@
 
                     </ul>
                 </li>
-                {{-- PRODUCT CATEGORY MENU END --}}
+                {{--  MASTER MENU END --}}
 
+                {{-- PRODUCT STOCK  --}}
                 <li>
                     @php
                     $requestIsProductStockMenu = request()->is('product_stock*') ? 'true' : 'false';
@@ -96,6 +97,8 @@
                         @endcan
                     </ul>
                 </li>
+                {{-- PRODUCT STOCK END --}}
+
 
                 <li>
                     @php
@@ -111,17 +114,19 @@
                     : 'false';
                     @endphp
                     @can('parentView', App\Product::class)
-                    <a href="#sale" aria-expanded="{{ $requestIsOnProductMenu }}" data-toggle="collapse">
+                    <a href="#product" aria-expanded="{{ $requestIsOnProductMenu }}" data-toggle="collapse">
                         <i class="dripicons-list"></i><span>{{ __('file.product') }}</span><span>
                     </a>
                     @endcan
                     <ul id="product"
                         class="collapse list-unstyled @if ($requestIsOnProductMenu === 'true') show @endif">
-                        @can('viewAny', App\Category::class)
+
+                        {{-- DICOMMENT KARENA MAKE 1 MENU SAJA YAITU YANG DI MASTER --}}
+                        {{-- @can('viewAny', App\Category::class)
                         <li id="category-menu" class="{{ request()->is('category*') ? 'active' : '' }}">
                             <a href="{{ route('category.index') }}">{{ __('file.category') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
                         @can('viewAny', App\Product::class)
                         <li id="product-list-menu" class="{{ request()->is('products/') ? 'active' : '' }}">
@@ -135,9 +140,11 @@
                         </li>
                         @endcan
 
+                        @can('viewAny', App\WarehouseTransfer::class)
                         <li id="warehouse_transfer" class="{{ request()->is('warehouse_transfer*') ? 'active' : '' }}">
                             <a href="{{ url('warehouse_transfer') }}">{{ __('file.warehouse_transfer') }}</a>
                         </li>
+                        @endcan
 
                         @can('productsStock',App\Product::class)
                         <li id="product_stock" class="{{ request()->is('product_stock*') ? 'active' : '' }}">
