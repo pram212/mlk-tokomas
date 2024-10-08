@@ -351,24 +351,42 @@
                                         <span>
 						                    <div aria-checked="false" aria-disabled="false">
 								                <div class="checkbox">
+                                                @if(in_array("products-parent", $all_permission))
 							                    	@if(in_array("warehouse-transfer", $all_permission))
 							                    	<input type="checkbox" value="1" id="warehouse-transfer" name="warehouse-transfer" checked>
 							                    	@else
 							                    	<input type="checkbox" value="1" id="warehouse-transfer" name="warehouse-transfer">
 							                    	@endif
 								                    <label for="warehouse-transfer" class="padding05">{{trans('file.warehouse_transfer')}} &nbsp;&nbsp;</label>
+                                                @else
+                                                    @if(in_array("warehouse-transfer", $all_permission))
+                                                    <input type="checkbox" value="1" id="warehouse-transfer" name="warehouse-transfer" checked disabled>
+                                                    @else
+                                                    <input type="checkbox" value="1" id="warehouse-transfer" name="warehouse-transfer" disabled>
+                                                    @endif
+                                                    <label for="warehouse-transfer" class="padding05">{{trans('file.warehouse_transfer')}} &nbsp;&nbsp;</label>
+                                                @endif
 								                </div>
 								            </div>
 						                </span>
                                         <span>
 						                    <div aria-checked="false" aria-disabled="false">
 								                <div class="checkbox">
+                                                @if(in_array("products-parent", $all_permission))
 							                    	@if(in_array("action-parent", $all_permission))
 							                    	<input type="checkbox" value="1" id="action-parent" name="action-parent" checked>
 							                    	@else
 							                    	<input type="checkbox" value="1" id="action-parent" name="action-parent">
 							                    	@endif
 								                    <label for="action-parent" class="padding05">{{trans('file.action')}} {{ trans('file.product') }} &nbsp;&nbsp;</label>
+                                                @else
+                                                    @if(in_array("action-parent", $all_permission))
+                                                    <input type="checkbox" value="1" id="action-parent" name="action-parent" checked disabled>
+                                                    @else
+                                                    <input type="checkbox" value="1" id="action-parent" name="action-parent" disabled>
+                                                    @endif
+                                                    <label for="action-parent" class="padding05">{{trans('file.action')}} {{ trans('file.product') }} &nbsp;&nbsp;</label>
+                                                @endif
 								                </div>
 								            </div>
 						                </span>
@@ -1254,53 +1272,102 @@
 						            </td>
 						        </tr>
 						        <tr>
-						            <td>{{trans('file.settings')}}</td>
+                                    <td >
+						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                                @if(in_array("master-setting", $all_permission))
+                                                <input type="checkbox" value="1" id="master-setting" name="master-setting" checked />
+                                                @else
+                                                <input type="checkbox" value="1" id="master-setting" name="master-setting" />
+                                                @endif
+                                                <label for="master-setting">
+                                                    {{trans('file.settings')}}
+                                                </label>
+							            	</div>
+						            	</div>
+						            </td>
 						            <td class="report-permissions" colspan="5">
 						            	<span>
 						                    <div aria-checked="false" aria-disabled="false">
 								                <div class="checkbox">
-							                    	@if(in_array("warehouse", $all_permission))
-							                    	<input type="checkbox" value="1" id="warehouse" name="warehouse" checked>
-							                    	@else
-							                    	<input type="checkbox" value="1" id="warehouse" name="warehouse">
-							                    	@endif
-								                    <label for="warehouse" class="padding05">{{trans('file.Warehouse')}} &nbsp;&nbsp;</label>
+                                                @if(in_array("master-setting", $all_permission))
+                                                    @if(in_array("warehouse", $all_permission))
+                                                    <input type="checkbox" value="1" id="warehouse" name="warehouse" checked>
+                                                    @else
+                                                    <input type="checkbox" value="1" id="warehouse" name="warehouse">
+                                                    @endif
+                                                    <label for="warehouse" class="padding05">{{trans('file.Warehouse')}} &nbsp;&nbsp;</label>
+                                                @else
+                                                    @if(in_array("warehouse", $all_permission))
+                                                    <input type="checkbox" value="1" id="warehouse" name="warehouse" checked disabled>
+                                                    @else
+                                                    <input type="checkbox" value="1" id="warehouse" name="warehouse" disabled>
+                                                    @endif
+                                                    <label for="warehouse" class="padding05">{{trans('file.Warehouse')}} &nbsp;&nbsp;</label>
+                                                @endif
 								                </div>
 								            </div>
 						                </span>
 						            	<span>
 						                    <div aria-checked="false" aria-disabled="false">
 								                <div class="checkbox">
+                                                @if(in_array("master-setting", $all_permission))
 							                    	@if(in_array("customer_group", $all_permission))
 							                    	<input type="checkbox" value="1" id="customer_group" name="customer_group" checked>
 							                    	@else
 							                    	<input type="checkbox" value="1" id="customer_group" name="customer_group">
 							                    	@endif
 								                    <label for="customer_group" class="padding05">{{trans('file.Customer Group')}} &nbsp;&nbsp;</label>
+                                                @else
+                                                    @if(in_array("customer_group", $all_permission))
+                                                    <input type="checkbox" value="1" id="customer_group" name="customer_group" checked disabled>
+                                                    @else
+                                                    <input type="checkbox" value="1" id="customer_group" name="customer_group" disabled>
+                                                    @endif
+                                                    <label for="customer_group" class="padding05">{{trans('file.Customer Group')}} &nbsp;&nbsp;</label>
+                                                @endif
 								                </div>
 								            </div>
 						                </span>
 						                <span>
 								            <div aria-checked="false" aria-disabled="false">
 								                <div class="checkbox">
+                                                @if(in_array("master-setting", $all_permission))
 							                    	@if(in_array("tax", $all_permission))
 							                    	<input type="checkbox" value="1" id="tax" name="tax" checked>
 							                    	@else
 							                    	<input type="checkbox" value="1" id="tax" name="tax">
 							                    	@endif
 								                    <label for="tax" class="padding05">{{trans('file.Tax')}} &nbsp;&nbsp;</label>
+                                                @else
+                                                    @if(in_array("tax", $all_permission))
+                                                    <input type="checkbox" value="1" id="tax" name="tax" checked disabled>
+                                                    @else
+                                                    <input type="checkbox" value="1" id="tax" name="tax" disabled>
+                                                    @endif
+                                                    <label for="tax" class="padding05">{{trans('file.Tax')}} &nbsp;&nbsp;</label>
+                                                @endif
 								                </div>
 								            </div>
 						                </span>
 						                <span>
 								            <div aria-checked="false" aria-disabled="false">
 								                <div class="checkbox">
+                                                @if(in_array("master-setting", $all_permission))
 							                    	@if(in_array("general_setting", $all_permission))
 							                    	<input type="checkbox" value="1" id="general_setting" name="general_setting" checked>
 							                    	@else
 							                    	<input type="checkbox" value="1" id="general_setting" name="general_setting">
 							                    	@endif
 								                    <label for="general_setting" class="padding05">{{trans('file.General Setting')}} &nbsp;&nbsp;</label>
+                                                @else
+                                                    @if(in_array("general_setting", $all_permission))
+                                                    <input type="checkbox" value="1" id="general_setting" name="general_setting" checked disabled>
+                                                    @else
+                                                    <input type="checkbox" value="1" id="general_setting" name="general_setting" disabled>
+                                                    @endif
+                                                    <label for="general_setting" class="padding05">{{trans('file.General Setting')}} &nbsp;&nbsp;</label>
+                                                @endif
 								                </div>
 								            </div>
 						                </span>

@@ -156,6 +156,15 @@ class RoleController extends Controller
         else
             $role->revokePermissionTo('master-promo');
 
+        if($request->has('master-setting')){
+            $permission = Permission::firstOrCreate(['name' => 'master-setting']);
+            if(!$role->hasPermissionTo('master-setting')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('master-setting');
+
         if($request->has('product-stock-parent')){
             $permission = Permission::firstOrCreate(['name' => 'product-stock-parent']);
             if(!$role->hasPermissionTo('product-stock-parent')){
