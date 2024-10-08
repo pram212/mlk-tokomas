@@ -20,6 +20,11 @@ class SettingPolicy
         //
     }
 
+    public function parentView(User $user) {
+        $role = Role::find($user->role_id);
+        return $role->hasPermissionTo('master-setting');
+    }
+
     public function backUpDatabase(User $user) {
         $role = Role::find($user->role_id);
         return $role->hasPermissionTo('backup_database');
