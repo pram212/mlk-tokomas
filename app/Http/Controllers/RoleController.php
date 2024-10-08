@@ -211,6 +211,51 @@ class RoleController extends Controller
         else
             $role->revokePermissionTo('sales-parent');
 
+        if($request->has('warehouse-transfer')){
+            $permission = Permission::firstOrCreate(['name' => 'warehouse-transfer']);
+            if(!$role->hasPermissionTo('warehouse-transfer')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('warehouse-transfer');
+
+        if($request->has('action-parent')){
+            $permission = Permission::firstOrCreate(['name' => 'action-parent']);
+            if(!$role->hasPermissionTo('action-parent')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('action-parent');
+
+        if($request->has('action-add')){
+            $permission = Permission::firstOrCreate(['name' => 'action-add']);
+            if(!$role->hasPermissionTo('action-add')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('action-add');
+
+        if($request->has('action-edit')){
+            $permission = Permission::firstOrCreate(['name' => 'action-edit']);
+            if(!$role->hasPermissionTo('action-edit')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('action-edit');
+
+        if($request->has('action-delete')){
+            $permission = Permission::firstOrCreate(['name' => 'action-delete']);
+            if(!$role->hasPermissionTo('action-delete')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('action-delete');
+
         if($request->has('products-index')){
             $permission = Permission::firstOrCreate(['name' => 'products-index']);
             if(!$role->hasPermissionTo('products-index')){

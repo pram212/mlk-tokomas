@@ -28,6 +28,11 @@ class RolePermissionMasterAndParentSeeder extends Seeder
             ['name' => 'product-stock', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
             ['name' => 'users-parent', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
             ['name' => 'report-parent', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
+            ['name' => 'warehouse-transfer', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
+            ['name' => 'action-parent', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
+            ['name' => 'action-add', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
+            ['name' => 'action-edit', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
+            ['name' => 'action-delete', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
         ];
 
         foreach($roleMasterAndParent as $value) {
