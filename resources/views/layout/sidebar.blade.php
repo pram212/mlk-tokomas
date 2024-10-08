@@ -507,11 +507,12 @@
                     ? 'true'
                     : 'false';
                     @endphp
+
+                    @can('parentView', App\Setting::class)
                     <a href="#setting" aria-expanded="{{ $requestIsOnSettingMenu }}" data-toggle="collapse">
                         <i class="dripicons-gear"></i><span>{{ trans('file.settings') }}</span>
                     </a>
-                    <ul id="setting"
-                        class="collapse list-unstyled @if ($requestIsOnSettingMenu === 'true') show @endif">
+                    <ul id="setting" class="collapse list-unstyled @if ($requestIsOnSettingMenu === 'true') show @endif">
                         @can('viewAny', App\Role::class)
                         <li id="role-menu" class="@if (request()->is('role*')) active @endif">
                             <a href="{{ route('role.index') }}">{{ trans('file.Role Permission') }}</a>
@@ -613,6 +614,7 @@
                         </li>
                         @endcan --}}
                     </ul>
+                    @endcan
                 </li>
             </ul>
         </div>
