@@ -238,10 +238,14 @@ function handlePaymentChange() {
             break;
     }
 }
-
 function handlePayingAmountChange() {
     const value = formatMoneyToDecimal($(this).val()) || 0;
-    if (value < calculateGrandTotal()) {
+
+    const paid_amount = formatMoneyToDecimal($paid_amount.val());
+
+    // diganti karena disesuaikan grand total dengan paid amount
+    // if (value < calculateGrandTotal()) {
+    if (value < paid_amount) {
         Swal.fire({
             icon: "error",
             title: "Oops...",
@@ -389,6 +393,7 @@ function updatePaymentInfo() {
             }
         },
     });
+    console.log('grand', grand_total);
     $paying_amount.val(formatMoney(grand_total));
     // $paid_amount.val(formatMoney(total_price));
     $payment_discount.val(

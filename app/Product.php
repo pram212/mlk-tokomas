@@ -55,6 +55,9 @@ class Product extends Model
         return $this->belongsTo(ProductProperty::class);
     }
 
+    // NONAKTIF GRAMASI MENJADI INPUT MANUAL BY REQUEST
+    // FROM ID TO DOUBLE
+
     public function gramasi()
     {
         return $this->belongsTo(Gramasi::class);
