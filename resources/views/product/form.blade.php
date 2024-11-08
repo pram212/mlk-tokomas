@@ -283,10 +283,7 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>{{ __('file.Gramasi') }} *</strong></label>
-                                                        <div id="text-kd-gramasi">{{ @$product->gramasi->gramasi ?? '-'
-                                                            }}
-                                                        </div>
-                                                        <input class="form-control" type="hidden" name="gramasi_id"
+                                                        <input class="form-control" type="number" name="gramasi_id"
                                                             id="input-kd-gramasi"
                                                             value="{{ old('gramasi_id',@$product->gramasi_id) }}">
                                                         @error('gramasi_id')

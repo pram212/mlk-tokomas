@@ -1948,7 +1948,13 @@ class SaleController extends Controller
         $pricePerGram = $productSales->net_unit_price ?? 0;
         $totalPrice = number_format((float) $data->grand_total, 2, ',', '.');
         $potongan = $this->getDiscount($data);
-        $gramasi = formatNumber(getValueOrFallback($productSplitSetDetail, $product->gramasi, 'gramasi'));
+        // NONAKTIF GRAMASI MENJADI INPUT MANUAL
+        // FROM ID TO DOUBLE
+        if($product->gramasi) {
+            $gramasi = formatNumber(getValueOrFallback($productSplitSetDetail, $product->gramasi, 'gramasi'));
+        } else {
+            $gramasi = formatNumber($product->gramasi_id);
+        }
         $miligram = formatNumber(getValueOrFallback($productSplitSetDetail, $product, 'mg'));
         // Dicomment karena menampilkan hanya kode sifat barang yang ditampikan
         // $sifatBarang = $product->productProperty->code . " (" . $product->productProperty->description . ")";

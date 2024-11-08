@@ -51,7 +51,7 @@
                                 <td>{{ $sale->category_name }}</td>
                                 <td class="text-right">{{ $sale->qty }}</td>
                                 <td class="text-right">{{ $sale->gramasi }}</td>
-                                <td class="text-right">{{ $sale->total }}</td>
+                                <td class="text-right total-value" data-total="{{ $sale->qty + $sale->gramasi }}">{{ $sale->qty + $sale->gramasi }}</td>
                                 @endforeach
                         </tbody>
                         <tfoot>
@@ -59,17 +59,17 @@
                                 <th colspan="2">Penjualan</th>
                                 <th class="text-right">{{ $saleQty }}</th>
                                 <th class="text-right">{{ $saleGramasi }}</th>
-                                <th class="text-right">{{ $saleTotal }}</th>
+                                <th class="text-right" id="totalPenjualan">{{ $saleTotal }}</th>
                             </tr>
                             <tr>
                                 <th colspan="2">Buyback</th>
                                 <th class="text-right">{{ $buybackQty }}</th>
                                 <th class="text-right">{{ $buybackGramasi }}</th>
-                                <th class="text-right">{{ $buybackTotal }}</th>
+                                <th class="text-right" id="totalBuyback">{{ $buybackQty + $buybackGramasi }}</th>
                             </tr>
                             <tr>
                                 <th colspan="4">Total</th>
-                                <th class="text-right">{{ $saleTotal+$buybackTotal }}</th>
+                                <th class="text-right" id="finalTotalCell"></th>
                             </tr>
                             <tr>
                                 <th colspan="2">Return</th>
@@ -91,4 +91,16 @@
 
 @section('scripts')
 <script src="{{ asset('public/js/pages/report/sale_report.js?timestamp=' . now()->timestamp) }}"></script>
+
+<script>
+    $(document).ready(function () {
+
+    var totalPenjualan = parseFloat($('#totalPenjualan').text()) || 0;
+    var totalBuyback = parseFloat($('#totalBuyback').text()) || 0;
+
+    var finalTotal = totalPenjualan + totalBuyback;
+    $('#finalTotalCell').text(finalTotal);
+});
+
+</script>
 @endsection

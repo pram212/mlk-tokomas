@@ -102,8 +102,8 @@
 
 <body>
     @php
-    // $productImage = asset($data->image);
-    // $productImage = asset($path);
+        // $productImage = asset($data->image);
+        // $productImage = asset($path);
     @endphp
     <div class="container">
 
@@ -120,9 +120,15 @@
                             </div>
                         </div>
                         <div class="gramasi">
-                            <h1>{{ $data->gramasi->gramasi }}
-                                <sup>{{ $data->mg }}</sup>
-                            </h1>
+                            @if (isset($data->gramasi) && is_object($data->gramasi) && isset($data->gramasi->gramasi))
+                                <h1>{{ $data->gramasi->gramasi }}
+                                    <sup>{{ $data->mg }}</sup>
+                                </h1>
+                            @else
+                                <h1>{{ $data->gramasi_id }}
+                                    <sup>{{ $data->mg }}</sup>
+                                </h1>
+                            @endif
                         </div>
 
                         <div class="bottom_right">

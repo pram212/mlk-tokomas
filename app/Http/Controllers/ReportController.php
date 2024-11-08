@@ -59,7 +59,7 @@ class ReportController extends Controller
         $dataSale = $this->getSaleData($startDate, $endDate);
         $saleQty = $dataSale->sum('qty');
         $saleGramasi = $dataSale->sum('gramasi');
-        $saleTotal = $dataSale->sum('total');
+        $saleTotal = $saleQty + $saleGramasi;
 
         // Calculate buyback data
         $dataBuyback = $this->getBuybackData($startDate, $endDate);
