@@ -573,7 +573,13 @@ $(document).ready(function () {
             $("#dtl-code").val(data.code);
             $("#dtl-price").val(data.product_warehouse[0]?.price);
             $("#dtl-tag-code").val(data.tag_type?.code);
-            $("#dtl-gramasi-code").val(data.gramasi?.code);
+            // NONAKTIF GRAMASI MENJADI INPUT MANUAL
+            // FROM ID TO DOUBLE
+            if(data.gramasi) {
+                $("#dtl-gramasi-code").val(data.gramasi?.code);
+            } else {
+                $("#dtl-gramasi-code").val(data.gramasi_id);
+            }
             $("#dtl-discount").val(data.discount);
             $("#dtl-product-property").val(data.product_property?.description);
             const url = baseUrl + "/view-product/" + data.code;
