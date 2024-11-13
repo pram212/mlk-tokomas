@@ -45,7 +45,7 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
-        // HIDE PHONE NUMBER EMAIL DAN ADDRESS
+        // HIDE DISISAKAN FIELD NAMA DAN ADDRESS SAJA BY REQUEST
         // $this->validate($request, [
         //     'phone_number' => [
         //         'max:255',
@@ -56,9 +56,12 @@ class CustomerController extends Controller
         // ]);
         $lims_customer_data = $request->all();
         $lims_customer_data['is_active'] = true;
-        //creating user if given user access
-        if(isset($lims_customer_data['user'])) {
-            // HIDE PHONE NUMBER EMAIL DAN ADDRESS
+        // $lims_customer_data['customer_group_id'] = 1;
+
+        // HIDE DISISAKAN FIELD NAMA DAN ADDRESS SAJA BY REQUEST
+        // LOGIC UNTUK MENAMBAH KE USER JUGA
+        // creating user if given user access
+        // if(isset($lims_customer_data['user'])) {
             // $this->validate($request, [
             //     'name' => [
             //         'max:255',
@@ -75,22 +78,23 @@ class CustomerController extends Controller
             //     ],
             // ]);
 
-            // HIDE PHONE NUMBER EMAIL DAN ADDRESS
+            // HIDE DISISAKAN FIELD NAMA DAN ADDRESS SAJA BY REQUEST
             // $lims_customer_data['phone'] = $lims_customer_data['phone_number'];
-            $lims_customer_data['role_id'] = 5;
-            $lims_customer_data['is_deleted'] = false;
-            $lims_customer_data['password'] = bcrypt($lims_customer_data['password']);
-            $user = User::create($lims_customer_data);
-            $lims_customer_data['user_id'] = $user->id;
-            $message = 'Customer and user created successfully';
-        }
-        else {
-            $message = 'Customer created successfully';
-        }
+            // $lims_customer_data['role_id'] = 5;
+            // $lims_customer_data['is_deleted'] = false;
+            // $lims_customer_data['password'] = bcrypt($lims_customer_data['password']);
+            // $user = User::create($lims_customer_data);
+            // $lims_customer_data['user_id'] = $user->id;
+        //     $message = 'Customer and user created successfully';
+        // }
+        // else {
+        //     $message = 'Customer created successfully';
+        // }
 
+        $message = 'Customer created successfully';
         $lims_customer_data['name'] = $lims_customer_data['customer_name'];
 
-        // HIDE PHONE NUMBER EMAIL DAN ADDRESS
+        // HIDE DISISAKAN FIELD NAMA DAN ADDRESS SAJA BY REQUEST
         // if($lims_customer_data['email']) {
         //     try{
         //         Mail::send( 'mail.customer_create', $lims_customer_data, function( $message ) use ($lims_customer_data)
@@ -103,10 +107,10 @@ class CustomerController extends Controller
         //     }
         // }
 
-        // HIDE PHONE NUMBER EMAIL DAN ADDRESS
+        // HIDE DISISAKAN FIELD NAMA DAN ADDRESS SAJA BY REQUEST
         $lims_customer_data['email'] = '';
         $lims_customer_data['phone_number'] = 0;
-        $lims_customer_data['address'] = '';
+        $lims_customer_data['city'] = '';
         Customer::create($lims_customer_data);
         if($lims_customer_data['pos'])
             return redirect('pos')->with('message', $message);
@@ -204,18 +208,18 @@ class CustomerController extends Controller
                     $value=preg_replace('/\D/','',$value);
                 }
                $data= array_combine($escapedHeader, $columns);
-               $lims_customer_group_data = CustomerGroup::where('name', $data['customergroup'])->first();
+            //    $lims_customer_group_data = CustomerGroup::where('name', $data['customergroup'])->first();
                $customer = Customer::firstOrNew(['name'=>$data['name']]);
-               $customer->customer_group_id = $lims_customer_group_data->id;
+            //    $customer->customer_group_id = 1;
                $customer->name = $data['name'];
-               $customer->company_name = $data['companyname'];
-               $customer->email = $data['email'];
-               $customer->phone_number = $data['phonenumber'];
+            //    $customer->company_name = $data['companyname'];
+            //    $customer->email = $data['email'];
+            //    $customer->phone_number = $data['phonenumber'];
                $customer->address = $data['address'];
-               $customer->city = $data['city'];
-               $customer->state = $data['state'];
-               $customer->postal_code = $data['postalcode'];
-               $customer->country = $data['country'];
+            //    $customer->city = $data['city'];
+            //    $customer->state = $data['state'];
+            //    $customer->postal_code = $data['postalcode'];
+            //    $customer->country = $data['country'];
                $customer->is_active = true;
                $customer->save();
                $message = 'Customer Imported Successfully';

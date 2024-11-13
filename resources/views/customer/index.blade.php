@@ -21,8 +21,7 @@
 <section>
     <div class="container-fluid">
         @if(in_array("customers-add", $all_permission))
-        <a href="{{route('customer.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add
-            Customer')}}</a>&nbsp;
+        <a href="{{route('customer.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Customer')}}</a>&nbsp;
         <a href="#" data-toggle="modal" data-target="#importCustomer" class="btn btn-primary"><i
                 class="dripicons-copy"></i> {{trans('file.Import Customer')}}</a>
         @endif
@@ -32,14 +31,8 @@
             <thead>
                 <tr>
                     <th class="not-exported"></th>
-                    <th>{{trans('file.Customer Group')}}</th>
                     <th>{{trans('file.name')}}</th>
-                    <th>{{trans('file.Company Name')}}</th>
-                    <th>{{trans('file.Email')}}</th>
-                    <th>{{trans('file.Phone Number')}}</th>
-                    <th>{{trans('file.Tax Number')}}</th>
                     <th>{{trans('file.Address')}}</th>
-                    <th>{{trans('file.Balance')}}</th>
                     <th class="not-exported">{{trans('file.action')}}</th>
                 </tr>
             </thead>
@@ -47,18 +40,10 @@
                 @foreach($lims_customer_all as $key=>$customer)
                 <tr data-id="{{$customer->id}}">
                     <td>{{$key}}</td>
-                    <td>
-                        <?php $customer_group = DB::table('customer_groups')->where('id',$customer->customer_group_id)->first(); ?>
-                        {{ $customer_group->name }}
-                    </td>
                     <td>{{ $customer->name }}</td>
-                    <td>{{ $customer->company_name}}</td>
-                    <td>{{ $customer->email}}</td>
-                    <td>{{ $customer->phone_number}}</td>
-                    <td>{{ $customer->tax_no}}</td>
-                    <td>{{ $customer->address}}, {{ $customer->city}}@if($customer->country) {{','.
-                        $customer->country}}@endif</td>
-                    <td>{{ number_format($customer->deposit - $customer->expense, 2) }}</td>
+                    {{-- <td>{{ $customer->address}}, {{ $customer->city}}@if($customer->country) {{','.
+                        $customer->country}}@endif</td> --}}
+                    <td>{{ $customer->address}}</td>
                     <td>
                         <div class="btn-group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
@@ -238,7 +223,7 @@
 
     var customer_id = [];
     var all_permission = <?php echo json_encode($all_permission) ?>;
-    
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -282,7 +267,7 @@
         var note = $('table.deposit-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('td:nth-child(3)').text();
         if(note == 'N/A')
             note = '';
-        
+
         $('#edit-deposit input[name="deposit_id"]').val(id);
         $('#edit-deposit input[name="amount"]').val(amount);
         $('#edit-deposit textarea[name="note"]').val(note);
@@ -322,7 +307,7 @@
             // {
             //   'targets': [8],
             //   'render': function(data, type, row, meta){
-                    
+
             //        return data.number( '', '', 0 );
             //     },
             // //   render: $.fn.dataTable.render.number( '', '', 0 )
@@ -440,7 +425,7 @@
         amounteditid.value = formatRupiah(this.value, 'input');
     });
 
-    
+
 
     function formatRupiah(angka, type){
         var number_string= '';
@@ -460,7 +445,7 @@
             ribuan = ribuan.join('.').split('').reverse().join('');
             return "-"+ribuan;
         }
-        
+
         if(type == 'input'){
             number_string = angka.replace(/[^,\d]/g, '').toString(),
 			split   		= number_string.split(',');
@@ -474,14 +459,14 @@
 			rupiah     		= split[0].substr(0, sisa);
 			ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
         }
-		    
- 
+
+
 			// tambahkan titik jika yang di input sudah menjadi angka ribuan
 			if(ribuan){
 				separator = sisa ? '.' : '';
 				rupiah += separator + ribuan.join('.');
 			}
- 
+
 			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
 			// return prefix == undefined || ? rupiah : (rupiah ? '' + rupiah : '');
             return ('' + rupiah);
