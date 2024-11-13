@@ -1072,6 +1072,206 @@
 						            	</div>
 						            </td>
 						        </tr>
+						        <tr>
+						            <td>
+                                        <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("biller-parent", $all_permission))
+								                <input type="checkbox" value="1" id="biller-parent" name="biller-parent" checked />
+								                @else
+								                <input type="checkbox" value="1" id="biller-parent" name="biller-parent" />
+								                @endif
+								                <label for="biller-parent">
+                                                    {{ trans('file.People')}} / {{ trans('file.Biller List') }}
+                                                </label>
+							            	</div>
+						            	</div>
+                                    </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                            @if(in_array("biller-parent", $all_permission))
+								                @if(in_array("billers-index", $all_permission))
+								                <input type="checkbox" value="1" id="billers-index" name="billers-index" checked>
+								                @else
+								                <input type="checkbox" value="1" id="billers-index" name="billers-index">
+								                @endif
+								                <label for="billers-index"></label>
+                                            @else
+								                @if(in_array("billers-index", $all_permission))
+								                <input type="checkbox" value="1" id="billers-index" name="billers-index" checked disabled>
+								                @else
+								                <input type="checkbox" value="1" id="billers-index" name="billers-index" disabled>
+								                @endif
+								                <label for="billers-index"></label>
+                                            @endif
+								            </div>
+						            	</div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                            @if(in_array("biller-parent", $all_permission))
+								                @if(in_array("billers-add", $all_permission))
+								                <input type="checkbox" value="1" id="billers-add" name="billers-add" checked>
+								                @else
+								                <input type="checkbox" value="1" id="billers-add" name="billers-add">
+								                @endif
+								                <label for="billers-add"></label>
+                                            @else
+								                @if(in_array("billers-add", $all_permission))
+								                <input type="checkbox" value="1" id="billers-add" name="billers-add" checked disabled>
+								                @else
+								                <input type="checkbox" value="1" id="billers-add" name="billers-add" disabled>
+								                @endif
+								                <label for="billers-add"></label>
+                                            @endif
+								            </div>
+						            	</div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                            @if(in_array("biller-parent", $all_permission))
+								                @if(in_array("billers-edit", $all_permission))
+								                <input type="checkbox" value="1" id="billers-edit" name="billers-edit" checked>
+								                @else
+								                <input type="checkbox" value="1" id="billers-edit" name="billers-edit">
+								                @endif
+								                <label for="billers-edit"></label>
+                                            @else
+                                                @if(in_array("billers-edit", $all_permission))
+                                                <input type="checkbox" value="1" id="billers-edit" name="billers-edit" checked disabled>
+                                                @else
+                                                <input type="checkbox" value="1" id="billers-edit" name="billers-edit" disabled>
+                                                @endif
+                                                <label for="billers-edit"></label>
+                                            @endif
+								            </div>
+						            	</div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                            @if(in_array("biller-parent", $all_permission))
+								                @if(in_array("billers-delete", $all_permission))
+								                <input type="checkbox" value="1" id="billers-delete" name="billers-delete" checked>
+								                @else
+								                <input type="checkbox" value="1" id="billers-delete" name="billers-delete">
+								                @endif
+								                <label for="billers-delete"></label>
+                                            @else
+								                @if(in_array("billers-delete", $all_permission))
+								                <input type="checkbox" value="1" id="billers-delete" name="billers-delete" checked disabled>
+								                @else
+								                <input type="checkbox" value="1" id="billers-delete" name="billers-delete" disabled>
+								                @endif
+								                <label for="billers-delete"></label>
+                                            @endif
+								            </div>
+						            	</div>
+						            </td>
+						        </tr>
+						        <tr>
+						            <td>
+                                        <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("supplier-parent", $all_permission))
+								                <input type="checkbox" value="1" id="supplier-parent" name="supplier-parent" checked />
+								                @else
+								                <input type="checkbox" value="1" id="supplier-parent" name="supplier-parent" />
+								                @endif
+								                <label for="supplier-parent">
+                                                    {{ trans('file.People')}} / {{ trans('file.Supplier List') }}
+                                                </label>
+							            	</div>
+						            	</div>
+                                    </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                            @if(in_array("supplier-parent", $all_permission))
+								                @if(in_array("suppliers-index", $all_permission))
+								                <input type="checkbox" value="1" id="suppliers-index" name="suppliers-index" checked>
+								                @else
+								                <input type="checkbox" value="1" id="suppliers-index" name="suppliers-index">
+								                @endif
+								                <label for="suppliers-index"></label>
+                                            @else
+								                @if(in_array("suppliers-index", $all_permission))
+								                <input type="checkbox" value="1" id="suppliers-index" name="suppliers-index" checked disabled>
+								                @else
+								                <input type="checkbox" value="1" id="suppliers-index" name="suppliers-index" disabled>
+								                @endif
+								                <label for="suppliers-index"></label>
+                                            @endif
+								            </div>
+						            	</div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                            @if(in_array("supplier-parent", $all_permission))
+								                @if(in_array("suppliers-add", $all_permission))
+								                <input type="checkbox" value="1" id="suppliers-add" name="suppliers-add" checked>
+								                @else
+								                <input type="checkbox" value="1" id="suppliers-add" name="suppliers-add">
+								                @endif
+								                <label for="suppliers-add"></label>
+                                            @else
+								                @if(in_array("suppliers-add", $all_permission))
+								                <input type="checkbox" value="1" id="suppliers-add" name="suppliers-add" checked disabled>
+								                @else
+								                <input type="checkbox" value="1" id="suppliers-add" name="suppliers-add" disabled>
+								                @endif
+								                <label for="suppliers-add"></label>
+                                            @endif
+								            </div>
+						            	</div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                            @if(in_array("supplier-parent", $all_permission))
+								                @if(in_array("suppliers-edit", $all_permission))
+								                <input type="checkbox" value="1" id="suppliers-edit" name="suppliers-edit" checked>
+								                @else
+								                <input type="checkbox" value="1" id="suppliers-edit" name="suppliers-edit">
+								                @endif
+								                <label for="suppliers-edit"></label>
+                                            @else
+                                                @if(in_array("suppliers-edit", $all_permission))
+                                                <input type="checkbox" value="1" id="suppliers-edit" name="suppliers-edit" checked disabled>
+                                                @else
+                                                <input type="checkbox" value="1" id="suppliers-edit" name="suppliers-edit" disabled>
+                                                @endif
+                                                <label for="suppliers-edit"></label>
+                                            @endif
+								            </div>
+						            	</div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                            @if(in_array("supplier-parent", $all_permission))
+								                @if(in_array("suppliers-delete", $all_permission))
+								                <input type="checkbox" value="1" id="suppliers-delete" name="suppliers-delete" checked>
+								                @else
+								                <input type="checkbox" value="1" id="suppliers-delete" name="suppliers-delete">
+								                @endif
+								                <label for="suppliers-delete"></label>
+                                            @else
+								                @if(in_array("suppliers-delete", $all_permission))
+								                <input type="checkbox" value="1" id="suppliers-delete" name="suppliers-delete" checked disabled>
+								                @else
+								                <input type="checkbox" value="1" id="suppliers-delete" name="suppliers-delete" disabled>
+								                @endif
+								                <label for="suppliers-delete"></label>
+                                            @endif
+								            </div>
+						            	</div>
+						            </td>
+						        </tr>
 						        {{-- <tr>
 						            <td>{{trans('file.customer')}}</td>
 						            <td class="text-center">
