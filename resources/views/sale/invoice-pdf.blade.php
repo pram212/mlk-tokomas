@@ -303,6 +303,8 @@
                                 Ketanggungan, {{$data->created_at}}
                                 <br>
                                 Kepada : {{$data->customer->name}}
+                                <br>
+                                {{ $data->customer->address }}
                             </td>
                         </tr>
                     </tbody>
