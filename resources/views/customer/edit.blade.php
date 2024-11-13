@@ -1,6 +1,6 @@
 @extends('layout.main') @section('content')
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 <section class="forms">
     <div class="container-fluid">
@@ -14,7 +14,7 @@
                         <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                         {!! Form::open(['route' => ['customer.update',$lims_customer_data->id], 'method' => 'put', 'files' => true]) !!}
                         <div class="row">
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <input type="hidden" name="customer_group" value="{{$lims_customer_data->customer_group_id}}">
                                     <label>{{trans('file.Customer Group')}} *</strong> </label>
@@ -24,14 +24,14 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>{{trans('file.name')}} *</strong> </label>
                                     <input type="text" name="customer_name" value="{{$lims_customer_data->name}}" required class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label>{{trans('file.Company Name')}} </label>
                                     <input type="text" name="company_name" value="{{$lims_customer_data->company_name}}" class="form-control">
@@ -59,17 +59,17 @@
                                     <label>{{trans('file.Tax Number')}}</label>
                                     <input type="text" name="tax_no" class="form-control" value="{{$lims_customer_data->tax_no}}">
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>{{trans('file.Address')}} *</label>
-                                    <input type="text" name="address" required value="{{$lims_customer_data->address}}" class="form-control">
+                                    <input type="text" name="address" required value="{{ $lims_customer_data->address}}" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label>{{trans('file.City')}} *</label>
-                                    <input type="text" name="city" required value="{{$lims_customer_data->city}}" class="form-control">
+                                    <input type="text" name="city" required value="{{$lims_customer_data_data->city}}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -114,7 +114,7 @@
                                     <label>{{trans('file.Password')}} *</label>
                                     <input type="password" name="password" class="form-control">
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-12">
                                 <div class="form-group mt-3">
                                     <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
@@ -148,7 +148,7 @@
             $('input[name="password"]').prop('required',false);
         }
     });
-        
+
     var customer_group = $("input[name='customer_group']").val();
     $('select[name=customer_group_id]').val(customer_group);
 </script>
