@@ -192,6 +192,15 @@ class RoleController extends Controller
         else
             $role->revokePermissionTo('users-parent');
 
+        if($request->has('customer-parent')){
+            $permission = Permission::firstOrCreate(['name' => 'customer-parent']);
+            if(!$role->hasPermissionTo('customer-parent')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('customer-parent');
+
         if($request->has('report-parent')){
             $permission = Permission::firstOrCreate(['name' => 'report-parent']);
             if(!$role->hasPermissionTo('report-parent')){

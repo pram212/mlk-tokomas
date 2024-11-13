@@ -28,6 +28,7 @@ class RolePermissionMasterAndParentSeeder extends Seeder
             ['name' => 'product-stock-parent', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
             ['name' => 'product-stock', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
             ['name' => 'users-parent', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
+            ['name' => 'customer-parent', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
             ['name' => 'report-parent', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
             ['name' => 'warehouse-transfer', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],
             ['name' => 'action-parent', 'guard_name' => 'web', 'created_at' => Date::now(), 'updated_at' => Date::now()],

@@ -1,6 +1,6 @@
 @extends('layout.main') @section('content')
 @if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
+  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div>
 @endif
 <section class="forms">
     <div class="container-fluid">
@@ -153,10 +153,10 @@
         var val = e.value; // get the value.
         localStorage.setItem(id, val);// Every time user writing something, the localStorage's value will override.
     }
-    //get the saved value function - return the value of "v" from localStorage. 
+    //get the saved value function - return the value of "v" from localStorage.
     function getSavedValue  (v){
         if (!localStorage.getItem(v)) {
-            return "";// You can change this to your defualt value. 
+            return "";// You can change this to your defualt value.
         }
         return localStorage.getItem(v);
     }

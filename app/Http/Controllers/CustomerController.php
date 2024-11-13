@@ -45,35 +45,38 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'phone_number' => [
-                'max:255',
-                    Rule::unique('customers')->where(function ($query) {
-                    return $query->where('is_active', 1);
-                }),
-            ],
-        ]);
+        // HIDE PHONE NUMBER EMAIL DAN ADDRESS
+        // $this->validate($request, [
+        //     'phone_number' => [
+        //         'max:255',
+        //             Rule::unique('customers')->where(function ($query) {
+        //             return $query->where('is_active', 1);
+        //         }),
+        //     ],
+        // ]);
         $lims_customer_data = $request->all();
         $lims_customer_data['is_active'] = true;
         //creating user if given user access
         if(isset($lims_customer_data['user'])) {
-            $this->validate($request, [
-                'name' => [
-                    'max:255',
-                        Rule::unique('users')->where(function ($query) {
-                        return $query->where('is_deleted', false);
-                    }),
-                ],
-                'email' => [
-                    'email',
-                    'max:255',
-                        Rule::unique('users')->where(function ($query) {
-                        return $query->where('is_deleted', false);
-                    }),
-                ],
-            ]);
+            // HIDE PHONE NUMBER EMAIL DAN ADDRESS
+            // $this->validate($request, [
+            //     'name' => [
+            //         'max:255',
+            //             Rule::unique('users')->where(function ($query) {
+            //             return $query->where('is_deleted', false);
+            //         }),
+            //     ],
+            //     'email' => [
+            //         'email',
+            //         'max:255',
+            //             Rule::unique('users')->where(function ($query) {
+            //             return $query->where('is_deleted', false);
+            //         }),
+            //     ],
+            // ]);
 
-            $lims_customer_data['phone'] = $lims_customer_data['phone_number'];
+            // HIDE PHONE NUMBER EMAIL DAN ADDRESS
+            // $lims_customer_data['phone'] = $lims_customer_data['phone_number'];
             $lims_customer_data['role_id'] = 5;
             $lims_customer_data['is_deleted'] = false;
             $lims_customer_data['password'] = bcrypt($lims_customer_data['password']);
@@ -84,21 +87,26 @@ class CustomerController extends Controller
         else {
             $message = 'Customer created successfully';
         }
-        
-        $lims_customer_data['name'] = $lims_customer_data['customer_name'];
-        
-        if($lims_customer_data['email']) {
-            try{
-                Mail::send( 'mail.customer_create', $lims_customer_data, function( $message ) use ($lims_customer_data)
-                {
-                    $message->to( $lims_customer_data['email'] )->subject( 'New Customer' );
-                });
-            }
-            catch(\Exception $e){
-                $message = 'Customer created successfully. Please setup your <a href="setting/mail_setting">mail setting</a> to send mail.';
-            }   
-        }
 
+        $lims_customer_data['name'] = $lims_customer_data['customer_name'];
+
+        // HIDE PHONE NUMBER EMAIL DAN ADDRESS
+        // if($lims_customer_data['email']) {
+        //     try{
+        //         Mail::send( 'mail.customer_create', $lims_customer_data, function( $message ) use ($lims_customer_data)
+        //         {
+        //             $message->to( $lims_customer_data['email'] )->subject( 'New Customer' );
+        //         });
+        //     }
+        //     catch(\Exception $e){
+        //         $message = 'Customer created successfully. Please setup your <a href="setting/mail_setting">mail setting</a> to send mail.';
+        //     }
+        // }
+
+        // HIDE PHONE NUMBER EMAIL DAN ADDRESS
+        $lims_customer_data['email'] = '';
+        $lims_customer_data['phone_number'] = 0;
+        $lims_customer_data['address'] = '';
         Customer::create($lims_customer_data);
         if($lims_customer_data['pos'])
             return redirect('pos')->with('message', $message);
@@ -161,7 +169,7 @@ class CustomerController extends Controller
         else {
             $message = 'Customer updated successfully';
         }
-        
+
         $input['name'] = $input['customer_name'];
         $lims_customer_data->update($input);
         return redirect('customer')->with('edit_message', $message);
@@ -259,7 +267,7 @@ class CustomerController extends Controller
         $data = $request->all();
         $data['user_id'] = Auth::id();
         $lims_customer_data = Customer::find($data['customer_id']);
-        $data['amount'] = (str_replace('.', '', $data['amount']) == '' ? 0 : str_replace('.', '', $data['amount'])) ;   
+        $data['amount'] = (str_replace('.', '', $data['amount']) == '' ? 0 : str_replace('.', '', $data['amount'])) ;
         $lims_customer_data->deposit += $data['amount'];
         $lims_customer_data->save();
         Deposit::create($data);
@@ -286,7 +294,7 @@ class CustomerController extends Controller
         $data = $request->all();
         $lims_deposit_data = Deposit::find($data['deposit_id']);
         $lims_customer_data = Customer::find($lims_deposit_data->customer_id);
-        $data['amount'] = (str_replace('.', '', $data['amount']) == '' ? 0 : str_replace('.', '', $data['amount'])) ;  
+        $data['amount'] = (str_replace('.', '', $data['amount']) == '' ? 0 : str_replace('.', '', $data['amount'])) ;
         $amount_dif = $data['amount'] - $lims_deposit_data->amount;
         $lims_customer_data->deposit += $amount_dif;
         $lims_customer_data->save();

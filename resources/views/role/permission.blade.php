@@ -882,7 +882,7 @@
 								                <input type="checkbox" value="1" id="users-parent" name="users-parent" />
 								                @endif
 								                <label for="users-parent">
-                                                    {{trans('file.User')}}
+                                                    {{ trans('file.People')}} / {{ trans('file.User') }}
                                                 </label>
 							            	</div>
 						            	</div>
@@ -967,6 +967,106 @@
 								                <input type="checkbox" value="1" id="users-delete" name="users-delete" disabled>
 								                @endif
 								                <label for="users-delete"></label>
+                                            @endif
+								            </div>
+						            	</div>
+						            </td>
+						        </tr>
+						        <tr>
+						            <td>
+                                        <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+								                @if(in_array("customer-parent", $all_permission))
+								                <input type="checkbox" value="1" id="customer-parent" name="customer-parent" checked />
+								                @else
+								                <input type="checkbox" value="1" id="customer-parent" name="customer-parent" />
+								                @endif
+								                <label for="customer-parent">
+                                                    {{ trans('file.People')}} / {{ trans('file.Customer List') }}
+                                                </label>
+							            	</div>
+						            	</div>
+                                    </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                            @if(in_array("customer-parent", $all_permission))
+								                @if(in_array("customers-index", $all_permission))
+								                <input type="checkbox" value="1" id="customers-index" name="customers-index" checked>
+								                @else
+								                <input type="checkbox" value="1" id="customers-index" name="customers-index">
+								                @endif
+								                <label for="customers-index"></label>
+                                            @else
+								                @if(in_array("customers-index", $all_permission))
+								                <input type="checkbox" value="1" id="customers-index" name="customers-index" checked disabled>
+								                @else
+								                <input type="checkbox" value="1" id="customers-index" name="customers-index" disabled>
+								                @endif
+								                <label for="customers-index"></label>
+                                            @endif
+								            </div>
+						            	</div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                            @if(in_array("customer-parent", $all_permission))
+								                @if(in_array("customers-add", $all_permission))
+								                <input type="checkbox" value="1" id="customers-add" name="customers-add" checked>
+								                @else
+								                <input type="checkbox" value="1" id="customers-add" name="customers-add">
+								                @endif
+								                <label for="customers-add"></label>
+                                            @else
+								                @if(in_array("customers-add", $all_permission))
+								                <input type="checkbox" value="1" id="customers-add" name="customers-add" checked disabled>
+								                @else
+								                <input type="checkbox" value="1" id="customers-add" name="customers-add" disabled>
+								                @endif
+								                <label for="customers-add"></label>
+                                            @endif
+								            </div>
+						            	</div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                            @if(in_array("customer-parent", $all_permission))
+								                @if(in_array("customers-edit", $all_permission))
+								                <input type="checkbox" value="1" id="customers-edit" name="customers-edit" checked>
+								                @else
+								                <input type="checkbox" value="1" id="customers-edit" name="customers-edit">
+								                @endif
+								                <label for="customers-edit"></label>
+                                            @else
+                                                @if(in_array("customers-edit", $all_permission))
+                                                <input type="checkbox" value="1" id="customers-edit" name="customers-edit" checked disabled>
+                                                @else
+                                                <input type="checkbox" value="1" id="customers-edit" name="customers-edit" disabled>
+                                                @endif
+                                                <label for="customers-edit"></label>
+                                            @endif
+								            </div>
+						            	</div>
+						            </td>
+						            <td class="text-center">
+						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
+							                <div class="checkbox">
+                                            @if(in_array("customer-parent", $all_permission))
+								                @if(in_array("customers-delete", $all_permission))
+								                <input type="checkbox" value="1" id="customers-delete" name="customers-delete" checked>
+								                @else
+								                <input type="checkbox" value="1" id="customers-delete" name="customers-delete">
+								                @endif
+								                <label for="customers-delete"></label>
+                                            @else
+								                @if(in_array("customers-delete", $all_permission))
+								                <input type="checkbox" value="1" id="customers-delete" name="customers-delete" checked disabled>
+								                @else
+								                <input type="checkbox" value="1" id="customers-delete" name="customers-delete" disabled>
+								                @endif
+								                <label for="customers-delete"></label>
                                             @endif
 								            </div>
 						            	</div>
