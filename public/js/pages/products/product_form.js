@@ -320,26 +320,26 @@ $input_categories_id.change(function () {
 });
 
 $input_product_type_id.change(function () {
-    let product_type_id = $(this).val();
-    let categories_id = $input_categories_id.val();
+    // let product_type_id = $(this).val();
+    // let categories_id = $input_categories_id.val();
 
-    $.ajax({
-        type: "GET",
-        url:
-            baseUrl +
-            "/product-categories/gramasi-getByCategoryAndProductType/" +
-            categories_id +
-            "/" +
-            product_type_id,
-        success: function (data) {
-            if (data.data) {
-                $input_gramasi_id.val(data.data.id);
-                $text_gramasi_id.text(data.data.gramasi);
+    // $.ajax({
+    //     type: "GET",
+    //     url:
+    //         baseUrl +
+    //         "/product-categories/gramasi-getByCategoryAndProductType/" +
+    //         categories_id +
+    //         "/" +
+    //         product_type_id,
+    //     success: function (data) {
+    //         if (data.data) {
+    //             // $input_gramasi_id.val(data.data.id);
+    //             // $text_gramasi_id.text(data.data.gramasi);
 
-                prevGramasi(data.data.id);
-            }
-        },
-    });
+    //             // prevGramasi(data.data.id);
+    //         }
+    //     },
+    // });
 
     setPrice();
 });
@@ -372,6 +372,7 @@ function setPrice() {
         success: function (data) {
             if (data) {
                 let price = data.price;
+                console.log('price', data.price);
 
                 price_col.val(price);
             }
@@ -500,10 +501,10 @@ $(window).keydown(function (e) {
 $("#price").maskMoney({ thousands: ".", decimal: "," });
 $("#total_price").maskMoney({ thousands: ".", decimal: "," });
 
-const getGramasi = (id_gramasi) => {
-    const selectedGramasi = gramasis.find(({ id }) => id === id_gramasi);
-    return selectedGramasi;
-};
+// const getGramasi = (id_gramasi) => {
+//     const selectedGramasi = gramasis.find(({ id }) => id === id_gramasi);
+//     return selectedGramasi;
+// };
 
 const getKdSifat = (id_kd_sifat) => {
     const selectedProerties = properties.find(({ id }) => id === id_kd_sifat);
@@ -518,7 +519,7 @@ $("#tag_type_id").change(function (e) {
 });
 
 function prevGramasi(id) {
-    const gramasi = getGramasi(id);
+    // const gramasi = getGramasi(id);
     $("#prev-gramasi").text(gramasi.gramasi);
     $("#prev-kd-gramasi").text(gramasi.code);
 }
@@ -535,18 +536,25 @@ $("#input-kd-sifat").change(function (e) {
     $("#prev-kd-sifat").text(property);
 });
 
-$("#input-mg").bind("input", function (e) {
+$("#input-kd-gramasi").change(function (e) {
+    e.preventDefault();
+    const gramasi = e.target.value
+    $("#prev-gramasi").text(gramasi)
+})
+
+$("#input-mg").change(function (e) {
     e.preventDefault();
     const mg = e.target.value;
 
     // getTotalPrice(mg)
-    const valGramasi = $text_gramasi_id.html();
+    const valGramasi = $("#prev-gramasi").text();
     const price = price_col.val();
 
 
     if(mg === "") {
         price_total.val("")
     } else {
+
         const countTotalPrice = (price * valGramasi) + ( price / 1000  * mg);
 
         localStorage.setItem('price_total_sementara', countTotalPrice)
@@ -554,7 +562,7 @@ $("#input-mg").bind("input", function (e) {
         price_total.val(countTotalPrice)
     }
 
-    $("#prev-mg").text(mg);
+    // $("#prev-mg").text(mg);
 });
 
 $("#input-gold_content").bind("input", function (e) {
