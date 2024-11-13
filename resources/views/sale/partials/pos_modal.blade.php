@@ -91,7 +91,7 @@
                     <label>{{trans('file.name')}} *</strong> </label>
                     <input type="text" name="customer_name" required class="form-control">
                 </div>
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label>{{trans('file.Email')}}</label>
                     <input type="text" name="email" placeholder="example@example.com" class="form-control">
                 </div>
@@ -102,7 +102,7 @@
                 <div class="form-group">
                     <label>{{trans('file.Address')}} *</label>
                     <input type="text" name="address" required class="form-control">
-                </div>
+                </div> --}}
                 <div class="form-group">
                     <label>{{trans('file.City')}} *</label>
                     <input type="text" name="city" required class="form-control">
