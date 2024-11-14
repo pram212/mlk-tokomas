@@ -145,12 +145,13 @@
                                 <label>{{trans('file.Change')}} : </label>
                                 <p id="payment_change" class="ml-2">0</p>
                             </div>
-                            <div class="col-md-6 mt-1">
+                            {{-- TAKEOUT DISCOUNT FROM SALE --}}
+                            {{-- <div class="col-md-6 mt-1">
                                 <input type="hidden" name="paid_by_id">
                                 <label>Total Discount</label>
                                 <input class="form-control" type="text" name="payment_discount" id="payment_discount"
                                     readonly>
-                            </div>
+                            </div> --}}
 
                         </div>
 
