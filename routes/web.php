@@ -523,6 +523,10 @@ Route::group(['middleware' => ['auth', 'active']], function () {
         Route::get('getTotalPriceProduct/{product_code}', 'PriceController@getTotalPriceProduct');
         Route::get('promo-getPromo/{product_property_id}', 'PromoController@getPromoProduct');
         Route::resource("/price", 'PriceController');
+        Route::resource('/potongan', 'PotonganController');
+        Route::get('/potongan-get-value/{id}', 'PotonganController@getValueDiscount');
+        Route::get('potongan-datatable', 'PotonganController@potonganData');
+        Route::post('potongan-multi-delete', 'PotonganController@destroyMultiple');
     });
 
 
