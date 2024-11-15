@@ -9,8 +9,8 @@ const $Buyback_price = $("#modal_price_value");
 const $Buyback_price_2 = $("#modal_price_value_2");
 const $_buyback_price_start = $("#modal_price_default");
 const $_buyback_price_start_2 = $("#modal_price_default_2");
-const $_buyback_price_decrease = $("#modal_discount");
 const $_buyback_price_decrease_2 = $("#modal_discount_2");
+const $_buyback_price_decrease = $("#modal_discount");
 const $_product_id = $("#product_id");
 const $_product_code = $("#product_code");
 const $_buyback_additional_cost = $("#modal_additional_cost");
@@ -124,6 +124,8 @@ function showBuyBackModal() {
         $_buyback_price_decrease.val(
             formatMoney(parseFloat(response.data.discount))
         );
+
+        console.log('data', response.data);
         $_product_id.val(response.data.product_id);
         $_product_code.val(code);
         $_buyback_additional_cost.val(formatMoney(additionalCostIsValid));
@@ -192,6 +194,7 @@ function showDetailModalToPrint() {
         $_buyback_price_decrease_2.val(
             formatMoney(parseFloat(response.data.discount))
         );
+
         $_product_id.val(response.data.product_id);
         $_product_code.val(code);
         $_buyback_additional_cost_2.val(formatMoney(additionalCostIsValid));
@@ -258,6 +261,7 @@ function validation_buyback() {
 
     return true;
 }
+
 
 function hitungTotalPotongan() {
     const isBarangMeleot = $(this).is(":checked");
