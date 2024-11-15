@@ -27,6 +27,7 @@ use Dompdf\Dompdf;
 use View;
 use QrCode;
 use App\Helpers\ResponseHelpers;
+use App\Potongan;
 use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
@@ -47,6 +48,7 @@ class ProductController extends Controller
         $product_type = ProductType::all();
         $tagType = TagType::all();
         $gramasi = Gramasi::all();
+        $discount = Potongan::all();
         $mode = 'create';
         $warehouses = Warehouse::where('is_active', true)->get();
         $split_set_type = [
@@ -65,6 +67,7 @@ class ProductController extends Controller
             'tagType',
             'gramasi',
             'category',
+            'discount',
             'mode',
             'split_set_type',
             'warehouses'
@@ -207,6 +210,7 @@ class ProductController extends Controller
             'category'
         ]);
 
+        $product['discount_value'] = DB::table('potongan')->where('id','=', $product->discount)->first();
         return response()->json($product);
     }
 
@@ -946,6 +950,7 @@ class ProductController extends Controller
             'tagType:id,code,color',
             'category'
         ]);
+        $product['discount_value'] = DB::table('potongan')->where('id','=', $product->discount)->first();
 
         $dompdf = new Dompdf();
         $options = $dompdf->getOptions();

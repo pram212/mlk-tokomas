@@ -81,6 +81,8 @@ return [
     "Order" => "Pemesanan",
     "Order Table" => "Tabel Pemesanan",
     "Discount" => "Potongan",
+    'Add Discount' => 'Tambah Potongan',
+    'Code Discount' => 'Kode Potongan',
     "Unit Cost" => "Biaya satuan",
     "Unit Price" => "Harga satuan",
     "Net Unit Cost" => "Biaya Unit Bersih",

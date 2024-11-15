@@ -116,7 +116,11 @@
                                 {{ $data->gold_content }}
                             </div>
                             <div class="additional_cod">
-                                {{ $data->additional_code }}/{{ $data->discount }}
+                                @if ($data->discount_value)
+                                    {{ $data->additional_code }}/{{ $data->discount_value->code }}
+                                @else
+                                    {{ $data->additional_code }}/{{ $data->discount }}
+                                @endif
                             </div>
                         </div>
                         <div class="gramasi">

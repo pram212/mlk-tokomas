@@ -68,6 +68,11 @@
                         </li>
                         @endcan
 
+                        {{-- Potongan Discount --}}
+                        <li id="potongan-list-menu" class="@if (request()->is('master/potongan*')) active @endif">
+                            <a href="{{ route('master.potongan.index') }}">{{ __('file.Discount') }}</a>
+                        </li>
+
                         @can('promo', App\Master::class)
                         <li id="promo" class="@if (request()->is('promo*')) active @endif">
                             <a href="{{ url('promo') }}">{{ __('file.promo') }}</a>
