@@ -580,7 +580,14 @@ $(document).ready(function () {
             } else {
                 $("#dtl-gramasi-code").val(data.gramasi_id);
             }
-            $("#dtl-discount").val(data.discount);
+            // DISCOUNT FROM
+            if(data.discount_value) {
+                // const discountCombine = data.discount_value.code + ' - '+ data.discount_value.discount;
+                // $("#dtl-discount").val(discountCombine);
+                $("#dtl-discount").val(data.discount_value.code);
+            } else {
+                $("#dtl-discount").val(data.discount);
+            }
             $("#dtl-product-property").val(data.product_property?.description);
             const url = baseUrl + "/view-product/" + data.code;
             generateQRCode(url, "prev-qrcode");

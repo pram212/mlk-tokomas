@@ -188,7 +188,7 @@ class BuyBackController extends Controller
             'product_sales.split_set_code',
             'buyback.description as buyback_desc',
             DB::raw("product_sales.product_id as code"),
-            DB::raw("COALESCE(buyback.final_price, product_sales.total) as price"),
+            DB::raw("COALESCE(buyback.final_price, product_sales.net_unit_price) as price"),
             DB::raw('(COALESCE(product_sales.discount,0)-COALESCE(product_sales.discount_promo,0)) as discount'),
         ])
             ->leftJoin('product_buyback as buyback', function ($join) {
@@ -205,6 +205,14 @@ class BuyBackController extends Controller
             ->with('product:id,additional_cost,mg,name,gramasi_id,product_property_id,image', 'product.productProperty:id,code,description', 'product.gramasi:id,gramasi', 'productSplitSetDetail:id,additional_cost,mg', 'sale:id,reference_no as invoice_number,sale_note')
             ->orderByDesc('product_sales.created_at')
             ->first();
+
+        // tambahan karena tidak mengambil dari product sales
+        $dataProduct = DB::table('products')->where('id', '=', $product['product_id'])->first();
+        $dataDiscountNew = DB::table('potongan')->where('id', '=', $dataProduct->discount)->first();
+
+        if($dataDiscountNew) {
+            $product['discount'] = $dataDiscountNew->discount;
+        }
 
         return response()->json($product);
     }

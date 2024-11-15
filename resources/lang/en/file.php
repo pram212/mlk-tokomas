@@ -82,6 +82,8 @@ return [
     'Order' => 'Order',
     'Order Table' => 'Order Table',
     'Discount' => 'Discount',
+    'Add Discount' => 'Add Discount',
+    'Code Discount' => 'Code Discount',
     'Unit Cost' => 'Unit Cost',
     'Unit Price' => 'Unit Price',
     'Net Unit Cost' => 'Net Unit Cost',
