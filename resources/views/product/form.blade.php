@@ -265,7 +265,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <div class="form-group">
+                                                    {{-- Ganti Menjadi dropdown dan change menjadi dari master --}}
+                                                    {{-- <div class="form-group">
                                                         <label>{{ __('file.Discount') }} *</strong> </label>
                                                         <input type="number" class="form-control" @if($mode=='show' )
                                                             readonly @endif name="discount" id="input-diskon"
@@ -273,7 +274,25 @@
                                                         @error('discount')
                                                         <span class="text-danger">{{ $message }}</span>
                                                         @enderror
+                                                    </div> --}}
+                                                    <div class="form-group">
+                                                        <label>{{ __('file.Discount') }}*</strong> </label>
+                                                        <select name="discount" @if($mode=='show' ) readonly @endif
+                                                            class="form-control" id="input-diskon">
+                                                            <option value="">{{ __('file.Select') }}
+                                                            </option>
+                                                            @foreach ($discount as $item)
+                                                            <option value="{{ $item->id }}" @if ($item->id ==
+                                                                @$product->discount) selected @endif>
+                                                                {{ $item->code }} -
+                                                                {{ $item->discount }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('discount')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>

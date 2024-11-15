@@ -691,7 +691,14 @@ class SaleController extends Controller
         $qty = $data['qty'];
         $sale_unit = $data['sale_unit'];
         $net_unit_price = $data['net_unit_price'];
-        $discount = $data['discount'];
+        // GET DISCOUNT RATE
+        $getDiscountRate = DB::table('products')->join('potongan', 'products.discount', '=', 'potongan.id')->where('id', '=', $data['product_id'])->first('potongan.discount');
+
+        if($getDiscountRate) {
+            $discount = $getDiscountRate->discount;
+        } else {
+            $discount = $data['discount'];
+        }
         $tax_rate = $data['tax_rate'];
         $tax = $data['tax'];
         $total = $data['subtotal'];
