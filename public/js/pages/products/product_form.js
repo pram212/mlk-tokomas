@@ -555,7 +555,13 @@ $("#input-mg").change(function (e) {
         price_total.val("")
     } else {
 
-        const countTotalPrice = (price * valGramasi) + ( price / 1000  * mg);
+
+        console.log('price:' + parseFloat(price));
+        console.log('gramasi' +  valGramasi);
+
+        console.log('mg' + mg);
+
+        const countTotalPrice = (parseFloat(price) * valGramasi) + ( parseFloat(price) / 1000  * mg);
 
         localStorage.setItem('price_total_sementara', countTotalPrice)
 
@@ -578,10 +584,13 @@ $("#input-additional_code").bind("input", function (e) {
 });
 
 
-$("#input-diskon").bind("input", function (e) {
+$("#input-diskon").change(function (e) {
     e.preventDefault();
-    const diskon = e.target.value;
-    $("#prev-diskon").text(diskon);
+    $.get(baseUrl + "/master/potongan-get-value/" + e.target.value , function (data) {
+        $("#prev-diskon").text(data.code);
+    });
+
+    // const diskon = e.target.value;
     // getTotalPrice(diskon)
 });
 
