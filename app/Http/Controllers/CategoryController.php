@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Category;
 use App\Product;
 use App\Gramasi;
+use App\Helpers\ResponseHelpers;
 
 class CategoryController extends Controller
 {
@@ -25,7 +26,7 @@ class CategoryController extends Controller
         // $modeData = $request->modeData ? $request->modeData : 'index';
         // $isActive = $modeData == 'index' ? true : false;
         $isActive = true;
-        
+
         $categories = Category::query()
             ->where('is_active', $isActive);
 
@@ -42,7 +43,7 @@ class CategoryController extends Controller
                         </li>
                         <li class="divider"></li>
                         <li>
-                          <button class="btn btn-link" onclick="confirmDeletes('.$category->id.')"><i class="dripicons-trash"></i> '.trans("file.delete").'</button> 
+                          <button class="btn btn-link" onclick="confirmDeletes('.$category->id.')"><i class="dripicons-trash"></i> '.trans("file.delete").'</button>
                         </li>
                     </ul>
                 </div>';
@@ -64,8 +65,11 @@ class CategoryController extends Controller
             ],
             // 'image' => 'image|mimes:jpg,jpeg,png,gif',
         ]);
-        
+
         $lims_category_data['name'] = $request->name;
+        $lims_category_data['width'] = $request->width;
+        $lims_category_data['height'] = $request->height;
+        $lims_category_data['tipe'] = $request->tipe;
         $lims_category_data['is_active'] = true;
         Category::create($lims_category_data);
         return redirect('category')->with('message', 'Category inserted successfully');
@@ -74,7 +78,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $lims_category_data = Category::findOrFail($id);
-        
+
         return $lims_category_data;
     }
 
@@ -83,7 +87,7 @@ class CategoryController extends Controller
         $this->validate($request,[
             'name' => [
                 'max:255',
-                Rule::unique('categories')->ignore($request->category_id)->where(function ($query) {
+                Rule::unique('categories')->ignore($id)->where(function ($query) {
                     return $query->where('is_active', 1);
                 }),
             ],
@@ -157,7 +161,7 @@ class CategoryController extends Controller
         }
 
         Category::whereIn('id', $category_id)->delete();
-        
+
         return response()->json(['status' => 'success', 'code'=>200,'message' => 'Category deleted successfully']);
     }
 
@@ -177,12 +181,12 @@ class CategoryController extends Controller
             if ($category) {
                 throw new \Exception('Category has gramasis. Please delete gramasis first');
             }
-            
+
             // Hapus kategori secara permanen
             Category::findOrFail($id)->delete();
 
             DB::commit();
-            
+
             // return json response
             return response()->json([
                 'status' => 'success',
@@ -191,7 +195,7 @@ class CategoryController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             // return json response
             return response()->json([
                 'status' => 'error',
@@ -217,4 +221,16 @@ class CategoryController extends Controller
     //     $lims_category_data->delete();
     //     return redirect('category')->with('message', 'Category has been deleted');
     // }
+
+      // get warehouse list
+    // [GET] /sales/warehouse
+    public function categoryList()
+    {
+        try {
+            $lims_category_list = Category::where('is_active', true)->get();
+            return ResponseHelpers::formatResponse('success', $lims_category_list, 200);
+        } catch (\Exception $e) {
+            return ResponseHelpers::formatResponse('error : ' . $e->getMessage(), [], 500, false);
+        }
+    }
 }
