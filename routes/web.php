@@ -134,6 +134,8 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
     // category routes
     Route::resource('category', 'CategoryController');
+    Route::get('/category-list', 'CategoryController@categoryList'); // warehouse modal
+
     Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
         // Route::post('delete', 'CategoryController@destroy');
         Route::post('category-datatable', 'CategoryController@categoryDatatable')->name('category-datatable');
@@ -176,6 +178,12 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
     // product routes
     Route::resource('products', 'ProductController');
+
+    Route::group(['prefix' => 'product-barcode', 'as' => 'product-barcode.'], function() {
+        Route::get('layout/{category_id}', 'LayoutBarcodeController@codeBarcodeSave');
+    });
+
+
     Route::get('product-detail-split-set-history/{id}', 'ProductController@getProductDetailSplitSetHistory');
     Route::get('product-datatable', 'ProductController@productDataTable')->name('product-datatable');
     Route::get('print_barcode', 'ProductController@printBarcode')->name('printBarcode');

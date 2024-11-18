@@ -710,11 +710,12 @@ class ProductController extends Controller
                 'products.id',
                 DB::raw("COALESCE(split.split_set_code, products.code) as code"),
                 'split.split_set_code',
+                'categories.name as category_name',
                 'split.id as split_id',
                 'product_warehouse.warehouse_id',
                 DB::raw("COALESCE(buyback.final_price, COALESCE(split.price, product_warehouse.price)) as price"),
-                'image',
-                'name',
+                'products.image',
+                'products.name',
                 'products.discount',
                 DB::raw("COALESCE(split.created_at, products.created_at) as created_at"),
                 'tag_type_id',
@@ -725,6 +726,7 @@ class ProductController extends Controller
                 DB::raw("COALESCE(split.invoice_number, products.invoice_number) as invoice_number")
             ])
             ->leftJoin('product_split_set_detail as split', 'products.id', '=', 'split.product_id')
+            ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
             ->leftJoin('product_warehouse as product_warehouse', 'products.id', '=', 'product_warehouse.product_id')
             ->leftJoin('product_buyback as buyback', function ($join) {
                 $join->on('products.id', '=', 'buyback.product_id');
@@ -737,6 +739,9 @@ class ProductController extends Controller
 
         if ($warehouseIds = $request->get('warehouse_ids')) {
             $productQuery->whereIn('product_warehouse.warehouse_id', explode(',', $warehouseIds));
+        }
+        if ($categoryId = $request->get('category_id')) {
+            $productQuery->where('products.category_id', $categoryId);
         }
 
         if ($statusIds = $request->get('status_ids') !== null) {

@@ -36,6 +36,9 @@
                 <tr>
                     <th class="not-exported"></th>
                     <th>{{ trans('file.category') }}</th>
+                    <th>{{ trans('file.width') }} {{ trans('file.category')}}</th>
+                    <th>{{ trans('file.height') }} {{ trans('file.category')}}</th>
+                    <th>{{ trans('file.Type') }} {{ trans('file.category')}}</th>
                     <th>{{ trans('file.Created At') }}</th>
                     <th class="not-exported">{{ trans('file.action') }}</th>
                     <th>{{ trans('file.Updated By') }}</th>
@@ -65,6 +68,32 @@
                         <label>{{ trans('file.name') }} *</label>
                         {{ Form::text('name', null, ['required' => 'required', 'class' => 'form-control', 'placeholder'
                         => trans('file.Type category name').'...' ]) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label>{{ trans('file.width') }} *</label>
+                        {{ Form::number('width', null, ['required' => 'required', 'class' => 'form-control', 'placeholder' => trans('file.Type width number').'...', 'step' => 'any']) }}
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label>{{ trans('file.height') }} *</label>
+                        {{ Form::number('height', null, ['required' => 'required', 'class' => 'form-control', 'placeholder'
+                        => trans('file.Type height number').'...', 'step' => 'any' ]) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label>{{ trans('file.width') }} *</label>
+                        @php
+                            $tipeBarcode = [
+                                'landscape' => 'Landscape',
+                                'potrait' => 'Potrait'
+                            ]
+                        @endphp
+                        {!! Form::select('tipe', $tipeBarcode, null, ['class' => 'form-control']) !!}
                     </div>
                 </div>
 
@@ -97,8 +126,33 @@
                         <label>{{ trans('file.name') }} *</label>
                         {{ Form::text('name', null, ['required' => 'required', 'class' => 'form-control']) }}
                     </div>
+                </div>
 
-
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label>{{ trans('file.width') }} *</label>
+                        {{ Form::number('width', null, ['required' => 'required', 'class' => 'form-control', 'placeholder'
+                        => trans('file.Type width number').'...', 'step' => 'any' ]) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label>{{ trans('file.height') }} *</label>
+                        {{ Form::number('height', null, ['required' => 'required', 'class' => 'form-control', 'placeholder'
+                        => trans('file.Type height number').'...', 'step' => 'any' ]) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label>{{ trans('file.width') }} *</label>
+                        @php
+                            $tipeBarcode = [
+                                'landscape' => 'Landscape',
+                                'potrait' => 'Potrait'
+                            ]
+                        @endphp
+                        {!! Form::select('tipe', $tipeBarcode, null, ['class' => 'form-control']) !!}
+                    </div>
                 </div>
 
                 <div class="form-group">
