@@ -8,6 +8,30 @@
                 class="dripicons-copy"></i> {{ __('file.import_product') }}</a>
         @endcan
     </div>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="d-tc mt-2"><strong>{{trans('file.category')}}</strong> &nbsp;</label>
+                <div class="d-tc">
+                    <select id="category_id" name="category_id" class="selectpicker form-control"
+                        data-live-search="true" data-live-search-style="begins">
+                        <option value="">{{trans('file.category')}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class=" mt-5 mr-3">
+            <div class="form-group">
+                <button class="btn btn-primary" id="filter-btn" type="submit">{{trans('file.submit')}}</button>
+            </div>
+        </div>
+        <div class=" mt-5">
+            <div class="form-group">
+                <button class="btn btn-info" id="print-barcode-btn" type="submit">{{trans('file.print_barcode')}}</button>
+            </div>
+        </div>
+    </div>
+
     <div class="table-responsive">
         <table id="product-data-table" class="table" style="width: 100%">
             <thead>
@@ -15,6 +39,7 @@
                     <th class="not-exported"></th>
                     {{-- <th>Barcode</th> --}}
                     <th>{{ trans('file.Code') }}</th>
+                    <th>{{ __('file.category') }}</th>
                     <th>{{ __('file.Product Name') }}</th>
                     <th>{{ __('file.Product Image') }}</th>
                     <th>{{ __('file.Date') }}</th>
