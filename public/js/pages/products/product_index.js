@@ -324,6 +324,7 @@ $(document).ready(function () {
         const statusFilter = localStorage.getItem('statusFilter');
         if(statusFilter === 'belum') {
             alert('Harap filter terlebih dahulu category tersebut')
+            return false;
         }
 
         // Initialize arrays to collect IDs
@@ -415,6 +416,7 @@ $(document).ready(function () {
             },
             {
                 data: "category_name",
+                searchable: true,
                 responsivePriority: 1,
             },
             {

@@ -79,6 +79,24 @@ class CategoryController extends Controller
     {
         $lims_category_data = Category::findOrFail($id);
 
+        if(str_contains($lims_category_data->width, '.00')) {
+            $isWidth = str_replace('.00', '', $lims_category_data->width);
+            $finalWidth = (int)$isWidth;
+        } else {
+            $isWidth = str_replace('0', '', $lims_category_data->width);
+            $finalWidth = (float)$isWidth;
+        }
+        if(str_contains($lims_category_data->height, '.00')) {
+            $isHeight = str_replace( '.00', '', $lims_category_data->height);
+            $finalHeight = (int)$isHeight;
+        } else {
+            $isHeight = str_replace('0', '', $lims_category_data->height);
+            $finalHeight = (float)$isHeight;
+        }
+
+        $lims_category_data['width'] = $finalWidth;
+        $lims_category_data['height'] = $finalHeight;
+
         return $lims_category_data;
     }
 
