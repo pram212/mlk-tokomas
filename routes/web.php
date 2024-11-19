@@ -180,7 +180,7 @@ Route::group(['middleware' => ['auth', 'active']], function () {
     Route::resource('products', 'ProductController');
 
     Route::group(['prefix' => 'product-barcode', 'as' => 'product-barcode.'], function() {
-        Route::get('layout/{category_id}', 'LayoutBarcodeController@codeBarcodeSave');
+        Route::get('layout', 'LayoutBarcodeController@codeBarcodeSave');
     });
 
 

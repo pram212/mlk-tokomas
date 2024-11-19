@@ -287,6 +287,7 @@ const filter_btn = $("#filter-btn");
 const barcode_btn = $("#print-barcode-btn");
 
 $(document).ready(function () {
+    localStorage.setItem('statusFilter', 'belum')
      // set data selectpicker category_id
      getCategory().then((response) => {
         const status = response.status;
@@ -320,14 +321,41 @@ $(document).ready(function () {
 
 
     function printBarcode() {
+        const statusFilter = localStorage.getItem('statusFilter');
+        if(statusFilter === 'belum') {
+            alert('Harap filter terlebih dahulu category tersebut')
+        }
+
+        // Initialize arrays to collect IDs
+        const ids = [];
+        const split_ids = [];
+
+        // Loop through all checked checkboxes in the DataTable
+        $(".dt-checkboxes:checked").each(function () {
+            const tr = $(this).closest("tr");
+            const data = table.row(tr).data();
+
+            // Ensure data exists before pushing
+            if (data) {
+                ids.push(data.id);
+            }
+        });
+
+
         const categoryId = $('#category_id').find(":selected").val();
-        const url = 'product-barcode/layout/' + categoryId;
+        if(ids) {
+            var url = `product-barcode/layout?category_id=${categoryId}&${ids.map(id => `ids[]=${id}`).join('&')}`;
+        } else {
+            var url = 'product-barcode/layout/' + categoryId;
+        }
 
         // Open the URL in a new tab
         window.open(url, '_blank');
+        console.log("Selected IDs:", ids);
     }
 
     function reloadDatatable() {
+        localStorage.setItem('statusFilter', 'sudah');
         table.ajax.reload();
     }
 
