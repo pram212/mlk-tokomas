@@ -780,6 +780,7 @@ class ProductController extends Controller
             ->addColumn('gramasi_gramasi', fn ($product) => $product->gramasi->gramasi ?? "-")
             ->addColumn('tag_type_code', fn ($product) => $product->tagType->code ?? "-")
             ->addColumn('gramasi_code', fn ($product) => $product->gramasi->code ?? "-")
+            ->addColumn('category_name', fn ($product) => $product->category_name ?? "-")
             ->addColumn('product_status', function ($product) {
                 switch ($product->product_status) {
                     case 0:

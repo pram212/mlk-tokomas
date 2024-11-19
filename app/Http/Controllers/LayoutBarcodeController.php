@@ -53,8 +53,20 @@ class LayoutBarcodeController extends Controller
                 $layout = $product->category->tipe === 'landscape' ? 'product.layout_barcode.barcode_landscape' : 'product.layout_barcode.barcode_potrait';
 
                 // Convert category width and height
-                $finalWidth = (float) str_replace('.00', '', $product->category->width);
-                $finalHeight = (float) str_replace('.00', '', $product->category->height);
+                if(str_contains($product->category->width, '.00')) {
+                    $isWidth = str_replace('.00', '', $product->category->width);
+                    $finalWidth = (int)$isWidth;
+                } else {
+                    $isWidth = str_replace('0', '', $product->category->width);
+                    $finalWidth = (float)$isWidth;
+                }
+                if(str_contains($product->category->height, '.00')) {
+                    $isHeight = str_replace( '.00', '', $product->category->height);
+                    $finalHeight = (int)$isHeight;
+                } else {
+                    $isHeight = str_replace('0', '', $product->category->height);
+                    $finalHeight = (float)$isHeight;
+                }
 
                 $html = View::make($layout, [
                     'products' => $products,
