@@ -100,6 +100,43 @@ var category_table = $("#category-table").DataTable({
             },
         },
         {
+            data: "width",
+            name: "width",
+            render: function (data, type, row) {
+                // Remove decimals and trailing zeros, then append "cm"
+                if(data) {
+                    let formattedData = data + " cm";
+                    return `<div style="width:200px"><div>${formattedData}</div></div>`;
+                } else {
+                    return `<div style="width:200px"><div>-</div></div>`;
+                }
+            },
+        },
+        {
+            data: "height",
+            name: "height",
+            render: function (data, type, row) {
+                // Remove decimals and trailing zeros, then append "cm"
+                if(data) {
+                    let formattedData = data + " cm";
+                    return `<div style="width:200px"><div>${formattedData}</div></div>`;
+                } else {
+                    return `<div style="width:200px"><div>-</div></div>`;
+                }
+            },
+        },
+        {
+            data: "tipe",
+            name: "tipe",
+            render: function (data, type, row) {
+                if(data) {
+                    return `<div style="width:200px"><div>${data}</div></div>`;
+                } else {
+                    return `<div style="width:200px"><div>-</div></div>`;
+                }
+            },
+        },
+        {
             data: "created_at",
             searchable: false,
             render: function (data, type, row) {
