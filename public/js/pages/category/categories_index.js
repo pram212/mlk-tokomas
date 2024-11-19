@@ -49,7 +49,10 @@ $(document).on("click", ".open-EditCategoryDialog", function () {
 
     $.get(url, function (data) {
         $("#editModal input[name='name']").val(data.name);
+        $("#editModal input[name='width']").val(data.width);
+        $("#editModal input[name='height']").val(data.height);
         $("#editModal select[name='parent_id']").val(data.parent_id);
+        $("#editModal select[name='tipe']").val(data.tipe).trigger("change");
         $("#editModal input[name='category_id']").val(data.id);
         $("#edit-category").val(data.category).trigger("change");
         $("#edit-sub_category").val(data.sub_category);

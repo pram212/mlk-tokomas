@@ -27,10 +27,11 @@
         }
 
         .product-tag {
-            /* Pindahkan padding ke baris ini */
-            padding: 5px;
-            /* Pastikan $data->color berisi nilai warna yang valid */
-            /* Perbarui nilai min-width sesuai kebutuhan */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-sizing: border-box;
         }
 
         .gramasi {
@@ -44,7 +45,7 @@
         }
 
         .gramasi h1 {
-            font-size: 40px;
+            font-size: 20px;
             /* margin: 0; */
             /* padding: 0; */
         }
@@ -84,12 +85,10 @@
             font-size: 10px;
             bottom: 0px;
         }
-        tr {
-            width: <?php echo $width ?>;
-            height: <?php echo $height ?>;
-        }
         /* td dengan jarak */
         td {
+            justify-content: center;
+            align-content: center;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -106,44 +105,46 @@
 
         <table>
             @foreach ($products as $product)
-            <tr >
-                <td>
-                    <div class="product-tag" style="text-align: center; background-color: {{ $product->tagType->color ?? '#fff' }}">
-                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents($qrCodePaths[$product->code])) }}"
-                            width="50" height="50" style=" padding: 20px;" alt="{{ $product->code }}">
-                    </div>
-                </td>
-                <td>
-                    <div class="product-tag" style="background-color: {{ $product->tagType->color ?? '#fff' }}">
-                        <div class="container-box">
-                            <div class="gold_content">
-                                {{ $product->gold_content }}
+            <tr>
+                <div style="width: {{ $width }}cm; height: {{ $height }}cm; background-color: {{ $product->tagType->color ?? '#fff' }}">
+                    <td>
+                        <div class="product-tag" style="text-align: center;">
+                            <img src="data:image/png;base64,{{ base64_encode(file_get_contents($qrCodePaths[$product->code])) }}"
+                                width="50" height="50" style=" padding: 20px;" alt="{{ $product->code }}">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="product-tag">
+                            <div class="container-box">
+                                <div class="gold_content">
+                                    {{ $product->gold_content }}
+                                </div>
+                                <div class="additional_cod">
+                                    @if ($product->discount_value)
+                                        {{ $product->additional_code }}/{{ $product->discount_value->code }}
+                                    @else
+                                        {{ $product->additional_code }}/{{ $product->discount }}
+                                    @endif
+                                </div>
                             </div>
-                            <div class="additional_cod">
-                                @if ($product->discount_value)
-                                    {{ $product->additional_code }}/{{ $product->discount_value->code }}
+                            <div class="gramasi">
+                                @if (isset($product->gramasi) && is_object($product->gramasi) && isset($product->gramasi->gramasi))
+                                    <h2>{{ $product->gramasi->gramasi }}
+                                        <sup>{{ $product->mg }}</sup>
+                                    </h2>
                                 @else
-                                    {{ $product->additional_code }}/{{ $product->discount }}
+                                    <h2>{{ $product->gramasi_id }}
+                                        <sup>{{ $product->mg }}</sup>
+                                    </h2>
                                 @endif
                             </div>
-                        </div>
-                        <div class="gramasi">
-                            @if (isset($product->gramasi) && is_object($product->gramasi) && isset($product->gramasi->gramasi))
-                                <h2>{{ $product->gramasi->gramasi }}
-                                    <sup>{{ $product->mg }}</sup>
-                                </h2>
-                            @else
-                                <h2>{{ $product->gramasi_id }}
-                                    <sup>{{ $product->mg }}</sup>
-                                </h2>
-                            @endif
-                        </div>
 
-                        <div class="bottom_right">
-                            {{ $product->productProperty->code }}
+                            <div class="bottom_right">
+                                {{ $product->productProperty->code }}
+                            </div>
                         </div>
-                    </div>
-                </td>
+                    </td>
+                </div>
             </tr>
             @endforeach
         </table>

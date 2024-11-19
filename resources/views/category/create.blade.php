@@ -86,7 +86,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12 form-group">
-                        <label>{{ trans('file.width') }} *</label>
+                        <label>{{ trans('file.Type') }} *</label>
                         @php
                             $tipeBarcode = [
                                 'landscape' => 'Landscape',
@@ -131,20 +131,18 @@
                 <div class="row">
                     <div class="col-md-12 form-group">
                         <label>{{ trans('file.width') }} *</label>
-                        {{ Form::number('width', null, ['required' => 'required', 'class' => 'form-control', 'placeholder'
-                        => trans('file.Type width number').'...', 'step' => 'any' ]) }}
+                        {{ Form::number('width', null, ['required' => 'required', 'class' => 'form-control',  'step' => 'any']) }}
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12 form-group">
                         <label>{{ trans('file.height') }} *</label>
-                        {{ Form::number('height', null, ['required' => 'required', 'class' => 'form-control', 'placeholder'
-                        => trans('file.Type height number').'...', 'step' => 'any' ]) }}
+                        {{ Form::number('height', null, ['required' => 'required', 'class' => 'form-control',  'step' => 'any']) }}
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12 form-group">
-                        <label>{{ trans('file.width') }} *</label>
+                        <label>{{ trans('file.Type') }} *</label>
                         @php
                             $tipeBarcode = [
                                 'landscape' => 'Landscape',

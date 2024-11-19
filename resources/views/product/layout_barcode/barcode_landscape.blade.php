@@ -19,7 +19,8 @@
         }
 
         table {
-            border-spacing: 0 10px; /* Adds a 10px gap between rows */
+            border-spacing: 0 10px;
+            /* Adds a 10px gap between rows */
         }
 
         .container {
@@ -29,12 +30,11 @@
         }
 
         .product-tag {
-            margin: 0 auto;
-            padding: 10px;
-            /* Pindahkan padding ke baris ini */
-            margin-top: 10px;
-            /* Pastikan $data->color berisi nilai warna yang valid */
-            /* Perbarui nilai min-width sesuai kebutuhan */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-sizing: border-box;
         }
 
         .gramasi {
@@ -50,13 +50,13 @@
         }
 
         .gramasi h1 {
-            font-size: 40px;
+            font-size: 20px;
             /* margin: 0; */
             /* padding: 0; */
         }
 
         .gramasi h1 sup {
-            font-size: 15px;
+            font-size: 10px;
             /* posisikan agak keatas */
             position: relative;
             top: -10px;
@@ -71,12 +71,12 @@
 
         .gold_content {
             text-align: left;
-            font-size: 20px;
+            font-size: 10px;
         }
 
         .additional_cod {
             text-align: right;
-            font-size: 20px;
+            font-size: 10px;
             position: relative;
             top: -25px;
             /* right: -250px; */
@@ -86,17 +86,13 @@
         .bottom_right {
             text-align: right;
             position: relative;
-            font-size: 20px;
+            font-size: 10px;
             bottom: 30px;
         }
 
         /* td dengan jarak */
         td {
             padding: 10px;
-        }
-        tr {
-            width: <?php echo $width ?> 'cm';
-            height: <?php echo $height ?> 'cm';
         }
     </style>
 </head>
@@ -110,45 +106,46 @@
 
         <table>
             @foreach ($products as $product)
-            <tr style=" background-color: {{ $product->tagType->color ?? '#fff' }}; ">
-                <td>
-                    <div class="product-tag" style="text-align: center;">
-                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents($qrCodePaths[$product->code])) }}"
-                            width="100" height="100" style=" padding-top: 20px;" alt="{{ $product->code }}">
-                    </div>
-                </td>
-                <td>
-                    <div class="product-tag">
-                        <div class="container-box">
-                            <div class="gold_content">
-                                {{ $product->gold_content }}
+                <tr style="background-color: {{ $product->tagType->color ?? '#fff' }};">
+                    <!-- First Cell -->
+                    <td>
+                        <div class="product-tag" style="width: {{ $width }}cm; height: {{ $height }}cm;">
+                            <img src="data:image/png;base64,{{ base64_encode(file_get_contents($qrCodePaths[$product->code])) }}"
+                                 width="70" height="70" alt="{{ $product->code }}">
+                        </div>
+                    </td>
+                    <!-- Second Cell -->
+                    <td>
+                        <div class="product-tag" style="width: {{ $width }}cm; height: {{ $height }}cm;">
+                            <div class="container-box">
+                                <div class="gold_content">
+                                    {{ $product->gold_content }}
+                                </div>
+                                <div class="additional_cod">
+                                    @if ($product->discount_value)
+                                        {{ $product->additional_code }}/{{ $product->discount_value->code }}
+                                    @else
+                                        {{ $product->additional_code }}/{{ $product->discount }}
+                                    @endif
+                                </div>
                             </div>
-                            <div class="additional_cod">
-                                @if ($product->discount_value)
-                                    {{ $product->additional_code }}/{{ $product->discount_value->code }}
+                            <div class="gramasi">
+                                @if (isset($product->gramasi) && is_object($product->gramasi) && isset($product->gramasi->gramasi))
+                                    <h1>{{ $product->gramasi->gramasi }}
+                                        <sup>{{ $product->mg }}</sup>
+                                    </h1>
                                 @else
-                                    {{ $product->additional_code }}/{{ $product->discount }}
+                                    <h1>{{ $product->gramasi_id }}
+                                        <sup>{{ $product->mg }}</sup>
+                                    </h1>
                                 @endif
                             </div>
+                            <div class="bottom_right">
+                                {{ $product->productProperty->code }}
+                            </div>
                         </div>
-                        <div class="gramasi">
-                            @if (isset($product->gramasi) && is_object($product->gramasi) && isset($product->gramasi->gramasi))
-                                <h1>{{ $product->gramasi->gramasi }}
-                                    <sup>{{ $product->mg }}</sup>
-                                </h1>
-                            @else
-                                <h1>{{ $product->gramasi_id }}
-                                    <sup>{{ $product->mg }}</sup>
-                                </h1>
-                            @endif
-                        </div>
-
-                        <div class="bottom_right">
-                            {{ $product->productProperty->code }}
-                        </div>
-                    </div>
-                </td>
-            </tr>
+                    </td>
+                </tr>
             @endforeach
         </table>
     </div>
