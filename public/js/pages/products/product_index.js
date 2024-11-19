@@ -283,7 +283,54 @@ function generateQRCode(data, elementId) {
     });
 }
 
+const filter_btn = $("#filter-btn");
+const barcode_btn = $("#print-barcode-btn");
+
 $(document).ready(function () {
+     // set data selectpicker category_id
+     getCategory().then((response) => {
+        const status = response.status;
+        const data = response.data;
+        const message = response.message;
+
+        if (!status) {
+            return;
+        }
+
+        let category_id = $("select[name='category_id']");
+
+        category_id.html("");
+
+        data.forEach((category) => {
+            category_id.append(
+                `<option value="${category.id}">${category.name}</option>`
+            );
+        });
+
+        // refresh selectpicker
+        category_id.selectpicker("refresh");
+
+    });
+
+    // on click filter_btn
+    filter_btn.on("click", reloadDatatable);
+
+    // on click barcode print
+    barcode_btn.on("click", printBarcode);
+
+
+    function printBarcode() {
+        const categoryId = $('#category_id').find(":selected").val();
+        const url = 'product-barcode/layout/' + categoryId;
+
+        // Open the URL in a new tab
+        window.open(url, '_blank');
+    }
+
+    function reloadDatatable() {
+        table.ajax.reload();
+    }
+
     var table = $("#product-data-table").DataTable({
         responsive: true,
         fixedHeader: {
@@ -302,6 +349,9 @@ $(document).ready(function () {
             url: baseUrl + "/product-datatable",
             dataType: "json",
             type: "get",
+            data: function (d) {
+                d.category_id =  $('#category_id').find(":selected").val();
+            },
         },
         columns: [
             {
@@ -335,7 +385,10 @@ $(document).ready(function () {
                 },
                 responsivePriority: 1,
             },
-
+            {
+                data: "category_name",
+                responsivePriority: 1,
+            },
             {
                 data: "name",
                 responsivePriority: 1,
@@ -645,3 +698,10 @@ $(document).ready(function () {
         }
     );
 });
+
+// axios get request [GET] category and return the response
+function getCategory() {
+    return axios.get(baseUrl + "/category-list").then((response) => {
+        return response.data;
+    });
+}
