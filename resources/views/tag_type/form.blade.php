@@ -1,4 +1,40 @@
-@extends('layout.main') @section('title', trans('file.Tagging Type'))@section('content')
+@extends('layout.main')
+
+@section('css')
+<style>
+    .conversion-pair {
+        display: flex;
+        align-items: center;
+    }
+
+    .conversion-pair .form-control {
+        flex: 1;
+        margin-right: 10px;
+        border-radius: 4px;
+    }
+
+    .conversion-pair .btn {
+        padding: 6px 10px;
+        border-radius: 4px;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+    }
+
+    .btn i {
+        font-size: 16px;
+    }
+</style>
+@endsection
+
+@section('title', trans('file.Tagging Type'))@section('content')
 @if (session()->has('create_message'))
 <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert"
         aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('create_message') }}</div>
@@ -74,30 +110,53 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-6">
+
+                    @if ($goldContentConversion && $goldContentConversion->isNotEmpty())
+                    <div class="col-md-12">
                         <div class="form-group">
-                            <label>{{ __('file.Gold Conversion') }}*</strong> </label>
-                            <input type="number" name="conversion" class="form-control @error('conversion')
-                                        is-invalid
-                                    @enderror" id="conversion" value="{{ old('conversion', @$goldContentConversion->gold_content) }}">
-                            @error('conversion')
-                            <small class="text-danger text-sm">{{ $message }}</small>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>{{ __('file.Result Conversion') }}*</strong> </label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">±</div>
+                            <label>{{ __('file.Gold Conversion') }} & {{ __('file.Result Conversion') }}</label>
+                            <div id="conversion-pair-container">
+                                <!-- Populate Input Groups Dynamically -->
+                                @foreach ($goldContentConversion as $conversion)
+                                <div class="conversion-pair d-flex align-items-center mb-2">
+                                    <input type="number" name="conversion[]" class="form-control mr-2"
+                                           value="{{ $conversion->gold_content }}" placeholder="Gold Conversion">
+                                    <input type="text" name="result[]" class="form-control mr-2"
+                                           value="{{ str_replace('±', '', $conversion->result) }}" placeholder="Result Conversion">
+                                    <button type="button" class="btn btn-danger remove-input" title="Remove">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
                                 </div>
-                                <input type="text" name="result" class="form-control @error('result')
-                                        is-invalid
-                                    @enderror" id="result" value="{{ old('result', str_replace('± ','',@$goldContentConversion->result)) }}">
+                                @endforeach
                             </div>
+                            <!-- Add Button -->
+                            <button type="button" class="btn btn-success add-pair mt-2" title="Add Conversion and Result">
+                                <i class="fas fa-plus"></i> Add {{ __('file.Gold Conversion') }} {{ __('file.Result Conversion') }}
+                            </button>
                         </div>
                     </div>
+                    @else
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>{{ __('file.Gold Conversion') }} & {{ __('file.Result Conversion') }}</label>
+                            <div id="conversion-pair-container">
+                                <!-- Default Input Group -->
+                                <div class="conversion-pair d-flex align-items-center mb-2">
+                                    <input type="number" name="conversion[]" class="form-control mr-2" placeholder="Gold Conversion">
+                                    <input type="text" name="result[]" class="form-control mr-2" placeholder="Result Conversion">
+                                    <button type="button" class="btn btn-danger remove-input" title="Remove">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Add Button -->
+                            <button type="button" class="btn btn-success add-pair mt-2" title="Add Conversion and Result">
+                                <i class="fas fa-plus"></i> Add {{ __('file.Gold Conversion') }} {{ __('file.Result Conversion') }}
+                            </button>
+                        </div>
+                    </div>
+                    @endif
+
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>{{ __('file.Description') }} *</strong> </label>
@@ -123,3 +182,29 @@
     </div>
 </section>
 @endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function () {
+        // Add new Gold Conversion and Result Conversion input pair
+        $(document).on('click', '.add-pair', function () {
+            const conversionPair = `
+                <div class="conversion-pair d-flex align-items-center mb-2">
+                    <input type="number" name="conversion[]" class="form-control mr-2" placeholder="Gold Conversion">
+                    <input type="text" name="result[]" class="form-control mr-2" placeholder="Result Conversion">
+                    <button type="button" class="btn btn-danger remove-input" title="Remove">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            `;
+            $('#conversion-pair-container').append(conversionPair);
+        });
+
+        // Remove input pair
+        $(document).on('click', '.remove-input', function () {
+            $(this).closest('.conversion-pair').remove();
+        });
+    });
+</script>
+@endsection
+
