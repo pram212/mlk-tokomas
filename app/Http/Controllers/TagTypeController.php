@@ -59,7 +59,8 @@ class TagTypeController extends Controller
     public function edit($id)
     {
         $tagType = TagType::findOrFail($id);
-        $goldContentConversion = GoldContentConvertion::where('tag_types_id', '=', $id)->first();
+        $goldContentConversion = GoldContentConvertion::where('tag_types_id', '=', $id)->get();
+
 
         return view('tag_type.form', compact('tagType', 'goldContentConversion'));
     }
@@ -75,11 +76,17 @@ class TagTypeController extends Controller
                 'color' => $request->color,
             ]);
 
-            GoldContentConvertion::create([
-                'tag_types_id' => $tagId->id,
-                'result' => '± '. $request->result,
-                'gold_content' => $request->conversion
-            ]);
+
+            // for($i= 0; $i <= count($request->conversion); $i++) {
+            $conversion = $request->conversion;
+            $result = $request->result;
+            foreach($conversion as $key => $data) {
+                GoldContentConvertion::create([
+                    'tag_types_id' => $tagId->id,
+                    'result' => '± '. $result[$key],
+                    'gold_content' => $data
+                ]);
+            }
 
             DB::commit();
 
@@ -95,34 +102,54 @@ class TagTypeController extends Controller
 
     public function update(UpdateTagTypeRequest $request, $id)
     {
-
         try {
             DB::beginTransaction();
 
             $tagType = TagType::find($id);
-            $goldConversion = GoldContentConvertion::where('tag_types_id', '=', $id)->first();
 
+            // Update the main TagType record
             $tagType->update([
                 'code' => $request->code,
                 'description' => $request->description,
                 'color' => $request->color,
             ]);
-            $goldConversion->update([
-                'result' => '± '. $request->result,
-                'gold_content' => $request->conversion
-            ]);
+
+            $goldConversion = GoldContentConvertion::where('tag_types_id', '=', $id)->get();
+
+
+            foreach($request->conversion as $key => $vls) {
+                $ifEdit = GoldContentConvertion::where('tag_types_id', '=', $id)->where('gold_content', '=', $vls)->get();
+                if($ifEdit->isNotEmpty()) {
+                     foreach ($goldConversion as $index => $data) {
+                        // print_r($ifEdit);
+                            // Make sure the index exists in the request arrays
+                            if (isset($request->result[$index]) && isset($request->conversion[$index])) {
+                                DB::table('gold_content_convertions')
+                                    ->where('id', $data->id)
+                                    ->update([
+                                        'result' => '± ' . $request->result[$index],
+                                        'gold_content' => $request->conversion[$index],
+                                    ]);
+                            }
+                     }
+                } else {
+                    GoldContentConvertion::create([
+                        'tag_types_id' => $id,
+                        'result' => '± '. $request->result[$key],
+                        'gold_content' => $request->conversion[$key]
+                    ]);
+                }
+            }
 
             DB::commit();
 
             return redirect('product-categories/tagtype')->with('create_message', __('file.Data updated successfully'));
 
         } catch (\Exception $exception) {
-
             DB::rollBack();
 
             return redirect('product-categories/tagtype')->with('message', $exception->getMessage());
         }
-
     }
 
 
