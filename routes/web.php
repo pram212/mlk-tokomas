@@ -117,6 +117,8 @@ Route::group(['middleware' => ['auth', 'active']], function () {
 
     Route::resource('warehouse_transfer', 'WarehouseTransferController');
 
+    Route::post('transfer-to-etalase', 'WarehouseTransferController@transferToEtalase');
+
     // role permission routes
     Route::resource('/role', 'RoleController');
     Route::group(['prefix' => 'role', 'as' => 'role.'], function () {

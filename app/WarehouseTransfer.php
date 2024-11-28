@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class WarehouseTransfer extends Model
 {
     protected $fillable = [
-        'transfer_number', 'product_id', 'split_set_code', 'warehouse_id'
+        'transfer_number', 'product_id', 'split_set_code', 'warehouse_id','status_warehouse'
     ];
 
     public function product()
