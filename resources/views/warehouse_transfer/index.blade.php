@@ -12,7 +12,9 @@
                 <tr>
                     <th class="not-exported">{{ __('file.No') }}</th>
                     <th>{{ __('file.Product Name') }}</th>
+                    <th>{{ __('file.status') }}</th>
                     <th>{{ __('file.warehouse_transfer_date') }}</th>
+                    <th class="not-exported">{{ trans('file.action') }}</th>
                 </tr>
             </thead>
             <tbody></tbody>

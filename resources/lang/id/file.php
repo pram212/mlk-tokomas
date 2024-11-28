@@ -11,6 +11,7 @@ return [
     "add_product" => "Tambahkan produk",
     "import_product" => "Import produk",
     "print_barcode" => "Cetak barcode",
+    "edit_barcode" => "Edit barcode",
     "welcome" => "Selamat datang",
     "profile" => "Profil",
     "add" => "Tambah",

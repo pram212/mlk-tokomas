@@ -28,6 +28,7 @@ use View;
 use QrCode;
 use App\Helpers\ResponseHelpers;
 use App\Potongan;
+use App\WarehouseTransfer;
 use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
@@ -77,6 +78,7 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $this->authorize('create', Product::class);
+        $dataToInsert = $request->all();
 
         try {
             DB::beginTransaction();
@@ -90,6 +92,12 @@ class ProductController extends Controller
                 "price" => $request->price,
             ]);
 
+            WarehouseTransfer::create([
+                'transfer_number' => $this->gen_transfer_number(),
+                'product_id' => $product->id,
+                'warehouse_id' => $dataToInsert['warehouse_id'],
+            ]); // Membuat entri baru untuk setiap data
+
             if ($request->split_set_type == 2) $this->handleStoreSplitSetType($product, $request);
 
             DB::commit();
@@ -99,6 +107,18 @@ class ProductController extends Controller
             DB::rollBack();
             return back()->with($this->createAlert('danger', $ex->getMessage()));
         }
+    }
+
+    private function gen_transfer_number()
+    {
+        $tf_number = 'TF' . date('Ymd') . rand(1000, 9999);
+        $tf_number_exists = WarehouseTransfer::where('transfer_number', $tf_number)->exists();
+
+        if ($tf_number_exists) {
+            return $this->gen_transfer_number();
+        }
+
+        return $tf_number;
     }
 
     private function handleImageUpload($request)
@@ -765,14 +785,9 @@ class ProductController extends Controller
             if($nameRole == 'Cashier' || $nameRole == 'Sales') {
                 $productQuery->where('product_warehouse.warehouse_id', $warehouse_id);
             }
-        } else { // (PRODUCT)(NO VALIDASI) jika tidak maka query untuk by produk all status
-
         }
         $datatable =  DataTables::of($productQuery)
             ->addIndexColumn()
-            // ->addColumn('barcode', function ($product) {
-            //     return $this->getBarcodeDownloadLink($product);
-            // })
             ->editColumn('created_at', fn ($product) => date('d M Y', strtotime($product->created_at)))
             ->editColumn('price', fn ($product) => $product->price)
             ->addColumn('product_property_description', fn ($product) => $product->productProperty->description ?? "-")

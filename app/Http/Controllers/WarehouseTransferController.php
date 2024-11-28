@@ -44,9 +44,22 @@ class WarehouseTransferController extends Controller
             DB::beginTransaction();
 
             foreach ($dataToInsert as $data) {
-                WarehouseTransfer::create($data); // Membuat entri baru untuk setiap data
-            }
+                $checkIfExist = DB::table('warehouse_transfers')->where('product_id', '=', $data['product_id'])->get();
 
+                if($checkIfExist->isNotEmpty()) {
+                    DB::table('warehouse_transfers')->where('product_id', '=', $data['product_id'])->update([
+                        'status_warehouse' => 3
+                    ]);
+                } else {
+                    WarehouseTransfer::create($data); // Membuat entri baru untuk setiap data
+                    DB::table('warehouse_transfers')->where('product_id', '=', $data['product_id'])->update([
+                        'status_warehouse' => 3
+                    ]);
+                }
+                DB::table('products')->where('id', '=', $dataToInsert[0]['product_id'])->update([
+                    'product_status' => 2
+                ]);
+            }
             DB::commit();
 
             // Redirect dengan pesan sukses
@@ -56,6 +69,27 @@ class WarehouseTransferController extends Controller
             dd($e);
             // Handle error jika terjadi kegagalan saat menyimpan
             return back()->withInput()->with('message', 'Failed to create warehouse transfers: ' . $e->getMessage());
+        }
+    }
+
+    function transferToEtalase(Request $request)  {
+        try {
+            DB::beginTransaction();
+            DB::table('warehouse_transfers')->where('id', '=', $request->warehouse_transfer_id)->update([
+                'status_warehouse' => 2
+            ]);
+
+            DB::table('products')->where('id', '=', $request->product_id)->update([
+                'product_status' => 1
+            ]);
+
+            DB::commit();
+            return redirect()->route('warehouse_transfer.index')->with($this->createAlert('success', 'Warehouse transfers to etalase successfully'));
+        } catch (\Throwable $e) {
+            DB::rollback();
+            dd($e);
+            // Handle error jika terjadi kegagalan saat menyimpan
+            return back()->withInput()->with('message', 'Failed to transfer warehouse to etalase: ' . $e->getMessage());
         }
     }
 
@@ -76,21 +110,29 @@ class WarehouseTransferController extends Controller
      * @param  \App\WarehouseTransfer  $warehouseTransfer
      * @return \Illuminate\Http\Response
      */
-    public function edit(WarehouseTransfer $warehouseTransfer)
+    public function edit($id)
     {
-        //
+        $vals_warehouse_data = DB::table('warehouse_transfers')->where('warehouse_transfers.id', '=', $id)->leftJoin('products', 'warehouse_transfers.product_id', 'products.id')->first();
+
+        return response()->json($vals_warehouse_data);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\WarehouseTransfer  $warehouseTransfer
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, WarehouseTransfer $warehouseTransfer)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $input = $request->all();
+            DB::table('products')->where('id', '=', $input['product_id'])->update([
+                'code' => $input['code']
+            ]);
+            DB::commit();
+            return redirect()->route('warehouse_transfer.index')->with($this->createAlert('success', 'Data Barcode updated successfully'));
+        } catch (\Throwable $e) {
+            DB::rollback();
+            dd($e);
+            // Handle error jika terjadi kegagalan saat menyimpan
+            return back()->withInput()->with('message', 'Failed to transfer warehouse to etalase: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -102,5 +144,13 @@ class WarehouseTransferController extends Controller
     public function destroy(WarehouseTransfer $warehouseTransfer)
     {
         //
+    }
+
+    private function createAlert($type, $message)
+    {
+        return [
+            'type' => "alert-{$type}",
+            'message' => $message
+        ];
     }
 }

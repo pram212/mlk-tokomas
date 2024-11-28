@@ -11,6 +11,7 @@ return [
     'add_product' => 'Add Product',
     'import_product' => 'Import Product',
     'print_barcode' => 'Print Barcode',
+    'edit_barcode' => 'Edit Barcode',
     'welcome' => 'Welcome',
     'profile' => 'Profile',
     'add' => 'Add',
