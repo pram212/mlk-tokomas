@@ -188,16 +188,29 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
+                                                        @php
+                                                            // Correctly defining the GoldContent array
+                                                            $GoldContent = [
+                                                                (object)['value' => 300],
+                                                                (object)['value' => 375],
+                                                                (object)['value' => 420]
+                                                            ];
+                                                        @endphp
                                                         <label for="">{{ __('file.Gold Content') }} *</label>
-                                                        <input type="number" @if($mode=='show' ) readonly @endif
-                                                            class="form-control" name="gold_content"
-                                                            value="{{ old('gold_content', @$product->gold_content) }}"
-                                                            id="input-gold_content" required>
+                                                        <select name="gold_content" class="form-control" id="input-gold_content">
+                                                            <option value="">{{ __('file.Select') }}</option>
+                                                            @foreach ($GoldContent as $item)
+                                                                <option value="{{ $item->value }}" @if ($item->value == @$product->gold_content) selected @endif>
+                                                                    {{ $item->value }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
                                                         @error('gold_content')
                                                         <span class="text-danger">{{ $message }}</span>
                                                         @enderror
                                                     </div>
                                                 </div>
+
 
                                                 <div class="col-md-6">
                                                     <div class="form-group">

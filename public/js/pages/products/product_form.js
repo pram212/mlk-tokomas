@@ -571,7 +571,7 @@ $("#input-mg").change(function (e) {
     $("#prev-mg").text(mg);
 });
 
-$("#input-gold_content").bind("input", function (e) {
+$("#input-gold_content").change(function (e) {
     e.preventDefault();
     const goldContent = e.target.value;
     $("#prev-gold_content").text(goldContent);
