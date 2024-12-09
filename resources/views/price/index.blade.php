@@ -19,7 +19,7 @@
                     <th>{{ __('file.Gramasi') }}</th>
                     <th>{{ __('file.Carat') }}</th>
                     <th>{{ __('file.category') }}</th>
-                    <th>{{ __('file.Product Type') }}</th>
+                    {{-- <th>{{ __('file.Product Type') }}</th> --}}
                     <th>{{ __('file.Created By') }}</th>
                     <th>{{ __('file.Updated By') }}</th>
                     <th>{{ __('file.Created At') }}</th>
