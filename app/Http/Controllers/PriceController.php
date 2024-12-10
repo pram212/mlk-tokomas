@@ -108,10 +108,10 @@ class PriceController extends Controller
 
             Price::create([
                 // 'price' =>  moneyToNumeric($request->price, ","),
-                'gramasi_id' => $request->gramasi_id,
+                'gramasi_id' => NULL,
                 'tag_type_id' => $request->tag_type_id,
                 'categories_id' => $request->categories_id,
-                'product_type_id' => $request->product_type_id,
+                // 'product_type_id' => $request->product_type_id,
                 'carat' => $request->carat,
                 'created_by' => auth()->id()
             ]);
@@ -119,13 +119,16 @@ class PriceController extends Controller
             $productPropertyPrice = $request->product_property_price;
 
             foreach ($productPropertyPrice as $productPropertyId => $price) {
-                PriceProductPropertyDetail::create([
-                    'price_id' => $price_created_id,
-                    'product_property_id' => $productPropertyId,
-                    'price' => moneyToNumeric($price, ","),
-                    'created_by' => auth()->id()
-                ]);
+                if (trim($price) !== '') { // Ensure the price is not empty
+                    PriceProductPropertyDetail::create([
+                        'price_id' => $price_created_id,
+                        'product_property_id' => $productPropertyId,
+                        'price' => moneyToNumeric($price, ","),
+                        'created_by' => auth()->id()
+                    ]);
+                }
             }
+
 
 
             DB::commit();
@@ -146,46 +149,46 @@ class PriceController extends Controller
         try {
             DB::beginTransaction();
 
-            $price = Price::find($id);
+            $price = Price::findOrFail($id);
 
+            // Update the main Price record
             $price->update([
-                // 'price' => moneyToNumeric($request->price, ","),
-                'gramasi_id' => $request->gramasi_id,
-                'carat' => $request->carat,
+                'gramasi_id' => null,
                 'tag_type_id' => $request->tag_type_id,
                 'categories_id' => $request->categories_id,
-                'product_type_id' => $request->product_type_id,
-                'updated_by' => auth()->id()
+                'updated_by' => auth()->id(),
             ]);
 
+            // Update or create PriceProductPropertyDetail
             $productPropertyPrice = $request->product_property_price;
 
-            foreach ($productPropertyPrice as $productPropertyId => $price) {
-                $productPropertyPrice = PriceProductPropertyDetail::where('price_id', $id)->where('product_property_id', $productPropertyId)->first();
-                if ($productPropertyPrice) {
-                    $productPropertyPrice->update([
-                        'price' => moneyToNumeric($price, ","),
-                        'updated_by' => auth()->id()
-                    ]);
-                } else {
-                    PriceProductPropertyDetail::create([
-                        'price_id' => $id,
-                        'product_property_id' => $productPropertyId,
-                        'price' => moneyToNumeric($price, ","),
-                        'created_by' => auth()->id()
-                    ]);
+            foreach ($productPropertyPrice as $productPropertyId => $priceValue) {
+                if (trim($priceValue) !== '') {
+                    PriceProductPropertyDetail::updateOrCreate(
+                        [
+                            'price_id' => $id,
+                            'product_property_id' => $productPropertyId,
+                        ],
+                        [
+                            'price' => moneyToNumeric($priceValue, ","),
+                            'updated_by' => auth()->id(),
+                        ]
+                    );
                 }
             }
 
-
-
             DB::commit();
-            return redirect('master/price')->with(['type' => 'alert-success', 'message' => __('file.Data saved successfully')]);
+            return redirect('master/price')->with([
+                'type' => 'alert-success',
+                'message' => __('file.Data saved successfully'),
+            ]);
         } catch (\Exception $exception) {
-
             DB::rollBack();
 
-            return back()->with(['type' => 'alert-danger', 'message', $exception->getMessage()]);
+            return back()->with([
+                'type' => 'alert-danger',
+                'message' => $exception->getMessage(),
+            ]);
         }
     }
 
@@ -245,7 +248,8 @@ class PriceController extends Controller
         return response()->json($product_property_price);
     }
 
-    public function getTotalPriceProduct($product_code) {
+    public function getTotalPriceProduct($product_code)
+    {
         $TotalPriceByCode = Product::where('code', '=', $product_code)->first();
 
         $getTotalPrice = $TotalPriceByCode->total_price;
