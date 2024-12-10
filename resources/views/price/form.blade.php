@@ -112,19 +112,20 @@
                                             @enderror
                                         </div>
                                     </div> --}}
-                                    <div class="col-md-12">
-                                        <div class="form-group">
+                                    {{-- Hide Gramasi karena Gramasi menjadi input manual --}}
+                                    {{-- <div class="col-md-12"> --}}
+                                        {{-- <div class="form-group"> --}}
                                             {{-- Hide by Request --}}
                                             {{-- <label>{{ __('file.Gramasi') }} *</strong></label> --}}
                                             {{-- <div id="text-kd-gramasi">{{ $price->gramasi->gramasi ?? '-' }}</div> --}}
-                                            <input class="form-control" type="hidden" name="gramasi_id"
+                                            {{-- <input class="form-control" type="hidden" name="gramasi_id"
                                                 id="input-kd-gramasi"
                                                 value="{{ old('gramasi_id',@$price->gramasi_id) }}">
                                             @error('gramasi_id')
                                             <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
+                                            @enderror --}}
+                                        {{-- </div>
+                                    </div> --}}
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>{{ __('file.Created By') }} *</strong></label>
@@ -175,8 +176,8 @@
                                                                     <input type="text"
                                                                         name="product_property_price[{{ $item->id }}]"
                                                                         class="form-control product_property_price"
-                                                                        value="{{ $priceValue }}" required>
-
+                                                                        value="{{ $priceValue }}" >
+                                                                    {{-- Menghapus Required karena sudah tidak perlu sampai semua diinput harga --}}
                                                                 </td>
                                                             </tr>
                                                             @endforeach
@@ -241,26 +242,26 @@
         });
     });
 
-    input_product_type_id.change(function() {
-        let product_type_id = $(this).val();
-        let categories_id = input_categories_id.val();
+    // input_product_type_id.change(function() {
+    //     let product_type_id = $(this).val();
+    //     let categories_id = input_categories_id.val();
 
-        $.ajax({
-            type: "GET",
-            url: "{{ url('product-categories/gramasi-getByCategoryAndProductType') }}/" + categories_id+"/"+product_type_id,
-            success: function(data) {
-                if(data.data){
-                    input_gramasi_id.val(data.data.id);
-                    text_gramasi_id.text(data.data.gramasi);
-                }
-            }
-        });
-    });
+    //     $.ajax({
+    //         type: "GET",
+    //         url: "{{ url('product-categories/gramasi-getByCategoryAndProductType') }}/" + categories_id+"/"+product_type_id,
+    //         success: function(data) {
+    //             if(data.data){
+    //                 input_gramasi_id.val(data.data.id);
+    //                 text_gramasi_id.text(data.data.gramasi);
+    //             }
+    //         }
+    //     });
+    // });
 
-    input_categories_id.add(input_product_type_id).change(function() {
-        input_gramasi_id.val('');
-        text_gramasi_id.text('-');
-    });
+    // input_categories_id.add(input_product_type_id).change(function() {
+    //     input_gramasi_id.val('');
+    //     text_gramasi_id.text('-');
+    // });
 
 
 
