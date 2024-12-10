@@ -26,10 +26,10 @@ class StorePriceRequest extends FormRequest
     {
         return [
             // 'price' => ['required'],
-            'gramasi_id' => ['required'],
+            // 'gramasi_id' => ['required'],
             'tag_type_id' => ['required'],
             'categories_id' => ['required'],
-            'product_type_id' => ['required'],
+            // 'product_type_id' => ['required'],
             // 'carat' => ['required'],
         ];
     }
@@ -43,10 +43,10 @@ class StorePriceRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $isPriceExist = Price::where('gramasi_id', $this->gramasi_id)
-                ->where('tag_type_id', $this->tag_type_id)
+            // HIDE GRAMASI DAN PRODUCT TYPE ID
+            $isPriceExist = Price::where('tag_type_id', $this->tag_type_id)
                 ->where('categories_id', $this->categories_id)
-                ->where('product_type_id', $this->product_type_id)
+                // ->where('product_type_id', $this->product_type_id)
                 ->first();
 
             if ($isPriceExist) {
