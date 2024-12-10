@@ -90,13 +90,13 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    {{-- <div class="col-md-12">
                                         <div class="form-group">
                                             <label>{{ __('file.Product Type') }} * </label>
                                             <select name="product_type_id" class="form-control selectpicker"
                                                 id="product_type_id" @if(!@$price)disabled @endif
                                                 data-live-search="true">
-                                                <option value="" disabled>{{ __('file.Select') }}</option>
+                                                <option value="" disabled>sss{{ __('file.Select') }}</option>
                                                 @if (@$price)
                                                 @foreach ($product_type as $item)
                                                 <option value="{{ $item->id }}" @if ($item->id ==
@@ -111,7 +111,7 @@
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             {{-- Hide by Request --}}

@@ -29,9 +29,9 @@ priceTable = $("#price-datatable").DataTable({
         {
             data: "categories",
         },
-        {
-            data: "product_type",
-        },
+        // {
+        //     data: "product_type",
+        // },
         {
             data: "created_by",
         },
