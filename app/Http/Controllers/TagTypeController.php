@@ -53,7 +53,8 @@ class TagTypeController extends Controller
 
     public function create()
     {
-        return view('tag_type.form');
+        $goldContentConversion = [];
+        return view('tag_type.form', compact('goldContentConversion'));
     }
 
     public function edit($id)

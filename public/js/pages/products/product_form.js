@@ -559,7 +559,7 @@ $("#input-mg").change(function (e) {
         console.log('price:' + parseFloat(price));
         console.log('gramasi' +  valGramasi);
 
-        console.log('mg' + mg);
+        // console.log('mgs' + mg);
 
         const countTotalPrice = (parseFloat(price) * valGramasi) + ( parseFloat(price) / 1000  * mg);
 
@@ -568,7 +568,7 @@ $("#input-mg").change(function (e) {
         price_total.val(countTotalPrice)
     }
 
-    // $("#prev-mg").text(mg);
+    $("#prev-mg").text(mg);
 });
 
 $("#input-gold_content").bind("input", function (e) {
