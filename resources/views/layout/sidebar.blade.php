@@ -55,12 +55,13 @@
                         </li>
                         @endcan
 
-                        @can('gramasi', App\Master::class)
+                        {{-- Hide Daftar Gramasi --}}
+                        {{-- @can('gramasi', App\Master::class)
                         <li id="productcategory-list-menu"
                             class="@if (request()->is('product-categories/gramasi*')) active @endif">
                             <a href="{{ route('product-categories.gramasi.index') }}">{{ __('file.Gramasi List') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
                         @can('price', App\Master::class)
                         <li id="price-list-menu" class="@if (request()->is('master/price*')) active @endif">
