@@ -31,7 +31,14 @@ const $datatable = $table.DataTable({
                 return `${data} (${row.code ?? row.product.code})`;
             },
         },
+        { data: "status_warehouse", name: "status_warehouse" },
         { data: "created_at", name: "created_at" },
+        {
+            data: "action",
+            orderable: false,
+            searchable: false,
+            responsivePriority: 1,
+        },
     ],
     order: [["2", "desc"]],
     columnDefs: [
