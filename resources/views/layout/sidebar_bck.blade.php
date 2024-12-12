@@ -205,7 +205,7 @@
 
                 {{-- HIDE ACM --}}
 
-                @can('viewAny', App\Expense::class)
+                {{-- @can('viewAny', App\Expense::class)
                 <li>
                     @php
                     $requestIsOnExpenseMenu = request()->is('expenses*') ? 'true' : 'false';
@@ -228,9 +228,9 @@
                         @endcan
                     </ul>
                 </li>
-                @endcan
+                @endcan --}}
 
-                @can('viewAny', App\Quotation::class)
+                {{-- @can('viewAny', App\Quotation::class)
                 <li>
                     @php
                     $requestIsOnQuotationMenu = request()->is('quotations*') ? 'true' : 'false';
@@ -251,9 +251,9 @@
                         @endcan
                     </ul>
                 </li>
-                @endcan
+                @endcan --}}
 
-                <li>
+                {{-- <li>
                     @php
                     $requestIsOnTransferMenu = request()->is('transfers*') ? 'true' : 'false';
                     @endphp
@@ -282,9 +282,9 @@
                         @endcan
 
                     </ul>
-                </li>
+                </li> --}}
 
-                <li>
+                {{-- <li>
                     @php
                     $requestIsOnReturnMenu = request()->is('return*') ? 'true' : 'false';
                     @endphp
@@ -308,9 +308,9 @@
                         @endcan
 
                     </ul>
-                </li>
+                </li> --}}
 
-                <li>
+                {{-- <li>
                     @php
                     $requestIsOnAccountingMenu = request()->is('accounts*', 'money-transfers*', 'balancesheet*')
                     ? 'true'
@@ -351,9 +351,9 @@
                         </li>
                         @endcan
                     </ul>
-                </li>
+                </li> --}}
 
-                @if (Auth::user()->role_id != 5)
+                {{-- @if (Auth::user()->role_id != 5)
                 <li>
                     @php
                     $requestIsOnHRMMenu = request()->is(
@@ -402,7 +402,7 @@
 
                     </ul>
                 </li>
-                @endif
+                @endif --}}
 
                 @php
                 $role = DB::table('roles')->find(Auth::user()->role_id);
@@ -543,13 +543,13 @@
                         </li>
                         @endcan
 
-                        @can('viewAny', App\Brand::class)
+                        {{-- @can('viewAny', App\Brand::class)
                         <li id="brand-menu" class="@if (request()->is('brand*')) active @endif">
                             <a href="{{ route('brand.index') }}">{{ trans('file.Brand') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
-                        @can('viewAny', App\Unit::class)
+                        {{-- @can('viewAny', App\Unit::class)
                         <li id="unit-menu" class="@if (request()->is('unit*')) active @endif">
                             <a href="{{ route('unit.index') }}">{{ trans('file.Unit') }}</a>
                         </li>
@@ -559,7 +559,7 @@
                         <li id="currency-menu" class="@if (request()->is('currency*')) active @endif">
                             <a href="{{ route('currency.index') }}">{{ trans('file.Currency') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
                         @can('viewAny', App\Tax::class)
                         <li id="tax-menu" class="@if (request()->is('tax*')) active @endif">
@@ -572,17 +572,17 @@
                                 }}</a>
                         </li>
 
-                        @can('createSms')
+                        {{-- @can('createSms')
                         <li id="create-sms-menu" class="@if (request()->is('setting/createsms*')) active @endif">
                             <a href="{{ route('setting.createSms') }}">{{ trans('file.Create SMS') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
-                        @can('backUpDatabase')
+                        {{-- @can('backUpDatabase')
                         <li class="@if (request()->is('backup*')) active @endif">
                             <a href="{{ route('setting.backup') }}">{{ trans('file.Backup Database') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
                         @can('viewAny', App\GeneralSetting::class)
                         <li id="general-setting-menu"
@@ -591,7 +591,7 @@
                         </li>
                         @endcan
 
-                        @can('mailSetting')
+                        {{-- @can('mailSetting')
                         <li id="mail-setting-menu" class="@if (request()->is('setting/mail_setting*')) active @endif">
                             <a href="{{ route('setting.mail') }}">{{ trans('file.Mail Setting') }}</a>
                         </li>
@@ -601,7 +601,7 @@
                         <li id="sms-setting-menu" class="@if (request()->is('setting/sms_setting*')) active @endif">
                             <a href="{{ route('setting.sms') }}">{{ trans('file.SMS Setting') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
 
                         <li id="invoice-setting-menu"
                             class="@if (request()->is('setting/invoice_setting*')) active @endif">
@@ -614,11 +614,11 @@
                         </li>
                         @endcan
 
-                        @can('viewAny', App\HrmSetting::class)
+                        {{-- @can('viewAny', App\HrmSetting::class)
                         <li id="hrm-setting-menu" class="@if (request()->is('setting/hrm_setting*')) active @endif">
                             <a href="{{ route('setting.hrm') }}">{{ trans('file.HRM Setting') }}</a>
                         </li>
-                        @endcan
+                        @endcan --}}
                     </ul>
                     @endcan
                 </li>

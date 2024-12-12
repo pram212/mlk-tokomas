@@ -547,7 +547,7 @@
 						            </td>
 						        </tr>
 
-						        <tr>
+						        {{-- <tr>
 						            <td>{{trans('file.Expense')}}</td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
@@ -597,9 +597,9 @@
 								            </div>
 						            	</div>
 						            </td>
-						        </tr>
+						        </tr> --}}
 
-						        <tr>
+						        {{-- <tr>
 						            <td>{{trans('file.Quotation')}}</td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
@@ -649,9 +649,9 @@
 								            </div>
 						            	</div>
 						            </td>
-						        </tr>
+						        </tr> --}}
 
-						        <tr>
+						        {{-- <tr>
 						            <td>{{trans('file.Transfer')}}</td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
@@ -701,8 +701,8 @@
 								            </div>
 						            	</div>
 						            </td>
-						        </tr>
-
+						        </tr> --}}
+{{--
 						        <tr>
 						            <td>{{trans('file.Sale Return')}}</td>
 						            <td class="text-center">
@@ -753,7 +753,7 @@
 								            </div>
 						            	</div>
 						            </td>
-						        </tr>
+						        </tr> --}}
 						        <tr>
 						            <td>{{trans('file.buy back')}}</td>
 						            <td class="text-center">
@@ -770,7 +770,7 @@
 						            </td>
 						        </tr>
 
-						        <tr>
+						        {{-- <tr>
 						            <td>{{trans('file.Purchase Return')}}</td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue" aria-checked="false" aria-disabled="false">
@@ -820,8 +820,8 @@
 								            </div>
 						            	</div>
 						            </td>
-						        </tr>
-						        <tr>
+						        </tr> --}}
+						        {{-- <tr>
 						            <td>{{trans('file.Employee')}}</td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
@@ -871,7 +871,7 @@
 								            </div>
 						            	</div>
 						            </td>
-						        </tr>
+						        </tr> --}}
 						        <tr>
 						            <td>
                                         <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
@@ -1272,7 +1272,7 @@
 						            	</div>
 						            </td>
 						        </tr>
-						        <tr>
+						        {{-- <tr>
 						            <td>{{trans('file.customer')}}</td>
 						            <td class="text-center">
 						                <div class="icheckbox_square-blue checked" aria-checked="false" aria-disabled="false">
@@ -1477,8 +1477,8 @@
 								            </div>
 						                </span>
 						            </td>
-						        </tr>
-						        <tr>
+						        </tr> --}}
+						        {{-- <tr>
 						            <td>HRM</td>
 						            <td class="report-permissions" colspan="5">
 						            	<span>
@@ -1530,7 +1530,7 @@
 								            </div>
 						                </span>
 						            </td>
-						        </tr>
+						        </tr> --}}
                                 <tr>
 						            {{-- <td></td> --}}
                                     <td >
