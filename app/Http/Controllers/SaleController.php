@@ -1953,7 +1953,10 @@ class SaleController extends Controller
         $goldContentConversion = $this->getGoldContentConversion($data->productSales[0]->product ?? null);
         $numberInWords = $this->getNumberInWords($data->grand_total);
         $pricePerGram = $productSales->net_unit_price ?? 0;
-        $totalPrice = number_format((float) $data->grand_total, 2, ',', '.');
+        // note update sblm presentasi client
+        // revisi grand total to paid amount karena ada angka yang tidak sesuai ketika print
+        // $totalPrice = number_format((float) $data->grand_total, 2, ',', '.');
+        $totalPrice = number_format((float) $data->paid_amount, 2, ',', '.');
         $potongan = $this->getDiscount($data);
         // NONAKTIF GRAMASI MENJADI INPUT MANUAL
         // FROM ID TO DOUBLE
