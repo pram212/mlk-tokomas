@@ -382,7 +382,7 @@
                         <tr>
                             <td style="border:0" colspan="2">
                                 <div class="total_price">
-                                    {{trans('file.price')}} : Rp. {{$totalPrice}}
+                                    {{trans('file.Paid Amount')}} : Rp. {{$totalPrice}}
                                 </div>
                                 <br>
                                 <div class="in_words">
