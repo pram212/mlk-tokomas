@@ -92,8 +92,6 @@ class SettingController extends Controller
 
     public function emptyDatabase()
     {
-        if (!env('USER_VERIFIED'))
-            return redirect()->back()->with('not_permitted', 'This feature is disable for demo!');
         $tables = DB::select('SHOW TABLES');
         $str = 'Tables_in_' . env('DB_DATABASE');
         foreach ($tables as $table) {
@@ -120,25 +118,23 @@ class SettingController extends Controller
 
     public function generalSettingStore(Request $request)
     {
-        if (!env('USER_VERIFIED')) return redirect()->back()->with('not_permitted', 'This feature is disable for demo!');
 
         $this->validate($request, [
             'site_logo_file' => 'image|mimes:jpg,jpeg,png,gif|max:100000',
         ]);
 
         //writting timezone info in .env file
-        $path = '.env';
+        $path = base_path('.env');
+        
         $searchArray = array('APP_TIMEZONE=' . env('APP_TIMEZONE'));
         $replaceArray = array('APP_TIMEZONE=' . $request->timezone);
-
         file_put_contents($path, str_replace($searchArray, $replaceArray, file_get_contents($path)));
 
         $imagePath = 'zummXD2dvAtI.png';
 
         if ($request->file('site_logo_file')) {
-            $file = $request->file('site_logo_file');
-            $imagePath = "storage/app/" . $file->storeAs('general_images', time() . $request->file('site_logo_file')->getClientOriginalName());
-            $request->merge(['site_logo' => $imagePath]);
+            $path = $request->file('site_logo_file')->store('general', 'public');
+            $request->merge(['site_logo' => "storage/" . $path]);
         }
 
 
@@ -149,8 +145,6 @@ class SettingController extends Controller
 
     public function backup()
     {
-        if (!env('USER_VERIFIED'))
-            return redirect()->back()->with('not_permitted', 'This feature is disable for demo!');
 
         // Database configuration
         $host = env('DB_HOST');
@@ -256,9 +250,6 @@ class SettingController extends Controller
 
     public function mailSettingStore(Request $request)
     {
-        if (!env('USER_VERIFIED'))
-            return redirect()->back()->with('not_permitted', 'This feature is disable for demo!');
-
         $data = $request->all();
         //writting mail info in .env file
         $path = '.env';
@@ -279,8 +270,6 @@ class SettingController extends Controller
 
     public function smsSettingStore(Request $request)
     {
-        if (!env('USER_VERIFIED'))
-            return redirect()->back()->with('not_permitted', 'This feature is disable for demo!');
 
         $data = $request->all();
         //writting bulksms info in .env file
@@ -370,8 +359,6 @@ class SettingController extends Controller
 
     public function posSettingStore(Request $request)
     {
-        if (!env('USER_VERIFIED'))
-            return redirect()->back()->with('not_permitted', 'This feature is disable for demo!');
 
         $data = $request->all();
         //writting paypal info in .env file
