@@ -60,5 +60,5 @@
     const lang_visibility = '{{ trans('file.Column visibility') }}';
     const lang_gramasi = '{{ trans('file.Gramasi') }}';
 </script>
-<script src="{{ asset('public/js/pages/gramasi/gramasi_index.js') }}"></script>
+<script src="{{ asset('js/pages/gramasi/gramasi_index.js') }}"></script>
 @endsection

@@ -61,5 +61,5 @@
     const lang_visibility = '{{ trans('file.Column visibility') }}';
     const lang_product_type = '{{ trans('file.Product Type') }}';
 </script>
-<script src="{{ asset('public/js/pages/producttype/producttype_index.js') }}"></script>
+<script src="{{ asset('js/pages/producttype/producttype_index.js') }}"></script>
 @endsection

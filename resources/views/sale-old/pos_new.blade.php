@@ -75,5 +75,5 @@
     const baseUrl = "{{url('/')}}";
     const _token = "{{ csrf_token() }}";
 </script>
-<script src="{{asset('public/js/pages/sale/sale_pos.js')}}"></script>
+<script src="{{asset('js/pages/sale/sale_pos.js')}}"></script>
 @endsection

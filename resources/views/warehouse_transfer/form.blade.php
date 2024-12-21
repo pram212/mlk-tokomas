@@ -82,5 +82,5 @@
     $("ul#product").addClass("show");
     $("ul#product #warehouse_transfer-create-menu").addClass("active");
 </script>
-<script src="{{asset('public/js/pages/warehouse_transfer/warehouse_transfer_form.js?timestamp=' . now())}}"></script>
+<script src="{{asset('js/pages/warehouse_transfer/warehouse_transfer_form.js?timestamp=' . now())}}"></script>
 @endsection

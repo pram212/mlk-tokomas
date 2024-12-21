@@ -14,13 +14,13 @@
     <link rel="icon" type="image/png" href="" />
     <!-- Google fonts - Poppins -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:400,700">
-    <link rel="stylesheet" href="{{ asset('public/help/css/documenter_style.css') }}" media="all">
-    <link rel="stylesheet" href="{{ asset('public/help/css/jquery.mCustomScrollbar.css') }}" media="all">
+    <link rel="stylesheet" href="{{ asset('help/css/documenter_style.css') }}" media="all">
+    <link rel="stylesheet" href="{{ asset('help/css/jquery.mCustomScrollbar.css') }}" media="all">
 
-    <script src="{{ asset('public/help/js/jquery.js') }}"></script>
-    <script src="{{ asset('public/help/js/jquery.scrollTo.js') }}"></script>
-    <script src="{{ asset('public/help/js/jquery.easing.js') }}"></script>
-    <script src="{{ asset('public/help/js/jquery.mCustomScrollbar.js') }}"></script>
+    <script src="{{ asset('help/js/jquery.js') }}"></script>
+    <script src="{{ asset('help/js/jquery.scrollTo.js') }}"></script>
+    <script src="{{ asset('help/js/jquery.easing.js') }}"></script>
+    <script src="{{ asset('help/js/jquery.mCustomScrollbar.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
@@ -28,7 +28,7 @@
         var duration = '500',
             easing = 'swing';
     </script>
-    <script src="{{ asset('public/help/js/script.js') }}"></script>
+    <script src="{{ asset('help/js/script.js') }}"></script>
 </head>
 
 <body>
@@ -77,55 +77,55 @@
                 Pertama, Anda harus menginstal driver printer Anda. Lalu pergi ke pengaturan dan pilih Perangkat.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/pos_printer1.png') }}">
+                <img alt="" src="{{ asset('help/images/pos_printer1.png') }}">
             </p>
             <p>
                 Lalu pergi ke Perangkat dan printer.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/pos_printer2.png') }}">
+                <img alt="" src="{{ asset('help/images/pos_printer2.png') }}">
             </p>
             <p>
                 Atur printer POS Anda sebagai printer default.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/pos_printer3.png') }}">
+                <img alt="" src="{{ asset('help/images/pos_printer3.png') }}">
             </p>
             <p>
                 Lalu pergi ke Preferensi pencetakan.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/pos_printer4.png') }}">
+                <img alt="" src="{{ asset('help/images/pos_printer4.png') }}">
             </p>
             <p>
                 Lalu pergi ke Advanced.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/pos_printer5.png') }}">
+                <img alt="" src="{{ asset('help/images/pos_printer5.png') }}">
             </p>
             <p>
                 Pilih opsi ukuran kertas ke-3 dan klik Ok.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/pos_printer6.png') }}">
+                <img alt="" src="{{ asset('help/images/pos_printer6.png') }}">
             </p>
             <p>
                 Setelah itu masuk ke properti printer.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/pos_printer7.png') }}">
+                <img alt="" src="{{ asset('help/images/pos_printer7.png') }}">
             </p>
             <p>
                 Pergi ke pengaturan perangkat dan pilih opsi ke-3 otomatis.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/pos_printer8.png') }}">
+                <img alt="" src="{{ asset('help/images/pos_printer8.png') }}">
             </p>
             <p>
                 Pastikan Anda memilih ukuran kertas yang benar (opsi ke-3) saat Anda ingin mencetak faktur.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/pos_printer9.png') }}">
+                <img alt="" src="{{ asset('help/images/pos_printer9.png') }}">
             </p>
         </section>
         <section id="dashboard">
@@ -138,24 +138,24 @@
                 Pembelian, dan Laba hari ini / 7 hari terakhir / bulan saat ini / tahun berjalan dengan sekali klik.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/dashboard1.png') }}">
+                <img alt="" src="{{ asset('help/images/dashboard1.png') }}">
             </p>
             <p>Anda akan mendapatkan informasi arus kas Anda yang berarti berapa banyak uang yang Anda hasilkan dan
                 berapa banyak uang yang Anda belanjakan dari grafik garis ini.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/dashboard4.png') }}">
+                <img alt="" src="{{ asset('help/images/dashboard4.png') }}">
             </p>
             <p>Anda juga mengetahui bulan Anda saat ini <strong>pembelian</strong>, <strong>pendapatan</strong>
                 <strong>pengeluaran</strong> dari bagan ini.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/dashboard5.png') }}">
+                <img alt="" src="{{ asset('help/images/dashboard5.png') }}">
             </p>
             <p>Bagan batang menunjukkan laporan tahunan pembelian dan penjualan tahun berjalan.</p>
-            <p><img alt="" src="{{ asset('public/help/images/dashboard2.png') }}"></p>
+            <p><img alt="" src="{{ asset('help/images/dashboard2.png') }}"></p>
             <p>Dari <strong>Dasbor</strong> Anda juga akan mendapatkan transaksi terkini (jual, beli, kuotasi,
                 pembayaran) dan 5 produk terlaris terbaik bulan ini dan tahun berjalan.
             </p>
-            <p><img alt="" src="{{ asset('public/help/images/dashboard3.png') }}"></p>
+            <p><img alt="" src="{{ asset('help/images/dashboard3.png') }}"></p>
         </section>
         <section id="product">
             <div class="page-header">
@@ -166,41 +166,41 @@
             <p>Anda dapat menambah, mengedit dan menghapus kategori produk. Anda juga dapat mengimpor kategori dari file
                 CSV dan mengekspor data tabel ke PDF dan CSV. Anda juga dapat mencetak data dari tabel.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/category1.png') }}">&nbsp;&nbsp;
-                <img alt="" src="{{ asset('public/help/images/category2.png') }}">
+                <img alt="" src="{{ asset('help/images/category1.png') }}">&nbsp;&nbsp;
+                <img alt="" src="{{ asset('help/images/category2.png') }}">
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/category3.png') }}">&nbsp;&nbsp;
-                <img alt="" src="{{ asset('public/help/images/category4.png') }}">
+                <img alt="" src="{{ asset('help/images/category3.png') }}">&nbsp;&nbsp;
+                <img alt="" src="{{ asset('help/images/category4.png') }}">
             </p>
             <p>
                 Jika Anda tidak ingin mengekspor kolom apa pun, Anda dapat melakukannya dengan mengklik tombol
                 Visibilitas Kolom. Dari sini Anda dapat memilih kolom untuk dihapus dari tabel.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/category5.png') }}">&nbsp;&nbsp;
-                <img alt="" src="{{ asset('public/help/images/category6.png') }}">
+                <img alt="" src="{{ asset('help/images/category5.png') }}">&nbsp;&nbsp;
+                <img alt="" src="{{ asset('help/images/category6.png') }}">
             </p>
             <p>Untuk mengekspor data dari baris tertentu, Anda hanya perlu mencentang kotak pada baris terkait</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/category9.png') }}">
+                <img alt="" src="{{ asset('help/images/category9.png') }}">
             </p>
             <p>Jika Anda ingin menghapus semua baris dari tabel, Anda dapat melakukannya dengan sangat mudah seperti
                 yang ditunjukkan di bawah ini. Anda juga dapat menghapus baris tertentu dari tabel.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/category10.png') }}">
+                <img alt="" src="{{ asset('help/images/category10.png') }}">
             </p>
             <p>
                 Jika Anda ingin mencari apa pun dari tabel, Anda cukup mengetikkan kata di kotak pencarian.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/category7.png') }}">
+                <img alt="" src="{{ asset('help/images/category7.png') }}">
             </p>
             <p>
                 Anda juga dapat mengontrol paginasi dari <strong>Menampilkan</strong> dropdown.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/category8.png') }}">
+                <img alt="" src="{{ asset('help/images/category8.png') }}">
             </p>
             <h2><strong>Produk</strong></h2>
             <p>Di bagian produk Anda hanya akan menambahkan informasi umum dari suatu produk. <strong>Untuk menambah
@@ -216,11 +216,11 @@
                     harus mengikuti petunjuk untuk mengimpor data dari CSV</strong>. Untuk lebih memahami Anda dapat
                 mengunduh file sampel.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/product1.png') }}">&nbsp;&nbsp;
-                <img alt="" src="{{ asset('public/help/images/product2.png') }}">
+                <img alt="" src="{{ asset('help/images/product1.png') }}">&nbsp;&nbsp;
+                <img alt="" src="{{ asset('help/images/product2.png') }}">
             </p>
             <p>Anda dapat mengurutkan data tabel menurut kolom</p>
-            <p><img alt="" src="{{ asset('public/help/images/product3.png') }}"></p>
+            <p><img alt="" src="{{ asset('help/images/product3.png') }}"></p>
             <p>Dan Anda dapat mencari, mengekspor, dan mencetak data dari tabel yang telah kita bahas sebelumnya dengan
                 lebih detail.</p>
         </section>
@@ -252,24 +252,24 @@
                     produk akan meningkat.</strong> Ada tiga status pembelian: Diterima, Sebagian, Tertunda, Pesanan.
                 Anda dapat menambahkan produk ke pemesanan dengan mengetik atau memindai barcode produk.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/purchase1.png') }}">&nbsp;&nbsp;
-                <img alt="" src="{{ asset('public/help/images/purchase2.png') }}">
+                <img alt="" src="{{ asset('help/images/purchase1.png') }}">&nbsp;&nbsp;
+                <img alt="" src="{{ asset('help/images/purchase2.png') }}">
             </p>
             <p>Anda juga dapat mengedit info produk dari tabel pesanan.</p>
-            <p><img alt="" src="{{ asset('public/help/images/purchase3.png') }}"></p>
+            <p><img alt="" src="{{ asset('help/images/purchase3.png') }}"></p>
             <p>Setelah melakukan pembelian, Anda akan diarahkan ke halaman indeks pembelian. Anda akan mendapatkan
                 ringkasan pembelian dari tabel. Untuk mendapatkan detailnya, Anda hanya perlu mengklik di baris tabel.
             </p>
-            <p><img alt="" src="{{ asset('public/help/images/purchase4.png') }}"></p>
+            <p><img alt="" src="{{ asset('help/images/purchase4.png') }}"></p>
             <h2><strong>Import Pembelian</strong></h2>
             <p>You can import sale from CSV.<strong>Anda harus mengikuti petunjuk untuk mengimpor data dari
                     CSV</strong>. Untuk mendapatkan pemahaman yang lebih baik, Anda dapat mengunduh file sampel.</p>
-            <p><img alt="" src="{{ asset('public/help/images/purchase7.png') }}"></p>
+            <p><img alt="" src="{{ asset('help/images/purchase7.png') }}"></p>
             <h2><strong>Pembayaran</strong></h2>
             <p>Anda dapat melakukan pembayaran dari tabel Pembelian. Anda dapat melakukan pembayaran dengan Uang Tunai,
                 Kartu Hadiah, Cek, Kartu Kredit dan Deposit.</p>
-            <p><img alt="" src="{{ asset('public/help/images/purchase5.png') }}">&nbsp;&nbsp;
-                <img alt="" src="{{ asset('public/help/images/purchase6.png') }}">
+            <p><img alt="" src="{{ asset('help/images/purchase5.png') }}">&nbsp;&nbsp;
+                <img alt="" src="{{ asset('help/images/purchase6.png') }}">
             </p>
             <p>Dan Anda dapat mencari, mengekspor, dan mencetak data dari tabel yang telah kita bahas di bagian<a
                     href="#product">Produk</a>.</p>
@@ -286,44 +286,44 @@
                 memindai barcode produk. Produk Unggulan akan ditampilkan di sisi kanan. Anda juga dapat menambahkan
                 produk dengan mengklik gambar produk. Anda dapat mengedit info produk dari tabel pesanan.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/sale1.png') }}">
-                <img alt="" src="{{ asset('public/help/images/sale2.png') }}">&nbsp;&nbsp;
-                <img alt="" src="{{ asset('public/help/images/sale3.png') }}">
+                <img alt="" src="{{ asset('help/images/sale1.png') }}">
+                <img alt="" src="{{ asset('help/images/sale2.png') }}">&nbsp;&nbsp;
+                <img alt="" src="{{ asset('help/images/sale3.png') }}">
             </p>
             <p>Untuk menambahkan diskon pesanan, pajak pesanan dan biaya pengiriman Anda hanya perlu mengklik tombol
                 yang ditunjukkan di bawah ini. Untuk menyelesaikan penjualan, Anda harus mengklik
                 tombol<strong>Pembayaran</strong>.</p>
-            <p><img alt="" src="{{ asset('public/help/images/sale4.png') }}"></p>
+            <p><img alt="" src="{{ asset('help/images/sale4.png') }}"></p>
             <p>Setelah membuat penjualan, Anda akan diarahkan ke halaman indeks penjualan. Sebuah surat konfirmasi akan
                 dikirim secara otomatis ke email pelanggan dengan detail penjualan. Anda akan mendapatkan ringkasan
                 penjualan dari tabel. Untuk mendapatkan detailnya, Anda hanya perlu mengklik di baris tabel.</p>
             <p>You can also generate <strong>Invoice</strong> automatically which is beutifully designed</p>
-            <p><img alt="" src="{{ asset('public/help/images/sale6.png') }}"></p>
+            <p><img alt="" src="{{ asset('help/images/sale6.png') }}"></p>
             <p>You can also create sale by clicking Add Sale button. Also you can import sale from CSV.<strong>You must
                     follow the instruction to import data from CSV</strong>. To get better understanding you can
                 download the sample file. </p>
-            <p><img alt="" src="{{ asset('public/help/images/sale5.png') }}"></p>
+            <p><img alt="" src="{{ asset('help/images/sale5.png') }}"></p>
             <h2><strong>Payment</strong></h2>
             <p>You can make payment from Sale table. You can make payment with Cash, Cheque, Credit Card, Gift Card,
                 Deposit and Paypal. A confirmation mail will be sent automatically to customer's email with payment
                 details.</p>
-            <p><img alt="" src="{{ asset('public/help/images/purchase5.png') }}">&nbsp;&nbsp;
-                <img alt="" src="{{ asset('public/help/images/purchase6.png') }}">
+            <p><img alt="" src="{{ asset('help/images/purchase5.png') }}">&nbsp;&nbsp;
+                <img alt="" src="{{ asset('help/images/purchase6.png') }}">
             </p>
             <p>And you can search, export and print data from table that we discussed in <a href="#product">Product</a>
                 section.</p>
             <h2><strong>Delivery</strong></h2>
             <p>You can add delivery for your sold products. A confirmation mail will be sent automatically to customer's
                 email with delivery details.</p>
-            <p><img alt="" src="{{ asset('public/help/images/delivery1.png') }}"></p>
+            <p><img alt="" src="{{ asset('help/images/delivery1.png') }}"></p>
             <p>And you can search, export and print data from table that we discussed in <a href="#product">Product</a>
                 section.</p>
             <h2><strong>Gift Card</strong></h2>
             <p>You can sell GiftCard to customer. By using gift card customer can purchase product. Again GiftCard can
                 be recharged. Customer will be notified by mail when assigning or recharging a GiftCard.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/gift_card1.png') }}">&nbsp;&nbsp;
-                <img alt="" src="{{ asset('public/help/images/gift_card2.png') }}">
+                <img alt="" src="{{ asset('help/images/gift_card1.png') }}">&nbsp;&nbsp;
+                <img alt="" src="{{ asset('help/images/gift_card2.png') }}">
             </p>
         </section>
         <section id="expense">
@@ -334,12 +334,12 @@
             <h2><strong>Expense Category</strong></h2>
             <p>You can create, edit and delete expense category in Expense module.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/expense1.png') }}">
+                <img alt="" src="{{ asset('help/images/expense1.png') }}">
             </p>
             <h2><strong>Expense</strong></h2>
             <p>You can create, edit and delete expense in Expense module.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/expense2.png') }}">
+                <img alt="" src="{{ asset('help/images/expense2.png') }}">
             </p>
             <p>And you can search, export and print data from table that we discussed in <a href="#product">Product</a>
                 section.</p>
@@ -352,17 +352,17 @@
             <h2><strong>Add Quotation</strong></h2>
             <p>You can create quotation in Quotation module. There are two quotation status: Pending and Sent</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/quotation1.png') }}">
+                <img alt="" src="{{ asset('help/images/quotation1.png') }}">
             </p>
             <p>If quotation status is <strong>Sent</strong> a confirmation mail will be sent automatically to customer's
                 email with quotation details.</p>
             <h2><strong>Create Sale</strong></h2>
             <p>You can create sale from Quotation.</p>
-            <p><img alt="" src="{{ asset('public/help/images/quotation2.png') }}">
+            <p><img alt="" src="{{ asset('help/images/quotation2.png') }}">
             </p>
             <h2><strong>Create Purchase</strong></h2>
             <p>You can create purchase from Quotation.</p>
-            <p><img alt="" src="{{ asset('public/help/images/quotation3.png') }}">
+            <p><img alt="" src="{{ asset('help/images/quotation3.png') }}">
             </p>
             <p>And you can search, export and print data from table that we discussed in <a href="#product">Product</a>
                 section.</p>
@@ -376,8 +376,8 @@
             <p>You can adjust product quantity in Quantity Adjustment module. There will be two operation: Subtraction
                 and Addition</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/adjustment1.png') }}">
-                <img alt="" src="{{ asset('public/help/images/adjustment2.png') }}">
+                <img alt="" src="{{ asset('help/images/adjustment1.png') }}">
+                <img alt="" src="{{ asset('help/images/adjustment2.png') }}">
             </p>
             <p>And you can search, export and print data from table that we discussed in <a href="#product">Product</a>
                 section.</p>
@@ -405,7 +405,7 @@
                 better understanding you can download the sample file. You will get details of transfer by clicking in
                 the table row.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/transfer1.png') }}">
+                <img alt="" src="{{ asset('help/images/transfer1.png') }}">
             </p>
             <p>And you can search, export and print data from table that we discussed in <a href="#product">Product</a>
                 section.</p>
@@ -422,7 +422,7 @@
                 automatically to supplier's email with return details. You will get details of return by clicking in the
                 table row.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/return1.png') }}">
+                <img alt="" src="{{ asset('help/images/return1.png') }}">
             </p>
             <p>And you can search, export and print data from table that we discussed in <a href="#product">Product</a>
                 section.</p>
@@ -436,7 +436,7 @@
             <p>You can create,edit and delete account to link all your transactions. You can also set default account
                 for sale. All the payments must be done under an account.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/accounting_1.png') }}">
+                <img alt="" src="{{ asset('help/images/accounting_1.png') }}">
             </p>
             <p>You can generate <strong>Balance Sheet</strong> of your accounts. You can also make <strong>Account
                     Statement</strong> of an specific account to see all the transactions which has done with this
@@ -469,17 +469,17 @@
             <p>There is also be a register option to create user account. But his/her ID will not be activated untill
                 admin will approve it.</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/user1.png') }}">
+                <img alt="" src="{{ asset('help/images/user1.png') }}">
             </p>
             <h2><strong>Add Customer</strong></h2>
             <p>You can create, edit and delete customer. After creating customer a confirmation email will automatically
                 send to customer. You can add money to customer's database just like a bank account. You can also import
                 customer with CSV file. <strong>You must follow the instruction to import data from CSV.</strong></p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/customer1.png') }}">
+                <img alt="" src="{{ asset('help/images/customer1.png') }}">
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/customer2.png') }}">
+                <img alt="" src="{{ asset('help/images/customer2.png') }}">
             </p>
             <h2><strong>Add Biller</strong></h2>
             <p>Biller is the representative of your company. You may have multiple company and you want to manage all
@@ -488,14 +488,14 @@
                 also import biller with CSV file. <strong>You must follow the instruction to import data from
                     CSV.</strong></p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/biller1.png') }}">
+                <img alt="" src="{{ asset('help/images/biller1.png') }}">
             </p>
             <h2><strong>Add Supplier</strong></h2>
             <p>Supplier is the people from whom you purchase products. You can create, edit and delete supplier. After
                 creating supplier a confirmation email will automatically send to supplier. You can also import supplier
                 with CSV file. <strong>You must follow the instruction to import data from CSV.</strong></p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/supplier1.png') }}">
+                <img alt="" src="{{ asset('help/images/supplier1.png') }}">
             </p>
             <p>And you can search, export and print data from table that we discussed in <a href="#product">Product</a>
                 section.</p>
@@ -534,13 +534,13 @@
             <p>You can create, edit and delete user roles. You can controll user access by changing the role permission.
                 So, under a certain role users have specific access over this software</p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/role1.png') }}">
+                <img alt="" src="{{ asset('help/images/role1.png') }}">
             </p>
             <h2><strong>Add Warehouse</strong></h2>
             <p>You can create, edit and delete warehouse. You can also import warehouse with CSV file. <strong>You must
                     follow the instruction to import data from CSV.</strong></p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/warehouse1.png') }}">
+                <img alt="" src="{{ asset('help/images/warehouse1.png') }}">
             </p>
             <h2><strong>Add Customer Group</strong></h2>
             <p>
@@ -552,25 +552,25 @@
                     from CSV.</strong>
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/customer_group1.png') }}">
+                <img alt="" src="{{ asset('help/images/customer_group1.png') }}">
             </p>
             <h2><strong>Add Brand</strong></h2>
             <p>You can create, edit and delete product brand. You can also import brand with CSV file. <strong>You must
                     follow the instruction to import data from CSV.</strong></p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/brand1.png') }}">
+                <img alt="" src="{{ asset('help/images/brand1.png') }}">
             </p>
             <h2><strong>Add Unit</strong></h2>
             <p>You can create, edit and delete product unit. You can also import brand with CSV file. <strong>You must
                     follow the instruction to import data from CSV.</strong></p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/unit1.png') }}">
+                <img alt="" src="{{ asset('help/images/unit1.png') }}">
             </p>
             <h2><strong>Add Tax</strong></h2>
             <p>You can create, edit and delete different product tax. You can also import tax with CSV file. <strong>You
                     must follow the instruction to import data from CSV.</strong></p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/tax1.png') }}">
+                <img alt="" src="{{ asset('help/images/tax1.png') }}">
             </p>
             <p>And you can search, export and print data from table that we discussed in <a href="#product">Product</a>
                 section.</p>
@@ -587,7 +587,7 @@
                 information.
             </p>
             <p>
-                <img alt="" src="{{ asset('public/help/images/pos1.png') }}">
+                <img alt="" src="{{ asset('help/images/pos1.png') }}">
             </p>
             <h2><strong>HRM Setting</strong></h2>
             <p>You can set default CheckIn and CheckOut time in HRM Setting.</p>

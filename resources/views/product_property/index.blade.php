@@ -57,5 +57,5 @@
     const lang_visibility = '{{ trans('file.Column visibility') }}';
     const lang_product_property = '{{ trans('file.Product Property') }}';
 </script>
-<script src="{{ asset('public/js/pages/productproperty/productproperty_index.js') }}"></script>
+<script src="{{ asset('js/pages/productproperty/productproperty_index.js') }}"></script>
 @endsection

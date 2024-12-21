@@ -37,5 +37,5 @@
     const lang_delete = '{{ trans("file.delete") }}';
     const lang_visibility = '{{ trans("file.Column visibility") }}';
 </script>
-<script src="{{ asset('public/js/pages/promo/promo_index.js?timestamp=' . time()) }}"></script>
+<script src="{{ asset('js/pages/promo/promo_index.js?timestamp=' . time()) }}"></script>
 @endsection

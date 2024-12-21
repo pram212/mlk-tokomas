@@ -480,7 +480,7 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('public/js/qrcode.min.js') }}"></script>
+<script src="{{ asset('js/qrcode.min.js') }}"></script>
 
 <script type="text/javascript">
     const mode = '{{ $mode }}';
@@ -524,6 +524,6 @@
     const split_set_code = '{{ @$split_set_code }}';
     @endif
 </script>
-<script src="{{ asset('public/js/pages/products/product_form.js') }}"></script>
+<script src="{{ asset('js/pages/products/product_form.js') }}"></script>
 
 @endsection

@@ -216,6 +216,6 @@
     // const btn_trash_span = $("#btn_trash span");
     // btn_trash_span.text(lang_trash);
 </script>
-<script src="{{ asset('public/js/pages/category/categories_index.js') }}"></script>
+<script src="{{ asset('js/pages/category/categories_index.js') }}"></script>
 
 @endsection

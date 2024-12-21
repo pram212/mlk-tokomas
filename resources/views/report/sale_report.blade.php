@@ -90,7 +90,7 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('public/js/pages/report/sale_report.js?timestamp=' . now()->timestamp) }}"></script>
+<script src="{{ asset('js/pages/report/sale_report.js?timestamp=' . now()->timestamp) }}"></script>
 
 <script>
     $(document).ready(function () {

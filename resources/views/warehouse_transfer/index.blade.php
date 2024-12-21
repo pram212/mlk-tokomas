@@ -35,6 +35,6 @@
     const lang_delete = '{{ trans("file.delete") }}';
     const lang_visibility = '{{ trans("file.Column visibility") }}';
 </script>
-<script src="{{ asset('public/js/pages/warehouse_transfer/warehouse_transfer_index.js?timestamp=' . time()) }}">
+<script src="{{ asset('js/pages/warehouse_transfer/warehouse_transfer_index.js?timestamp=' . time()) }}">
 </script>
 @endsection

@@ -30,12 +30,12 @@
 @endsection
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('public/css/pages/sales/sales_pos_new.css') }}">
+<link rel="stylesheet" href="{{ asset('css/pages/sales/sales_pos_new.css') }}">
 @endsection
 
 @section('scripts')
-<script src="{{ asset('public/js/pages/sales/sales_pos_new.js?timestamp=' . now()->timestamp) }}"></script>
-<script src="{{ asset('public/js/pages/sales/sales_pos_cart.js?timestamp=' . now()->timestamp) }}"></script>
-<script src="{{ asset('public/js/pages/sales/sales_pos_info.js?timestamp=' . now()->timestamp) }}"></script>
-<script src="{{ asset('public/js/pages/sales/sales_pos_payment.js?timestamp=' . now()->timestamp) }}"></script>
+<script src="{{ asset('js/pages/sales/sales_pos_new.js?timestamp=' . now()->timestamp) }}"></script>
+<script src="{{ asset('js/pages/sales/sales_pos_cart.js?timestamp=' . now()->timestamp) }}"></script>
+<script src="{{ asset('js/pages/sales/sales_pos_info.js?timestamp=' . now()->timestamp) }}"></script>
+<script src="{{ asset('js/pages/sales/sales_pos_payment.js?timestamp=' . now()->timestamp) }}"></script>
 @endsection

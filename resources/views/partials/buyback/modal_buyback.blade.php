@@ -98,10 +98,10 @@
                         BuyBack
                     </span>
                     <img class="mr-2 "
-                        src="data:image/png;base64,{{ asset('public/logo/bima_logo_1.png') }}"
+                        src="data:image/png;base64,{{ asset('logo/bima_logo_1.png') }}"
                         height="40px" alt="">
                     <img class=""
-                        src="data:image/png;base64,{{ asset('public/logo/bima_text_1.png') }}"
+                        src="data:image/png;base64,{{ asset('logo/bima_text_1.png') }}"
                         height="40px" alt="">
                 </div>
 
@@ -235,10 +235,10 @@
                         Detail Buyback
                     </span>
                     <img class="mr-2 "
-                        src="data:image/png;base64,{{ asset('public/logo/bima_logo_1.png') }}"
+                        src="data:image/png;base64,{{ asset('logo/bima_logo_1.png') }}"
                         height="40px" alt="">
                     <img class=""
-                        src="data:image/png;base64,{{ asset('public/logo/bima_text_1.png') }}"
+                        src="data:image/png;base64,{{ asset('logo/bima_text_1.png') }}"
                         height="40px" alt="">
                 </div>
 

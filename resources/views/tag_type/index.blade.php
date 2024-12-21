@@ -59,5 +59,5 @@
     const lang_tagtype = '{{ trans('file.Tagging Type') }}';
 </script>
 
-<script src="{{ asset('public/js/pages/tagtype/tagtype_index.js') }}"></script>
+<script src="{{ asset('js/pages/tagtype/tagtype_index.js') }}"></script>
 @endsection

@@ -221,7 +221,7 @@
 @endsection
 @section('scripts')
 {{-- qrcode --}}
-<script src="{{ asset('public/js/qrcode.min.js') }}"></script>
+<script src="{{ asset('js/qrcode.min.js') }}"></script>
 <script>
     const lang_records_per_page = '{{ trans("file.records per page") }}';
     const lang_Showing = '{{ trans("file.Showing") }}';
@@ -252,5 +252,5 @@
 
     const url_asset_bootstrap = '{{ asset("public/vendor/bootstrap/css/bootstrap.min.css") }}';
 </script>
-<script src="{{ asset('public/js/pages/products/product_index.js?timestamp=' . time()) }}"></script>
+<script src="{{ asset('js/pages/products/product_index.js?timestamp=' . time()) }}"></script>
 @endsection

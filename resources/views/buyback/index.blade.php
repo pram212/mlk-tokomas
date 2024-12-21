@@ -1,5 +1,5 @@
 @extends('layout.main') @section('content')
-<link rel="stylesheet" href="{{asset('public/css/pages/buyback/buyback_list.css')}}">
+<link rel="stylesheet" href="{{asset('css/pages/buyback/buyback_list.css')}}">
 <section>
     <div class="container-fluid">
         <div class="row">
@@ -95,6 +95,6 @@
     const lang_visibility = '{{ __("file.Column visibility") }}';
     const lang_select = '{{ __("file.Select") }}';
 </script>
-<script src="{{ asset('public/js/pages/buyback/buyback_list.js?timestamp=' . now()->timestamp) }}"></script>
-<script src="{{ asset('public/js/pages/buyback/modal/buyback_modal.js?timestamp=' . now()->timestamp) }}"></script>
+<script src="{{ asset('js/pages/buyback/buyback_list.js?timestamp=' . now()->timestamp) }}"></script>
+<script src="{{ asset('js/pages/buyback/modal/buyback_modal.js?timestamp=' . now()->timestamp) }}"></script>
 @endsection

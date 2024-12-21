@@ -74,5 +74,5 @@
 
     const url_asset_bootstrap = '{{ asset("public/vendor/bootstrap/css/bootstrap.min.css") }}';
 </script>
-<script src="{{ asset('public/js/pages/products_stock/product_stock_index.js?timestamp=' . time()) }}"></script>
+<script src="{{ asset('js/pages/products_stock/product_stock_index.js?timestamp=' . time()) }}"></script>
 @endsection

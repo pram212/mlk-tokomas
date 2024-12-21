@@ -45,5 +45,5 @@
     const lang_visibility = '{{ trans('file.Column visibility') }}';
     const lang_price = '{{ trans('file.price') }}';
 </script>
-<script src="{{ asset('public/js/pages/price/price_index.js') }}"></script>
+<script src="{{ asset('js/pages/price/price_index.js') }}"></script>
 @endsection

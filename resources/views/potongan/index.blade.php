@@ -58,5 +58,5 @@
     const lang_visibility = '{{ trans('file.Column visibility') }}';
     const lang_gramasi = '{{ trans('file.Discount') }}';
 </script>
-<script src="{{ asset('public/js/pages/potongan/potongan_index.js') }}"></script>
+<script src="{{ asset('js/pages/potongan/potongan_index.js') }}"></script>
 @endsection

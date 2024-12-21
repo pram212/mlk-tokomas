@@ -100,7 +100,7 @@
     const lang_print = '{{ trans('file.Print') }}';
     const lang_delete = '{{ trans('file.delete') }}';
     const lang_visibility = '{{ trans('file.Column visibility') }}';
-    const asset_url = '{{ asset('public/vendor/bootstrap/css/bootstrap.min.css') }}';
+    const asset_url = '{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}';
 </script>
-<script src="{{ asset('public/js/pages/sale/sale_index.js') }}"></script>
+<script src="{{ asset('js/pages/sale/sale_index.js') }}"></script>
 @endsection
